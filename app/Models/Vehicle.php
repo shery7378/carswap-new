@@ -71,12 +71,24 @@ class Vehicle extends Model
 
     public function getGalleryImageUrlsAttribute(): array
     {
-        if (empty($this->gallery_images)) {
+        $images = $this->gallery_images;
+        if (empty($images)) {
             return [];
         }
+        
+        // Fallback in case it's returned as a string from older rows
+        if (is_string($images)) {
+            $decoded = json_decode($images, true);
+            $images = is_array($decoded) ? $decoded : [$images];
+        } elseif (!is_array($images)) {
+            $images = [];
+        }
+
         return array_map(
-            fn ($path) => Storage::disk('public')->url($path),
-            $this->gallery_images
+            function ($path) {
+                return Storage::disk('public')->url($path);
+            },
+            $images
         );
     }
 
