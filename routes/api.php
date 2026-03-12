@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\VehicleOptionController;
+use App\Http\Controllers\Api\UserAdController;
 use App\Http\Controllers\Api\Admin\AdminVehicleController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -59,20 +60,38 @@ Route::get('/vehicle-options', [VehicleOptionController::class, 'getOptions']);
 Route::get('/brands', [VehicleOptionController::class, 'getBrands']);
 Route::get('/brands/{brandId}/models', [VehicleOptionController::class, 'getModels']);
 
-// Vehicle API Routes
+// Public Ads API Routes
+// These routes use UserAdController and are open to all visitors.
+Route::get('/ads', [UserAdController::class, 'index']);
+Route::get('/ads/{id}', [UserAdController::class, 'show']);
+
+// Legacy vehicle routes (kept for backwards compatibility)
 Route::get('/vehicles', [VehicleController::class, 'index']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
+
+// Authenticated Ad Routes (user must be logged in)
+// IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel
+// from matching the literal string 'my' as an {id} parameter.
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/ads/my', [UserAdController::class, 'myAds']);
+    Route::post('/ads', [UserAdController::class, 'store']);
+    Route::put('/ads/{id}', [UserAdController::class, 'update']);
+    Route::delete('/ads/{id}', [UserAdController::class, 'destroy']);
+    Route::patch('/ads/{id}/status', [UserAdController::class, 'changeStatus']);
+});
 
 
 // Admin Routes
 Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
-    // Existing Vehicle Routes
+    // Vehicle / Ad Management
     Route::get('/brands/{brandId}/models', [AdminVehicleController::class, 'getModelsByBrand']);
     Route::get('/vehicles', [AdminVehicleController::class, 'index']);
     Route::get('/vehicles/{id}', [AdminVehicleController::class, 'show']);
     Route::post('/vehicles', [AdminVehicleController::class, 'store']);
     Route::put('/vehicles/{id}', [AdminVehicleController::class, 'update']);
     Route::delete('/vehicles/{id}', [AdminVehicleController::class, 'destroy']);
+    Route::patch('/vehicles/{id}/status', [AdminVehicleController::class, 'changeStatus']);
+    Route::patch('/vehicles/{id}/featured', [AdminVehicleController::class, 'toggleFeatured']);
 
     // Role Management
     Route::middleware('role:admin')->group(function () {

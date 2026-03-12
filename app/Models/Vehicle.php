@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Vehicle extends Model
 {
@@ -43,14 +44,41 @@ class Vehicle extends Model
         'gallery_images',
         'technical_expiration',
         'is_featured',
-        'video_url'
+        'video_url',
+        'ad_status',
+        'history_report',
+        'owner_type',
     ];
 
+    protected $appends = ['main_image_url', 'gallery_image_urls'];
+
     protected $casts = [
-        'gallery_images' => 'json',
-        'is_featured' => 'boolean',
-        'technical_expiration' => 'date'
+        'gallery_images'       => 'json',
+        'is_featured'          => 'boolean',
+        'technical_expiration' => 'date:Y-m-d',
+        'request_price_option' => 'boolean',
     ];
+
+    // -------------------------------------------------------------------------
+    // Accessors – return full public URLs for stored images
+    // -------------------------------------------------------------------------
+    public function getMainImageUrlAttribute(): ?string
+    {
+        return $this->main_image
+            ? Storage::disk('public')->url($this->main_image)
+            : null;
+    }
+
+    public function getGalleryImageUrlsAttribute(): array
+    {
+        if (empty($this->gallery_images)) {
+            return [];
+        }
+        return array_map(
+            fn ($path) => Storage::disk('public')->url($path),
+            $this->gallery_images
+        );
+    }
 
     public function user()
     {
