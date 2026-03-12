@@ -1,0 +1,12 @@
+Once you have your Laravel server running, open this URL in browser:
+
+http://localhost:8000/test-dropdown.html
+
+(or whatever port you use - 3000, 8080, etc.)
+
+This page will show you:
+✅ If brands are loading
+✅ If models are loading when you select a brand
+✅ Exact error messages in the console if something fails
+
+If not working, the console will show the exact error. Send me that error.

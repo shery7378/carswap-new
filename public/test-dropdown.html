@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Model Dropdown Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 40px; background: #f5f5f5; font-family: Arial; }
+        .card { max-width: 500px; margin: 0 auto; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .console { background: #1e1e1e; color: #00ff00; padding: 15px; border-radius: 5px; font-family: 'Courier New'; font-size: 12px; max-height: 300px; overflow-y: auto; margin-top: 20px; }
+        .console-line { margin: 5px 0; }
+        .error { color: #ff4444; }
+        .success { color: #00ff00; }
+        .info { color: #00aaff; }
+        .test-btn { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Model Dropdown Test</h4>
+        </div>
+        <div class="card-body">
+            <div class="mb-3">
+                <label class="form-label"><strong>Step 1: Select a Brand</strong></label>
+                <select class="form-select" id="brand_select">
+                    <option value="">-- Loading Brands --</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label"><strong>Step 2: Select a Model</strong></label>
+                <select class="form-select" id="model_select">
+                    <option value="">-- Select Model --</option>
+                </select>
+            </div>
+
+            <button class="btn btn-success test-btn w-100" id="test-btn">Test Fetch Manually</button>
+        </div>
+    </div>
+
+    <div class="console" id="console">
+        <div class="console-line info">Console Output:</div>
+    </div>
+
+    <script>
+        const console_el = document.getElementById('console');
+        
+        function log(message, type = 'info') {
+            const line = document.createElement('div');
+            line.className = `console-line ${type}`;
+            line.textContent = `> ${message}`;
+            console_el.appendChild(line);
+            console_el.scrollTop = console_el.scrollHeight;
+            console.log(message);
+        }
+
+        // Load brands on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            log('Page loaded, fetching brands...', 'info');
+            fetch('/api/brands')
+                .then(res => {
+                    log(`Response: ${res.status} ${res.statusText}`, 'info');
+                    return res.json();
+                })
+                .then(data => {
+                    log(`Brands fetched: ${data.length} records`, 'success');
+                    const brandSelect = document.getElementById('brand_select');
+                    brandSelect.innerHTML = '<option value="">-- Select Brand --</option>';
+                    data.forEach(brand => {
+                        const option = document.createElement('option');
+                        option.value = brand.id;
+                        option.textContent = brand.name;
+                        brandSelect.appendChild(option);
+                        log(`Added brand: ${brand.id} = ${brand.name}`, 'success');
+                    });
+                })
+                .catch(error => {
+                    log(`❌ Error fetching brands: ${error.message}`, 'error');
+                });
+        });
+
+        // Brand selection handler
+        document.getElementById('brand_select').addEventListener('change', function () {
+            const brandId = this.value;
+            const modelSelect = document.getElementById('model_select');
+            
+            log(`Brand selected: ${brandId}`, 'info');
+            
+            if (!brandId) {
+                log('No brand selected', 'error');
+                modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+                return;
+            }
+
+            modelSelect.innerHTML = '<option value="">Loading...</option>';
+            const url = `/app/vehicles/models-by-brand/${brandId}`;
+            log(`Fetching from: ${url}`, 'info');
+
+            fetch(url)
+                .then(res => {
+                    log(`Response: ${res.status} ${res.statusText}`, 'info');
+                    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                    return res.json();
+                })
+                .then(data => {
+                    log(`Models fetched: ${data.length} records`, 'success');
+                    modelSelect.innerHTML = '<option value="">-- Select Model --</option>';
+                    
+                    if (Array.isArray(data) && data.length > 0) {
+                        data.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name;
+                            modelSelect.appendChild(option);
+                            log(`Added model: ${model.id} = ${model.name}`, 'success');
+                        });
+                    } else {
+                        log('No models found for this brand', 'error');
+                        modelSelect.innerHTML += '<option value="" disabled>No models available</option>';
+                    }
+                })
+                .catch(error => {
+                    log(`❌ Error: ${error.message}`, 'error');
+                    modelSelect.innerHTML = '<option value="" disabled>Error loading models</option>';
+                });
+        });
+
+        // Manual test button
+        document.getElementById('test-btn').addEventListener('click', function() {
+            log('=== Manual Test ===', 'info');
+            const url = '/app/vehicles/models-by-brand/1';
+            log(`Testing URL: ${url}`, 'info');
+            fetch(url)
+                .then(r => {
+                    log(`Status: ${r.status}`, 'info');
+                    return r.json();
+                })
+                .then(d => log(`Response: ${JSON.stringify(d)}`, 'success'))
+                .catch(e => log(`Error: ${e}`, 'error'));
+        });
+    </script>
+</body>
+</html>

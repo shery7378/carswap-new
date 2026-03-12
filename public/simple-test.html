@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Model Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f0f0f0; }
+        div { background: white; padding: 20px; margin: 10px 0; border-radius: 5px; }
+        select { padding: 10px; font-size: 16px; width: 100%; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; background: #007bff; color: white; border: none; border-radius: 3px; }
+        .error { color: red; font-weight: bold; }
+        .success { color: green; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div>
+    <h2>Model Dropdown TEST</h2>
+    <label>Brand:</label>
+    <select id="brand">
+        <option value="">-- Select Brand --</option>
+    </select>
+</div>
+
+<div>
+    <label>Model:</label>
+    <select id="model">
+        <option value="">-- Select Model --</option>
+    </select>
+</div>
+
+<div>
+    <button onclick="testAPI()">Test API</button>
+    <p id="result"></p>
+</div>
+
+<script>
+// Load brands when page loads
+window.addEventListener('load', function() {
+    console.log('Fetching brands...');
+    fetch('/api/brands')
+        .then(r => r.json())
+        .then(brands => {
+            console.log('Got brands:', brands);
+            const select = document.getElementById('brand');
+            select.innerHTML = '<option value="">-- Select Brand --</option>';
+            brands.forEach(b => {
+                const opt = document.createElement('option');
+                opt.value = b.id;
+                opt.text = b.name;
+                select.appendChild(opt);
+            });
+        })
+        .catch(e => {
+            console.error('BRAND ERROR:', e);
+            document.getElementById('result').innerHTML = '<span class="error">Error loading brands: ' + e.message + '</span>';
+        });
+});
+
+// When brand changes, load models
+document.getElementById('brand').addEventListener('change', function() {
+    const brandId = this.value;
+    const select = document.getElementById('model');
+    
+    if (!brandId) {
+        select.innerHTML = '<option value="">-- Select Model --</option>';
+        return;
+    }
+    
+    console.log('Fetching models for brand:', brandId);
+    fetch(`/api/brands/${brandId}/models`)
+        .then(r => r.json())
+        .then(models => {
+            console.log('Got models:', models);
+            select.innerHTML = '<option value="">-- Select Model --</option>';
+            models.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id;
+                opt.text = m.name;
+                select.appendChild(opt);
+            });
+        })
+        .catch(e => {
+            console.error('MODEL ERROR:', e);
+            document.getElementById('result').innerHTML = '<span class="error">Error loading models: ' + e.message + '</span>';
+        });
+});
+
+function testAPI() {
+    const result = document.getElementById('result');
+    result.innerHTML = 'Testing...';
+    
+    fetch('/api/brands/6/models')
+        .then(r => r.json())
+        .then(data => {
+            result.innerHTML = '<span class="success">✅ API Works! Got ' + data.length + ' models: ' + data.map(m => m.name).join(', ') + '</span>';
+        })
+        .catch(e => {
+            result.innerHTML = '<span class="error">❌ API Error: ' + e.message + '</span>';
+        });
+}
+</script>
+
+</body>
+</html>
