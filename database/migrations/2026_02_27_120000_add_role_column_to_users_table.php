@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             if (!Schema::hasColumn('users', 'role')) {
-                $table->enum('role', ['admin', 'user', 'trader'])->default('user')->after('email_verified_at');
+                $table->enum('role', ['admin', 'subscriber', 'trader'])->default('subscriber')->after('email_verified_at');
             }
         });
     }
