@@ -25,6 +25,9 @@
                             <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-services" aria-controls="navs-top-services" aria-selected="false">Services</button>
                             </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-gallery" aria-controls="navs-top-gallery" aria-selected="false">Gallery</button>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Basic Info Tab -->
@@ -110,6 +113,15 @@
                                     <!-- Dynamic services will be added here -->
                                 </div>
                                 <button type="button" class="btn btn-sm btn-outline-primary" id="add-service">Add Service</button>
+                            </div>
+                            <!-- Gallery Tab -->
+                            <div class="tab-pane fade" id="navs-top-gallery" role="tabpanel">
+                                <div class="mb-3">
+                                    <label class="form-label" for="gallery">Gallery Photos</label>
+                                    <input type="file" class="form-control @error('gallery.*') is-invalid @enderror" id="gallery" name="gallery[]" multiple />
+                                    <small class="text-muted">You can select multiple images.</small>
+                                    @error('gallery.*')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
                             </div>
                         </div>
                     </div>

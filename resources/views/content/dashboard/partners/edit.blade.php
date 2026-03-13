@@ -26,6 +26,9 @@
                             <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-services" aria-controls="navs-top-services" aria-selected="false">Services</button>
                             </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#navs-top-gallery" aria-controls="navs-top-gallery" aria-selected="false">Gallery</button>
+                            </li>
                         </ul>
                         <div class="tab-content">
                             <!-- Basic Info Tab -->
@@ -139,6 +142,29 @@
                                     @endforeach
                                 </div>
                                 <button type="button" class="btn btn-sm btn-outline-primary" id="add-service">Add Another Service</button>
+                            </div>
+                            <!-- Gallery Tab -->
+                            <div class="tab-pane fade" id="navs-top-gallery" role="tabpanel">
+                                <div class="mb-4">
+                                    <label class="form-label" for="gallery">Add More Photos</label>
+                                    <input type="file" class="form-control @error('gallery.*') is-invalid @enderror" id="gallery" name="gallery[]" multiple />
+                                    <small class="text-muted">You can select multiple images to add to the gallery.</small>
+                                    @error('gallery.*')<div class="invalid-feedback">{{ $message }}</div>@enderror
+                                </div>
+
+                                @if($partner->gallery && count($partner->gallery) > 0)
+                                <h6 class="mb-3">Existing Gallery</h6>
+                                <div class="row">
+                                    @foreach($partner->gallery as $photo)
+                                    <div class="col-md-3 mb-3">
+                                        <div class="card bg-light">
+                                            <img src="{{ asset('storage/' . $photo) }}" class="card-img-top rounded" alt="Gallery Image" style="height: 150px; object-fit: cover;">
+                                            {{-- To implement photo deletion, we'd need a separate route/form --}}
+                                        </div>
+                                    </div>
+                                    @endforeach
+                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>

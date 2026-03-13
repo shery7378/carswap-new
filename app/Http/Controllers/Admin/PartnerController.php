@@ -43,11 +43,20 @@ class PartnerController extends Controller
             'website' => 'nullable|url|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'boolean',
         ]);
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('partners', 'public');
+        }
+
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = [];
+            foreach ($request->file('gallery') as $file) {
+                $galleryPaths[] = $file->store('partners/gallery', 'public');
+            }
+            $validated['gallery'] = $galleryPaths;
         }
 
         $validated['is_active'] = $request->has('is_active');
@@ -110,6 +119,7 @@ class PartnerController extends Controller
             'website' => 'nullable|url|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'boolean',
         ]);
 
@@ -118,6 +128,14 @@ class PartnerController extends Controller
                 Storage::disk('public')->delete($partner->image);
             }
             $validated['image'] = $request->file('image')->store('partners', 'public');
+        }
+
+        if ($request->hasFile('gallery')) {
+            $galleryPaths = $partner->gallery ?? [];
+            foreach ($request->file('gallery') as $file) {
+                $galleryPaths[] = $file->store('partners/gallery', 'public');
+            }
+            $validated['gallery'] = $galleryPaths;
         }
 
         $validated['is_active'] = $request->has('is_active');

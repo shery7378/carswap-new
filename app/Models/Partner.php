@@ -14,12 +14,18 @@ class Partner extends Model
         'name',
         'slug',
         'image',
+        'gallery',
         'description',
         'address',
         'phone',
         'email',
         'website',
         'is_active',
+    ];
+
+    protected $casts = [
+        'gallery' => 'array',
+        'is_active' => 'boolean',
     ];
 
     protected static function boot()
