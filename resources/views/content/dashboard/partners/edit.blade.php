@@ -84,7 +84,8 @@
 
                                 <div class="mb-3">
                                     <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active" {{ $partner->is_active ? 'checked' : '' }}>
+                                        <input type="hidden" name="is_active" value="0">
+                                        <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" {{ old('is_active', $partner->is_active) ? 'checked' : '' }}>
                                         <label class="form-check-label" for="is_active">Is Active</label>
                                     </div>
                                 </div>

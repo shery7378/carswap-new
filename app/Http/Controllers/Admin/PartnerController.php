@@ -43,20 +43,21 @@ class PartnerController extends Controller
             'website' => 'nullable|url|max:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'is_active' => 'boolean',
+            'gallery' => 'nullable|array',
+            'gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'is_active' => 'nullable',
         ]);
+
 
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('partners', 'public');
         }
-
         if ($request->hasFile('gallery')) {
-            $galleryPaths = [];
+            $paths = [];
             foreach ($request->file('gallery') as $file) {
-                $galleryPaths[] = $file->store('partners/gallery', 'public');
+                $paths[] = $file->store('partners/gallery', 'public');
             }
-            $validated['gallery'] = $galleryPaths;
+            $validated['gallery'] = $paths;
         }
 
         $validated['is_active'] = $request->has('is_active');
@@ -80,8 +81,9 @@ class PartnerController extends Controller
         // Handle Services
         if ($request->has('services')) {
             foreach ($request->services as $serviceData) {
-                if (empty($serviceData['name'])) continue;
-                
+                if (empty($serviceData['name']))
+                    continue;
+
                 PartnerService::create([
                     'partner_id' => $partner->id,
                     'name' => $serviceData['name'],
@@ -120,7 +122,7 @@ class PartnerController extends Controller
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'is_active' => 'boolean',
+            'is_active' => 'nullable',
         ]);
 
         if ($request->hasFile('image')) {
@@ -147,12 +149,12 @@ class PartnerController extends Controller
         if ($request->has('opening_hours')) {
             foreach ($request->opening_hours as $day => $hours) {
                 PartnerOpeningHour::updateOrCreate(
-                    ['partner_id' => $partner->id, 'day' => $day],
-                    [
-                        'open_time' => $hours['open'] ?? null,
-                        'close_time' => $hours['close'] ?? null,
-                        'is_closed' => isset($hours['is_closed']),
-                    ]
+                ['partner_id' => $partner->id, 'day' => $day],
+                [
+                    'open_time' => $hours['open'] ?? null,
+                    'close_time' => $hours['close'] ?? null,
+                    'is_closed' => isset($hours['is_closed']),
+                ]
                 );
             }
         }
@@ -161,20 +163,21 @@ class PartnerController extends Controller
         if ($request->has('services')) {
             $serviceIds = [];
             foreach ($request->services as $serviceData) {
-                if (empty($serviceData['name'])) continue;
-                
+                if (empty($serviceData['name']))
+                    continue;
+
                 $service = PartnerService::updateOrCreate(
-                    ['id' => $serviceData['id'] ?? null, 'partner_id' => $partner->id],
-                    [
-                        'name' => $serviceData['name'],
-                        'description' => $serviceData['description'] ?? null,
-                        'is_active' => isset($serviceData['is_active']),
-                    ]
+                ['id' => $serviceData['id'] ?? null, 'partner_id' => $partner->id],
+                [
+                    'name' => $serviceData['name'],
+                    'description' => $serviceData['description'] ?? null,
+                    'is_active' => isset($serviceData['is_active']),
+                ]
                 );
                 $serviceIds[] = $service->id;
             }
-            // Optional: delete services not in the list
-            // $partner->services()->whereNotIn('id', $serviceIds)->delete();
+        // Optional: delete services not in the list
+        // $partner->services()->whereNotIn('id', $serviceIds)->delete();
         }
 
         return redirect()->route('admin.partners.index')->with('success', 'Partner updated successfully.');
