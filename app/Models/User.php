@@ -52,4 +52,9 @@ class User extends Authenticatable
         'is_email_visible' => 'boolean',
         'is_trader' => 'boolean',
     ];
+
+    public function favorites()
+    {
+        return $this->belongsToMany(Vehicle::class, 'favorites', 'user_id', 'vehicle_id')->withTimestamps();
+    }
 }

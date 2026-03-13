@@ -91,6 +91,8 @@ class AdminVehicleController extends Controller
                 'is_featured' => 'boolean',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'technical_expiration' => 'nullable|date',
+                'history_report' => 'nullable|string|max:500',
             ]);
 
             if ($request->hasFile('main_image')) {
@@ -192,6 +194,8 @@ class AdminVehicleController extends Controller
                 'is_featured' => 'boolean',
                 'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'technical_expiration' => 'nullable|date',
+                'history_report' => 'nullable|string|max:500',
             ]);
 
             if ($request->hasFile('main_image')) {

@@ -48,8 +48,6 @@
                         type="button"><i class="bx bx-image"></i> Images & Videos</button>
                     <button class="nav-link" id="tab-location" data-bs-toggle="pill" data-bs-target="#content-location"
                         type="button"><i class="bx bx-map"></i> Location</button>
-                    <button class="nav-link" id="tab-featured" data-bs-toggle="pill" data-bs-target="#content-featured"
-                        type="button"><i class="bx bx-bookmark-star"></i> Mark as Featured</button>
                     <button class="nav-link" id="tab-details" data-bs-toggle="pill" data-bs-target="#content-details"
                         type="button"><i class="bx bx-list-ul"></i> Other Details</button>
                 </div>
@@ -74,13 +72,6 @@
                     </div>
                 @endif
 
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.vehicles.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="tab-content">
@@ -92,6 +83,15 @@
                                     <label class="form-label">Title</label>
                                     <input type="text" class="form-control" name="title" required
                                         placeholder="AIXAM CROSSLINE">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Sales Method</label>
+                                    <select class="form-select" name="sales_method_id">
+                                        <option value="">Select Sales Method</option>
+                                        @foreach($salesMethods as $method)
+                                            <option value="{{ $method->id }}">{{ $method->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Brand</label>
@@ -107,6 +107,32 @@
                                     <select class="form-select" name="model_id" id="model_select">
                                         <option value="">Select Model</option>
                                     </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Body Type (Design)</label>
+                                    <select class="form-select" name="body_type_id">
+                                        <option value="">Select Body Type</option>
+                                        @foreach($bodyTypes as $body)
+                                            <option value="{{ $body->id }}">{{ $body->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Status</label>
+                                    <select class="form-select" name="vehicle_status_id">
+                                        <option value="">Select Status</option>
+                                        @foreach($vehicleStatuses as $status)
+                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Year</label>
+                                    <input type="number" class="form-control" name="year" placeholder="2023">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mileage (km)</label>
+                                    <input type="number" class="form-control" name="mileage" placeholder="12000">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Fuel Type</label>
@@ -135,41 +161,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Body Type</label>
-                                    <select class="form-select" name="body_type_id">
-                                        <option value="">Select Body Type</option>
-                                        @foreach($bodyTypes as $body)
-                                            <option value="{{ $body->id }}">{{ $body->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Year</label>
-                                    <input type="number" class="form-control" name="year" placeholder="2023">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Mileage (km)</label>
-                                    <input type="number" class="form-control" name="mileage" placeholder="12000">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Exterior Color</label>
-                                    <select class="form-select" name="exterior_color_id">
-                                        <option value="">Select Exterior Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Interior Color</label>
-                                    <select class="form-select" name="interior_color_id">
-                                        <option value="">Select Interior Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
                         </div>
 
@@ -182,33 +173,18 @@
                                     <input type="number" class="form-control" name="price" placeholder="5555">
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <label class="form-label">Currency</label>
+                                    <input type="text" class="form-control" name="currency" placeholder="Ft">
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">Regular Price Label</label>
                                     <input type="text" class="form-control" name="regular_price_label"
                                         placeholder="Enter regular price label">
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Regular Price Description</label>
-                                    <textarea class="form-control" name="regular_price_description" rows="2"
-                                        placeholder="Enter regular price description"></textarea>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Sale Price</label>
                                     <input type="number" class="form-control" name="sale_price"
                                         placeholder="Enter sale price">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sale Price Label</label>
-                                    <input type="text" class="form-control" name="sale_price_label"
-                                        placeholder="Enter sale price label">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Instant Savings Label</label>
-                                    <input type="text" class="form-control" name="instant_savings_label"
-                                        placeholder="Enter instant savings label">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Currency</label>
-                                    <input type="text" class="form-control" name="currency" placeholder="Ft">
                                 </div>
                             </div>
                         </div>
@@ -258,26 +234,6 @@
                                 <label class="form-label">Address</label>
                                 <input type="text" class="form-control" name="address" placeholder="Enter full address">
                             </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Latitude</label>
-                                    <input type="text" class="form-control" name="latitude" placeholder="e.g. 47.4979">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Longitude</label>
-                                    <input type="text" class="form-control" name="longitude" placeholder="e.g. 19.0402">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Featured Section -->
-                        <div class="tab-pane fade" id="content-featured">
-                            <h4 class="mb-4">Mark as Featured</h4>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="is_featured" value="1"
-                                    id="isFeatured">
-                                <label class="form-check-label" for="isFeatured">Featured Vehicle</label>
-                            </div>
                         </div>
 
                         <!-- Other Details -->
@@ -285,22 +241,25 @@
                             <h4 class="mb-4">Other Details</h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Vehicle Status</label>
-                                    <select class="form-select" name="vehicle_status_id">
-                                        <option value="">Select Status</option>
-                                        @foreach($vehicleStatuses as $status)
-                                            <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    <label class="form-label">Technical Expiration Date</label>
+                                    <input type="date" class="form-control" name="technical_expiration">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle History Report</label>
+                                    <input type="text" class="form-control" name="history_report" placeholder="Enter history details">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Document Type</label>
+                                    <select class="form-select" name="document_type_id">
+                                        <option value="">Select Document Type</option>
+                                        @foreach($documentTypes as $doc)
+                                            <option value="{{ $doc->id }}">{{ $doc->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sales Method</label>
-                                    <select class="form-select" name="sales_method_id">
-                                        <option value="">Select Sales Method</option>
-                                        @foreach($salesMethods as $method)
-                                            <option value="{{ $method->id }}">{{ $method->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Chassis Number (VIN)</label>
+                                    <input type="text" class="form-control" name="vin_number">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Cylinder Capacity</label>
@@ -308,27 +267,39 @@
                                         placeholder="e.g. 1598 cm3">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Performance</label>
+                                    <label class="form-label">Performance (Power)</label>
                                     <input type="text" class="form-control" name="performance" placeholder="e.g. 110 kW">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">VIN Number</label>
-                                    <input type="text" class="form-control" name="vin_number">
+                                    <label class="form-label">Engine Number</label>
+                                    <input type="text" class="form-control" name="engine_number">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                     <label class="form-label">Engine Number</label>
-                                     <input type="text" class="form-control" name="engine_number">
-                                 </div>
-                                 <div class="col-md-6 mb-3">
-                                     <label class="form-label">Document Type</label>
-                                     <select class="form-select" name="document_type_id">
-                                         <option value="">Select Document Type</option>
-                                         @foreach($documentTypes as $doc)
-                                             <option value="{{ $doc->id }}">{{ $doc->name }}</option>
-                                         @endforeach
-                                     </select>
-                                 </div>
-                                 <div class="col-12 mb-3">
+                                    <label class="form-label">Exterior Color</label>
+                                    <select class="form-select" name="exterior_color_id">
+                                        <option value="">Select Color</option>
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Interior Color</label>
+                                    <select class="form-select" name="interior_color_id">
+                                        <option value="">Select Color</option>
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" name="is_featured" value="1"
+                                            id="isFeatured">
+                                        <label class="form-check-label" for="isFeatured">Mark as Featured</label>
+                                    </div>
+                                </div>
+                                <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control" name="description" rows="4"></textarea>
                                 </div>

@@ -48,8 +48,6 @@
                             class="bx bx-image"></i> Images & Videos</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#content-location" type="button"><i
                             class="bx bx-map"></i> Location</button>
-                    <button class="nav-link" data-bs-toggle="pill" data-bs-target="#content-featured" type="button"><i
-                            class="bx bx-bookmark-star"></i> Mark as Featured</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#content-details" type="button"><i
                             class="bx bx-list-ul"></i> Other Details</button>
                 </div>
@@ -74,13 +72,6 @@
                     </div>
                 @endif
 
-                @if (session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                @endif
-
                 <form action="{{ route('admin.vehicles.update', $vehicle->id) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
@@ -92,8 +83,17 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Title</label>
-                                    <input type="text" class="form-control" name="title" value="{{ $vehicle->title }}"
+                                    <input type="text" class="form-control" name="title" value="{{ old('title', $vehicle->title) }}"
                                         required>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Sales Method</label>
+                                    <select class="form-select" name="sales_method_id">
+                                        <option value="">Select Sales Method</option>
+                                        @foreach($salesMethods as $method)
+                                            <option value="{{ $method->id }}" {{ $vehicle->sales_method_id == $method->id ? 'selected' : '' }}>{{ $method->name }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Brand</label>
@@ -112,6 +112,33 @@
                                             <option value="{{ $model->id }}" {{ $vehicle->model_id == $model->id ? 'selected' : '' }}>{{ $model->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Body Type (Design)</label>
+                                    <select class="form-select" name="body_type_id">
+                                        <option value="">Select Body Type</option>
+                                        @foreach($bodyTypes as $body)
+                                            <option value="{{ $body->id }}" {{ $vehicle->body_type_id == $body->id ? 'selected' : '' }}>{{ $body->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Vehicle Status</label>
+                                    <select class="form-select" name="vehicle_status_id">
+                                        <option value="">Select Status</option>
+                                        @foreach($vehicleStatuses as $status)
+                                            <option value="{{ $status->id }}" {{ $vehicle->vehicle_status_id == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Year</label>
+                                    <input type="number" class="form-control" name="year" value="{{ old('year', $vehicle->year) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Mileage (km)</label>
+                                    <input type="number" class="form-control" name="mileage"
+                                        value="{{ old('mileage', $vehicle->mileage) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Fuel Type</label>
@@ -140,42 +167,6 @@
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Body Type (Design)</label>
-                                    <select class="form-select" name="body_type_id">
-                                        <option value="">Select Body Type</option>
-                                        @foreach($bodyTypes as $body)
-                                            <option value="{{ $body->id }}" {{ $vehicle->body_type_id == $body->id ? 'selected' : '' }}>{{ $body->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Year</label>
-                                    <input type="number" class="form-control" name="year" value="{{ $vehicle->year }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Mileage (km)</label>
-                                    <input type="number" class="form-control" name="mileage"
-                                        value="{{ $vehicle->mileage }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Exterior Color</label>
-                                    <select class="form-select" name="exterior_color_id">
-                                        <option value="">Select Exterior Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}" {{ $vehicle->exterior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Interior Color</label>
-                                    <select class="form-select" name="interior_color_id">
-                                        <option value="">Select Interior Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}" {{ $vehicle->interior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                             </div>
                         </div>
 
@@ -185,37 +176,22 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Regular Price</label>
-                                    <input type="number" class="form-control" name="price" value="{{ $vehicle->price }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Regular Price Label</label>
-                                    <input type="text" class="form-control" name="regular_price_label"
-                                        value="{{ $vehicle->regular_price_label }}">
-                                </div>
-                                <div class="col-12 mb-3">
-                                    <label class="form-label">Regular Price Description</label>
-                                    <textarea class="form-control" name="regular_price_description"
-                                        rows="2">{{ $vehicle->regular_price_description }}</textarea>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sale Price</label>
-                                    <input type="number" class="form-control" name="sale_price"
-                                        value="{{ $vehicle->sale_price }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sale Price Label</label>
-                                    <input type="text" class="form-control" name="sale_price_label"
-                                        value="{{ $vehicle->sale_price_label }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Instant Savings Label</label>
-                                    <input type="text" class="form-control" name="instant_savings_label"
-                                        value="{{ $vehicle->instant_savings_label }}">
+                                    <input type="number" class="form-control" name="price" value="{{ old('price', $vehicle->price) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Currency</label>
                                     <input type="text" class="form-control" name="currency"
-                                        value="{{ $vehicle->currency }}">
+                                        value="{{ old('currency', $vehicle->currency) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Regular Price Label</label>
+                                    <input type="text" class="form-control" name="regular_price_label"
+                                        value="{{ old('regular_price_label', $vehicle->regular_price_label) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Sale Price</label>
+                                    <input type="number" class="form-control" name="sale_price"
+                                        value="{{ old('sale_price', $vehicle->sale_price) }}">
                                 </div>
                             </div>
                         </div>
@@ -245,7 +221,7 @@
                                 @if($vehicle->main_image)
                                     <div class="mb-2">
                                         <img src="{{ asset('storage/' . $vehicle->main_image) }}" alt="Main" width="120"
-                                            class="rounded">
+                                            class="rounded border">
                                     </div>
                                 @endif
                                 <input type="file" class="form-control" name="main_image">
@@ -255,16 +231,14 @@
                                 <label class="form-label">Gallery Images (Upload to add more)</label>
                                 @php
                                     $gallery = $vehicle->gallery_images;
-                                    if (is_string($gallery)) {
-                                        $gallery = json_decode($gallery, true);
-                                    }
+                                    if (is_string($gallery)) $gallery = json_decode($gallery, true);
                                 @endphp
                                 @if($gallery && is_array($gallery))
-                                    <div class="row mb-2">
+                                    <div class="row mb-2 g-2">
                                         @foreach($gallery as $img)
                                             <div class="col-md-3 mb-2">
                                                 <img src="{{ asset('storage/' . $img) }}" alt="Gallery"
-                                                    class="img-fluid rounded border">
+                                                    class="img-fluid rounded border shadow-sm" style="height: 100px; width: 100%; object-fit: cover;">
                                             </div>
                                         @endforeach
                                     </div>
@@ -274,7 +248,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Video URL</label>
-                                <input type="text" class="form-control" name="video_url" value="{{ $vehicle->video_url }}">
+                                <input type="text" class="form-control" name="video_url" value="{{ old('video_url', $vehicle->video_url) }}">
                             </div>
                         </div>
 
@@ -282,30 +256,12 @@
                         <div class="tab-pane fade" id="content-location">
                             <h4 class="mb-4">Location</h4>
                             <div class="mb-3">
+                                <label class="form-label">City/Location</label>
+                                <input type="text" class="form-control" name="location" value="{{ old('location', $vehicle->location) }}">
+                            </div>
+                            <div class="mb-3">
                                 <label class="form-label">Address</label>
-                                <input type="text" class="form-control" name="address" value="{{ $vehicle->address }}">
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Latitude</label>
-                                    <input type="text" class="form-control" name="latitude"
-                                        value="{{ $vehicle->latitude }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Longitude</label>
-                                    <input type="text" class="form-control" name="longitude"
-                                        value="{{ $vehicle->longitude }}">
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Featured Section -->
-                        <div class="tab-pane fade" id="content-featured">
-                            <h4 class="mb-4">Mark as Featured</h4>
-                            <div class="form-check form-switch mb-3">
-                                <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="isFeatured"
-                                    {{ $vehicle->is_featured ? 'checked' : '' }}>
-                                <label class="form-check-label" for="isFeatured">Featured Vehicle</label>
+                                <input type="text" class="form-control" name="address" value="{{ old('address', $vehicle->address) }}">
                             </div>
                         </div>
 
@@ -314,42 +270,12 @@
                             <h4 class="mb-4">Other Details</h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Vehicle Status</label>
-                                    <select class="form-select" name="vehicle_status_id">
-                                        <option value="">Select Status</option>
-                                        @foreach($vehicleStatuses as $status)
-                                            <option value="{{ $status->id }}" {{ $vehicle->vehicle_status_id == $status->id ? 'selected' : '' }}>{{ $status->name }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label">Technical Expiration Date</label>
+                                    <input type="date" class="form-control" name="technical_expiration" value="{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : '' }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sales Method</label>
-                                    <select class="form-select" name="sales_method_id">
-                                        <option value="">Select Sales Method</option>
-                                        @foreach($salesMethods as $method)
-                                            <option value="{{ $method->id }}" {{ $vehicle->sales_method_id == $method->id ? 'selected' : '' }}>{{ $method->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cylinder Capacity</label>
-                                    <input type="text" class="form-control" name="cylinder_capacity"
-                                        value="{{ $vehicle->cylinder_capacity }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Performance</label>
-                                    <input type="text" class="form-control" name="performance"
-                                        value="{{ $vehicle->performance }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">VIN Number</label>
-                                    <input type="text" class="form-control" name="vin_number"
-                                        value="{{ $vehicle->vin_number }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label class="form-label">Engine Number</label>
-                                    <input type="text" class="form-control" name="engine_number"
-                                        value="{{ $vehicle->engine_number }}">
+                                    <label class="form-label">Vehicle History Report</label>
+                                    <input type="text" class="form-control" name="history_report" value="{{ old('history_report', $vehicle->history_report) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Document Type</label>
@@ -360,10 +286,55 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Chassis Number (VIN)</label>
+                                    <input type="text" class="form-control" name="vin_number"
+                                        value="{{ old('vin_number', $vehicle->vin_number) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Cylinder Capacity</label>
+                                    <input type="text" class="form-control" name="cylinder_capacity"
+                                        value="{{ old('cylinder_capacity', $vehicle->cylinder_capacity) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Performance (Power)</label>
+                                    <input type="text" class="form-control" name="performance"
+                                        value="{{ old('performance', $vehicle->performance) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Engine Number</label>
+                                    <input type="text" class="form-control" name="engine_number"
+                                        value="{{ old('engine_number', $vehicle->engine_number) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Exterior Color</label>
+                                    <select class="form-select" name="exterior_color_id">
+                                        <option value="">Select Color</option>
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}" {{ $vehicle->exterior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Interior Color</label>
+                                    <select class="form-select" name="interior_color_id">
+                                        <option value="">Select Color</option>
+                                        @foreach($colors as $color)
+                                            <option value="{{ $color->id }}" {{ $vehicle->interior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-check form-switch mt-2">
+                                        <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="isFeatured"
+                                            {{ $vehicle->is_featured ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="isFeatured">Mark as Featured</label>
+                                    </div>
+                                </div>
                                 <div class="col-12 mb-3">
                                     <label class="form-label">Description</label>
                                     <textarea class="form-control" name="description"
-                                        rows="4">{{ $vehicle->description }}</textarea>
+                                        rows="4">{{ old('description', $vehicle->description) }}</textarea>
                                 </div>
                             </div>
                         </div>
@@ -379,45 +350,31 @@
     </div>
 
     <script>
-            document.addEventListener('DOMContentLoaded', fu nctio               n () {
-                const brandSelect = document.getElementById('brand_select');
-                const modelSelect = document.getElementById('model_select');
+        document.addEventListener('DOMContentLoaded', function () {
+            const brandSelect = document.getElementById('brand_select');
+            const modelSelect = document.getElementById('model_select');
 
-                if (!brandSelect || !modelSelect) {
-                    console.error('Selects not found');
+            brandSelect.addEventListener('change', function () {
+                const brandId = this.value;
+                if (!brandId) {
+                    modelSelect.innerHTML = '<option value="">Select Model</option>';
                     return;
                 }
-
-                brandSelect.addEventListener('change', function () {
-                    const brandId = this.value;
-
-                    if (!brandId) {
+                modelSelect.innerHTML = '<option value="">Loading...</option>';
+                fetch(`/api/brands/${brandId}/models`)
+                    .then(response => response.json())
+                    .then(data => {
                         modelSelect.innerHTML = '<option value="">Select Model</option>';
-                        return;
-                    }
-
-                    modelSelect.innerHTML = '<option value="">Loading...</option>';
-
-                    fetch(`/api/brands/${brandId}/models`)
-                        .then(response => response.json())
-                        .then(data => {
-                            modelSelect.innerHTML = '<option value="">Select Model</option>';
-                            if (data && Array.isArray(data) && data.length > 0) {
-                                data.forEach(model => {
-                                    const option = document.createElement('option');
-                                    option.value = model.id;
-                                    option.textContent = model.name;
-                                    modelSelect.appendChild(option);
-                                });
-                            } else {
-                                modelSelect.innerHTML = '<option value="">No models found</option>';
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error loading models:', error);
-                            modelSelect.innerHTML = '<option value="">Error loading models</option>';
-                        });
-                });
+                        if (data && Array.isArray(data) && data.length > 0) {
+                            data.forEach(model => {
+                                const option = document.createElement('option');
+                                option.value = model.id;
+                                option.textContent = model.name;
+                                modelSelect.appendChild(option);
+                            });
+                        }
+                    });
             });
-        </script>
+        });
+    </script>
 @endsection

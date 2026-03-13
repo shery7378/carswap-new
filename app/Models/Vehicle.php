@@ -50,7 +50,7 @@ class Vehicle extends Model
         'owner_type',
     ];
 
-    protected $appends = ['main_image_url', 'gallery_image_urls'];
+    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited'];
 
     protected $casts = [
         'gallery_images'       => 'json',
@@ -62,6 +62,16 @@ class Vehicle extends Model
     // -------------------------------------------------------------------------
     // Accessors – return full public URLs for stored images
     // -------------------------------------------------------------------------
+    public function getIsFavoritedAttribute(): bool
+    {
+        $user = auth('sanctum')->user();
+        if (!$user) {
+            return false;
+        }
+
+        return $this->favoritedBy()->where('user_id', $user->id)->exists();
+    }
+
     public function getMainImageUrlAttribute(): ?string
     {
         return $this->main_image
@@ -143,5 +153,10 @@ class Vehicle extends Model
     public function properties()
     {
         return $this->belongsToMany(Property::class);
+    }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'favorites', 'vehicle_id', 'user_id')->withTimestamps();
     }
 }

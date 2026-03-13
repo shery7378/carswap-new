@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\VehicleController;
 use App\Http\Controllers\Api\VehicleOptionController;
 use App\Http\Controllers\Api\UserAdController;
+use App\Http\Controllers\Api\FavoriteController;
 use App\Http\Controllers\Api\Admin\AdminVehicleController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UserController;
@@ -75,6 +76,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/ads/{id}', [UserAdController::class , 'update']);
     Route::delete('/ads/{id}', [UserAdController::class , 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);
+
+    // Favorite Routes
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class, 'toggle']);
 });
 
 
