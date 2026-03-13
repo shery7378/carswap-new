@@ -25,6 +25,23 @@
       ]
     },
     {
+      "name": "Partners",
+      "icon": "menu-icon icon-base bx bx-group",
+      "slug": "admin-partners",
+      "submenu": [
+        {
+          "url": "app/partners",
+          "name": "Partner List",
+          "slug": "admin-partners-index"
+        },
+        {
+          "url": "app/partners/create",
+          "name": "Add Partner",
+          "slug": "admin-partners-create"
+        }
+      ]
+    },
+    {
       "name": "Car Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "admin-vehicle-settings",

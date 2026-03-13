@@ -58,6 +58,7 @@ use App\Http\Controllers\Controller;
 use APP\Http\Controllers\users\User_Controller;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
+use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 
 // Main Page \Illuminate\Support\Facades\Route
 
@@ -159,6 +160,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update');
     Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy');
     Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
+
+    // partners
+    Route::resource('/app/partners', AdminPartnerController::class)->names('admin.partners');
 
     // settings
     Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');
