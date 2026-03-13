@@ -21,11 +21,13 @@ class Partner extends Model
         'email',
         'website',
         'is_active',
+        'show_opening_hours',
     ];
 
     protected $casts = [
         'gallery' => 'array',
         'is_active' => 'boolean',
+        'show_opening_hours' => 'boolean',
     ];
 
     protected static function boot()

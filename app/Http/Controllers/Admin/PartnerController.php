@@ -46,6 +46,7 @@ class PartnerController extends Controller
             'gallery' => 'nullable|array',
             'gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'nullable',
+            'show_opening_hours' => 'nullable',
         ]);
 
 
@@ -61,6 +62,7 @@ class PartnerController extends Controller
         }
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['show_opening_hours'] = $request->has('show_opening_hours');
         $validated['slug'] = Str::slug($request->name);
 
         $partner = Partner::create($validated);
@@ -123,6 +125,7 @@ class PartnerController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'nullable',
+            'show_opening_hours' => 'nullable',
         ]);
 
         if ($request->hasFile('image')) {
@@ -141,6 +144,7 @@ class PartnerController extends Controller
         }
 
         $validated['is_active'] = $request->has('is_active');
+        $validated['show_opening_hours'] = $request->has('show_opening_hours');
         $validated['slug'] = Str::slug($request->name);
 
         $partner->update($validated);
