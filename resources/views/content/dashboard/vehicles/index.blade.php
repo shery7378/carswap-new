@@ -24,6 +24,7 @@
                                 <tr>
                                     <th>Thumbnail</th>
                                     <th>Vehicle</th>
+                                    <th>User</th>
                                     <th>Year</th>
                                     <th>Price</th>
                                     <th>Details</th>
@@ -46,6 +47,13 @@
                                             <strong>{{ $vehicle->title }}</strong><br>
                                             <small class="text-muted">{{ optional($vehicle->brand)->name }}
                                                 {{ optional($vehicle->model)->name }}</small>
+                                        </td>
+                                        <td>
+                                            @if($vehicle->user)
+                                                {{ $vehicle->user->first_name }} {{ $vehicle->user->last_name }}
+                                            @else
+                                                <span class="text-muted">N/A</span>
+                                            @endif
                                         </td>
                                         <td>{{ $vehicle->year }}</td>
                                         <td>{{ number_format($vehicle->price, 0, ',', ' ') }} Ft</td>
@@ -86,7 +94,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center">No vehicles found.</td>
+                                        <td colspan="8" class="text-center">No vehicles found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

@@ -22,7 +22,7 @@ class AdminVehicleController extends Controller
 {
     public function index()
     {
-        $vehicles = Vehicle::with(['brand', 'model', 'fuelType', 'transmission'])->orderBy('id', 'desc')->paginate(10);
+        $vehicles = Vehicle::with(['brand', 'model', 'fuelType', 'transmission', 'user'])->orderBy('id', 'desc')->paginate(10);
         return view('content.dashboard.vehicles.index', compact('vehicles'));
     }
 
