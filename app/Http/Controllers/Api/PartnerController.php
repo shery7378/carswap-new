@@ -45,12 +45,14 @@ class PartnerController extends Controller
         }
 
         // 4. Location / Distance Filter
-        if ($request->has('lat') && $request->has('lng') && $request->has('radius')) {
+        $hasLocation = $request->has('lat') && $request->has('lng') && $request->has('radius');
+        $haversine = "";
+
+        if ($hasLocation) {
             $lat = (float) $request->lat;
             $lng = (float) $request->lng;
             $radius = (float) $request->radius;
 
-            // Haversine formula for distance in kilometers
             $haversine = "(6371 * acos(cos(radians($lat)) 
                          * cos(radians(latitude)) 
                          * cos(radians(longitude) - radians($lng)) 
@@ -60,10 +62,49 @@ class PartnerController extends Controller
             $query->whereNotNull('latitude')
                   ->whereNotNull('longitude')
                   ->selectRaw("partners.*, {$haversine} AS distance")
-                  ->whereRaw("{$haversine} <= ?", [$radius])
-                  ->orderBy('distance', 'asc');
+                  ->whereRaw("{$haversine} <= ?", [$radius]);
         } else {
-            $query->select('partners.*')->orderBy('id', 'desc');
+            $query->select('partners.*');
+        }
+
+        // 5. Sorting Logic
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'top_rated':
+                    $query->withAvg(['reviews' => function($q) { $q->where('is_approved', true); }], 'rating')
+                          ->orderBy('reviews_avg_rating', 'desc');
+                    break;
+                case 'most_rated':
+                    $query->withCount(['reviews' => function($q) { $q->where('is_approved', true); }])
+                          ->orderBy('reviews_count', 'desc');
+                    break;
+                case 'latest':
+                    $query->orderBy('created_at', 'desc');
+                    break;
+                case 'oldest':
+                    $query->orderBy('created_at', 'asc');
+                    break;
+                case 'az':
+                    $query->orderBy('name', 'asc');
+                    break;
+                case 'za':
+                    $query->orderBy('name', 'desc');
+                    break;
+                default:
+                    if ($hasLocation) {
+                        $query->orderBy('distance', 'asc');
+                    } else {
+                        $query->orderBy('id', 'desc');
+                    }
+                    break;
+            }
+        } else {
+            // Default sorting
+            if ($hasLocation) {
+                $query->orderBy('distance', 'asc');
+            } else {
+                $query->orderBy('id', 'desc');
+            }
         }
 
         $partners = $query->with(['services' => function($q) {
