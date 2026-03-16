@@ -16,8 +16,8 @@ class PartnerController extends Controller
     {
         $query = Partner::query()->where('is_active', true);
 
-        // Optional: filter by search term
-        if ($request->has('search')) {
+        // 1. Search Filter
+        if ($request->has('search') && $request->search) {
             $search = $request->search;
             $query->where(function($q) use ($search) {
                 $q->where('name', 'LIKE', "%{$search}%")
@@ -26,13 +26,62 @@ class PartnerController extends Controller
             });
         }
 
+        // 2. Services Filter (array of service names)
+        if ($request->has('services') && is_array($request->services) && count($request->services) > 0) {
+            $services = $request->services;
+            $query->whereHas('services', function($q) use ($services) {
+                $q->whereIn('name', $services)->where('is_active', true);
+            });
+        }
+
+        // 3. Opening Hours Filter (array of days, e.g., ['Monday', 'Tuesday'])
+        if ($request->has('days') && is_array($request->days) && count($request->days) > 0) {
+            $days = $request->days;
+            foreach ($days as $day) {
+                $query->whereHas('openingHours', function($q) use ($day) {
+                    $q->where('day', $day)->where('is_closed', false);
+                });
+            }
+        }
+
+        // 4. Location / Distance Filter
+        if ($request->has('lat') && $request->has('lng') && $request->has('radius')) {
+            $lat = (float) $request->lat;
+            $lng = (float) $request->lng;
+            $radius = (float) $request->radius;
+
+            // Haversine formula for distance in kilometers
+            $haversine = "(6371 * acos(cos(radians($lat)) 
+                         * cos(radians(latitude)) 
+                         * cos(radians(longitude) - radians($lng)) 
+                         + sin(radians($lat)) 
+                         * sin(radians(latitude))))";
+
+            $query->whereNotNull('latitude')
+                  ->whereNotNull('longitude')
+                  ->selectRaw("partners.*, {$haversine} AS distance")
+                  ->whereRaw("{$haversine} <= ?", [$radius])
+                  ->orderBy('distance', 'asc');
+        } else {
+            $query->select('partners.*')->orderBy('id', 'desc');
+        }
+
         $partners = $query->with(['services' => function($q) {
             $q->where('is_active', true);
-        }])->orderBy('id', 'desc')->get();
+        }])->get();
 
+        // 5. Append Ratings
         $partners->each(function($partner) {
             $partner->append('average_rating');
         });
+
+        // 6. Rating Filter (Filtering the collection after appending the dynamic attribute)
+        if ($request->has('min_rating') && $request->min_rating) {
+            $minRating = (float) $request->min_rating;
+            $partners = $partners->filter(function($partner) use ($minRating) {
+                return $partner->average_rating >= $minRating;
+            })->values(); // Reset array keys
+        }
 
         return response()->json([
             'success' => true,
