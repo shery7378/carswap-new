@@ -161,23 +161,25 @@ class PartnerController extends Controller
     public function storeReview(Request $request, $partnerId)
     {
         $validated = $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
+            'rating' => 'nullable|integer|min:1|max:5',
             'title' => 'nullable|string|max:255',
             'body' => 'required|string',
             'reviewer_name' => 'required|string|max:255',
             'reviewer_email' => 'required|email|max:255',
+            'is_genuine' => 'required|boolean',
         ]);
 
         $partner = Partner::findOrFail($partnerId);
 
         $review = PartnerReview::create([
             'partner_id' => $partner->id,
-            'rating' => $validated['rating'],
+            'rating' => $validated['rating'] ?? 5, // Default to 5 if not provided
             'title' => $validated['title'],
             'body' => $validated['body'],
             'reviewer_name' => $validated['reviewer_name'],
             'reviewer_email' => $validated['reviewer_email'],
-            'is_approved' => true, // Auto-approve for simplicity
+            'is_genuine' => $validated['is_genuine'],
+            'is_approved' => true,
         ]);
 
         return response()->json([

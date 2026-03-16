@@ -16,7 +16,13 @@ class PartnerReview extends Model
         'body',
         'reviewer_name',
         'reviewer_email',
+        'is_genuine',
         'is_approved',
+    ];
+
+    protected $casts = [
+        'is_genuine' => 'boolean',
+        'is_approved' => 'boolean',
     ];
 
     public function partner()
