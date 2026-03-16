@@ -12,6 +12,8 @@ use App\Http\Controllers\Api\Admin\AdminVehicleController;
 use App\Http\Controllers\Api\Admin\RoleController;
 use App\Http\Controllers\Api\Admin\UserController;
 use App\Http\Controllers\Api\PartnerController as ApiPartnerController;
+use App\Http\Controllers\Api\VehicleInquiryController;
+use App\Http\Controllers\Api\CompareController;
 
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "api" middleware group. Make something great! | */
 
@@ -57,6 +59,7 @@ Route::get('/brands/{brandId}/models', [VehicleOptionController::class , 'getMod
 // These routes use UserAdController and are open to all visitors.
 Route::get('/ads', [UserAdController::class , 'index']);
 Route::get('/ads/{id}', [UserAdController::class , 'show']);
+Route::get('/compare', [CompareController::class, 'compare']);
 
 // Public Partner API Routes
 Route::get('/partners', [ApiPartnerController::class , 'index']);
