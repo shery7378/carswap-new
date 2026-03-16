@@ -16,13 +16,12 @@ class PartnerController extends Controller
     {
         $query = Partner::query()->where('is_active', true);
 
-        // 1. Search Filter
-        if ($request->has('search') && $request->search) {
-            $search = $request->search;
-            $query->where(function($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhere('description', 'LIKE', "%{$search}%")
-                  ->orWhere('address', 'LIKE', "%{$search}%");
+        if ($request->filled('search')) {
+            $search = "%{$request->search}%";
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', $search)
+                  ->orWhere('description', 'LIKE', $search)
+                  ->orWhere('address', 'LIKE', $search);
             });
         }
 
@@ -151,7 +150,11 @@ class PartnerController extends Controller
 
         return response()->json([
             'success' => true,
-            'data' => $partner
+            'data' => $partner,
+            'meta' => [
+                'reviews_count' => $partner->reviews_count,
+                'average_rating' => $partner->average_rating
+            ]
         ]);
     }
 
@@ -236,9 +239,7 @@ class PartnerController extends Controller
             ->groupBy('day')
             ->get();
 
-        // 3. Ratings Counts (only for filtered partners)
-        $partners = Partner::whereIn('id', $partnerIds)->get();
-        
+        // 3. Ratings Counts (Efficiently using a subquery)
         $ratings = [
             '5' => 0,
             '4' => 0,
@@ -247,13 +248,17 @@ class PartnerController extends Controller
             '1' => 0,
         ];
 
-        foreach ($partners as $partner) {
-            $avg = $partner->average_rating;
-            if ($avg >= 5) $ratings['5']++;
-            if ($avg >= 4) $ratings['4']++;
-            if ($avg >= 3) $ratings['3']++;
-            if ($avg >= 2) $ratings['2']++;
-            if ($avg >= 1) $ratings['1']++;
+        $partnersWithAvg = Partner::whereIn('id', $partnerIds)
+            ->withAvg(['reviews' => function($q) { $q->where('is_approved', true); }], 'rating')
+            ->get();
+        
+        foreach ($partnersWithAvg as $partner) {
+            $avg = (float) ($partner->reviews_avg_rating ?? 0);
+            if ($avg >= 4.5) $ratings['5']++;
+            if ($avg >= 3.5) $ratings['4']++;
+            if ($avg >= 2.5) $ratings['3']++;
+            if ($avg >= 1.5) $ratings['2']++;
+            if ($avg >= 0.5) $ratings['1']++;
         }
 
         return response()->json([

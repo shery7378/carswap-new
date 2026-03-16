@@ -32,6 +32,8 @@ class Partner extends Model
         'show_opening_hours' => 'boolean',
     ];
 
+    protected $appends = ['average_rating', 'reviews_count'];
+
     protected static function boot()
     {
         parent::boot();
@@ -59,6 +61,19 @@ class Partner extends Model
 
     public function getAverageRatingAttribute()
     {
-        return round($this->reviews()->where('is_approved', true)->avg('rating'), 1) ?: 0;
+        if ($this->relationLoaded('reviews')) {
+            $avg = $this->reviews->where('is_approved', true)->avg('rating');
+        } else {
+            $avg = $this->reviews()->where('is_approved', true)->avg('rating');
+        }
+        return round((float)($avg ?: 0), 1);
+    }
+
+    public function getReviewsCountAttribute()
+    {
+        if ($this->relationLoaded('reviews')) {
+            return $this->reviews->where('is_approved', true)->count();
+        }
+        return $this->reviews()->where('is_approved', true)->count();
     }
 }
