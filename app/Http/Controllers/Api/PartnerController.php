@@ -145,4 +145,48 @@ class PartnerController extends Controller
             'data' => $review
         ]);
     }
+    public function getFiltersData()
+    {
+        // 1. Services Counts
+        $services = \App\Models\PartnerService::where('is_active', true)
+            ->select('name', \DB::raw('count(DISTINCT partner_id) as count'))
+            ->groupBy('name')
+            ->get();
+
+        // 2. Opening Hours Counts (Days)
+        $days = \App\Models\PartnerOpeningHour::where('is_closed', false)
+            ->select('day', \DB::raw('count(DISTINCT partner_id) as count'))
+            ->groupBy('day')
+            ->get();
+
+        // 3. Ratings Counts
+        // Fetch active partners with their reviews to calculate average ratings for filter buckets
+        $partners = Partner::where('is_active', true)->get();
+        
+        $ratings = [
+            '5' => 0,
+            '4' => 0,
+            '3' => 0,
+            '2' => 0,
+            '1' => 0,
+        ];
+
+        foreach ($partners as $partner) {
+            $avg = $partner->average_rating;
+            if ($avg >= 5) $ratings['5']++;
+            if ($avg >= 4) $ratings['4']++;
+            if ($avg >= 3) $ratings['3']++;
+            if ($avg >= 2) $ratings['2']++;
+            if ($avg >= 1) $ratings['1']++;
+        }
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'services' => $services,
+                'days' => $days,
+                'ratings' => $ratings
+            ]
+        ]);
+    }
 }

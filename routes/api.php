@@ -60,6 +60,7 @@ Route::get('/ads/{id}', [UserAdController::class , 'show']);
 
 // Public Partner API Routes
 Route::get('/partners', [ApiPartnerController::class , 'index']);
+Route::get('/partners/filters', [ApiPartnerController::class , 'getFiltersData']);
 Route::get('/partners/{idOrSlug}', [ApiPartnerController::class , 'show']);
 Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class , 'storeReview']);
 
