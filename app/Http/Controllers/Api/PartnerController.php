@@ -145,23 +145,56 @@ class PartnerController extends Controller
             'data' => $review
         ]);
     }
-    public function getFiltersData()
+    public function getFiltersData(Request $request)
     {
-        // 1. Services Counts
-        $services = \App\Models\PartnerService::where('is_active', true)
+        $query = Partner::query()->where('is_active', true);
+
+        // Apply Search Filter if present
+        if ($request->has('search') && $request->search) {
+            $search = $request->search;
+            $query->where(function($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhere('description', 'LIKE', "%{$search}%")
+                  ->orWhere('address', 'LIKE', "%{$search}%");
+            });
+        }
+
+        // Apply Location / Distance Filter if present
+        if ($request->has('lat') && $request->has('lng') && $request->has('radius')) {
+            $lat = (float) $request->lat;
+            $lng = (float) $request->lng;
+            $radius = (float) $request->radius;
+
+            $haversine = "(6371 * acos(cos(radians($lat)) 
+                         * cos(radians(latitude)) 
+                         * cos(radians(longitude) - radians($lng)) 
+                         + sin(radians($lat)) 
+                         * sin(radians(latitude))))";
+
+            $query->whereNotNull('latitude')
+                  ->whereNotNull('longitude')
+                  ->whereRaw("{$haversine} <= ?", [$radius]);
+        }
+
+        // Get the IDs of the partners that match the current context (search + location)
+        $partnerIds = $query->pluck('id');
+
+        // 1. Services Counts (only for filtered partners)
+        $services = \App\Models\PartnerService::whereIn('partner_id', $partnerIds)
+            ->where('is_active', true)
             ->select('name', \DB::raw('count(DISTINCT partner_id) as count'))
             ->groupBy('name')
             ->get();
 
-        // 2. Opening Hours Counts (Days)
-        $days = \App\Models\PartnerOpeningHour::where('is_closed', false)
+        // 2. Opening Hours Counts (Days) (only for filtered partners)
+        $days = \App\Models\PartnerOpeningHour::whereIn('partner_id', $partnerIds)
+            ->where('is_closed', false)
             ->select('day', \DB::raw('count(DISTINCT partner_id) as count'))
             ->groupBy('day')
             ->get();
 
-        // 3. Ratings Counts
-        // Fetch active partners with their reviews to calculate average ratings for filter buckets
-        $partners = Partner::where('is_active', true)->get();
+        // 3. Ratings Counts (only for filtered partners)
+        $partners = Partner::whereIn('id', $partnerIds)->get();
         
         $ratings = [
             '5' => 0,
