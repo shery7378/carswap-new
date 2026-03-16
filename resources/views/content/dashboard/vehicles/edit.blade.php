@@ -257,11 +257,18 @@
                             <h4 class="mb-4">Location</h4>
                             <div class="mb-3">
                                 <label class="form-label">City/Location</label>
-                                <input type="text" class="form-control" name="location" value="{{ old('location', $vehicle->location) }}">
+                                <input type="text" class="form-control" name="location" id="location" value="{{ old('location', $vehicle->location) }}">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Address</label>
-                                <input type="text" class="form-control" name="address" value="{{ old('address', $vehicle->address) }}">
+                                <div class="input-group">
+                                    <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
+                                    <input type="text" class="form-control" name="address" id="address" value="{{ old('address', $vehicle->address) }}" placeholder="Search for address..." required>
+                                </div>
+                                <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $vehicle->latitude) }}">
+                                <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $vehicle->longitude) }}">
+                                <div id="map" class="mt-2 rounded border" style="width: 100%; height: 300px; {{ $vehicle->latitude ? '' : 'display: none;' }}"></div>
+                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Search an address to update the location on the map.</small>
                             </div>
                         </div>
 
@@ -373,8 +380,92 @@
                                 modelSelect.appendChild(option);
                             });
                         }
-                    });
-            });
+                });
         });
-    </script>
+    });
+
+    // Google Maps & Places Autocomplete Logic
+    function initAutocomplete() {
+        const addressInput = document.getElementById('address');
+        const locationInput = document.getElementById('location');
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+        const mapDiv = document.getElementById('map');
+
+        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+            fields: ["geometry", "formatted_address", "address_components"],
+        });
+
+        let map = null;
+        let marker = null;
+
+        // Function to create/update map and marker
+        function updateMap(lat, lng) {
+            mapDiv.style.display = 'block';
+            const position = { lat: lat, lng: lng };
+            
+            if (!map) {
+                map = new google.maps.Map(mapDiv, {
+                    center: position,
+                    zoom: 15,
+                    mapTypeControl: false,
+                    streetViewControl: false,
+                });
+                marker = new google.maps.Marker({
+                    map: map,
+                    position: position,
+                    draggable: true
+                });
+
+                marker.addListener('dragend', function() {
+                    const newPos = marker.getPosition();
+                    latInput.value = newPos.lat();
+                    lngInput.value = newPos.lng();
+                });
+            } else {
+                map.setCenter(position);
+                marker.setPosition(position);
+            }
+        }
+
+        autocomplete.addListener('place_changed', function() {
+            const place = autocomplete.getPlace();
+
+            if (!place.geometry) {
+                console.log("No details available for input: '" + place.name + "'");
+                return;
+            }
+
+            const lat = place.geometry.location.lat();
+            const lng = place.geometry.location.lng();
+
+            // Set inputs
+            addressInput.value = place.formatted_address;
+            latInput.value = lat;
+            lngInput.value = lng;
+
+            // Try to extract city from address components if location is empty
+            if (place.address_components) {
+                for (const component of place.address_components) {
+                    if (component.types.includes('locality')) {
+                        locationInput.value = component.long_name;
+                        break;
+                    }
+                }
+            }
+
+            updateMap(lat, lng);
+        });
+
+        // Handle initial map load for existing data
+        if (latInput.value && lngInput.value) {
+            const initialLat = parseFloat(latInput.value);
+            const initialLng = parseFloat(lngInput.value);
+            if (!isNaN(initialLat) && !isNaN(initialLng)) {
+                updateMap(initialLat, initialLng);
+            }
+        }
+    }
+</script>
+<script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initAutocomplete"></script>
 @endsection
