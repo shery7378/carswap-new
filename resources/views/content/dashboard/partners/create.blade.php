@@ -380,5 +380,5 @@ function initAutocomplete() {
     }
 }
 </script>
-<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXwMTcZEQcOu5-CzCGpuvcVmPku2GWghQ&libraries=places&callback=initAutocomplete"></script>
+<script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initAutocomplete"></script>
 @endsection
