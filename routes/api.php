@@ -59,9 +59,9 @@ Route::get('/ads', [UserAdController::class , 'index']);
 Route::get('/ads/{id}', [UserAdController::class , 'show']);
 
 // Public Partner API Routes
-Route::get('/partners', [ApiPartnerController::class, 'index']);
-Route::get('/partners/{idOrSlug}', [ApiPartnerController::class, 'show']);
-Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class, 'storeReview']);
+Route::get('/partners', [ApiPartnerController::class , 'index']);
+Route::get('/partners/{idOrSlug}', [ApiPartnerController::class , 'show']);
+Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class , 'storeReview']);
 
 // Legacy vehicle routes (kept for backwards compatibility)
 Route::get('/vehicles', [VehicleController::class , 'index']);
@@ -78,8 +78,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);
 
     // Favorite Routes
-    Route::get('/favorites', [FavoriteController::class, 'index']);
-    Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class, 'toggle']);
+    Route::get('/favorites', [FavoriteController::class , 'index']);
+    Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class , 'toggle']);
 });
 
 
@@ -112,4 +112,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
             Route::put('/users/{id}', [UserController::class , 'update']);
             Route::delete('/users/{id}', [UserController::class , 'destroy']);
         }
-        );    });
+        );
+    });

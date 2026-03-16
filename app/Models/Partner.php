@@ -22,6 +22,8 @@ class Partner extends Model
         'website',
         'is_active',
         'show_opening_hours',
+        'latitude',
+        'longitude',
     ];
 
     protected $casts = [

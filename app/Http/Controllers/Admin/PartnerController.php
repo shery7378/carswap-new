@@ -47,6 +47,8 @@ class PartnerController extends Controller
             'gallery.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'nullable',
             'show_opening_hours' => 'nullable',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
 
@@ -126,6 +128,8 @@ class PartnerController extends Controller
             'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'is_active' => 'nullable',
             'show_opening_hours' => 'nullable',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
         ]);
 
         if ($request->hasFile('image')) {

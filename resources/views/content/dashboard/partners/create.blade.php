@@ -95,7 +95,10 @@
                                     <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
                                     <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" placeholder="Search for address or enter manually..." required />
                                 </div>
-                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Google Maps integration for address lookup</small>
+                                <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') }}">
+                                <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') }}">
+                                <div id="map" class="mt-2 rounded border" style="width: 100%; height: 300px; display: none;"></div>
+                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Search an address to set the exact location on the map.</small>
                             </div>
                         </div>
                     </div>
@@ -294,5 +297,88 @@ document.addEventListener('DOMContentLoaded', function() {
         seoDesc.textContent = this.value.substring(0, 160) || 'Write an introduction to see SEO description preview...';
     });
 });
+
+// Google Maps & Places Autocomplete Logic
+function initAutocomplete() {
+    const addressInput = document.getElementById('address');
+    const latInput = document.getElementById('latitude');
+    const lngInput = document.getElementById('longitude');
+    const mapDiv = document.getElementById('map');
+
+    const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+        fields: ["geometry", "formatted_address"],
+    });
+
+    let map = null;
+    let marker = null;
+
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+
+        if (!place.geometry) {
+            console.log("No details available for input: '" + place.name + "'");
+            return;
+        }
+
+        const lat = place.geometry.location.lat();
+        const lng = place.geometry.location.lng();
+
+        // Set inputs
+        addressInput.value = place.formatted_address;
+        latInput.value = lat;
+        lngInput.value = lng;
+
+        // Display and update map
+        mapDiv.style.display = 'block';
+        const position = { lat: lat, lng: lng };
+        
+        if (!map) {
+            map = new google.maps.Map(mapDiv, {
+                center: position,
+                zoom: 15,
+                mapTypeControl: false,
+                streetViewControl: false,
+            });
+            marker = new google.maps.Marker({
+                map: map,
+                position: position,
+                draggable: true // Allow tweaking the location manually
+            });
+
+            // Update lat/lng if marker is dragged
+            marker.addListener('dragend', function() {
+                const newPos = marker.getPosition();
+                latInput.value = newPos.lat();
+                lngInput.value = newPos.lng();
+            });
+        } else {
+            map.setCenter(position);
+            marker.setPosition(position);
+        }
+    });
+
+    // Handle initial map load if editing (or if validation failed but old() values exist)
+    if (latInput.value && lngInput.value) {
+        mapDiv.style.display = 'block';
+        const initialPos = { lat: parseFloat(latInput.value), lng: parseFloat(lngInput.value) };
+        map = new google.maps.Map(mapDiv, {
+            center: initialPos,
+            zoom: 15,
+            mapTypeControl: false,
+            streetViewControl: false,
+        });
+        marker = new google.maps.Marker({
+            map: map,
+            position: initialPos,
+            draggable: true
+        });
+        marker.addListener('dragend', function() {
+            const newPos = marker.getPosition();
+            latInput.value = newPos.lat();
+            lngInput.value = newPos.lng();
+        });
+    }
+}
 </script>
+<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDXwMTcZEQcOu5-CzCGpuvcVmPku2GWghQ&libraries=places&callback=initAutocomplete"></script>
 @endsection
