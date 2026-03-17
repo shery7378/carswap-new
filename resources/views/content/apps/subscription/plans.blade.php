@@ -2,133 +2,136 @@
 
 @section('title', 'Subscription Plans')
 
+@section('page-style')
+<style>
+.pricing-card {
+  transition: all 0.3s ease-in-out;
+  border: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  background: #fff;
+}
+.pricing-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+}
+.pricing-header {
+  padding: 2.5rem 1.5rem;
+  position: relative;
+  background: #f8f9fa;
+  border-bottom: 5px solid transparent;
+}
+.border-primary .pricing-header { border-bottom-color: #696cff; }
+.border-success .pricing-header { border-bottom-color: #71dd37; }
+.border-warning .pricing-header { border-bottom-color: #ffab00; }
+.border-info .pricing-header { border-bottom-color: #03c3ec; }
+.border-secondary .pricing-header { border-bottom-color: #8592a3; }
+
+.price-box {
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  margin-top: 1rem;
+}
+.feature-list {
+  padding: 1.5rem;
+  text-align: left;
+}
+.feature-item {
+  margin-bottom: 0.8rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+}
+.feature-item i {
+  font-size: 1.25rem;
+  margin-right: 0.75rem;
+}
+.plan-actions {
+  padding: 0 1.5rem 2rem;
+}
+.popular-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+</style>
+@endsection
+
 @section('content')
-  <!-- Content wrapper -->
-  <div class="content-wrapper">
-    <!-- Content -->
-    <div class="container-xxl flex-grow-1 container-p-y">
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="card">
-            <div class="card-header">
-              <h4 class="card-title">Subscription Plans</h4>
-              <div class="card-actions">
-                <button class="btn btn-primary">
-                  <i class="bx bx-plus me-1"></i> Add New Plan
-                </button>
-              </div>
-            </div>
-            <div class="card-body">
-              <!-- Pricing Cards -->
-              <div class="row">
-                <!-- Basic Plan -->
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card border-primary">
-                    <div class="card-body text-center">
-                      <h3 class="card-title">Basic</h3>
-                      <div class="py-3">
-                        <h2 class="text-primary">$9.99<span class="text-muted fs-6">/month</span></h2>
-                      </div>
-                      <ul class="list-unstyled">
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>10 Products</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Basic Support</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>1 GB Storage</li>
-                        <li class="py-2 text-muted"><i class="bx bx-x text-danger me-2"></i>Analytics</li>
-                        <li class="py-2 text-muted"><i class="bx bx-x text-danger me-2"></i>API Access</li>
-                      </ul>
-                      <button class="btn btn-outline-primary w-100">Choose Plan</button>
-                    </div>
-                  </div>
-                </div>
+<div class="container-xxl flex-grow-1 container-p-y">
+  <div class="d-flex justify-content-between align-items-center mb-5">
+    <div>
+      <h3 class="fw-bold mb-1">Subscription Tiers</h3>
+      <p class="text-muted mb-0">Manage your business packages and customer value levels</p>
+    </div>
+    <a href="{{ route('app-subscription-create') }}" class="btn btn-primary d-flex align-items-center">
+      <i class="bx bx-plus me-1"></i> New Package
+    </a>
+  </div>
 
-                <!-- Pro Plan -->
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card border-success">
-                    <div class="card-body text-center">
-                      <span class="badge bg-success position-absolute top-0 end-0 m-2">Popular</span>
-                      <h3 class="card-title">Professional</h3>
-                      <div class="py-3">
-                        <h2 class="text-success">$29.99<span class="text-muted fs-6">/month</span></h2>
-                      </div>
-                      <ul class="list-unstyled">
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Unlimited Products</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Priority Support</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>10 GB Storage</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Advanced Analytics</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>API Access</li>
-                      </ul>
-                      <button class="btn btn-success w-100">Choose Plan</button>
-                    </div>
-                  </div>
-                </div>
-
-                <!-- Enterprise Plan -->
-                <div class="col-lg-4 col-md-6 mb-4">
-                  <div class="card border-warning">
-                    <div class="card-body text-center">
-                      <h3 class="card-title">Enterprise</h3>
-                      <div class="py-3">
-                        <h2 class="text-warning">$99.99<span class="text-muted fs-6">/month</span></h2>
-                      </div>
-                      <ul class="list-unstyled">
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Unlimited Everything</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>24/7 Support</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Unlimited Storage</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Custom Analytics</li>
-                        <li class="py-2"><i class="bx bx-check text-success me-2"></i>Advanced API</li>
-                      </ul>
-                      <button class="btn btn-warning w-100">Choose Plan</button>
-                    </div>
-                  </div>
-                </div>
+  <div class="row">
+    @foreach($plans as $plan)
+    <div class="col-lg-3 col-md-6 mb-4">
+      <div class="card pricing-card h-100 border-{{ $plan->color }}">
+        <div class="pricing-header text-center">
+          @if($plan->is_popular)
+          <span class="badge bg-{{ $plan->color }} popular-badge rounded-pill shadow-sm">Popular Choice</span>
+          @endif
+          <div class="avatar avatar-md mx-auto mb-3">
+             <span class="avatar-initial rounded-circle bg-label-{{ $plan->color }}">
+                <i class="bx {{ $plan->slug === 'free' ? 'bx-gift' : ($plan->slug === 'partner-package' ? 'bx-buildings' : ($plan->slug === 'several-cars' ? 'bx-car' : 'bx-crown')) }} fs-3"></i>
+             </span>
+          </div>
+          <h4 class="fw-bold mb-0">{{ $plan->name }}</h4>
+          <p class="text-muted small mt-1 mb-0">{{ $plan->description }}</p>
+          <div class="price-box">
+            <span class="h2 fw-extrabold text-{{ $plan->color }} mb-0">{{ number_format($plan->price, 0) }}</span>
+            <span class="ms-1 text-muted fw-medium">HUF</span>
+            <span class="ms-1 text-muted small">/{{ $plan->billing_period }}</span>
+          </div>
+        </div>
+        
+        <div class="card-body p-0">
+          <div class="feature-list px-4 mt-3">
+            @php
+              $features = is_string($plan->features) ? json_decode($plan->features, true) : $plan->features;
+            @endphp
+            @if(is_array($features))
+              @foreach($features as $feature)
+              <div class="feature-item">
+                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
+                <span>{{ $feature }}</span>
               </div>
+              @endforeach
+            @endif
+          </div>
+        </div>
 
-              <!-- Active Plans Table -->
-              <div class="mt-5">
-                <h5 class="mb-3">Active Plans Management</h5>
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th>Plan Name</th>
-                        <th>Price</th>
-                        <th>Duration</th>
-                        <th>Features</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Basic Plan</td>
-                        <td>$9.99/month</td>
-                        <td>Monthly</td>
-                        <td>10 Products, Basic Support</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-outline-primary">Edit</button>
-                          <button class="btn btn-sm btn-outline-danger">Disable</button>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Professional Plan</td>
-                        <td>$29.99/month</td>
-                        <td>Monthly</td>
-                        <td>Unlimited Products, Priority Support</td>
-                        <td><span class="badge bg-success">Active</span></td>
-                        <td>
-                          <button class="btn btn-sm btn-outline-primary">Edit</button>
-                          <button class="btn btn-sm btn-outline-danger">Disable</button>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+        <div class="plan-actions px-4 pb-4 mt-auto">
+          <div class="d-flex gap-2">
+            <a href="javascript:void(0);" class="btn btn-outline-{{ $plan->color }} flex-grow-1">
+              <i class="bx bx-edit-alt small me-1"></i> Edit
+            </a>
+            <button class="btn btn-label-secondary p-2" title="Deactivate">
+              <i class="bx bx-power-off"></i>
+            </button>
+          </div>
+          <div class="mt-3 text-center">
+            @if($plan->is_active)
+              <span class="badge bg-label-success small"><i class="bx bxs-circle me-1" style="font-size: 6px;"></i> Live Package</span>
+            @else
+              <span class="badge bg-label-secondary small">Disabled</span>
+            @endif
           </div>
         </div>
       </div>
     </div>
+    @endforeach
   </div>
+</div>
 @endsection

@@ -38,152 +38,52 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach($payments as $payment)
                         <tr>
-                            <td><code>#TRX001234</code></td>
+                            <td><code>#{{ $payment->transaction_id }}</code></td>
                             <td>
                                 <div class="d-flex align-items-center">
                                     <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('assets/img/avatars/1.png') }}" alt="Avatar" class="rounded-circle">
+                                        @if($payment->user->profile_photo_url)
+                                        <img src="{{ $payment->user->profile_photo_url }}" alt="Avatar" class="rounded-circle">
+                                        @else
+                                        <span class="avatar-initial rounded-circle bg-label-primary">{{ strtoupper(substr($payment->user->name ?? 'U', 0, 1)) }}</span>
+                                        @endif
                                     </div>
                                     <div>
-                                        <span class="fw-medium">John Doe</span>
+                                        <span class="fw-medium">{{ $payment->user->name ?? 'Unknown' }}</span>
                                         <br>
-                                        <small class="text-muted">john@example.com</small>
+                                        <small class="text-muted">{{ $payment->user->email ?? '' }}</small>
                                     </div>
                                 </div>
                             </td>
-                            <td><span class="badge bg-label-primary">Premium</span></td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-label-success">Completed</span></td>
+                            <td><span class="badge bg-label-{{ $payment->plan->color ?? 'primary' }}">{{ $payment->plan->name ?? '-' }}</span></td>
+                            <td>${{ $payment->amount }}</td>
+                            <td><span class="badge bg-label-{{ $payment->status === 'completed' ? 'success' : ($payment->status === 'failed' ? 'danger' : 'warning') }}">{{ ucfirst($payment->status) }}</span></td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <i class="bx bx-credit-card me-2"></i>
-                                    <span>Credit Card</span>
+                                    <i class="bx {{ $payment->payment_method === 'paypal' ? 'bxl-paypal' : ($payment->payment_method === 'bank_transfer' ? 'bx-bank' : 'bx-credit-card') }} me-2"></i>
+                                    <span>{{ ucwords(str_replace('_', ' ', $payment->payment_method ?? 'Not Specified')) }}</span>
                                 </div>
                             </td>
-                            <td>Feb 15, 2024</td>
+                            <td>{{ $payment->created_at->format('M d, Y') }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                                         <i class="bx bx-dots-vertical-rounded"></i>
                                     </button>
                                     <div class="dropdown-menu">
+                                        @if($payment->status === 'completed')
                                         <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-receipt me-1"></i> View Receipt</a>
                                         <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-download me-1"></i> Download Invoice</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-refresh me-1"></i> Refund</a>
+                                        @elseif($payment->status === 'failed')
+                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-refresh me-1"></i> Retry</a>
+                                        @endif
                                     </div>
                                 </div>
                             </td>
                         </tr>
-                        <tr>
-                            <td><code>#TRX001235</code></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('assets/img/avatars/2.png') }}" alt="Avatar" class="rounded-circle">
-                                    </div>
-                                    <div>
-                                        <span class="fw-medium">Jane Smith</span>
-                                        <br>
-                                        <small class="text-muted">jane@example.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-label-info">Basic</span></td>
-                            <td>$9.99</td>
-                            <td><span class="badge bg-label-success">Completed</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bxl-paypal me-2"></i>
-                                    <span>PayPal</span>
-                                </div>
-                            </td>
-                            <td>Feb 14, 2024</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-receipt me-1"></i> View Receipt</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-download me-1"></i> Download Invoice</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-refresh me-1"></i> Refund</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><code>#TRX001236</code></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('assets/img/avatars/3.png') }}" alt="Avatar" class="rounded-circle">
-                                    </div>
-                                    <div>
-                                        <span class="fw-medium">Mike Johnson</span>
-                                        <br>
-                                        <small class="text-muted">mike@example.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-label-warning">Enterprise</span></td>
-                            <td>$99.99</td>
-                            <td><span class="badge bg-label-danger">Failed</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-credit-card me-2"></i>
-                                    <span>Credit Card</span>
-                                </div>
-                            </td>
-                            <td>Feb 13, 2024</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-refresh me-1"></i> Retry Payment</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1"></i> Update Payment Method</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><code>#TRX001237</code></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-3">
-                                        <img src="{{ asset('assets/img/avatars/4.png') }}" alt="Avatar" class="rounded-circle">
-                                    </div>
-                                    <div>
-                                        <span class="fw-medium">Sarah Wilson</span>
-                                        <br>
-                                        <small class="text-muted">sarah@example.com</small>
-                                    </div>
-                                </div>
-                            </td>
-                            <td><span class="badge bg-label-primary">Premium</span></td>
-                            <td>$29.99</td>
-                            <td><span class="badge bg-label-warning">Pending</span></td>
-                            <td>
-                                <div class="d-flex align-items-center">
-                                    <i class="bx bx-bank me-2"></i>
-                                    <span>Bank Transfer</span>
-                                </div>
-                            </td>
-                            <td>Feb 12, 2024</td>
-                            <td>
-                                <div class="dropdown">
-                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                                        <i class="bx bx-dots-vertical-rounded"></i>
-                                    </button>
-                                    <div class="dropdown-menu">
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-check me-1"></i> Mark as Paid</a>
-                                        <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> Cancel</a>
-                                    </div>
-                                </div>
-                            </td>
-                        </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

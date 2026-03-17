@@ -9,6 +9,7 @@ class SubscriptionPayments extends Controller
 {
     public function index()
     {
-        return view('content.app.subscription.payments');
+        $payments = \App\Models\Payment::with(['user', 'plan'])->latest()->get();
+        return view('content.app.subscription.payments', compact('payments'));
     }
 }

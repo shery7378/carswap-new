@@ -9,6 +9,7 @@ class SubscriptionPlans extends Controller
 {
     public function index()
     {
-        return view('content.apps.subscription.plans');
+        $plans = \App\Models\Plan::all();
+        return view('content.apps.subscription.plans', compact('plans'));
     }
 }

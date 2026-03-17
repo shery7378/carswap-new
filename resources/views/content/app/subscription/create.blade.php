@@ -4,7 +4,7 @@
 
 @section('content')
 
-<form method="POST" action="">
+<form method="POST" action="{{ route('app-subscription-store') }}">
 @csrf
 
 <div class="row">

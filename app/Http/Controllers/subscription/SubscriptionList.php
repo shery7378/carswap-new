@@ -9,6 +9,7 @@ class SubscriptionList extends Controller
 {
     public function index()
     {
-        return view('content.app.subscription.list');
+        $subscriptions = \App\Models\Subscription::with(['user', 'plan'])->latest()->get();
+        return view('content.app.subscription.list', compact('subscriptions'));
     }
 }

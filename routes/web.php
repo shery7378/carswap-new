@@ -135,6 +135,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // subscription
     Route::get('/app/subscription/list', [SubscriptionList::class , 'index'])->name('app-subscription-list');
     Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create');
+    Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store');
     Route::get('/app/subscription/plans', [SubscriptionPlans::class , 'index'])->name('app-subscription-plans');
     Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
 
