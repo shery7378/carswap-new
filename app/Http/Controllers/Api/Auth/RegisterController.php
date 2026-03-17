@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use App\Models\Plan;
+use App\Models\Subscription;
 use App\Mail\WelcomeMail;
 
 class RegisterController extends Controller
@@ -54,6 +56,23 @@ class RegisterController extends Controller
                 'has_whatsapp' => $validated['has_whatsapp'] ?? false,
                 'has_viber' => $validated['has_viber'] ?? false,
             ]);
+
+            // Assign FREE package to user
+            $freePlan = Plan::where('slug', 'free')->first();
+            if ($freePlan) {
+                Subscription::create([
+                    'user_id' => $user->id,
+                    'plan_id' => $freePlan->id,
+                    'amount' => 0,
+                    'status' => 'active',
+                    'starts_at' => now(),
+                    'next_billing_at' => now()->addYears(10), // Basically lifetime for free
+                    'duration' => 'Lifetime (Free)'
+                ]);
+            }
+
+            // Assign basic user role
+            $user->assignRole('user'); // Default role
 
             // Send welcome email (async, don't block registration)
             if ($user) {

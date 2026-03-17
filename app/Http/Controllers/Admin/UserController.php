@@ -3,23 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class UserController extends Controller
 {
     public function index()
     {
-        $users = User::with('roles')->paginate(10);
+        $users = Admin::with(['roles', 'permissions'])->paginate(10);
         return view('content.access-control.users', compact('users'));
     }
 
     public function create()
     {
-        $roles = Role::all();
-        return view('content.access-control.users-create', compact('roles'));
+        $roles = Role::where('guard_name', 'admin-guard')->get();
+        $permissions = Permission::where('guard_name', 'admin-guard')->get();
+        return view('content.access-control.users-create', compact('roles', 'permissions'));
     }
 
     public function store(Request $request)
@@ -27,60 +29,76 @@ class UserController extends Controller
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:admins,email',
             'password' => 'required|min:8',
-            'roles' => 'required|array'
+            'roles' => 'array',
+            'permissions' => 'array'
         ]);
 
-        $user = User::create([
+        $admin = Admin::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        $user->assignRole($request->roles);
+        if ($request->has('roles')) {
+            $admin->syncRoles($request->roles);
+        }
+        
+        if ($request->has('permissions')) {
+            $admin->syncPermissions($request->permissions);
+        }
 
-        return redirect()->route('admin.users.index')->with('success', 'User created successfully');
+        return redirect()->route('admin.users.index')->with('success', 'Administrator account created successfully');
     }
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        $roles = Role::all();
+        $user = Admin::findOrFail($id);
+        $roles = Role::where('guard_name', 'admin-guard')->get();
+        $permissions = Permission::where('guard_name', 'admin-guard')->get();
         $userRoles = $user->roles->pluck('name')->toArray();
-        return view('content.access-control.users-edit', compact('user', 'roles', 'userRoles'));
+        $userPermissions = $user->permissions->pluck('name')->toArray();
+        
+        return view('content.access-control.users-edit', compact('user', 'roles', 'userRoles', 'permissions', 'userPermissions'));
     }
 
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
+        $admin = Admin::findOrFail($id);
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
+            'email' => 'required|email|unique:admins,email,' . $id,
             'password' => 'nullable|min:8',
-            'roles' => 'required|array'
+            'roles' => 'array',
+            'permissions' => 'array'
         ]);
 
-        $user->first_name = $request->first_name;
-        $user->last_name = $request->last_name;
-        $user->email = $request->email;
+        $admin->first_name = $request->first_name;
+        $admin->last_name = $request->last_name;
+        $admin->email = $request->email;
 
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $admin->password = Hash::make($request->password);
         }
 
-        $user->save();
-        $user->syncRoles($request->roles);
+        $admin->save();
+        $admin->syncRoles($request->roles ?? []);
+        $admin->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('admin.users.index')->with('success', 'User updated successfully');
+        return redirect()->route('admin.users.index')->with('success', 'Administrator account updated successfully');
     }
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        $user->delete();
-        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully');
+        $admin = Admin::findOrFail($id);
+        // Prevent deleting yourself
+        if ($admin->id === auth()->id()) {
+            return back()->with('error', 'You cannot delete your own account');
+        }
+        $admin->delete();
+        return redirect()->route('admin.users.index')->with('success', 'Administrator account deleted successfully');
     }
 }

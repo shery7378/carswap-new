@@ -59,6 +59,7 @@ use APP\Http\Controllers\users\User_Controller;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
+use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
 
 // Main Page \Illuminate\Support\Facades\Route
 
@@ -67,7 +68,7 @@ use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 Route::get('/', [AuthController::class , 'index'])->name('login');
 Route::post('/login', [AuthController::class , 'store'])->name('admin-login-store');
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-guard'])->group(function () {
 
     Route::get('/dashboard', [Analytics::class , 'index'])->name('dashboard-analytics');
     Route::post('/logout', [AuthController::class , 'logout'])->name('logout');
@@ -140,19 +141,28 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
 
     // Access Control (Roles & Users)
-    Route::get('/app/access-control/roles', [AdminRoleController::class , 'index'])->name('admin.roles.index');
-    Route::get('/app/access-control/roles/create', [AdminRoleController::class , 'create'])->name('admin.roles.create');
-    Route::post('/app/access-control/roles', [AdminRoleController::class , 'store'])->name('admin.roles.store');
-    Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class , 'edit'])->name('admin.roles.edit');
-    Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update');
-    Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy');
+    Route::middleware(['role:super-admin|admin,admin-guard'])->group(function () {
+        Route::get('/app/access-control/roles', [AdminRoleController::class , 'index'])->name('admin.roles.index');
+        Route::get('/app/access-control/roles/create', [AdminRoleController::class , 'create'])->name('admin.roles.create');
+        Route::post('/app/access-control/roles', [AdminRoleController::class , 'store'])->name('admin.roles.store');
+        Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class , 'edit'])->name('admin.roles.edit');
+        Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update');
+        Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy');
 
-    Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
-    Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create');
-    Route::post('/app/access-control/users', [AdminUserController::class , 'store'])->name('admin.users.store');
-    Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class , 'edit'])->name('admin.users.edit');
-    Route::put('/app/access-control/users/{id}', [AdminUserController::class , 'update'])->name('admin.users.update');
-    Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy');
+        Route::get('/app/access-control/permissions', [AdminPermissionController::class , 'index'])->name('admin.permissions.index');
+        Route::get('/app/access-control/permissions/create', [AdminPermissionController::class , 'create'])->name('admin.permissions.create');
+        Route::post('/app/access-control/permissions', [AdminPermissionController::class , 'store'])->name('admin.permissions.store');
+        Route::get('/app/access-control/permissions/{id}/edit', [AdminPermissionController::class , 'edit'])->name('admin.permissions.edit');
+        Route::put('/app/access-control/permissions/{id}', [AdminPermissionController::class , 'update'])->name('admin.permissions.update');
+        Route::delete('/app/access-control/permissions/{id}', [AdminPermissionController::class , 'destroy'])->name('admin.permissions.destroy');
+
+        Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
+        Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create');
+        Route::post('/app/access-control/users', [AdminUserController::class , 'store'])->name('admin.users.store');
+        Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class , 'edit'])->name('admin.users.edit');
+        Route::put('/app/access-control/users/{id}', [AdminUserController::class , 'update'])->name('admin.users.update');
+        Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy');
+    });
     // vehicles
     Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
     Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create');

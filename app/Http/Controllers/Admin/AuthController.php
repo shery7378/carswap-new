@@ -7,14 +7,13 @@ use Illuminate\Http\Request;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Traits\HasPermissions;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
 
 class AuthController extends Controller
 {
     // Show login form
     public function index()
     {
-        if (Auth::check()) {
+        if (Auth::guard('admin-guard')->check()) {
             return redirect()->route('dashboard-analytics');
         }
         return view('content.Admin.admin-login');
@@ -29,12 +28,12 @@ class AuthController extends Controller
             'password' => 'required|min:8',
         ]);
 
-        // Attempt login
-        if (Auth::attempt($data)) {
-
-          // Check if logged-in user has admin role
-            if (!Auth::user()->hasRole('admin')) {
-                Auth::logout();
+        // Attempt login with admin-guard
+        if (Auth::guard('admin-guard')->attempt($data)) {
+            // Check for admin-level roles
+            $admin = Auth::guard('admin-guard')->user();
+            if (!$admin->hasAnyRole(['super-admin', 'admin', 'sub-admin'])) {
+                Auth::guard('admin-guard')->logout();
                 return back()->withErrors(['email' => 'Unauthorized access']);
             }
 
@@ -49,7 +48,7 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        Auth::logout();
+        Auth::guard('admin-guard')->logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login');

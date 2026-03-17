@@ -138,7 +138,14 @@ class UserAdController extends Controller
         }
 
         // Assign the ad to the authenticated user
-        $validated['user_id'] = $request->user()->id;
+        $user = $request->user();
+        $validated['user_id'] = $user->id;
+
+        // Check subscription limits
+        $limitCheck = $this->canPostMoreActiveAds($user);
+        if ($limitCheck !== true) {
+            return $limitCheck;
+        }
 
         // Default ad_status
         $validated['ad_status'] = $validated['ad_status'] ?? 'active';
@@ -322,7 +329,17 @@ class UserAdController extends Controller
             'ad_status' => 'required|in:active,garage,draft,inactive',
         ]);
 
-        $vehicle->update(['ad_status' => $request->input('ad_status')]);
+        $newStatus = $request->input('ad_status');
+
+        // Check limits if changing to active
+        if ($newStatus === 'active') {
+            $limitCheck = $this->canPostMoreActiveAds($request->user());
+            if ($limitCheck !== true) {
+                return $limitCheck;
+            }
+        }
+
+        $vehicle->update(['ad_status' => $newStatus]);
 
         return response()->json([
             'success'    => true,
@@ -346,5 +363,36 @@ class UserAdController extends Controller
         // Frontend should always send a title if it wants a custom one;
         // this fallback just avoids a DB error since title is NOT NULL.
         return implode(' ', $parts) ?: 'Vehicle Ad';
+    }
+
+    private function canPostMoreActiveAds($user)
+    {
+        $subscription = $user->activeSubscription;
+        if (!$subscription || !$subscription->plan) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You do not have an active subscription plan.',
+            ], 403);
+        }
+
+        $plan = $subscription->plan;
+        
+        // Only check limits if the plan has a numeric limit (0 or negative means unlimited)
+        // According to our seeder and business rules:
+        // FREE = 2, SEVERAL CARS = 5, DEALER = 0 (Unlimited)
+        if ($plan->active_ads_limit > 0) {
+            $activeAdsCount = Vehicle::where('user_id', $user->id)
+                ->where('ad_status', 'active')
+                ->count();
+
+            if ($activeAdsCount >= $plan->active_ads_limit) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You have reached your limit of {$plan->active_ads_limit} active ads for the {$plan->name}. Please upgrade your plan.",
+                ], 403);
+            }
+        }
+
+        return true;
     }
 }

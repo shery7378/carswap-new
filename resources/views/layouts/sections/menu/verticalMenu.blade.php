@@ -1,8 +1,42 @@
 @php
   use Illuminate\Support\Facades\Route;
 @endphp
-<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme"
-  style="background-color: #1d2327; color: white;">
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme shadow-lg"
+  style="background: linear-gradient(180deg, #1d2327 0%, #2b343b 100%); color: #e1e1e1; border-right: 1px solid rgba(255,255,255,0.05);">
+
+  <style>
+    #layout-menu .menu-item.active > .menu-link {
+      background: linear-gradient(270deg, rgba(105, 108, 255, 0.2) 0%, rgba(105, 108, 255, 0) 100%);
+      border-left: 3px solid #696cff;
+      color: #fff !important;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    #layout-menu .menu-link:hover {
+      background: rgba(255,255,255,0.03) !important;
+      transition: all 0.3s ease;
+    }
+    #layout-menu .menu-header-text {
+      color: #696cff !important;
+      letter-spacing: 1px;
+      font-weight: 700;
+      opacity: 0.85;
+    }
+    #layout-menu .menu-link i {
+      font-size: 1.25rem !important;
+      margin-right: 12px;
+      color: rgba(255,255,255,0.7);
+    }
+    #layout-menu .active .menu-link i {
+      color: #696cff !important;
+    }
+    .app-brand .app-brand-text {
+      background: linear-gradient(90deg, #fff 0%, #696cff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 0 20px rgba(105, 108, 255, 0.3);
+    }
+  </style>
 
   <!-- ! Hide app brand if navbar-full -->
   <div class="app-brand demo">
