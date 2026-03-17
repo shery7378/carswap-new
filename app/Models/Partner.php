@@ -61,11 +61,15 @@ class Partner extends Model
 
     public function getAverageRatingAttribute()
     {
-        if ($this->relationLoaded('reviews')) {
+        // Try to use pre-calculated average from withAvg() if available
+        if (array_key_exists('reviews_avg_rating', $this->attributes)) {
+            $avg = $this->attributes['reviews_avg_rating'];
+        } elseif ($this->relationLoaded('reviews')) {
             $avg = $this->reviews->where('is_approved', true)->avg('rating');
         } else {
             $avg = $this->reviews()->where('is_approved', true)->avg('rating');
         }
+
         return round((float)($avg ?: 0), 1);
     }
 

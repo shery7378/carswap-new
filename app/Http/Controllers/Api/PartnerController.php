@@ -66,16 +66,18 @@ class PartnerController extends Controller
             $query->select('partners.*');
         }
 
+        // Always include basic stats to prevent N+1 and for accurate filtering
+        $query->withAvg(['reviews' => function($q) { $q->where('is_approved', true); }], 'rating')
+              ->withCount(['reviews' => function($q) { $q->where('is_approved', true); }]);
+
         // 5. Sorting Logic
         if ($request->has('sort')) {
             switch ($request->sort) {
                 case 'top_rated':
-                    $query->withAvg(['reviews' => function($q) { $q->where('is_approved', true); }], 'rating')
-                          ->orderBy('reviews_avg_rating', 'desc');
+                    $query->orderBy('reviews_avg_rating', 'desc');
                     break;
                 case 'most_rated':
-                    $query->withCount(['reviews' => function($q) { $q->where('is_approved', true); }])
-                          ->orderBy('reviews_count', 'desc');
+                    $query->orderBy('reviews_count', 'desc');
                     break;
                 case 'latest':
                     $query->orderBy('created_at', 'desc');
@@ -98,7 +100,6 @@ class PartnerController extends Controller
                     break;
             }
         } else {
-            // Default sorting
             if ($hasLocation) {
                 $query->orderBy('distance', 'asc');
             } else {
@@ -106,22 +107,19 @@ class PartnerController extends Controller
             }
         }
 
+        // 6. Rating Filter (In Database using Having)
+        if ($request->filled('min_rating')) {
+            $minRating = (float) $request->min_rating;
+            // Coalesce handles NULL averages for partners with no reviews as 0
+            $query->havingRaw('COALESCE(reviews_avg_rating, 0) >= ?', [$minRating]);
+        }
+
         $partners = $query->with(['services' => function($q) {
             $q->where('is_active', true);
         }])->get();
 
-        // 5. Append Ratings
-        $partners->each(function($partner) {
-            $partner->append('average_rating');
-        });
-
-        // 6. Rating Filter (Filtering the collection after appending the dynamic attribute)
-        if ($request->has('min_rating') && $request->min_rating) {
-            $minRating = (float) $request->min_rating;
-            $partners = $partners->filter(function($partner) use ($minRating) {
-                return $partner->average_rating >= $minRating;
-            })->values(); // Reset array keys
-        }
+        // Append dynamic attributes for JSON
+        $partners->each->append('average_rating');
 
         return response()->json([
             'success' => true,
