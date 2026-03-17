@@ -104,15 +104,24 @@
           <div class="permission-container">
             <p class="text-muted small mb-4">Select the specific capabilities this role should possess within the chosen guard.</p>
             <div class="row" id="permissions-row">
-              @foreach($permissions as $permission)
-              <div class="col-md-4 col-lg-3 mb-2 permission-item" data-guard="{{ $permission->guard_name }}">
-                <div class="permission-card">
-                  <div class="form-check custom-option-basic">
-                    <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm-{{ $permission->id }}">
-                    <label class="form-check-label fw-medium h6 mb-0" for="perm-{{ $permission->id }}">
-                      {{ $permission->name }}
-                    </label>
+              @foreach($permissions as $module => $modulePermissions)
+              <div class="col-12 mb-4 module-group" data-module="{{ $module }}">
+                <h6 class="text-primary text-capitalize border-bottom pb-2 mb-3">
+                  <i class="bx bx-folder me-1"></i> {{ str_replace('_', ' ', $module) }}
+                </h6>
+                <div class="row module-permissions-list">
+                  @foreach($modulePermissions as $permission)
+                  <div class="col-md-3 col-sm-4 mb-2 permission-item" data-guard="{{ $permission->guard_name }}">
+                    <div class="permission-card px-2 py-1">
+                      <div class="form-check custom-option-basic">
+                        <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm-{{ $permission->id }}">
+                        <label class="form-check-label fw-medium small mb-0" for="perm-{{ $permission->id }}">
+                          {{ str_replace('-' . $module, '', $permission->name) }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
+                  @endforeach
                 </div>
               </div>
               @endforeach
@@ -136,32 +145,40 @@
 <script>
   function filterPermissions() {
     const selectedGuard = document.getElementById('guard-name').value;
-    const items = document.querySelectorAll('.permission-item');
-    let visibleCount = 0;
-
-    items.forEach(item => {
-      const input = item.querySelector('input');
-      if (item.dataset.guard === selectedGuard) {
-        item.style.display = 'block';
-        input.disabled = false;
-        visibleCount++;
-      } else {
-        item.style.display = 'none';
-        input.disabled = true;
-        input.checked = false;
-      }
+    const modules = document.querySelectorAll('.module-group');
+    let totalVisibleCount = 0;
+    
+    modules.forEach(module => {
+        const items = module.querySelectorAll('.permission-item');
+        let moduleVisibleCount = 0;
+        
+        items.forEach(item => {
+            const input = item.querySelector('input');
+            if (item.dataset.guard === selectedGuard) {
+                item.style.display = 'block';
+                input.disabled = false;
+                moduleVisibleCount++;
+                totalVisibleCount++;
+            } else {
+                item.style.display = 'none';
+                input.disabled = true;
+                input.checked = false;
+            }
+        });
+        
+        // Hide entire module if no permissions visible for this guard
+        module.style.display = (moduleVisibleCount > 0) ? 'block' : 'none';
     });
 
-    // If no permissions found for this guard
     const row = document.getElementById('permissions-row');
     const existingEmptyMsg = document.getElementById('no-perms-msg');
     
-    if (visibleCount === 0) {
+    if (totalVisibleCount === 0) {
         if (!existingEmptyMsg) {
             const msg = document.createElement('div');
             msg.id = 'no-perms-msg';
-            msg.className = 'col-12 text-center py-4 text-muted italic';
-            msg.innerHTML = '<i class="bx bx-info-circle mb-2 d-block fs-2"></i> No permissions registered for this guard.';
+            msg.className = 'col-12 text-center py-5 text-muted';
+            msg.innerHTML = '<i class="bx bx-info-circle mb-3 d-block fs-1"></i> No matching capabilities found for this guard.';
             row.appendChild(msg);
         }
     } else if (existingEmptyMsg) {

@@ -16,21 +16,25 @@ class PermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
-        $permissions = [
-            'manage-vehicles',
-            'manage-users',
-            'manage-roles',
-            'manage-subscriptions',
-            'manage-orders',
+        // Create permissions categories
+        $modules = ['vehicles', 'users', 'roles', 'subscriptions', 'orders', 'partners', 'inquiries'];
+        $actions = ['view', 'create', 'edit', 'delete'];
+
+        $allPermissions = [
             'view-dashboard',
-            'access-frontend-pages', // Specific for your Next.js requirement
+            'access-frontend-pages',
         ];
 
+        foreach ($modules as $module) {
+            foreach ($actions as $action) {
+                $allPermissions[] = "{$action}-{$module}";
+            }
+        }
+
         // Create permissions for both guards
-        foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
-            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'admin-guard']);
+        foreach ($allPermissions as $permissionName) {
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'web']);
+            Permission::firstOrCreate(['name' => $permissionName, 'guard_name' => 'admin-guard']);
         }
 
         // --- ADMIN GUARD ROLES ---
@@ -43,7 +47,12 @@ class PermissionSeeder extends Seeder
         $subAdminRole = Role::firstOrCreate(['name' => 'sub-admin', 'guard_name' => 'admin-guard']);
         $subAdminRole->syncPermissions(
             Permission::where('guard_name', 'admin-guard')
-                ->whereIn('name', ['view-dashboard', 'manage-vehicles', 'manage-orders'])
+                ->where(function ($q) {
+                    $q->where('name', 'view-dashboard')
+                      ->orWhere('name', 'LIKE', 'view-%')
+                      ->orWhere('name', 'LIKE', 'edit-vehicles%')
+                      ->orWhere('name', 'LIKE', 'create-vehicles%');
+                })
                 ->get()
         );
 

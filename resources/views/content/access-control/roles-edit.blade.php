@@ -107,15 +107,24 @@
           <div class="permission-container">
             <p class="text-muted small mb-4">Update the specific capabilities assigned to this role. These changes will reflect immediately for all users holding this role.</p>
             <div class="row">
-              @foreach($permissions as $permission)
-              <div class="col-md-4 col-lg-3 mb-2">
-                <div class="permission-card {{ in_array($permission->name, $rolePermissions) ? 'selected' : '' }}">
-                  <div class="form-check custom-option-basic">
-                    <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm-{{ $permission->id }}" {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
-                    <label class="form-check-label fw-medium h6 mb-0" for="perm-{{ $permission->id }}">
-                      {{ $permission->name }}
-                    </label>
+              @foreach($permissions as $module => $modulePermissions)
+              <div class="col-12 mb-4">
+                <h6 class="text-primary text-capitalize border-bottom pb-2 mb-3">
+                  <i class="bx bx-folder me-1"></i> {{ str_replace('_', ' ', $module) }}
+                </h6>
+                <div class="row">
+                  @foreach($modulePermissions as $permission)
+                  <div class="col-md-3 col-sm-4 mb-2">
+                    <div class="permission-card px-2 py-1 {{ in_array($permission->name, $rolePermissions) ? 'selected' : '' }}">
+                      <div class="form-check custom-option-basic">
+                        <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->name }}" id="perm-{{ $permission->id }}" {{ in_array($permission->name, $rolePermissions) ? 'checked' : '' }}>
+                        <label class="form-check-label fw-medium small mb-0" for="perm-{{ $permission->id }}">
+                          {{ str_replace('-' . $module, '', $permission->name) }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
+                  @endforeach
                 </div>
               </div>
               @endforeach
