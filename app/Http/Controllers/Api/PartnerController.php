@@ -107,19 +107,39 @@ class PartnerController extends Controller
             }
         }
 
-        // 6. Rating Filter (In Database using Having)
-        if ($request->filled('min_rating')) {
-            $minRating = (float) $request->min_rating;
-            // Coalesce handles NULL averages for partners with no reviews as 0
-            $query->havingRaw('COALESCE(reviews_avg_rating, 0) >= ?', [$minRating]);
-        }
+        // 6. Rating Filter (Robust Approach)
+        // We'll fetch all matching partners first (search, services, location)
+        // and filter by rating using the collection's append 'average_rating'.
+        // This is safe because partners lists are usually small (< 1000 items).
 
         $partners = $query->with(['services' => function($q) {
             $q->where('is_active', true);
         }])->get();
 
-        // Append dynamic attributes for JSON
+        // Append dynamic attributes
         $partners->each->append('average_rating');
+
+        // Apply Rating Filter
+        if ($request->filled('min_rating')) {
+            $rawRating = $request->min_rating;
+            // Handle both single value and array (checkboxes)
+            if (is_array($rawRating)) {
+                // If it's a list like ["5", "4", "3"], we usually want "any of these"
+                // but since they are "X and more", the lowest selected value is the true threshold
+                // Example: If ["5", "3"] are checked, you want everything >= 3.
+                // However, if the checkboxes are exclusive, you might want something else.
+                // Based on standard designs, taking the minimum of the selected ratings works best for "and more" filters.
+                $minThreshold = (float) min($rawRating);
+            } else {
+                $minThreshold = (float) $rawRating;
+            }
+
+            if ($minThreshold > 0) {
+                $partners = $partners->filter(function($partner) use ($minThreshold) {
+                    return $partner->average_rating >= $minThreshold;
+                })->values();
+            }
+        }
 
         return response()->json([
             'success' => true,
