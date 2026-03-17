@@ -20,10 +20,10 @@
             <div class="d-flex align-items-start row">
                 <div class="col-sm-7">
                     <div class="card-body">
-                        <h5 class="card-title text-primary mb-3">Congratulations John! 🎉</h5>
-                        <p class="mb-6">You have done 72% more sales today.<br />Check your new badge in your profile.</p>
+                        <h5 class="card-title text-primary mb-3">Welcome, {{ Auth::user()->first_name ?? 'Admin' }}! 🚗</h5>
+                        <p class="mb-6">Here is an overview of your CarSwap platform today.</p>
 
-                        <a href="javascript:;" class="btn btn-sm btn-outline-primary">View Badges</a>
+                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">Manage Vehicles</a>
                     </div>
                 </div>
                 <div class="col-sm-5 text-center text-sm-left">
@@ -53,9 +53,9 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="mb-1">Profit</p>
-                        <h4 class="card-title mb-3">$12,628</h4>
-                        <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +72.80%</small>
+                        <p class="mb-1">Total Vehicles</p>
+                        <h4 class="card-title mb-3">{{ $stats['total_vehicles'] }}</h4>
+                        <small class="text-success fw-medium"><i class="icon-base bx bx-car"></i> Live Listings</small>
                     </div>
                 </div>
             </div>
@@ -76,14 +76,157 @@
                                 </div>
                             </div>
                         </div>
-                        <p class="mb-1">Sales</p>
-                        <h4 class="card-title mb-3">$4,679</h4>
-                        <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +28.42%</small>
+                        <p class="mb-1">Total Partners</p>
+                        <h4 class="card-title mb-3">{{ $stats['total_partners'] }}</h4>
+                        <small class="text-success fw-medium"><i class="icon-base bx bx-group"></i> Active Dealers</small>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    <!-- Recent Vehicles -->
+    <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="m-0 me-2">Recent Vehicle Listings</h5>
+                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-primary">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-borderless">
+                        <thead>
+                            <tr>
+                                <th>Vehicle</th>
+                                <th>Price</th>
+                                <th>Listing Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($recent_vehicles as $vehicle)
+                            <tr>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="avatar avatar-sm me-3">
+                                            @if($vehicle->main_image)
+                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}" alt="car" class="rounded">
+                                            @else
+                                                <span class="avatar-initial rounded bg-label-secondary"><i class="bx bx-car"></i></span>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0">{{ $vehicle->brand->name ?? '' }} {{ $vehicle->model->name ?? '' }}</h6>
+                                            <small class="text-muted">{{ $vehicle->year }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>{{ number_format($vehicle->price) }} {{ $vehicle->currency }}</td>
+                                <td>{{ $vehicle->created_at->format('M d, Y') }}</td>
+                                <td><span class="badge bg-label-{{ $vehicle->ad_status === 'active' ? 'success' : 'warning' }}">{{ ucfirst($vehicle->ad_status ?? 'draft') }}</span></td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="4" class="text-center">No recent vehicles</td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/ Recent Vehicles -->
+
+    <!-- Recent Partners -->
+    <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
+        <div class="card h-100">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <h5 class="m-0 me-2">Global Partners</h5>
+                <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-primary">All</a>
+            </div>
+            <div class="card-body">
+                <ul class="p-0 m-0">
+                    @forelse($recent_partners as $partner)
+                    <li class="d-flex align-items-center mb-6">
+                        <div class="avatar flex-shrink-0 me-3">
+                            @if($partner->image)
+                                <img src="{{ asset('storage/' . $partner->image) }}" alt="partner" class="rounded" />
+                            @else
+                                <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-buildings"></i></span>
+                            @endif
+                        </div>
+                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                            <div class="me-2">
+                                <h6 class="mb-0">{{ $partner->name }}</h6>
+                                <small class="d-block text-muted">{{ $partner->city }}</small>
+                            </div>
+                            <div class="user-progress d-flex align-items-center gap-2">
+                                <span class="badge badge-dot bg-success"></span>
+                            </div>
+                        </div>
+                    </li>
+                    @empty
+                    <li class="text-center p-4">No partners found</li>
+                    @endforelse
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--/ Recent Partners -->
+
+    @if(false)
+    <!-- Profit Card -->
+    <div class="col-lg-6 col-md-12 col-6 mb-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                    <div class="avatar flex-shrink-0">
+                        <img src="{{ asset('assets/img/icons/unicons/chart-success.png') }}" alt="chart success" class="rounded" />
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
+                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                <p class="mb-1">Profit</p>
+                <h4 class="card-title mb-3">$12,628</h4>
+                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +72.80%</small>
+            </div>
+        </div>
+    </div>
+    <!--/ Profit Card -->
+
+    <!-- Sales Card -->
+    <div class="col-lg-6 col-md-12 col-6 mb-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <div class="card-title d-flex align-items-start justify-content-between mb-4">
+                    <div class="avatar flex-shrink-0">
+                        <img src="{{ asset('assets/img/icons/unicons/wallet-info.png') }}" alt="wallet info" class="rounded" />
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
+                            <a class="dropdown-item" href="javascript:void(0);">View More</a>
+                            <a class="dropdown-item" href="javascript:void(0);">Delete</a>
+                        </div>
+                    </div>
+                </div>
+                <p class="mb-1">Sales</p>
+                <h4 class="card-title mb-3">$4,679</h4>
+                <small class="text-success fw-medium"><i class="icon-base bx bx-up-arrow-alt"></i> +28.42%</small>
+            </div>
+        </div>
+    </div>
+    <!--/ Sales Card -->
+
     <!-- Total Revenue -->
     <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6 total-revenue">
         <div class="card">
@@ -163,6 +306,7 @@
         </div>
     </div>
     <!--/ Total Revenue -->
+
     <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2 profile-report">
         <div class="row">
             <div class="col-6 mb-6 payments">
@@ -232,8 +376,7 @@
             </div>
         </div>
     </div>
-</div>
-<div class="row">
+
     <!-- Order Statistics -->
     <div class="col-md-6 col-lg-4 col-xl-4 order-0 mb-6">
         <div class="card h-100">
@@ -488,5 +631,6 @@
         </div>
     </div>
     <!--/ Transactions -->
+    @endif
 </div>
 @endsection

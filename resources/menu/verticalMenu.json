@@ -4,9 +4,8 @@
       "url": "/",
       "name": "Dashboard",
       "icon": "menu-icon icon-base bx bx-home-smile",
-      "slug": "app-ecommerce-dashboard"
+      "slug": "dashboard-analytics"
     },
-    
     {
       "name": "Vehicles",
       "icon": "menu-icon icon-base bx bx-car",
@@ -15,7 +14,7 @@
         {
           "url": "app/vehicles",
           "name": "Vehicle List",
-          "slug": "admin-vehicles-index"
+          "slug": "admin.vehicles.index"
         },
         {
           "url": "app/vehicles/create",
@@ -32,7 +31,7 @@
         {
           "url": "app/partners",
           "name": "Partner List",
-          "slug": "admin-partners-index"
+          "slug": "admin.partners.index"
         },
         {
           "url": "app/partners/create",
@@ -157,12 +156,12 @@
         {
           "url": "app/access-control/roles",
           "name": "Roles",
-          "slug": "admin-roles-index"
+          "slug": "admin.roles.index"
         },
         {
           "url": "app/access-control/users",
           "name": "Users",
-          "slug": "admin-users-index"
+          "slug": "admin.users.index"
         }
       ]
     }
