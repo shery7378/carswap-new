@@ -200,7 +200,7 @@ class AdminVehicleController extends Controller
 
         // Separate relational and file fields before mass-assignment
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['main_image']);
 
         $validated['ad_status'] = $validated['ad_status'] ?? 'published';
 
@@ -285,7 +285,7 @@ class AdminVehicleController extends Controller
         ]);
 
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['main_image']);
 
         $vehicle->update($validated);
 

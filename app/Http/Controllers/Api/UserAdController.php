@@ -157,7 +157,7 @@ class UserAdController extends Controller
 
         // Remove file fields from mass-assignment
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images'], $validated['documents']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
 
         // Create the vehicle record
         $vehicle = Vehicle::create($validated);
@@ -245,7 +245,7 @@ class UserAdController extends Controller
         $validated = $request->validated();
 
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images'], $validated['documents']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
 
         // Reset status to pending for approval if updated, unless saving as draft
         if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
