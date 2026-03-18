@@ -115,18 +115,24 @@
             @endforelse
           </td>
           <td>
-            <div class="d-flex gap-2">
-              <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
-                <i class="bx bx-edit-alt"></i>
-              </a>
-              <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="action-btn text-danger bg-label-danger border-0" data-bs-toggle="tooltip" title="Delete Admin">
-                  <i class="bx bx-trash"></i>
-                </button>
-              </form>
-            </div>
+            @if($user->hasRole('super-admin', 'admin-guard'))
+               <div class="d-flex align-items-center">
+                 <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
+               </div>
+            @else
+              <div class="d-flex gap-2">
+                <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
+                  <i class="bx bx-edit-alt"></i>
+                </a>
+                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="action-btn text-danger bg-label-danger border-0" data-bs-toggle="tooltip" title="Delete Admin">
+                    <i class="bx bx-trash"></i>
+                  </button>
+                </form>
+              </div>
+            @endif
           </td>
         </tr>
         @endforeach

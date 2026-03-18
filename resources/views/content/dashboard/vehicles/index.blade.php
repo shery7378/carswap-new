@@ -18,7 +18,9 @@
                                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                             </select>
                         </form>
+                        @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-vehicles', 'admin-guard'))
                         <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">Add New Vehicle</a>
+                        @endif
                     </div>
                 </div>
                 <div class="card-body">
@@ -89,6 +91,7 @@
                                                     default => 'bg-label-primary',
                                                 };
                                             @endphp
+                                            @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                             <div class="btn-group">
                                                 <button type="button"
                                                     class="btn btn-sm {{ str_replace('bg-label', 'btn-outline', $statusClass) }} dropdown-toggle"
@@ -128,6 +131,9 @@
                                                     </li>
                                                 </ul>
                                             </div>
+                                            @else
+                                                <span class="badge {{ $statusClass }}">{{ ucfirst($vehicle->ad_status) }}</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="dropdown">
@@ -136,9 +142,13 @@
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
+                                                    @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.vehicles.edit', $vehicle->id) }}"><i
                                                             class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                    @endif
+                                                    
+                                                    @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
                                                     <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}"
                                                         method="POST" class="d-inline">
                                                         @csrf
@@ -147,6 +157,11 @@
                                                             onclick="return confirm('Are you sure?')"><i
                                                                 class="bx bx-trash me-1"></i> Delete</button>
                                                     </form>
+                                                    @endif
+
+                                                    @if(!(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard')))
+                                                        <span class="dropdown-item disabled">No permissions</span>
+                                                    @endif
                                                 </div>
                                             </div>
                                         </td>

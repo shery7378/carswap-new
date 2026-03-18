@@ -134,22 +134,22 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::get('/app/ecommerce/settings/notifications', [SettingsNotifications::class , 'index'])->name('app-ecommerce-settings-notifications');
 
     // subscription
-    Route::get('/app/subscription/list', [SubscriptionList::class , 'index'])->name('app-subscription-list');
-    Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create');
-    Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store');
-    Route::get('/app/subscription/plans', [SubscriptionPlans::class , 'index'])->name('app-subscription-plans');
-    Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
+    Route::middleware(['permission:view-subscriptions,admin-guard'])->group(function () {
+        Route::get('/app/subscription/list', [SubscriptionList::class , 'index'])->name('app-subscription-list');
+        Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create');
+        Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store');
+        Route::get('/app/subscription/plans', [SubscriptionPlans::class , 'index'])->name('app-subscription-plans');
+        Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
+    });
 
     // Access Control (Roles & Users)
-    Route::middleware(['role:super-admin|admin,admin-guard'])->group(function () {
+    Route::middleware(['role:super-admin|admin,admin-guard', 'permission:view-roles,admin-guard'])->group(function () {
         Route::get('/app/access-control/roles', [AdminRoleController::class , 'index'])->name('admin.roles.index');
         Route::get('/app/access-control/roles/create', [AdminRoleController::class , 'create'])->name('admin.roles.create');
         Route::post('/app/access-control/roles', [AdminRoleController::class , 'store'])->name('admin.roles.store');
         Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class , 'edit'])->name('admin.roles.edit');
         Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update');
         Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy');
-
-
 
         Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
         Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create');
@@ -159,17 +159,21 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy');
     });
     // vehicles
-    Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
-    Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create');
-    Route::post('/app/vehicles', [AdminVehicleController::class , 'store'])->name('admin.vehicles.store');
-    Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit');
-    Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update');
-    Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy');
-    Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class , 'updateStatus'])->name('admin.vehicles.update-status');
-    Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
+    Route::middleware(['permission:view-vehicles,admin-guard'])->group(function () {
+        Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
+        Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create');
+        Route::post('/app/vehicles', [AdminVehicleController::class , 'store'])->name('admin.vehicles.store');
+        Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit');
+        Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update');
+        Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy');
+        Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class , 'updateStatus'])->name('admin.vehicles.update-status');
+        Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
+    });
 
     // partners
-    Route::resource('/app/partners', AdminPartnerController::class)->names('admin.partners');
+    Route::middleware(['permission:view-partners,admin-guard'])->group(function () {
+        Route::resource('/app/partners', AdminPartnerController::class)->names('admin.partners');
+    });
 
     // settings
     Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');

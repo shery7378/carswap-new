@@ -56,6 +56,12 @@ class UserController extends Controller
     public function edit($id)
     {
         $user = Admin::findOrFail($id);
+        
+        // Prevent editing super-admins unless you are specifically allowed or maybe just block it for safety
+        if ($user->hasRole('super-admin', 'admin-guard')) {
+            return redirect()->route('admin.users.index')->with('error', 'Super Admin accounts are protected and cannot be edited via the management panel.');
+        }
+
         $roles = Role::where('guard_name', 'admin-guard')->get();
         $permissions = Permission::where('guard_name', 'admin-guard')->get();
         $userRoles = $user->roles->pluck('name')->toArray();
@@ -67,6 +73,11 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $admin = Admin::findOrFail($id);
+
+        if ($admin->hasRole('super-admin', 'admin-guard')) {
+            return redirect()->route('admin.users.index')->with('error', 'Super Admin accounts are protected.');
+        }
+
         $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -94,6 +105,12 @@ class UserController extends Controller
     public function destroy($id)
     {
         $admin = Admin::findOrFail($id);
+        
+        // Prevent deleting super-admins
+        if ($admin->hasRole('super-admin', 'admin-guard')) {
+            return back()->with('error', 'Super Admin accounts are protected and cannot be deleted.');
+        }
+
         // Prevent deleting yourself
         if ($admin->id === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account');

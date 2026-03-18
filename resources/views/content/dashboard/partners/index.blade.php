@@ -8,7 +8,9 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h5 class="mb-0">Partners List</h5>
+                @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-partners', 'admin-guard'))
                 <a href="{{ route('admin.partners.create') }}" class="btn btn-primary btn-sm">Add New Partner</a>
+                @endif
             </div>
             <div class="card-body">
                 @if(session('success'))
@@ -63,9 +65,13 @@
                                                 <i class="bx bx-dots-vertical-rounded"></i>
                                             </button>
                                             <div class="dropdown-menu">
+                                                @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
                                                 <a class="dropdown-item"
                                                     href="{{ route('admin.partners.edit', $partner->id) }}"><i
                                                         class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                @endif
+
+                                                @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('delete-partners', 'admin-guard'))
                                                 <form action="{{ route('admin.partners.destroy', $partner->id) }}"
                                                     method="POST" class="d-inline">
                                                     @csrf
@@ -74,6 +80,11 @@
                                                         onclick="return confirm('Are you sure?')"><i
                                                             class="bx bx-trash me-1"></i> Delete</button>
                                                 </form>
+                                                @endif
+
+                                                @if(!(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-partners', 'admin-guard')))
+                                                    <span class="dropdown-item disabled">No permissions</span>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>

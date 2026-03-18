@@ -56,6 +56,11 @@ class RoleController extends Controller
     public function edit($id)
     {
         $role = Role::findOrFail($id);
+
+        if ($role->name === 'super-admin') {
+            return redirect()->route('admin.roles.index')->with('error', 'The Super Admin role is core to the system and cannot be modified.');
+        }
+
         $permissions = Permission::where('guard_name', $role->guard_name)->get()->groupBy(function($perm) {
             $parts = explode('-', $perm->name);
             if (count($parts) > 1) {
@@ -71,6 +76,11 @@ class RoleController extends Controller
     public function update(Request $request, $id)
     {
         $role = Role::findOrFail($id);
+
+        if ($role->name === 'super-admin') {
+            return redirect()->route('admin.roles.index')->with('error', 'The Super Admin role cannot be modified.');
+        }
+
         $request->validate([
             'name' => 'required',
             'permissions' => 'array'
@@ -98,6 +108,11 @@ class RoleController extends Controller
     public function destroy($id)
     {
         $role = Role::findOrFail($id);
+
+        if ($role->name === 'super-admin') {
+            return back()->with('error', 'The Super Admin role cannot be deleted.');
+        }
+
         // Note: users() in Spatie Permission is a bit more complex with guards.
         // We'll just check if any user has this role in that guard.
         // But for common usage, deleting a role that is in use is usually blocked.

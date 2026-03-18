@@ -112,18 +112,24 @@
             </div>
           </td>
           <td>
-            <div class="d-flex gap-2">
-              <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info" title="Edit Role">
-                <i class="bx bx-edit-alt"></i>
-              </a>
-              <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this role?')">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="action-btn text-danger bg-label-danger border-0" title="Delete Role">
-                  <i class="bx bx-trash"></i>
-                </button>
-              </form>
-            </div>
+            @if($role->name === 'super-admin')
+               <div class="d-flex align-items-center">
+                 <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
+               </div>
+            @else
+              <div class="d-flex gap-2">
+                <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info" title="Edit Role">
+                  <i class="bx bx-edit-alt"></i>
+                </a>
+                <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this role?')">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="action-btn text-danger bg-label-danger border-0" title="Delete Role">
+                    <i class="bx bx-trash"></i>
+                  </button>
+                </form>
+              </div>
+            @endif
           </td>
         </tr>
         @endforeach

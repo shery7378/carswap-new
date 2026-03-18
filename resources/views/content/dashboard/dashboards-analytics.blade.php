@@ -36,6 +36,7 @@
     </div>
     <div class="col-xxl-4 col-lg-12 col-md-4 order-1">
         <div class="row">
+            @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-vehicles', 'admin-guard'))
             <div class="col-lg-6 col-md-12 col-6 mb-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -59,6 +60,9 @@
                     </div>
                 </div>
             </div>
+            @endif
+
+            @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-partners', 'admin-guard'))
             <div class="col-lg-6 col-md-12 col-6 mb-6">
                 <div class="card h-100">
                     <div class="card-body">
@@ -82,9 +86,11 @@
                     </div>
                 </div>
             </div>
+            @endif
         </div>
     </div>
     <!-- Recent Vehicles -->
+    @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-vehicles', 'admin-guard'))
     <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
@@ -135,9 +141,11 @@
             </div>
         </div>
     </div>
+    @endif
     <!--/ Recent Vehicles -->
 
     <!-- Recent Partners -->
+    @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-partners', 'admin-guard'))
     <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
@@ -172,6 +180,7 @@
             </div>
         </div>
     </div>
+    @endif
     <!--/ Recent Partners -->
 
     @if(false)
