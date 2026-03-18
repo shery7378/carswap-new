@@ -48,6 +48,7 @@ class Vehicle extends Model
         'ad_status',
         'history_report',
         'owner_type',
+        'exchange_preferences',
     ];
 
     protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited'];
@@ -57,6 +58,7 @@ class Vehicle extends Model
         'is_featured'          => 'boolean',
         'technical_expiration' => 'date:Y-m-d',
         'request_price_option' => 'boolean',
+        'exchange_preferences' => 'json',
     ];
 
     // -------------------------------------------------------------------------

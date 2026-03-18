@@ -27,6 +27,16 @@
             border-left: none;
             padding: 2rem;
         }
+
+        .preference-item {
+            border-left: 4px solid #007bff !important;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .preference-item:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+            transform: translateY(-2px);
+        }
     </style>
 @endsection
 
@@ -50,6 +60,8 @@
                             class="bx bx-map"></i> Location</button>
                     <button class="nav-link" data-bs-toggle="pill" data-bs-target="#content-details" type="button"><i
                             class="bx bx-list-ul"></i> Other Details</button>
+                    <button class="nav-link d-none" id="tab-exchange" data-bs-toggle="pill" data-bs-target="#content-exchange"
+                        type="button"><i class="bx bx-refresh"></i> Exchange Preferences</button>
                 </div>
             </div>
             <div class="col-md-9">
@@ -88,7 +100,7 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Sales Method</label>
-                                    <select class="form-select" name="sales_method_id">
+                                    <select class="form-select" name="sales_method_id" id="sales_method_select">
                                         <option value="">Select Sales Method</option>
                                         @foreach($salesMethods as $method)
                                             <option value="{{ $method->id }}" {{ $vehicle->sales_method_id == $method->id ? 'selected' : '' }}>{{ $method->name }}</option>
@@ -354,6 +366,181 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Exchange Preferences Section -->
+                        <div class="tab-pane fade" id="content-exchange">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h4 class="mb-0">Preferred Exchange Vehicles</h4>
+                                <button type="button" class="btn btn-outline-primary btn-sm" id="add-preference">
+                                    <i class="bx bx-plus me-1"></i> Add Another Preference
+                                </button>
+                            </div>
+                            <p class="text-muted mb-4">Specify the types of vehicles you would be interested in swapping for. This section is optional.</p>
+
+                            <div id="preferences-container">
+                                @if($vehicle->exchange_preferences && is_array($vehicle->exchange_preferences))
+                                    @foreach($vehicle->exchange_preferences as $index => $pref)
+                                        <div class="card bg-light border-0 mb-3 preference-item">
+                                            <div class="card-body p-4">
+                                                <div class="row align-items-end mb-3">
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Brand (Márka)</label>
+                                                        <select class="form-select brand-select" name="exchange_preferences[{{ $index }}][brand_id]">
+                                                            <option value="">Any Brand</option>
+                                                            @foreach($brands as $brand)
+                                                                <option value="{{ $brand->id }}" {{ ($pref['brand_id'] ?? '') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Model (Modell)</label>
+                                                        <select class="form-select model-select" name="exchange_preferences[{{ $index }}][model_id]">
+                                                            <option value="">Any Model</option>
+                                                            @if(isset($pref['brand_id']) && $pref['brand_id'])
+                                                                @foreach(\App\Models\VehicleModel::where('brand_id', $pref['brand_id'])->get() as $model)
+                                                                    <option value="{{ $model->id }}" {{ ($pref['model_id'] ?? '') == $model->id ? 'selected' : '' }}>{{ $model->name }}</option>
+                                                                @endforeach
+                                                            @endif
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Body Type (Kivitel)</label>
+                                                        <select class="form-select" name="exchange_preferences[{{ $index }}][body_type_id]">
+                                                            <option value="">Any Body Type</option>
+                                                            @foreach($bodyTypes as $body)
+                                                                <option value="{{ $body->id }}" {{ ($pref['body_type_id'] ?? '') == $body->id ? 'selected' : '' }}>{{ $body->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Min Year (Min. Évjárat)</label>
+                                                        <input type="number" class="form-control" name="exchange_preferences[{{ $index }}][year_from]" value="{{ $pref['year_from'] ?? '' }}" placeholder="e.g. 2020">
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Fuel Type (Üzemanyag)</label>
+                                                        <select class="form-select" name="exchange_preferences[{{ $index }}][fuel_type_id]">
+                                                            <option value="">Any Fuel Type</option>
+                                                            @foreach($fuelTypes as $fuel)
+                                                                <option value="{{ $fuel->id }}" {{ ($pref['fuel_type_id'] ?? '') == $fuel->id ? 'selected' : '' }}>{{ $fuel->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        @php $capacity = $pref['cylinder_capacity'] ?? 0; @endphp
+                                                        <label class="form-label d-flex justify-content-between">
+                                                            Capacity (cm³)
+                                                            <span class="capacity-value text-primary fw-bold">{{ $capacity > 0 ? $capacity . ' cm³' : 'Any' }}</span>
+                                                        </label>
+                                                        <input type="range" class="form-range capacity-slider" name="exchange_preferences[{{ $index }}][cylinder_capacity]" 
+                                                            min="500" max="8000" step="100" value="{{ $capacity }}">
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Transmission (Váltó)</label>
+                                                        <select class="form-select" name="exchange_preferences[{{ $index }}][transmission_id]">
+                                                            <option value="">Any Transmission</option>
+                                                            @foreach($transmissions as $trans)
+                                                                <option value="{{ $trans->id }}" {{ ($pref['transmission_id'] ?? '') == $trans->id ? 'selected' : '' }}>{{ $trans->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Drive Type (Hajtás)</label>
+                                                        <select class="form-select" name="exchange_preferences[{{ $index }}][drive_type_id]">
+                                                            <option value="">Any Drive Type</option>
+                                                            @foreach($driveTypes as $drive)
+                                                                <option value="{{ $drive->id }}" {{ ($pref['drive_type_id'] ?? '') == $drive->id ? 'selected' : '' }}>{{ $drive->name }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="text-end">
+                                                    <button type="button" class="btn btn-label-danger btn-sm remove-preference">
+                                                        <i class="bx bx-trash me-1"></i> Remove This Preference
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
+                            </div>
+
+                            <template id="preference-template">
+                                <div class="card bg-light border-0 mb-3 preference-item">
+                                    <div class="card-body p-4">
+                                        <div class="row align-items-end mb-3">
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Brand (Márka)</label>
+                                                <select class="form-select brand-select" name="exchange_preferences[INDEX][brand_id]">
+                                                    <option value="">Any Brand</option>
+                                                    @foreach($brands as $brand)
+                                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Model (Modell)</label>
+                                                <select class="form-select model-select" name="exchange_preferences[INDEX][model_id]">
+                                                    <option value="">Any Model</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Body Type (Kivitel)</label>
+                                                <select class="form-select" name="exchange_preferences[INDEX][body_type_id]">
+                                                    <option value="">Any Body Type</option>
+                                                    @foreach($bodyTypes as $body)
+                                                        <option value="{{ $body->id }}">{{ $body->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Min Year (Min. Évjárat)</label>
+                                                <input type="number" class="form-control" name="exchange_preferences[INDEX][year_from]" placeholder="e.g. 2020">
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Fuel Type (Üzemanyag)</label>
+                                                <select class="form-select" name="exchange_preferences[INDEX][fuel_type_id]">
+                                                    <option value="">Any Fuel Type</option>
+                                                    @foreach($fuelTypes as $fuel)
+                                                        <option value="{{ $fuel->id }}">{{ $fuel->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label d-flex justify-content-between">
+                                                    Capacity (cm³)
+                                                    <span class="capacity-value text-primary fw-bold">Any</span>
+                                                </label>
+                                                <input type="range" class="form-range capacity-slider" name="exchange_preferences[INDEX][cylinder_capacity]" 
+                                                    min="500" max="8000" step="100" value="0">
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Transmission (Váltó)</label>
+                                                <select class="form-select" name="exchange_preferences[INDEX][transmission_id]">
+                                                    <option value="">Any Transmission</option>
+                                                    @foreach($transmissions as $trans)
+                                                        <option value="{{ $trans->id }}">{{ $trans->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Drive Type (Hajtás)</label>
+                                                <select class="form-select" name="exchange_preferences[INDEX][drive_type_id]">
+                                                    <option value="">Any Drive Type</option>
+                                                    @foreach($driveTypes as $drive)
+                                                        <option value="{{ $drive->id }}">{{ $drive->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="text-end">
+                                            <button type="button" class="btn btn-label-danger btn-sm remove-preference">
+                                                <i class="bx bx-trash me-1"></i> Remove This Preference
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
                     </div>
 
                     <div class="card-footer bg-white border-top text-end p-3">
@@ -475,6 +662,99 @@
             }
         }
     }
+
+    // Exchange Preferences Logic
+    document.addEventListener('DOMContentLoaded', function () {
+        const salesMethodSelect = document.getElementById('sales_method_select');
+        const exchangeTab = document.getElementById('tab-exchange');
+        const preferencesContainer = document.getElementById('preferences-container');
+        const addPreferenceBtn = document.getElementById('add-preference');
+        const template = document.getElementById('preference-template');
+
+        // Map names to keep it flexible
+        const exchangeMethods = ['Exchange Only', 'For Sale / Exchange', 'Interchangeable'];
+
+        function toggleExchangeTab() {
+            const selectedText = salesMethodSelect.options[salesMethodSelect.selectedIndex]?.text.trim();
+            const isExchange = exchangeMethods.includes(selectedText);
+            
+            if (isExchange) {
+                exchangeTab.classList.remove('d-none');
+            } else {
+                exchangeTab.classList.add('d-none');
+                if (exchangeTab.classList.contains('active')) {
+                    const firstTab = document.querySelector('[data-bs-target="#content-options"]');
+                    if (firstTab) firstTab.click();
+                }
+            }
+        }
+
+        salesMethodSelect.addEventListener('change', toggleExchangeTab);
+        toggleExchangeTab(); // Run on load
+
+        let preferenceIndex = document.querySelectorAll('.preference-item').length;
+
+        function initPreferenceItem(item) {
+            const brandSelect = item.querySelector('.brand-select');
+            const modelSelect = item.querySelector('.model-select');
+            const removeBtn = item.querySelector('.remove-preference');
+
+            brandSelect.addEventListener('change', function () {
+                const brandId = this.value;
+                if (!brandId) {
+                    modelSelect.innerHTML = '<option value="">Any Model</option>';
+                    return;
+                }
+                modelSelect.innerHTML = '<option value="">Loading...</option>';
+                fetch(`/api/brands/${brandId}/models`)
+                    .then(response => response.json())
+                    .then(data => {
+                        modelSelect.innerHTML = '<option value="">Any Model</option>';
+                        data.forEach(model => {
+                            const option = document.createElement('option');
+                            option.value = model.id;
+                            option.textContent = model.name;
+                            modelSelect.appendChild(option);
+                        });
+                    });
+            });
+
+            removeBtn.addEventListener('click', function () {
+                item.remove();
+            });
+
+            // Capacity slider logic
+            const slider = item.querySelector('.capacity-slider');
+            const valueLabel = item.querySelector('.capacity-value');
+            if (slider && valueLabel) {
+                slider.addEventListener('input', function() {
+                    if (this.value == 0) {
+                        valueLabel.textContent = 'Any';
+                    } else {
+                        valueLabel.textContent = this.value + ' cm³';
+                    }
+                });
+            }
+        }
+
+        // Initialize existing items
+        document.querySelectorAll('.preference-item').forEach(initPreferenceItem);
+
+        addPreferenceBtn.addEventListener('click', function () {
+            const clone = template.content.cloneNode(true);
+            const item = clone.querySelector('.preference-item');
+            
+            // Replace INDEX placeholder in names
+            const inputs = item.querySelectorAll('[name*="INDEX"]');
+            inputs.forEach(input => {
+                input.name = input.name.replace('INDEX', preferenceIndex);
+            });
+
+            initPreferenceItem(item);
+            preferencesContainer.appendChild(clone);
+            preferenceIndex++;
+        });
+    });
 </script>
 <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initAutocomplete"></script>
 @endsection

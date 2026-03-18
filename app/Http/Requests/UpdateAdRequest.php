@@ -50,6 +50,15 @@ class UpdateAdRequest extends FormRequest
             'owner_type'           => 'nullable|in:private,dealer',
             'title'                => 'nullable|string|max:191',
             'description'          => 'nullable|string',
+            'exchange_preferences' => 'nullable|array',
+            'exchange_preferences.*.brand_id' => 'nullable|exists:brands,id',
+            'exchange_preferences.*.model_id' => 'nullable|exists:vehicle_models,id',
+            'exchange_preferences.*.body_type_id' => 'nullable|exists:body_types,id',
+            'exchange_preferences.*.fuel_type_id' => 'nullable|exists:fuel_types,id',
+            'exchange_preferences.*.transmission_id' => 'nullable|exists:transmissions,id',
+            'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
+            'exchange_preferences.*.year_from' => 'nullable|integer',
+            'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
         ];
     }
 

@@ -69,7 +69,7 @@ class UserAdController extends Controller
             $term = $request->input('search');
             $query->where(function ($q) use ($term) {
                 $q->where('title', 'LIKE', "%{$term}%")
-                  ->orWhere('description', 'LIKE', "%{$term}%");
+                    ->orWhere('description', 'LIKE', "%{$term}%");
             });
         }
         if ($request->filled('property_ids')) {
@@ -85,17 +85,17 @@ class UserAdController extends Controller
 
         // --- Sorting ---
         match ($request->input('sort', 'newest')) {
-            'price_low'  => $query->orderBy('price', 'asc'),
-            'price_high' => $query->orderBy('price', 'desc'),
-            'oldest'     => $query->orderBy('created_at', 'asc'),
-            default      => $query->orderBy('created_at', 'desc'),
-        };
+                'price_low' => $query->orderBy('price', 'asc'),
+                'price_high' => $query->orderBy('price', 'desc'),
+                'oldest' => $query->orderBy('created_at', 'asc'),
+                default => $query->orderBy('created_at', 'desc'),
+            };
 
         $ads = $query->paginate($request->input('limit', 12));
 
         return response()->json([
             'success' => true,
-            'data'    => $ads,
+            'data' => $ads,
         ]);
     }
 
@@ -120,7 +120,7 @@ class UserAdController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $vehicle,
+            'data' => $vehicle,
         ]);
     }
 
@@ -150,7 +150,8 @@ class UserAdController extends Controller
         // Default ad_status for users is 'pending' for approval, unless they explicitly saved it as 'draft'
         if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
             $validated['ad_status'] = 'draft';
-        } else {
+        }
+        else {
             $validated['ad_status'] = 'pending';
         }
 
@@ -187,9 +188,9 @@ class UserAdController extends Controller
             foreach ($request->file('documents') as $doc) {
                 $docPaths[] = $doc->store('ads/documents', 'public');
             }
-            // Store document paths in a separate JSON column if you have one,
-            // or leave as a response-only field for now.
-            // For now we attach them to the response only.
+        // Store document paths in a separate JSON column if you have one,
+        // or leave as a response-only field for now.
+        // For now we attach them to the response only.
         }
 
         $vehicle->load($this->relations);
@@ -197,7 +198,7 @@ class UserAdController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Ad uploaded successfully.',
-            'data'    => $vehicle,
+            'data' => $vehicle,
         ], 201);
     }
 
@@ -214,7 +215,7 @@ class UserAdController extends Controller
 
         return response()->json([
             'success' => true,
-            'data'    => $ads,
+            'data' => $ads,
         ]);
     }
 
@@ -242,7 +243,8 @@ class UserAdController extends Controller
         // Reset status to pending for approval if updated, unless saving as draft
         if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
             $validated['ad_status'] = 'draft';
-        } else {
+        }
+        else {
             $validated['ad_status'] = 'pending';
         }
 
@@ -282,7 +284,7 @@ class UserAdController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Ad updated successfully.',
-            'data'    => $vehicle,
+            'data' => $vehicle,
         ]);
     }
 
@@ -347,7 +349,7 @@ class UserAdController extends Controller
             // If a user tries to set it to published, it should actually go to pending for approval
             // Actually, if this is coming from the user, they shouldn't be able to set it to 'published' directly.
             // But let's keep the logic for now or force it to pending.
-            $newStatus = 'pending'; 
+            $newStatus = 'pending';
 
             $limitCheck = $this->canPostMoreActiveAds($request->user());
             if ($limitCheck !== true) {
@@ -358,9 +360,9 @@ class UserAdController extends Controller
         $vehicle->update(['ad_status' => $newStatus]);
 
         return response()->json([
-            'success'    => true,
-            'message'    => 'Ad status updated.',
-            'ad_status'  => $vehicle->ad_status,
+            'success' => true,
+            'message' => 'Ad status updated.',
+            'ad_status' => $vehicle->ad_status,
         ]);
     }
 
@@ -392,7 +394,7 @@ class UserAdController extends Controller
         }
 
         $plan = $subscription->plan;
-        
+
         // Only check limits if the plan has a numeric limit (0 or negative means unlimited)
         // According to our seeder and business rules:
         // FREE = 2, SEVERAL CARS = 5, DEALER = 0 (Unlimited)
