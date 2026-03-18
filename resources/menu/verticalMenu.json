@@ -10,6 +10,7 @@
       "name": "Vehicles",
       "icon": "menu-icon icon-base bx bx-car",
       "slug": "admin-vehicles",
+      "permission": "view-vehicles",
       "submenu": [
         {
           "url": "app/vehicles",
@@ -27,6 +28,7 @@
       "name": "Partners",
       "icon": "menu-icon icon-base bx bx-group",
       "slug": "admin-partners",
+      "permission": "view-partners",
       "submenu": [
         {
           "url": "app/partners",
@@ -44,6 +46,7 @@
       "name": "Car Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "admin-vehicle-settings",
+      "permission": "view-vehicles",
       "submenu": [
         {
           "url": "app/vehicle-settings/brands",
@@ -81,18 +84,21 @@
       "url": "app/ecommerce/order",
       "name": "Order",
       "icon": "menu-icon icon-base bx bx-shopping-bag",
-      "slug": "app-ecommerce-order"
+      "slug": "app-ecommerce-order",
+      "permission": "view-orders"
     },
     {
       "url": "app/ecommerce/customer",
       "name": "Customer",
       "icon": "menu-icon icon-base bx bx-user",
-      "slug": "app-ecommerce-customer"
+      "slug": "app-ecommerce-customer",
+      "permission": "view-users"
     },
     {
       "name": "Subscription",
       "icon": "menu-icon icon-base bx bx-credit-card",
       "slug": "app-subscription",
+      "permission": "view-subscriptions",
       "submenu": [
         {
           "url": "app/subscription/list",
@@ -120,6 +126,7 @@
       "name": "Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "app-ecommerce-settings",
+      "permission": "view-dashboard",
       "submenu": [
         {
           "url": "app/ecommerce/settings/general",
@@ -152,6 +159,7 @@
       "name": "Access Control",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",
+      "permission": "view-roles",
       "submenu": [
         {
           "url": "app/access-control/roles",
