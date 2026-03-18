@@ -18,7 +18,16 @@ class VehicleRelationController extends Controller
         if (!$table)
             abort(404);
 
-        $items = DB::table($table)->orderBy('id', 'desc')->paginate(10);
+        $query = DB::table($table);
+
+        // Handle color filtering by type if specified in the route {type}
+        if ($type === 'exterior-colors') {
+            $query->where('type', 'exterior');
+        } elseif ($type === 'interior-colors') {
+            $query->where('type', 'interior');
+        }
+
+        $items = $query->orderBy('id', 'desc')->paginate(10);
         $title = Str::headline($type);
 
         return view('content.dashboard.relationships.index', compact('items', 'type', 'title'));
@@ -35,11 +44,18 @@ class VehicleRelationController extends Controller
 
         $request->validate(['name' => 'required|string|max:255']);
 
-        $data = ['name' => $request->name];
+        $data = ['name' => $request->name, 'created_at' => now(), 'updated_at' => now()];
 
         // Add brand_id for models
         if ($type === 'models' && $request->has('brand_id')) {
             $data['brand_id'] = $request->brand_id;
+        }
+
+        // Add type for colors slug-based management
+        if ($type === 'exterior-colors') {
+            $data['type'] = 'exterior';
+        } elseif ($type === 'interior-colors') {
+            $data['type'] = 'interior';
         }
 
         DB::table($table)->insert($data);
@@ -74,9 +90,12 @@ class VehicleRelationController extends Controller
             'drive-types' => 'drive_types',
             'body-types' => 'body_types',
             'colors' => 'colors',
+            'exterior-colors' => 'colors',
+            'interior-colors' => 'colors',
             'sales-methods' => 'sales_methods',
             'document-types' => 'document_types',
             'statuses' => 'vehicle_statuses',
+            'vehicle-statuses' => 'vehicle_statuses',
             'extra-features' => 'properties',
         ];
 

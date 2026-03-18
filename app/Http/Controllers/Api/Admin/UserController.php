@@ -16,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles')->get();
+        $users = User::with('roles', 'activeSubscription.plan')->get();
         return response()->json([
             'success' => true,
             'data' => $users
@@ -68,7 +68,7 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::with('roles')->find($id);
+        $user = User::with('roles', 'activeSubscription.plan')->find($id);
 
         if (!$user) {
             return response()->json([

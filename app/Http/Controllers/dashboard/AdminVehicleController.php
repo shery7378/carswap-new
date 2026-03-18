@@ -43,6 +43,8 @@ class AdminVehicleController extends Controller
         $vehicleStatuses = VehicleStatus::all();
         $properties = Property::all();
         $colors = Color::all();
+        $exteriorColors = Color::where('type', 'exterior')->get();
+        $interiorColors = Color::where('type', 'interior')->get();
         $documentTypes = DocumentType::all();
 
         return view('content.dashboard.vehicles.create', compact(
@@ -55,6 +57,8 @@ class AdminVehicleController extends Controller
             'vehicleStatuses',
             'properties',
             'colors',
+            'exteriorColors',
+            'interiorColors',
             'documentTypes'
         ));
     }
@@ -153,6 +157,8 @@ class AdminVehicleController extends Controller
         $vehicleStatuses = VehicleStatus::all();
         $properties = Property::all();
         $colors = Color::all();
+        $exteriorColors = Color::where('type', 'exterior')->get();
+        $interiorColors = Color::where('type', 'interior')->get();
         $documentTypes = DocumentType::all();
 
         return view('content.dashboard.vehicles.edit', compact(
@@ -167,6 +173,8 @@ class AdminVehicleController extends Controller
             'vehicleStatuses',
             'properties',
             'colors',
+            'exteriorColors',
+            'interiorColors',
             'documentTypes'
         ));
     }

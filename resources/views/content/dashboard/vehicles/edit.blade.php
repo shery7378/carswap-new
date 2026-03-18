@@ -327,21 +327,21 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Exterior Color</label>
-                                    <select class="form-select" name="exterior_color_id">
-                                        <option value="">Select Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}" {{ $vehicle->exterior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
+                                     <select class="form-select" name="exterior_color_id">
+                                         <option value="">Select Color</option>
+                                         @foreach($exteriorColors as $color)
+                                             <option value="{{ $color->id }}" {{ $vehicle->exterior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
+                                         @endforeach
+                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Interior Color</label>
-                                    <select class="form-select" name="interior_color_id">
-                                        <option value="">Select Color</option>
-                                        @foreach($colors as $color)
-                                            <option value="{{ $color->id }}" {{ $vehicle->interior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
+                                     <select class="form-select" name="interior_color_id">
+                                         <option value="">Select Color</option>
+                                         @foreach($interiorColors as $color)
+                                             <option value="{{ $color->id }}" {{ $vehicle->interior_color_id == $color->id ? 'selected' : '' }}>{{ $color->name }}</option>
+                                         @endforeach
+                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Status</label>

@@ -28,7 +28,7 @@ Route::post('/login', [RegisterController::class , 'login']);
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     $user = $request->user();
     // Load roles and permissions for frontend authorization
-    $user->load('roles.permissions');
+    $user->load('roles.permissions', 'activeSubscription.plan');
 
     $userData = $user->toArray();
 

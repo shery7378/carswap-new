@@ -59,9 +59,39 @@
           "slug": "admin-models"
         },
         {
+          "url": "app/vehicle-settings/sales-methods",
+          "name": "Sales Methods",
+          "slug": "admin-sales-methods"
+        },
+        {
+          "url": "app/vehicle-settings/vehicle-statuses",
+          "name": "Vehicle Statuses",
+          "slug": "admin-vehicle-statuses"
+        },
+        {
+          "url": "app/vehicle-settings/body-types",
+          "name": "Body Types",
+          "slug": "admin-body-types"
+        },
+        {
           "url": "app/vehicle-settings/fuel-types",
           "name": "Fuel Types",
           "slug": "admin-fuel-types"
+        },
+        {
+          "url": "app/vehicle-settings/interior-colors",
+          "name": "Interior Colors",
+          "slug": "admin-interior-colors"
+        },
+        {
+          "url": "app/vehicle-settings/exterior-colors",
+          "name": "Exterior Colors",
+          "slug": "admin-exterior-colors"
+        },
+        {
+          "url": "app/vehicle-settings/document-types",
+          "name": "Document Types",
+          "slug": "admin-document-types"
         },
         {
           "url": "app/vehicle-settings/transmissions",
@@ -69,9 +99,9 @@
           "slug": "admin-transmissions"
         },
         {
-          "url": "app/vehicle-settings/body-types",
-          "name": "Body Types",
-          "slug": "admin-body-types"
+          "url": "app/vehicle-settings/drive-types",
+          "name": "Drive Types",
+          "slug": "admin-drive-types"
         },
         {
           "url": "app/vehicle-settings/extra-features",

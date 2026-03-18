@@ -31,6 +31,8 @@ class VehicleOptionController extends Controller
             'transmissions' => Transmission::orderBy('name')->get(),
             'drive_types' => DriveType::orderBy('name')->get(),
             'colors' => Color::orderBy('name')->get(),
+            'exterior_colors' => Color::where('type', 'exterior')->orderBy('name')->get(),
+            'interior_colors' => Color::where('type', 'interior')->orderBy('name')->get(),
             'sales_methods' => SalesMethod::orderBy('name')->get(),
             'document_types' => DocumentType::orderBy('name')->get(),
             'vehicle_statuses' => VehicleStatus::orderBy('name')->get(),

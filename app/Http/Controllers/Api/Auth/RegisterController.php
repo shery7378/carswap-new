@@ -121,7 +121,8 @@ class RegisterController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-        
+
+        $user->load('activeSubscription.plan');
         $userData = $user->toArray();
         if ($user->profile_picture) {
             $userData['profile_picture_url'] = asset($user->profile_picture);
@@ -138,6 +139,7 @@ class RegisterController extends Controller
     public function profile(Request $request)
     {
         $user = $request->user();
+        $user->load('activeSubscription.plan');
         $userData = $user->toArray();
         if ($user->profile_picture) {
             $userData['profile_picture_url'] = asset($user->profile_picture);
@@ -228,6 +230,7 @@ class RegisterController extends Controller
         */
         $user->update($validated);
         $user->refresh();
+        $user->load('activeSubscription.plan');
 
         /*
         |--------------------------------------------------------------------------
