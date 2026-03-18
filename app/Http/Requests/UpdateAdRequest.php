@@ -46,7 +46,7 @@ class UpdateAdRequest extends FormRequest
             'documents.*'          => 'file|mimes:jpg,jpeg,png,pdf|max:10240',
             'price'                => 'sometimes|numeric|min:0',
             'currency'             => 'nullable|string|max:10',
-            'ad_status'            => 'nullable|in:active,garage,draft,inactive',
+            'ad_status'            => 'nullable|in:published,rejected,pending,draft',
             'owner_type'           => 'nullable|in:private,dealer',
             'title'                => 'nullable|string|max:191',
             'description'          => 'nullable|string',

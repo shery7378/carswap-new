@@ -59,7 +59,7 @@ use APP\Http\Controllers\users\User_Controller;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
-use App\Http\Controllers\Admin\PermissionController as AdminPermissionController;
+
 
 // Main Page \Illuminate\Support\Facades\Route
 
@@ -149,12 +149,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update');
         Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy');
 
-        Route::get('/app/access-control/permissions', [AdminPermissionController::class , 'index'])->name('admin.permissions.index');
-        Route::get('/app/access-control/permissions/create', [AdminPermissionController::class , 'create'])->name('admin.permissions.create');
-        Route::post('/app/access-control/permissions', [AdminPermissionController::class , 'store'])->name('admin.permissions.store');
-        Route::get('/app/access-control/permissions/{id}/edit', [AdminPermissionController::class , 'edit'])->name('admin.permissions.edit');
-        Route::put('/app/access-control/permissions/{id}', [AdminPermissionController::class , 'update'])->name('admin.permissions.update');
-        Route::delete('/app/access-control/permissions/{id}', [AdminPermissionController::class , 'destroy'])->name('admin.permissions.destroy');
+
 
         Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
         Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create');
@@ -170,6 +165,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit');
     Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update');
     Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy');
+    Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class , 'updateStatus'])->name('admin.vehicles.update-status');
     Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
 
     // partners

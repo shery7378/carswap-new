@@ -8,7 +8,18 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Vehicles List</h5>
-                    <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">Add New Vehicle</a>
+                    <div class="d-flex align-items-center">
+                        <form action="{{ route('admin.vehicles.index') }}" method="GET" class="me-3">
+                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                <option value="">All Statuses</option>
+                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                            </select>
+                        </form>
+                        <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">Add New Vehicle</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if(session('success'))
@@ -65,10 +76,58 @@
                                             </small>
                                         </td>
                                         <td>
-                                            @if($vehicle->is_featured)
-                                                <span class="badge bg-label-warning">Featured</span>
+                                            @if ($vehicle->is_featured)
+                                                <span class="badge bg-label-warning me-1">Featured</span>
                                             @endif
-                                            <span class="badge bg-label-primary">Active</span>
+
+                                            @php
+                                                $statusClass = match ($vehicle->ad_status) {
+                                                    'published' => 'bg-label-success',
+                                                    'pending' => 'bg-label-warning',
+                                                    'rejected' => 'bg-label-danger',
+                                                    'draft' => 'bg-label-secondary',
+                                                    default => 'bg-label-primary',
+                                                };
+                                            @endphp
+                                            <div class="btn-group">
+                                                <button type="button"
+                                                    class="btn btn-sm {{ str_replace('bg-label', 'btn-outline', $statusClass) }} dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    {{ ucfirst($vehicle->ad_status) }}
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    <li>
+                                                        <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="ad_status" value="published">
+                                                            <button type="submit" class="dropdown-item">Approve /
+                                                                Publish</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="ad_status" value="rejected">
+                                                            <button type="submit" class="dropdown-item text-danger">Reject
+                                                                / Hide</button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
+                                                            method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <input type="hidden" name="ad_status" value="pending">
+                                                            <button type="submit" class="dropdown-item">Set to
+                                                                Pending</button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                         </td>
                                         <td>
                                             <div class="dropdown">

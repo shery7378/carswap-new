@@ -20,9 +20,15 @@ use Illuminate\Support\Facades\Storage;
 
 class AdminVehicleController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $vehicles = Vehicle::with(['brand', 'model', 'fuelType', 'transmission', 'user'])->orderBy('id', 'desc')->paginate(10);
+        $query = Vehicle::with(['brand', 'model', 'fuelType', 'transmission', 'user']);
+        
+        if ($request->filled('status')) {
+            $query->where('ad_status', $request->status);
+        }
+
+        $vehicles = $query->orderBy('id', 'desc')->paginate(10);
         return view('content.dashboard.vehicles.index', compact('vehicles'));
     }
 
@@ -93,6 +99,7 @@ class AdminVehicleController extends Controller
                 'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
+                'ad_status' => 'nullable|in:published,rejected,pending,draft',
             ]);
 
             if ($request->hasFile('main_image')) {
@@ -109,6 +116,7 @@ class AdminVehicleController extends Controller
 
             $validated['is_featured'] = $request->has('is_featured');
             $validated['user_id'] = auth()->id() ?? 1;
+            $validated['ad_status'] = $request->input('ad_status', 'published');
 
             $vehicle = Vehicle::create($validated);
 
@@ -196,6 +204,7 @@ class AdminVehicleController extends Controller
                 'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
+                'ad_status' => 'nullable|in:published,rejected,pending,draft',
             ]);
 
             if ($request->hasFile('main_image')) {
@@ -259,5 +268,17 @@ class AdminVehicleController extends Controller
     public function getModelsByBrand($brandId)
     {
         return response()->json(VehicleModel::where('brand_id', $brandId)->get());
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'ad_status' => 'required|in:published,rejected,pending,draft'
+        ]);
+
+        $vehicle = Vehicle::findOrFail($id);
+        $vehicle->update(['ad_status' => $request->ad_status]);
+
+        return redirect()->back()->with('success', 'Vehicle status updated to ' . $request->ad_status);
     }
 }

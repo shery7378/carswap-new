@@ -18,13 +18,14 @@ class RoleController extends Controller
     public function create()
     {
         $permissions = Permission::all()->groupBy(function($perm) {
-            if (strpos($perm->name, '-') !== false) {
-                $parts = explode('-', $perm->name);
-                // Handle cases like 'view-dashboard' (module is dashboard) 
-                // and 'view-admin-vehicles' (not used here but as an example)
-                return $parts[1] ?? 'other';
+            $parts = explode('-', $perm->name);
+            // The module is everything after the first segment (the action)
+            // e.g. 'view-vehicles' => 'vehicles', 'create-admin-users' => 'admin-users'
+            if (count($parts) > 1) {
+                array_shift($parts); // remove first element (the action)
+                return implode('-', $parts);
             }
-            return 'other';
+            return 'general';
         });
         return view('content.access-control.roles-create', compact('permissions'));
     }
@@ -56,10 +57,12 @@ class RoleController extends Controller
     {
         $role = Role::findOrFail($id);
         $permissions = Permission::where('guard_name', $role->guard_name)->get()->groupBy(function($perm) {
-            if (strpos($perm->name, '-') !== false) {
-                return explode('-', $perm->name)[1] ?? 'other';
+            $parts = explode('-', $perm->name);
+            if (count($parts) > 1) {
+                array_shift($parts); // remove action (view/create/edit/delete)
+                return implode('-', $parts);
             }
-            return 'other';
+            return 'general';
         });
         $rolePermissions = $role->permissions->pluck('name')->toArray();
         return view('content.access-control.roles-edit', compact('role', 'permissions', 'rolePermissions'));

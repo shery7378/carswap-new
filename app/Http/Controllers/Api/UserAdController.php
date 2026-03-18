@@ -38,7 +38,7 @@ class UserAdController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Vehicle::with($this->relations)
-            ->where('ad_status', 'active');
+            ->where('ad_status', 'published');
 
         // --- Filtering ---
         $filters = [
@@ -107,8 +107,8 @@ class UserAdController extends Controller
     {
         $vehicle = Vehicle::with($this->relations)->findOrFail($id);
 
-        // Non-active ads are only shown to the owner
-        if ($vehicle->ad_status !== 'active') {
+        // Non-published ads are only shown to the owner
+        if ($vehicle->ad_status !== 'published') {
             $user = $request->user();
             if (!$user || $user->id !== $vehicle->user_id) {
                 return response()->json([
@@ -147,8 +147,12 @@ class UserAdController extends Controller
             return $limitCheck;
         }
 
-        // Default ad_status
-        $validated['ad_status'] = $validated['ad_status'] ?? 'active';
+        // Default ad_status for users is 'pending' for approval, unless they explicitly saved it as 'draft'
+        if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
+            $validated['ad_status'] = 'draft';
+        } else {
+            $validated['ad_status'] = 'pending';
+        }
 
         // Remove file fields from mass-assignment
         $properties = $validated['properties'] ?? null;
@@ -234,6 +238,13 @@ class UserAdController extends Controller
 
         $properties = $validated['properties'] ?? null;
         unset($validated['properties'], $validated['gallery_images'], $validated['documents']);
+
+        // Reset status to pending for approval if updated, unless saving as draft
+        if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
+            $validated['ad_status'] = 'draft';
+        } else {
+            $validated['ad_status'] = 'pending';
+        }
 
         $vehicle->update($validated);
 
@@ -326,13 +337,18 @@ class UserAdController extends Controller
         }
 
         $request->validate([
-            'ad_status' => 'required|in:active,garage,draft,inactive',
+            'ad_status' => 'required|in:published,rejected,pending,draft',
         ]);
 
         $newStatus = $request->input('ad_status');
 
-        // Check limits if changing to active
-        if ($newStatus === 'active') {
+        // Check limits if changing to published
+        if ($newStatus === 'published') {
+            // If a user tries to set it to published, it should actually go to pending for approval
+            // Actually, if this is coming from the user, they shouldn't be able to set it to 'published' directly.
+            // But let's keep the logic for now or force it to pending.
+            $newStatus = 'pending'; 
+
             $limitCheck = $this->canPostMoreActiveAds($request->user());
             if ($limitCheck !== true) {
                 return $limitCheck;
@@ -382,7 +398,7 @@ class UserAdController extends Controller
         // FREE = 2, SEVERAL CARS = 5, DEALER = 0 (Unlimited)
         if ($plan->active_ads_limit > 0) {
             $activeAdsCount = Vehicle::where('user_id', $user->id)
-                ->where('ad_status', 'active')
+                ->where('ad_status', 'published')
                 ->count();
 
             if ($activeAdsCount >= $plan->active_ads_limit) {

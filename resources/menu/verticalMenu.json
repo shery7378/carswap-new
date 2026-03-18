@@ -159,11 +159,6 @@
           "slug": "admin.roles.index"
         },
         {
-          "url": "app/access-control/permissions",
-          "name": "Permissions",
-          "slug": "admin.permissions.index"
-        },
-        {
           "url": "app/access-control/users",
           "name": "Admins",
           "slug": "admin.users.index"

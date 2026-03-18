@@ -180,7 +180,7 @@ class AdminVehicleController extends Controller
             'request_price_option' => 'nullable|boolean',
 
             // Ad control
-            'ad_status'            => 'nullable|in:active,garage,draft,inactive',
+            'ad_status'            => 'nullable|in:published,rejected,pending,draft',
             'owner_type'           => 'nullable|in:private,dealer',
 
             // Owner assignment (admin can assign to any user)
@@ -200,7 +200,7 @@ class AdminVehicleController extends Controller
         $properties = $validated['properties'] ?? null;
         unset($validated['properties'], $validated['gallery_images']);
 
-        $validated['ad_status'] = $validated['ad_status'] ?? 'active';
+        $validated['ad_status'] = $validated['ad_status'] ?? 'published';
 
         $vehicle = Vehicle::create($validated);
 
@@ -272,7 +272,7 @@ class AdminVehicleController extends Controller
             'video_url'            => 'nullable|url|max:500',
             'is_featured'          => 'nullable|boolean',
             'request_price_option' => 'nullable|boolean',
-            'ad_status'            => 'nullable|in:active,garage,draft,inactive',
+            'ad_status'            => 'nullable|in:published,rejected,pending,draft',
             'owner_type'           => 'nullable|in:private,dealer',
             'user_id'              => 'nullable|integer|exists:users,id',
             'properties'           => 'nullable|array',
@@ -365,7 +365,7 @@ class AdminVehicleController extends Controller
         $vehicle = Vehicle::findOrFail($id);
 
         $request->validate([
-            'ad_status' => 'required|in:active,garage,draft,inactive',
+            'ad_status' => 'required|in:published,rejected,pending,draft',
         ]);
 
         $vehicle->update(['ad_status' => $request->input('ad_status')]);

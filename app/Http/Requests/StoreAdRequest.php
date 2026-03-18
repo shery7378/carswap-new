@@ -85,10 +85,11 @@ class StoreAdRequest extends FormRequest
             // ----------------------------------------------------------------
             // Ad publication settings
             // ----------------------------------------------------------------
-            'ad_status'          => 'nullable|in:active,garage,draft',
-            // 'active'  => publicly listed
-            // 'garage'  => private garage only
-            // 'draft'   => saved but not published
+            'ad_status'          => 'nullable|in:published,rejected,pending,draft',
+            // 'published' => publicly listed
+            // 'pending'   => waiting for admin approval
+            // 'rejected'  => not approved by admin
+            // 'draft'     => saved but not published
 
             'owner_type'         => 'nullable|in:private,dealer',
 

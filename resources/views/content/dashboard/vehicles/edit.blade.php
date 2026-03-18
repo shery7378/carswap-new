@@ -331,6 +331,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Ad Status</label>
+                                    <select class="form-select" name="ad_status">
+                                        <option value="published" {{ $vehicle->ad_status == 'published' ? 'selected' : '' }}>Published</option>
+                                        <option value="draft" {{ $vehicle->ad_status == 'draft' ? 'selected' : '' }}>Draft</option>
+                                        <option value="pending" {{ $vehicle->ad_status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                        <option value="rejected" {{ $vehicle->ad_status == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="form-check form-switch mt-2">
                                         <input class="form-check-input" type="checkbox" name="is_featured" value="1" id="isFeatured"

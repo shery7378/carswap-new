@@ -299,6 +299,15 @@
                                         @endforeach
                                     </select>
                                 </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Ad Status</label>
+                                    <select class="form-select" name="ad_status">
+                                        <option value="published">Published</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="rejected">Rejected</option>
+                                    </select>
+                                </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="form-check form-switch mt-2">
                                         <input class="form-check-input" type="checkbox" name="is_featured" value="1"
