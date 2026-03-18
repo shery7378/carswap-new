@@ -15,7 +15,7 @@ class SubscriptionController extends Controller
 
         $activeSubscription = null;
         if ($request->user('sanctum')) {
-             $activeSubscription = $request->user('sanctum')->load('activeSubscription.plan')->activeSubscription;
+            $activeSubscription = $request->user('sanctum')->load('activeSubscription.plan')->activeSubscription;
         }
 
         return response()->json([

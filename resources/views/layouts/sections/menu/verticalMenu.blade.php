@@ -36,6 +36,12 @@
       -webkit-text-fill-color: transparent;
       text-shadow: 0 0 20px rgba(105, 108, 255, 0.3);
     }
+    .menu-inner-shadow {
+      background: transparent !important;
+    }
+    .menu-vertical .menu-inner > .menu-header::before {
+      background-color: rgba(255,255,255,0.1) !important;
+    }
   </style>
 
   <!-- ! Hide app brand if navbar-full -->
@@ -51,7 +57,7 @@
   </div>
 
   <div class="menu-divider mt-0"></div>
-  <div class="menu-inner-shadow"></div>
+  <div class="menu-inner-shadow" style="display: none !important;"></div>
 
   <ul class="menu-inner py-1">
     @foreach ($menuData[0]->menu as $menu)

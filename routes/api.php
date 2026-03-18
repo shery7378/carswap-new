@@ -19,7 +19,7 @@ use App\Http\Controllers\Api\SubscriptionController;
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "api" middleware group. Make something great! | */
 
 // Public Subscription API
-Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
+Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
 
 // Public API route for registration
 Route::post('/register', [RegisterController::class , 'register']);
@@ -61,9 +61,9 @@ Route::get('/brands/{brandId}/models', [VehicleOptionController::class , 'getMod
 
 // Public Ads API Routes
 // These routes use UserAdController and are open to all visitors.
-Route::get('/ads', [UserAdController::class , 'index']);
+Route::get('/ad', [UserAdController::class , 'index']);
 Route::get('/ads/{id}', [UserAdController::class , 'show']);
-Route::get('/compare', [CompareController::class, 'compare']);
+Route::get('/compare', [CompareController::class , 'compare']);
 
 // Public Partner API Routes
 Route::get('/partners', [ApiPartnerController::class , 'index']);
