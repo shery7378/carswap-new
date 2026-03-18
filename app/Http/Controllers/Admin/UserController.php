@@ -19,7 +19,8 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::where('guard_name', 'admin-guard')->get();
+        // Exclude super-admin role from creation to prevent uncontrolled privilege escalation
+        $roles = Role::where('guard_name', 'admin-guard')->where('name', '!=', 'super-admin')->get();
         $permissions = Permission::where('guard_name', 'admin-guard')->get();
         return view('content.access-control.users-create', compact('roles', 'permissions'));
     }
@@ -34,6 +35,11 @@ class UserController extends Controller
             'roles' => 'array',
             'permissions' => 'array'
         ]);
+
+        // Security check: Ensure 'super-admin' isn't being manually passed in
+        if ($request->has('roles') && in_array('super-admin', $request->roles)) {
+            return back()->with('error', 'You cannot create new Super Admin accounts via the panel.')->withInput();
+        }
 
         $admin = Admin::create([
             'first_name' => $request->first_name,
@@ -62,7 +68,8 @@ class UserController extends Controller
             return redirect()->route('admin.users.index')->with('error', 'Super Admin accounts are protected and cannot be edited via the management panel.');
         }
 
-        $roles = Role::where('guard_name', 'admin-guard')->get();
+        // Exclude super-admin role from editing
+        $roles = Role::where('guard_name', 'admin-guard')->where('name', '!=', 'super-admin')->get();
         $permissions = Permission::where('guard_name', 'admin-guard')->get();
         $userRoles = $user->roles->pluck('name')->toArray();
         $userPermissions = $user->permissions->pluck('name')->toArray();
@@ -76,6 +83,11 @@ class UserController extends Controller
 
         if ($admin->hasRole('super-admin', 'admin-guard')) {
             return redirect()->route('admin.users.index')->with('error', 'Super Admin accounts are protected.');
+        }
+
+        // Security check: Ensure 'super-admin' isn't being manually passed in
+        if ($request->has('roles') && in_array('super-admin', $request->roles)) {
+            return back()->with('error', 'You cannot assign the Super Admin role via the panel.')->withInput();
         }
 
         $request->validate([
