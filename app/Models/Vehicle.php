@@ -51,7 +51,7 @@ class Vehicle extends Model
         'exchange_preferences',
     ];
 
-    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited'];
+    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited', 'status'];
 
     protected $casts = [
         'gallery_images'       => 'json',
@@ -60,6 +60,11 @@ class Vehicle extends Model
         'request_price_option' => 'boolean',
         'exchange_preferences' => 'json',
     ];
+    
+    public function getStatusAttribute(): string
+    {
+        return $this->ad_status ?? 'pending';
+    }
 
     // -------------------------------------------------------------------------
     // Accessors – return full public URLs for stored images

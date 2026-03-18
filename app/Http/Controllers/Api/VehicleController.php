@@ -26,7 +26,7 @@ class VehicleController extends Controller
             'documentType',
             'vehicleStatus',
             'properties'
-        ]);
+        ])->where('ad_status', 'published');
 
         // Filtering by Featured Status
         if ($request->has('featured')) {
@@ -176,7 +176,7 @@ class VehicleController extends Controller
             'documentType',
             'vehicleStatus',
             'properties'
-        ])->findOrFail($id);
+        ])->where('ad_status', 'published')->findOrFail($id);
 
         return response()->json($vehicle);
     }

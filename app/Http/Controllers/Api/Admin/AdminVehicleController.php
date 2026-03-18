@@ -38,9 +38,11 @@ class AdminVehicleController extends Controller
     {
         $query = Vehicle::with($this->relations);
 
-        // --- Filter by ad_status ---
+        // --- Filter by ad_status / status ---
         if ($request->filled('ad_status')) {
             $query->where('ad_status', $request->input('ad_status'));
+        } elseif ($request->filled('status')) {
+            $query->where('ad_status', $request->input('status'));
         }
 
         // --- Filter by owner/user ---

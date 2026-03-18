@@ -195,6 +195,7 @@ class VehicleSeeder extends Seeder
                 'location' => $v['location'],
                 'is_featured' => $v['is_featured'],
                 'main_image' => 'vehicles/' . $v['main_image'],
+                'ad_status' => 'published',
                 'user_id' => 1 // Assuming 1 is default admin
             ]);
         }

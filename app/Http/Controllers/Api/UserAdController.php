@@ -208,9 +208,16 @@ class UserAdController extends Controller
     // =========================================================================
     public function myAds(Request $request): JsonResponse
     {
-        $ads = Vehicle::with($this->relations)
-            ->where('user_id', $request->user()->id)
-            ->orderBy('created_at', 'desc')
+        $query = Vehicle::with($this->relations)
+            ->where('user_id', $request->user()->id);
+
+        if ($request->filled('ad_status')) {
+            $query->where('ad_status', $request->input('ad_status'));
+        } elseif ($request->filled('status')) {
+            $query->where('ad_status', $request->input('status'));
+        }
+
+        $ads = $query->orderBy('created_at', 'desc')
             ->paginate($request->input('limit', 12));
 
         return response()->json([

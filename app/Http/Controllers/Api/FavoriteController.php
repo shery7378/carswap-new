@@ -33,6 +33,7 @@ class FavoriteController extends Controller
         $favorites = $request->user()
             ->favorites()
             ->with($this->relations)
+            ->where('ad_status', 'published')
             ->orderBy('favorites.created_at', 'desc')
             ->paginate($request->input('limit', 12));
 
