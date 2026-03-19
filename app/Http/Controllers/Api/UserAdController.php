@@ -203,6 +203,24 @@ class UserAdController extends Controller
     }
 
     // =========================================================================
+    // AUTHENTICATED: GET /api/garage
+    // List user uploaded vehicles that are published, pending, and draft.
+    // =========================================================================
+    public function garage(Request $request): JsonResponse
+    {
+        $ads = Vehicle::with($this->relations)
+            ->where('user_id', $request->user()->id)
+            ->whereIn('ad_status', ['published', 'pending', 'draft'])
+            ->orderBy('created_at', 'desc')
+            ->paginate($request->input('limit', 12));
+
+        return response()->json([
+            'success' => true,
+            'data' => $ads,
+        ]);
+    }
+
+    // =========================================================================
     // AUTHENTICATED: GET /api/ads/my
     // List all ads belonging to the authenticated user
     // =========================================================================

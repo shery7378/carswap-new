@@ -79,6 +79,7 @@ Route::get('/vehicles/{id}', [VehicleController::class , 'show']);
 // IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel
 // from matching the literal string 'my' as an {id} parameter.
 Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/garage', [UserAdController::class , 'garage']);
     Route::get('/ads/my', [UserAdController::class , 'myAds']);
     Route::post('/ads', [UserAdController::class , 'store']);
     Route::put('/ads/{id}', [UserAdController::class , 'update']);
