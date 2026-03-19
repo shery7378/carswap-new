@@ -89,6 +89,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Favorite Routes
     Route::get('/favorites', [FavoriteController::class , 'index']);
     Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class , 'toggle']);
+
+    // Subscriptions
+    Route::get('/subscriptions/my', [SubscriptionController::class, 'mySubscription']);
 });
 
 
