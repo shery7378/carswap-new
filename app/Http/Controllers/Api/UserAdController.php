@@ -407,13 +407,13 @@ class UserAdController extends Controller
         // FREE = 2, SEVERAL CARS = 5, DEALER = 0 (Unlimited)
         if ($plan->active_ads_limit > 0) {
             $activeAdsCount = Vehicle::where('user_id', $user->id)
-                ->where('ad_status', 'published')
+                ->whereIn('ad_status', ['published', 'pending'])
                 ->count();
 
             if ($activeAdsCount >= $plan->active_ads_limit) {
                 return response()->json([
                     'success' => false,
-                    'message' => "You have reached your limit of {$plan->active_ads_limit} active ads for the {$plan->name}. Please upgrade your plan.",
+                    'message' => 'Your subscription plan limit is completed. Please upgrade your plan to post more ads.',
                 ], 403);
             }
         }
