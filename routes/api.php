@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\PartnerController as ApiPartnerController;
 use App\Http\Controllers\Api\VehicleInquiryController;
 use App\Http\Controllers\Api\CompareController;
 use App\Http\Controllers\Api\SubscriptionController;
+use App\Http\Controllers\Api\StripeController;
 
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "api" middleware group. Make something great! | */
 
@@ -92,7 +93,11 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Subscriptions
     Route::get('/subscriptions/my', [SubscriptionController::class, 'mySubscription']);
+    Route::post('/subscriptions/checkout', [StripeController::class, 'createCheckout']);
 });
+
+// Stripe Webhook — must be public & exclude CSRF
+Route::post('/webhooks/stripe', [StripeController::class, 'handleWebhook']);
 
 
 // Admin Routes

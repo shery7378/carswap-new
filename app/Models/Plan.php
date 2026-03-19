@@ -9,6 +9,8 @@ class Plan extends Model
     protected $fillable = [
         'name',
         'slug',
+        'stripe_price_id_monthly',
+        'stripe_price_id_yearly',
         'price',
         'yearly_price',
         'billing_period',
