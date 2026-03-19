@@ -13,16 +13,33 @@ class SubscriptionController extends Controller
             ->orderBy('price', 'asc')
             ->get();
 
+        $activePlanId = null;
         $activeSubscription = null;
-        if ($request->user('sanctum')) {
-            $activeSubscription = $request->user('sanctum')->load('activeSubscription.plan')->activeSubscription;
+
+        $user = $request->user('sanctum');
+        if ($user) {
+            $activeSubscription = $user->load('activeSubscription.plan')->activeSubscription;
+            $activePlanId = $activeSubscription?->plan_id;
         }
 
+        // Attach per-plan metadata for the frontend to use
+        $plans = $plans->map(function ($plan) use ($activePlanId) {
+            $isCurrent = $activePlanId && $plan->id === $activePlanId;
+
+            $plan->is_current       = $isCurrent;
+            $plan->is_disabled      = $isCurrent;
+            $plan->status_message   = $isCurrent ? 'Already subscribed' : null;
+            // Frontend should redirect here when user clicks Upgrade
+            $plan->upgrade_url      = $isCurrent ? null : '/account/billing?upgrade=' . $plan->slug;
+
+            return $plan;
+        });
+
         return response()->json([
-            'success' => true,
-            'message' => 'Subscription plans retrieved successfully.',
-            'data' => $plans,
-            'active_subscription' => $activeSubscription
+            'success'             => true,
+            'message'             => 'Subscription plans retrieved successfully.',
+            'data'                => $plans,
+            'active_subscription' => $activeSubscription,
         ]);
     }
 
