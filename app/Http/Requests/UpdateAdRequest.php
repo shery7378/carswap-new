@@ -49,12 +49,12 @@ class UpdateAdRequest extends FormRequest
             'longitude'            => 'nullable|numeric',
             'properties'           => 'nullable|array',
             'properties.*'         => 'integer|exists:properties,id',
-            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
             'gallery_images'       => 'nullable|array|max:8',
-            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png|max:10240',
+            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png,webp|max:10240',
             'video_url'            => 'nullable|url|max:500',
             'documents'            => 'nullable|array|max:5',
-            'documents.*'          => 'file|mimes:jpg,jpeg,png,pdf|max:10240',
+            'documents.*'          => 'file|mimes:pdf|max:10240',
             'price'                => 'sometimes|numeric|min:0',
             'currency'             => 'nullable|string|max:10',
             'ad_status'            => 'nullable|in:published,rejected,pending,draft',
@@ -70,6 +70,19 @@ class UpdateAdRequest extends FormRequest
             'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
             'exchange_preferences.*.year_from' => 'nullable|integer',
             'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'gallery_images.max'         => 'You can upload a maximum of 8 pictures.',
+            'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
+            'gallery_images.*.mimes'     => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.mimes'           => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.max'             => 'Main image must be less than 10 MB.',
+            'documents.*.mimes'          => 'Supported document types: pdf.',
+            'documents.*.max'            => 'Each document must be less than 10 MB.',
         ];
     }
 

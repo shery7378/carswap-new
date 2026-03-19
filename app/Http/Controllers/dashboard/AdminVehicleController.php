@@ -99,8 +99,9 @@ class AdminVehicleController extends Controller
                 'description' => 'nullable|string',
                 'video_url' => 'nullable|string',
                 'is_featured' => 'boolean',
-                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-                'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+                'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+                'documents.*' => 'nullable|file|mimes:pdf|max:10240',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
                 'ad_status' => 'nullable|in:published,rejected,pending,draft',
@@ -113,6 +114,13 @@ class AdminVehicleController extends Controller
                 'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
                 'exchange_preferences.*.year_from' => 'nullable|integer',
                 'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
+            ], [
+                'main_image.mimes' => 'Supported image types: jpg, jpeg, png, webp.',
+                'main_image.max' => 'Main image must be less than 10 MB.',
+                'gallery_images.*.mimes' => 'Supported image types: jpg, jpeg, png, webp.',
+                'gallery_images.*.max' => 'Each gallery image must be less than 10 MB.',
+                'documents.*.mimes' => 'Supported document types: pdf.',
+                'documents.*.max' => 'Each document must be less than 10 MB.',
             ]);
 
             if ($request->hasFile('main_image')) {
@@ -217,8 +225,9 @@ class AdminVehicleController extends Controller
                 'description' => 'nullable|string',
                 'video_url' => 'nullable|string',
                 'is_featured' => 'boolean',
-                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-                'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'main_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+                'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:10240',
+                'documents.*' => 'nullable|file|mimes:pdf|max:10240',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
                 'ad_status' => 'nullable|in:published,rejected,pending,draft',
@@ -231,6 +240,13 @@ class AdminVehicleController extends Controller
                 'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
                 'exchange_preferences.*.year_from' => 'nullable|integer',
                 'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
+            ], [
+                'main_image.mimes' => 'Supported image types: jpg, jpeg, png, webp.',
+                'main_image.max' => 'Main image must be less than 10 MB.',
+                'gallery_images.*.mimes' => 'Supported image types: jpg, jpeg, png, webp.',
+                'gallery_images.*.max' => 'Each gallery image must be less than 10 MB.',
+                'documents.*.mimes' => 'Supported document types: pdf.',
+                'documents.*.max' => 'Each document must be less than 10 MB.',
             ]);
 
             if ($request->hasFile('main_image')) {

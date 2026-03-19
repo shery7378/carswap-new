@@ -193,14 +193,26 @@ class AdminVehicleController extends Controller
             'properties.*'         => 'integer|exists:properties,id',
 
             // Images
-            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
             'gallery_images'       => 'nullable|array|max:8',
-            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png|max:10240',
+            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png,webp|max:10240',
+
+            // Documents
+            'documents'            => 'nullable|array|max:5',
+            'documents.*'          => 'file|mimes:pdf|max:10240',
+        ], [
+            'gallery_images.max'         => 'You can upload a maximum of 8 pictures.',
+            'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
+            'gallery_images.*.mimes'     => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.mimes'           => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.max'             => 'Main image must be less than 10 MB.',
+            'documents.*.mimes'          => 'Supported document types: pdf.',
+            'documents.*.max'            => 'Each document must be less than 10 MB.',
         ]);
 
         // Separate relational and file fields before mass-assignment
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images'], $validated['main_image']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['main_image'], $validated['documents']);
 
         $validated['ad_status'] = $validated['ad_status'] ?? 'published';
 
@@ -279,13 +291,23 @@ class AdminVehicleController extends Controller
             'user_id'              => 'nullable|integer|exists:users,id',
             'properties'           => 'nullable|array',
             'properties.*'         => 'integer|exists:properties,id',
-            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png|max:10240',
+            'main_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
             'gallery_images'       => 'nullable|array|max:8',
-            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png|max:10240',
+            'gallery_images.*'     => 'image|mimes:jpg,jpeg,png,webp|max:10240',
+            'documents'            => 'nullable|array|max:5',
+            'documents.*'          => 'file|mimes:pdf|max:10240',
+        ], [
+            'gallery_images.max'         => 'You can upload a maximum of 8 pictures.',
+            'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
+            'gallery_images.*.mimes'     => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.mimes'           => 'Supported image types: jpg, jpeg, png, webp.',
+            'main_image.max'             => 'Main image must be less than 10 MB.',
+            'documents.*.mimes'          => 'Supported document types: pdf.',
+            'documents.*.max'            => 'Each document must be less than 10 MB.',
         ]);
 
         $properties = $validated['properties'] ?? null;
-        unset($validated['properties'], $validated['gallery_images'], $validated['main_image']);
+        unset($validated['properties'], $validated['gallery_images'], $validated['main_image'], $validated['documents']);
 
         $vehicle->update($validated);
 
