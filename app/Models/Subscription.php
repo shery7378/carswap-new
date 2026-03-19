@@ -18,6 +18,18 @@ class Subscription extends Model
         'stripe_session_id',
         'stripe_subscription_id',
         'stripe_customer_id',
+
+        // Billing Information
+        'billing_full_name',
+        'billing_company_name',
+        'billing_my_name',
+        'billing_city',
+        'billing_address',
+
+        // Toggles / Selections
+        'accepted_terms',
+        'accepted_privacy',
+        'accepted_recurring',
     ];
 
     protected $casts = [

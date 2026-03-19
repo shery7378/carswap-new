@@ -29,6 +29,18 @@ class StripeController extends Controller
         $request->validate([
             'plan_id' => 'required|integer|exists:plans,id',
             'billing' => 'required|in:monthly,yearly',
+
+            // New Billing Fields from Form
+            'full_name'    => 'required|string|max:191',
+            'company_name' => 'nullable|string|max:191',
+            'my_name'      => 'required|string|max:191',
+            'city'         => 'required|string|max:191',
+            'address'      => 'required|string|max:255',
+
+            // Checkbox Enforcements
+            'accepted_terms'     => 'accepted',
+            'accepted_privacy'   => 'accepted',
+            'accepted_recurring' => 'accepted',
         ]);
 
         $user = $request->user();
@@ -66,9 +78,13 @@ class StripeController extends Controller
                     'quantity' => 1,
                 ]],
                 'metadata'             => [
-                    'user_id'  => $user->id,
-                    'plan_id'  => $plan->id,
-                    'billing'  => $request->billing,
+                    'user_id'         => $user->id,
+                    'plan_id'         => $plan->id,
+                    'billing_period'  => $request->billing,
+                    'full_name'       => $request->full_name,
+                    'company'         => $request->company_name,
+                    'city'            => $request->city,
+                    'address'         => $request->address,
                 ],
                 'success_url'          => $frontendUrl . '/account/billing?status=success&session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url'           => $frontendUrl . '/account/billing?status=cancelled',
@@ -80,7 +96,7 @@ class StripeController extends Controller
                 ],
             ]);
 
-            // Create a pending subscription record so we can track it
+            // Create a pending subscription record with ALL info
             Subscription::create([
                 'user_id'           => $user->id,
                 'plan_id'           => $plan->id,
@@ -90,6 +106,16 @@ class StripeController extends Controller
                 'next_billing_at'   => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
                 'duration'          => $request->billing === 'yearly' ? 'Yearly' : 'Monthly',
                 'stripe_session_id' => $session->id,
+
+                // Saving Billing Info
+                'billing_full_name'    => $request->full_name,
+                'billing_company_name' => $request->company_name,
+                'billing_my_name'      => $request->my_name,
+                'billing_city'         => $request->city,
+                'billing_address'      => $request->address,
+                'accepted_terms'       => $request->boolean('accepted_terms'),
+                'accepted_privacy'     => $request->boolean('accepted_privacy'),
+                'accepted_recurring'   => $request->boolean('accepted_recurring'),
             ]);
 
             return response()->json([
