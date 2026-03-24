@@ -84,8 +84,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/ads/my', [UserAdController::class , 'myAds']);
     Route::post('/ads', [UserAdController::class , 'store']);
     Route::get('/ads/{id}/edit', [UserAdController::class , 'edit']);
-    Route::put('/ads/{id}', [UserAdController::class , 'update']);
-    Route::post('/ads/{id}', [UserAdController::class , 'update']); // To support file uploads via POST
+    Route::post('/ads/{id}', [UserAdController::class , 'update']); // Combined update method using POST for file support
     Route::delete('/ads/{id}', [UserAdController::class , 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);
 
@@ -110,7 +109,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () 
     Route::get('/vehicles', [AdminVehicleController::class , 'index']);
     Route::get('/vehicles/{id}', [AdminVehicleController::class , 'show']);
     Route::post('/vehicles', [AdminVehicleController::class , 'store']);
-    Route::put('/vehicles/{id}', [AdminVehicleController::class , 'update']);
+    Route::post('/vehicles/{id}', [AdminVehicleController::class , 'update']);
     Route::delete('/vehicles/{id}', [AdminVehicleController::class , 'destroy']);
     Route::patch('/vehicles/{id}/status', [AdminVehicleController::class , 'changeStatus']);
     Route::patch('/vehicles/{id}/featured', [AdminVehicleController::class , 'toggleFeatured']);
