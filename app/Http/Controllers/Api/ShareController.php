@@ -12,11 +12,13 @@ class ShareController extends Controller
      */
     public function index(Request $request)
     {
+        // Changed 'url' to 'required|string' instead of 'url' to be more flexible
+        // with deep links, localhost, or non-protocol prefixed links.
         $request->validate([
-            'url' => 'required|url',
+            'url' => 'required|string',
             'title' => 'nullable|string',
             'description' => 'nullable|string',
-            'image' => 'nullable|url',
+            'image' => 'nullable|string', // Changed to string for same flexibility
         ]);
 
         $url = $request->url;
@@ -24,10 +26,15 @@ class ShareController extends Controller
         $description = $request->description ?? '';
         $image = $request->image ?? '';
 
-        $encodedUrl = urlencode($url);
-        $encodedTitle = urlencode($title);
-        $encodedDesc = urlencode($description);
-        $encodedImage = urlencode($image);
+        // rawurlencode is often better for social links than urlencode (uses %20 instead of +)
+        $encodedUrl = rawurlencode($url);
+        $encodedTitle = rawurlencode($title);
+        $encodedDesc = rawurlencode($description);
+        $encodedImage = rawurlencode($image);
+
+        // Prepare email/message body
+        $fullBody = !empty($description) ? "{$description} - {$url}" : $url;
+        $encodedFullBody = rawurlencode($fullBody);
 
         $shareLinks = [
             [
@@ -64,7 +71,8 @@ class ShareController extends Controller
                 'name' => 'Messenger',
                 'icon' => 'bx bxl-messenger',
                 'color' => '#006AFF',
-                'share_url' => "fb-messenger://share/?link={$encodedUrl}&app_id=123456789" // Requires app_id for web, but this is a common scheme
+                // Web version works better for cross-platform than just the app scheme
+                'share_url' => "https://www.facebook.com/dialog/send?link={$encodedUrl}&app_id=123456789&redirect_uri={$encodedUrl}"
             ],
             [
                 'name' => 'Pinterest',
@@ -82,17 +90,17 @@ class ShareController extends Controller
                 'name' => 'Email',
                 'icon' => 'bx bx-envelope',
                 'color' => '#7F7F7F',
-                'share_url' => "mailto:?subject={$encodedTitle}&body={$encodedDesc}%20{$encodedUrl}"
+                'share_url' => "mailto:?subject={$encodedTitle}&body={$encodedFullBody}"
             ],
             [
                 'name' => 'Gmail',
                 'icon' => 'bx bxl-gmail',
                 'color' => '#EA4335',
-                'share_url' => "https://mail.google.com/mail/?view=cm&fs=1&tf=1&to=&su={$encodedTitle}&body={$encodedDesc}%20{$encodedUrl}&ui=2&tf=1"
+                'share_url' => "https://mail.google.com/mail/?view=cm&fs=1&to=&su={$encodedTitle}&body={$encodedFullBody}"
             ],
             [
                 'name' => 'Bluesky',
-                'icon' => 'bx bx-cloud', // Bluesky doesn't have a default boxicon yet usually, using cloud as placeholder
+                'icon' => 'bx bx-share-alt', // Better placeholder for now
                 'color' => '#0085FF',
                 'share_url' => "https://bsky.app/intent/compose?text={$encodedTitle}%20{$encodedUrl}"
             ],
@@ -116,7 +124,7 @@ class ShareController extends Controller
             ],
             [
                 'name' => 'Viber',
-                'icon' => 'bx bxl-viber', // If exists
+                'icon' => 'bx bxl-viber',
                 'color' => '#7360F2',
                 'share_url' => "viber://forward?text={$encodedTitle}%20{$encodedUrl}"
             ],
@@ -124,7 +132,7 @@ class ShareController extends Controller
                 'name' => 'Copy Link',
                 'icon' => 'bx bx-copy',
                 'color' => '#000000',
-                'share_url' => $url // Handled by frontend clipboard API
+                'share_url' => $url 
             ],
         ];
 
