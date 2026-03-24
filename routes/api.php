@@ -26,6 +26,9 @@ Route::get('/share', [ShareController::class , 'index']);
 // Public Subscription API
 Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
 
+// Public Settings API (Header, Footer, Social links, etc.)
+Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
+
 // Public API route for registration
 Route::post('/register', [RegisterController::class , 'register']);
 Route::post('/login', [RegisterController::class , 'login']);

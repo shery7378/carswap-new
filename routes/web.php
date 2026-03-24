@@ -132,9 +132,11 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/ecommerce/settings/shipping', [SettingsShipping::class , 'index'])->name('app-ecommerce-settings-shipping');
         Route::get('/app/ecommerce/settings/tax', [SettingsTax::class , 'index'])->name('app-ecommerce-settings-tax');
         Route::get('/app/ecommerce/settings/notifications', [SettingsNotifications::class , 'index'])->name('app-ecommerce-settings-notifications');
+        Route::get('/app/ecommerce/settings/header-footer', [\App\Http\Controllers\ecommerce\SettingsHeaderFooter::class , 'index'])->name('app-ecommerce-settings-header-footer');
         
         // Settings write/edit operations
         Route::post('/app/ecommerce/settings/payment', [SettingsPayment::class , 'store'])->name('app-ecommerce-settings-payment-store')->middleware('permission:edit-settings,admin-guard');
+        Route::post('/app/ecommerce/settings/header-footer', [\App\Http\Controllers\ecommerce\SettingsHeaderFooter::class, 'store'])->name('app-ecommerce-settings-header-footer-store')->middleware('permission:edit-settings,admin-guard');
     });
 
     // Subscription Management
