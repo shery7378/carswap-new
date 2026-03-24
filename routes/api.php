@@ -16,8 +16,12 @@ use App\Http\Controllers\Api\VehicleInquiryController;
 use App\Http\Controllers\Api\CompareController;
 use App\Http\Controllers\Api\SubscriptionController;
 use App\Http\Controllers\Api\StripeController;
+use App\Http\Controllers\Api\ShareController;
 
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "api" middleware group. Make something great! | */
+
+// Public Social Sharing API
+Route::get('/share', [ShareController::class , 'index']);
 
 // Public Subscription API
 Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
