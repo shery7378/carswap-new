@@ -14,7 +14,7 @@
                 <form action="{{ route('admin.partners.store') }}" method="POST" enctype="multipart/form-data" id="partnerForm">
                     @csrf
 
-                    <!-- Company Info Section -->
+                    <!-- Company Info Section>
                     <div class="mb-4">
                         <h6 class="fw-bold mb-3 border-bottom pb-2">Basic Information</h6>
                         <div class="row">

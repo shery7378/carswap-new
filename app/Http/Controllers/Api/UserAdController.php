@@ -313,6 +313,33 @@ class UserAdController extends Controller
         ]);
     }
 
+    /**
+     * AUTHENTICATED: GET /api/ads/{id}/edit
+     * Returns the vehicle data combined with all necessary form options (brands, fuel types, etc.)
+     */
+    public function edit(int $id): JsonResponse
+    {
+        $vehicle = Vehicle::with($this->relations)->findOrFail($id);
+
+        if ($vehicle->user_id !== auth()->id()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are not authorized to edit this ad.',
+            ], 403);
+        }
+
+        // Get options using the VehicleOptionController logic
+        $options = (new VehicleOptionController())->getOptions()->getData();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'vehicle' => $vehicle,
+                'options' => $options
+            ],
+        ]);
+    }
+
     // =========================================================================
     // AUTHENTICATED: DELETE /api/ads/{id}
     // Delete an ad (owner only)

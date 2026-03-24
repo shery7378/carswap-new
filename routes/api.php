@@ -83,7 +83,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/garage', [UserAdController::class , 'garage']);
     Route::get('/ads/my', [UserAdController::class , 'myAds']);
     Route::post('/ads', [UserAdController::class , 'store']);
+    Route::get('/ads/{id}/edit', [UserAdController::class , 'edit']);
     Route::put('/ads/{id}', [UserAdController::class , 'update']);
+    Route::post('/ads/{id}', [UserAdController::class , 'update']); // To support file uploads via POST
     Route::delete('/ads/{id}', [UserAdController::class , 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);
 
