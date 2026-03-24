@@ -83,7 +83,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/garage', [UserAdController::class , 'garage']);
     Route::get('/ads/my', [UserAdController::class , 'myAds']);
     Route::post('/ads', [UserAdController::class , 'store']);
-    Route::get('/ads/{id}/edit', [UserAdController::class , 'edit']);
+    Route::match(['get', 'post'], '/ads/{id}/edit', [UserAdController::class , 'edit']);
     Route::post('/ads/{id}', [UserAdController::class , 'update']); // Combined update method using POST for file support
     Route::delete('/ads/{id}', [UserAdController::class , 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);

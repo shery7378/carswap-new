@@ -186,6 +186,13 @@
       ]
     },
     {
+      "url": "app/email-templates",
+      "name": "Email Templates",
+      "icon": "menu-icon icon-base bx bx-envelope",
+      "slug": "admin.email-templates.index",
+      "permission": "view-dashboard"
+    },
+    {
       "name": "Access Control",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",

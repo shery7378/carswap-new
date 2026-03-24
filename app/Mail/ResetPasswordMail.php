@@ -30,6 +30,18 @@ class ResetPasswordMail extends Mailable
      */
     public function build()
     {
+        $template = \App\Models\EmailTemplate::where('slug', 'password-recovery')->first();
+
+        if ($template) {
+            $rendered = $template->render([
+                'first_name' => $this->user->first_name,
+                'reset_link' => $this->resetUrl,
+            ]);
+
+            return $this->subject($rendered['subject'])
+                        ->html($rendered['body']);
+        }
+
         $htmlContent = "
         <!DOCTYPE html>
         <html>

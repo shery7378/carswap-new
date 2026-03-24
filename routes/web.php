@@ -59,6 +59,7 @@ use APP\Http\Controllers\users\User_Controller;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
+use App\Http\Controllers\Admin\EmailTemplateController;
 
 
 // Main Page \Illuminate\Support\Facades\Route
@@ -179,4 +180,9 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');
     Route::post('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'store'])->name('admin.vehicle-settings.store');
     Route::delete('/app/vehicle-settings/{type}/{id}', [VehicleRelationController::class , 'destroy'])->name('admin.vehicle-settings.destroy');
+
+    // Email Templates
+    Route::get('/app/email-templates', [EmailTemplateController::class, 'index'])->name('admin.email-templates.index');
+    Route::put('/app/email-templates/{id}', [EmailTemplateController::class, 'update'])->name('admin.email-templates.update');
+    Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update');
 });
