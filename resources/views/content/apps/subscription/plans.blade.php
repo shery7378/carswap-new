@@ -69,9 +69,11 @@
       <h3 class="fw-bold mb-1">Subscription Tiers</h3>
       <p class="text-muted mb-0">Manage your business packages and customer value levels</p>
     </div>
+    @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-subscriptions', 'admin-guard'))
     <a href="{{ route('app-subscription-create') }}" class="btn btn-primary d-flex align-items-center">
       <i class="bx bx-plus me-1"></i> New Package
     </a>
+    @endif
   </div>
 
   <div class="row">
@@ -113,6 +115,7 @@
         </div>
 
         <div class="plan-actions px-4 pb-4 mt-auto">
+          @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-subscriptions', 'admin-guard'))
           <div class="d-flex gap-2">
             <a href="javascript:void(0);" class="btn btn-outline-{{ $plan->color }} flex-grow-1">
               <i class="bx bx-edit-alt small me-1"></i> Edit
@@ -121,6 +124,7 @@
               <i class="bx bx-power-off"></i>
             </button>
           </div>
+          @endif
           <div class="mt-3 text-center">
             @if($plan->is_active)
               <span class="badge bg-label-success small"><i class="bx bxs-circle me-1" style="font-size: 6px;"></i> Live Package</span>

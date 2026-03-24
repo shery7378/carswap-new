@@ -62,9 +62,11 @@
     <span class="text-muted fw-light">Access Control /</span> 
     <span class="fw-bold text-primary">Administrators</span>
   </h4>
+  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-users', 'admin-guard'))
   <a href="{{ route('admin.users.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm">
     <i class="bx bx-plus-circle me-1"></i> Add New Admin
   </a>
+  @endif
 </div>
 
 <div class="card admin-card overflow-hidden">
@@ -121,9 +123,12 @@
                </div>
             @else
               <div class="d-flex gap-2">
+                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-users', 'admin-guard'))
                 <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
                   <i class="bx bx-edit-alt"></i>
                 </a>
+                @endif
+                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-users', 'admin-guard'))
                 <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
                   @csrf
                   @method('DELETE')
@@ -131,6 +136,7 @@
                     <i class="bx bx-trash"></i>
                   </button>
                 </form>
+                @endif
               </div>
             @endif
           </td>

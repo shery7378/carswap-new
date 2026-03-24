@@ -21,7 +21,11 @@ class UserController extends Controller
     {
         // Exclude super-admin role from creation to prevent uncontrolled privilege escalation
         $roles = Role::where('guard_name', 'admin-guard')->where('name', '!=', 'super-admin')->get();
-        $permissions = Permission::where('guard_name', 'admin-guard')->get();
+        $permissions = Permission::where('guard_name', 'admin-guard')->get()->groupBy(function($p) {
+            $parts = explode('-', $p->name);
+            array_shift($parts);
+            return count($parts) ? implode('_', $parts) : 'general';
+        });
         return view('content.access-control.users-create', compact('roles', 'permissions'));
     }
 
@@ -70,7 +74,11 @@ class UserController extends Controller
 
         // Exclude super-admin role from editing
         $roles = Role::where('guard_name', 'admin-guard')->where('name', '!=', 'super-admin')->get();
-        $permissions = Permission::where('guard_name', 'admin-guard')->get();
+        $permissions = Permission::where('guard_name', 'admin-guard')->get()->groupBy(function($p) {
+            $parts = explode('-', $p->name);
+            array_shift($parts);
+            return count($parts) ? implode('_', $parts) : 'general';
+        });
         $userRoles = $user->roles->pluck('name')->toArray();
         $userPermissions = $user->permissions->pluck('name')->toArray();
         

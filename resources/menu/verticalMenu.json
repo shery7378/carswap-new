@@ -15,12 +15,14 @@
         {
           "url": "app/vehicles",
           "name": "Vehicle List",
-          "slug": "admin.vehicles.index"
+          "slug": "admin.vehicles.index",
+          "permission": "view-vehicles"
         },
         {
           "url": "app/vehicles/create",
           "name": "Add Vehicle",
-          "slug": "admin-vehicles-create"
+          "slug": "admin-vehicles-create",
+          "permission": "create-vehicles"
         }
       ]
     },
@@ -33,12 +35,14 @@
         {
           "url": "app/partners",
           "name": "Partner List",
-          "slug": "admin.partners.index"
+          "slug": "admin.partners.index",
+          "permission": "view-partners"
         },
         {
           "url": "app/partners/create",
           "name": "Add Partner",
-          "slug": "admin-partners-create"
+          "slug": "admin-partners-create",
+          "permission": "create-partners"
         }
       ]
     },
@@ -46,83 +50,109 @@
       "name": "Car Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "admin-vehicle-settings",
-      "permission": "view-vehicles",
+      "permission": "view-car_settings",
       "submenu": [
         {
           "url": "app/vehicle-settings/brands",
           "name": "Brands",
-          "slug": "admin-brands"
+          "slug": "admin-brands",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/models",
           "name": "Models",
-          "slug": "admin-models"
+          "slug": "admin-models",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/sales-methods",
           "name": "Sales Methods",
-          "slug": "admin-sales-methods"
+          "slug": "admin-sales-methods",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/vehicle-statuses",
           "name": "Vehicle Statuses",
-          "slug": "admin-vehicle-statuses"
+          "slug": "admin-vehicle-statuses",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/body-types",
           "name": "Body Types",
-          "slug": "admin-body-types"
+          "slug": "admin-body-types",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/fuel-types",
           "name": "Fuel Types",
-          "slug": "admin-fuel-types"
+          "slug": "admin-fuel-types",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/interior-colors",
           "name": "Interior Colors",
-          "slug": "admin-interior-colors"
+          "slug": "admin-interior-colors",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/exterior-colors",
           "name": "Exterior Colors",
-          "slug": "admin-exterior-colors"
+          "slug": "admin-exterior-colors",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/document-types",
           "name": "Document Types",
-          "slug": "admin-document-types"
+          "slug": "admin-document-types",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/transmissions",
           "name": "Transmissions",
-          "slug": "admin-transmissions"
+          "slug": "admin-transmissions",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/drive-types",
           "name": "Drive Types",
-          "slug": "admin-drive-types"
+          "slug": "admin-drive-types",
+          "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/extra-features",
           "name": "Extra Features",
-          "slug": "admin-extra-features"
+          "slug": "admin-extra-features",
+          "permission": "view-car_settings"
         }
       ]
     },
     {
-      "url": "app/ecommerce/order",
-      "name": "Order",
-      "icon": "menu-icon icon-base bx bx-shopping-bag",
-      "slug": "app-ecommerce-order",
-      "permission": "view-orders"
-    },
-    {
-      "url": "app/ecommerce/customer",
-      "name": "Customer",
-      "icon": "menu-icon icon-base bx bx-user",
-      "slug": "app-ecommerce-customer",
-      "permission": "view-users"
+      "name": "Ecommerce",
+      "icon": "menu-icon icon-base bx bx-cart",
+      "slug": "app-ecommerce",
+      "permission": "view-products",
+      "submenu": [
+        {
+          "url": "app/ecommerce/products/product-list",
+          "name": "Product List",
+          "slug": "app-ecommerce-product-list",
+          "permission": "view-products"
+        },
+        {
+          "url": "app/ecommerce/order",
+          "name": "Orders",
+          "icon": "menu-icon icon-base bx bx-shopping-bag",
+          "slug": "app-ecommerce-order",
+          "permission": "view-orders"
+        },
+        {
+          "url": "app/ecommerce/customer",
+          "name": "Customers",
+          "icon": "menu-icon icon-base bx bx-user",
+          "slug": "app-ecommerce-customer",
+          "permission": "view-customers"
+        }
+      ]
     },
     {
       "name": "Subscription",
@@ -133,22 +163,26 @@
         {
           "url": "app/subscription/list",
           "name": "Subscription List",
-          "slug": "app-subscription-list"
+          "slug": "app-subscription-list",
+          "permission": "view-subscriptions"
         },
         {
           "url": "app/subscription/create",
           "name": "Create Subscription",
-          "slug": "app-subscription-create"
+          "slug": "app-subscription-create",
+          "permission": "create-subscriptions"
         },
         {
           "url": "app/subscription/plans",
           "name": "Subscription Plans",
-          "slug": "app-subscription-plans"
+          "slug": "app-subscription-plans",
+          "permission": "view-subscriptions"
         },
         {
           "url": "app/subscription/payments",
           "name": "Payment History",
-          "slug": "app-subscription-payments"
+          "slug": "app-subscription-payments",
+          "permission": "view-subscriptions"
         }
       ]
     },
@@ -156,32 +190,37 @@
       "name": "Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "app-ecommerce-settings",
-      "permission": "view-dashboard",
+      "permission": "view-settings",
       "submenu": [
         {
           "url": "app/ecommerce/settings/general",
           "name": "General",
-          "slug": "app-ecommerce-settings-general"
+          "slug": "app-ecommerce-settings-general",
+          "permission": "view-settings"
         },
         {
           "url": "app/ecommerce/settings/payment",
           "name": "Payment",
-          "slug": "app-ecommerce-settings-payment"
+          "slug": "app-ecommerce-settings-payment",
+          "permission": "view-settings"
         },
         {
           "url": "app/ecommerce/settings/shipping",
           "name": "Shipping",
-          "slug": "app-ecommerce-settings-shipping"
+          "slug": "app-ecommerce-settings-shipping",
+          "permission": "view-settings"
         },
         {
           "url": "app/ecommerce/settings/tax",
           "name": "Tax",
-          "slug": "app-ecommerce-settings-tax"
+          "slug": "app-ecommerce-settings-tax",
+          "permission": "view-settings"
         },
         {
           "url": "app/ecommerce/settings/notifications",
           "name": "Notifications",
-          "slug": "app-ecommerce-settings-notifications"
+          "slug": "app-ecommerce-settings-notifications",
+          "permission": "view-settings"
         }
       ]
     },
@@ -190,7 +229,7 @@
       "name": "Email Templates",
       "icon": "menu-icon icon-base bx bx-envelope",
       "slug": "admin.email-templates.index",
-      "permission": "view-dashboard"
+      "permission": "view-email_templates"
     },
     {
       "name": "Access Control",
@@ -201,12 +240,14 @@
         {
           "url": "app/access-control/roles",
           "name": "Roles",
-          "slug": "admin.roles.index"
+          "slug": "admin.roles.index",
+          "permission": "view-roles"
         },
         {
           "url": "app/access-control/users",
           "name": "Admins",
-          "slug": "admin.users.index"
+          "slug": "admin.users.index",
+          "permission": "view-users"
         }
       ]
     }

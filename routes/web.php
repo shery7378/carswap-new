@@ -62,28 +62,24 @@ use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Admin\EmailTemplateController;
 
 
-// Main Page \Illuminate\Support\Facades\Route
-
-// admin auth
-
+// Admin Authentication (Publicly accessible but handled by guard)
 Route::get('/', [AuthController::class , 'index'])->name('login');
 Route::post('/login', [AuthController::class , 'store'])->name('admin-login-store');
 
+// Protected Routes Section
 Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-guard'])->group(function () {
 
+    // General Dashboard & Logout
     Route::get('/dashboard', [Analytics::class , 'index'])->name('dashboard-analytics');
     Route::post('/logout', [AuthController::class , 'logout'])->name('logout');
-    // layout
+    
+    // Layout, UI, & Forms (Accessible Utility Pages for all authorized staff)
     Route::get('/layouts/without-menu', [WithoutMenu::class , 'index'])->name('layouts-without-menu');
     Route::get('/layouts/without-navbar', [WithoutNavbar::class , 'index'])->name('layouts-without-navbar');
     Route::get('/layouts/fluid', [Fluid::class , 'index'])->name('layouts-fluid');
     Route::get('/layouts/container', [Container::class , 'index'])->name('layouts-container');
     Route::get('/layouts/blank', [Blank::class , 'index'])->name('layouts-blank');
-
-    // cards
     Route::get('/cards/basic', [CardBasic::class , 'index'])->name('cards-basic');
-
-    // User Interface
     Route::get('/ui/accordion', [Accordion::class , 'index'])->name('ui-accordion');
     Route::get('/ui/alerts', [Alerts::class , 'index'])->name('ui-alerts');
     Route::get('/ui/badges', [Badges::class , 'index'])->name('ui-badges');
@@ -103,86 +99,110 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::get('/ui/toasts', [Toasts::class , 'index'])->name('ui-toasts');
     Route::get('/ui/tooltips-popovers', [TooltipsPopovers::class , 'index'])->name('ui-tooltips-popovers');
     Route::get('/ui/typography', [Typography::class , 'index'])->name('ui-typography');
-
-    // extended ui
     Route::get('/extended/ui-perfect-scrollbar', [PerfectScrollbar::class , 'index'])->name('extended-ui-perfect-scrollbar');
     Route::get('/extended/ui-text-divider', [TextDivider::class , 'index'])->name('extended-ui-text-divider');
-
-    // icons
     Route::get('/icons/boxicons', [Boxicons::class , 'index'])->name('icons-boxicons');
-
-    // form elements
     Route::get('/forms/basic-inputs', [BasicInput::class , 'index'])->name('forms-basic-inputs');
     Route::get('/forms/input-groups', [InputGroups::class , 'index'])->name('forms-input-groups');
-
-    // form layouts
     Route::get('/form/layouts-vertical', [VerticalForm::class , 'index'])->name('form-layouts-vertical');
     Route::get('/form/layouts-horizontal', [HorizontalForm::class , 'index'])->name('form-layouts-horizontal');
-
-    // tables
     Route::get('/tables/basic', [TablesBasic::class , 'index'])->name('tables-basic');
 
-    // ecommerce
-    Route::get('/app/ecommerce/products/product-list', [ProductList::class , 'index'])->name('app-ecommerce-product-list');
-    Route::get('/app/ecommerce/products/add-product', [AddProduct::class , 'index'])->name('app-ecommerce-add-product');
-    Route::get('/app/ecommerce/products/category-list', [CategoryList::class , 'index'])->name('app-ecommerce-category-list');
-    Route::get('/app/ecommerce/order', [Order::class , 'index'])->name('app-ecommerce-order');
-    Route::get('/app/ecommerce/customer', [Customer::class , 'index'])->name('app-ecommerce-customer');
-    Route::get('/app/ecommerce/settings/general', [SettingsGeneral::class , 'index'])->name('app-ecommerce-settings-general');
-    Route::get('/app/ecommerce/settings/payment', [SettingsPayment::class , 'index'])->name('app-ecommerce-settings-payment');
-    Route::get('/app/ecommerce/settings/shipping', [SettingsShipping::class , 'index'])->name('app-ecommerce-settings-shipping');
-    Route::get('/app/ecommerce/settings/tax', [SettingsTax::class , 'index'])->name('app-ecommerce-settings-tax');
-    Route::get('/app/ecommerce/settings/notifications', [SettingsNotifications::class , 'index'])->name('app-ecommerce-settings-notifications');
+    // E-commerce Products Module
+    Route::middleware(['permission:view-products,admin-guard'])->group(function () {
+        Route::get('/app/ecommerce/products/product-list', [ProductList::class , 'index'])->name('app-ecommerce-product-list');
+        Route::get('/app/ecommerce/products/add-product', [AddProduct::class , 'index'])->name('app-ecommerce-add-product');
+        Route::get('/app/ecommerce/products/category-list', [CategoryList::class , 'index'])->name('app-ecommerce-category-list');
+    });
+    
+    // E-commerce Orders Module
+    Route::middleware(['permission:view-orders,admin-guard'])->group(function () {
+        Route::get('/app/ecommerce/order', [Order::class , 'index'])->name('app-ecommerce-order');
+    });
+    
+    // E-commerce Customers Module
+    Route::middleware(['permission:view-customers,admin-guard'])->group(function () {
+        Route::get('/app/ecommerce/customer', [Customer::class , 'index'])->name('app-ecommerce-customer');
+    });
 
-    // subscription
+    // Main Settings Module
+    Route::middleware(['permission:view-settings,admin-guard'])->group(function () {
+        Route::get('/app/ecommerce/settings/general', [SettingsGeneral::class , 'index'])->name('app-ecommerce-settings-general');
+        Route::get('/app/ecommerce/settings/payment', [SettingsPayment::class , 'index'])->name('app-ecommerce-settings-payment');
+        Route::get('/app/ecommerce/settings/shipping', [SettingsShipping::class , 'index'])->name('app-ecommerce-settings-shipping');
+        Route::get('/app/ecommerce/settings/tax', [SettingsTax::class , 'index'])->name('app-ecommerce-settings-tax');
+        Route::get('/app/ecommerce/settings/notifications', [SettingsNotifications::class , 'index'])->name('app-ecommerce-settings-notifications');
+        
+        // Settings write/edit operations
+        Route::post('/app/ecommerce/settings/payment', [SettingsPayment::class , 'store'])->name('app-ecommerce-settings-payment-store')->middleware('permission:edit-settings,admin-guard');
+    });
+
+    // Subscription Management
     Route::middleware(['permission:view-subscriptions,admin-guard'])->group(function () {
         Route::get('/app/subscription/list', [SubscriptionList::class , 'index'])->name('app-subscription-list');
-        Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create');
-        Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store');
         Route::get('/app/subscription/plans', [SubscriptionPlans::class , 'index'])->name('app-subscription-plans');
         Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
+        
+        // Subscription creation
+        Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create')->middleware('permission:create-subscriptions,admin-guard');
+        Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store')->middleware('permission:create-subscriptions,admin-guard');
     });
 
-    // Access Control (Roles & Users)
-    Route::middleware(['role:super-admin|admin,admin-guard', 'permission:view-roles,admin-guard'])->group(function () {
+    // Access Control: ROLES
+    Route::middleware(['permission:view-roles,admin-guard'])->group(function () {
         Route::get('/app/access-control/roles', [AdminRoleController::class , 'index'])->name('admin.roles.index');
-        Route::get('/app/access-control/roles/create', [AdminRoleController::class , 'create'])->name('admin.roles.create');
-        Route::post('/app/access-control/roles', [AdminRoleController::class , 'store'])->name('admin.roles.store');
-        Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class , 'edit'])->name('admin.roles.edit');
-        Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update');
-        Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy');
-
-        Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
-        Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create');
-        Route::post('/app/access-control/users', [AdminUserController::class , 'store'])->name('admin.users.store');
-        Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class , 'edit'])->name('admin.users.edit');
-        Route::put('/app/access-control/users/{id}', [AdminUserController::class , 'update'])->name('admin.users.update');
-        Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy');
+        Route::get('/app/access-control/roles/create', [AdminRoleController::class , 'create'])->name('admin.roles.create')->middleware('permission:create-roles,admin-guard');
+        Route::post('/app/access-control/roles', [AdminRoleController::class , 'store'])->name('admin.roles.store')->middleware('permission:create-roles,admin-guard');
+        Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class , 'edit'])->name('admin.roles.edit')->middleware('permission:edit-roles,admin-guard');
+        Route::put('/app/access-control/roles/{id}', [AdminRoleController::class , 'update'])->name('admin.roles.update')->middleware('permission:edit-roles,admin-guard');
+        Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class , 'destroy'])->name('admin.roles.destroy')->middleware('permission:delete-roles,admin-guard');
     });
-    // vehicles
+
+    // Access Control: ADMIN USERS
+    Route::middleware(['permission:view-users,admin-guard'])->group(function () {
+        Route::get('/app/access-control/users', [AdminUserController::class , 'index'])->name('admin.users.index');
+        Route::get('/app/access-control/users/create', [AdminUserController::class , 'create'])->name('admin.users.create')->middleware('permission:create-users,admin-guard');
+        Route::post('/app/access-control/users', [AdminUserController::class , 'store'])->name('admin.users.store')->middleware('permission:create-users,admin-guard');
+        Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class , 'edit'])->name('admin.users.edit')->middleware('permission:edit-users,admin-guard');
+        Route::put('/app/access-control/users/{id}', [AdminUserController::class , 'update'])->name('admin.users.update')->middleware('permission:edit-users,admin-guard');
+        Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy')->middleware('permission:delete-users,admin-guard');
+    });
+
+    // Main VEHICLES Module
     Route::middleware(['permission:view-vehicles,admin-guard'])->group(function () {
         Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
-        Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create');
-        Route::post('/app/vehicles', [AdminVehicleController::class , 'store'])->name('admin.vehicles.store');
-        Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit');
-        Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update');
-        Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy');
-        Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class , 'updateStatus'])->name('admin.vehicles.update-status');
         Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
+        
+        // Granular vehicle permissions for modification
+        Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create')->middleware('permission:create-vehicles,admin-guard');
+        Route::post('/app/vehicles', [AdminVehicleController::class , 'store'])->name('admin.vehicles.store')->middleware('permission:create-vehicles,admin-guard');
+        Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit')->middleware('permission:edit-vehicles,admin-guard');
+        Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update')->middleware('permission:edit-vehicles,admin-guard');
+        Route::delete('/app/vehicles/{id}', [AdminVehicleController::class , 'destroy'])->name('admin.vehicles.destroy')->middleware('permission:delete-vehicles,admin-guard');
+        Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class , 'updateStatus'])->name('admin.vehicles.update-status')->middleware('permission:edit-vehicles,admin-guard');
     });
 
-    // partners
+    // PARTNERS Module
     Route::middleware(['permission:view-partners,admin-guard'])->group(function () {
-        Route::resource('/app/partners', AdminPartnerController::class)->names('admin.partners');
+        Route::get('/app/partners', [AdminPartnerController::class, 'index'])->name('admin.partners.index');
+        Route::get('/app/partners/create', [AdminPartnerController::class, 'create'])->name('admin.partners.create')->middleware('permission:create-partners,admin-guard');
+        Route::post('/app/partners', [AdminPartnerController::class, 'store'])->name('admin.partners.store')->middleware('permission:create-partners,admin-guard');
+        Route::get('/app/partners/{partner}/edit', [AdminPartnerController::class, 'edit'])->name('admin.partners.edit')->middleware('permission:edit-partners,admin-guard');
+        Route::put('/app/partners/{partner}', [AdminPartnerController::class, 'update'])->name('admin.partners.update')->middleware('permission:edit-partners,admin-guard');
+        Route::delete('/app/partners/{partner}', [AdminPartnerController::class, 'destroy'])->name('admin.partners.destroy')->middleware('permission:delete-partners,admin-guard');
     });
 
-    // settings
-    Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');
-    Route::post('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'store'])->name('admin.vehicle-settings.store');
-    Route::delete('/app/vehicle-settings/{type}/{id}', [VehicleRelationController::class , 'destroy'])->name('admin.vehicle-settings.destroy');
+    // CAR / VEHICLE SETTINGS Module
+    Route::middleware(['permission:view-car_settings,admin-guard'])->group(function () {
+        Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');
+        Route::post('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'store'])->name('admin.vehicle-settings.store')->middleware('permission:create-car_settings,admin-guard');
+        Route::delete('/app/vehicle-settings/{type}/{id}', [VehicleRelationController::class , 'destroy'])->name('admin.vehicle-settings.destroy')->middleware('permission:delete-car_settings,admin-guard');
+    });
 
-    // Email Templates
-    Route::get('/app/email-templates', [EmailTemplateController::class, 'index'])->name('admin.email-templates.index');
-    Route::put('/app/email-templates/{id}', [EmailTemplateController::class, 'update'])->name('admin.email-templates.update');
-    Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update');
+    // EMAIL TEMPLATES Module
+    Route::middleware(['permission:view-email_templates,admin-guard'])->group(function () {
+        Route::get('/app/email-templates', [EmailTemplateController::class, 'index'])->name('admin.email-templates.index');
+        Route::put('/app/email-templates/{id}', [EmailTemplateController::class, 'update'])->name('admin.email-templates.update')->middleware('permission:edit-email_templates,admin-guard');
+        Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update')->middleware('permission:edit-email_templates,admin-guard');
+    });
 });

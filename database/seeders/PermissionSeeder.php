@@ -17,7 +17,7 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create permissions categories
-        $modules = ['vehicles', 'users', 'roles', 'subscriptions', 'orders', 'partners', 'inquiries'];
+        $modules = ['vehicles', 'users', 'roles', 'subscriptions', 'orders', 'partners', 'inquiries', 'email_templates', 'settings', 'car_settings', 'products', 'customers'];
         $actions = ['view', 'create', 'edit', 'delete'];
 
         $allPermissions = [
@@ -48,10 +48,7 @@ class PermissionSeeder extends Seeder
         $subAdminRole->syncPermissions(
             Permission::where('guard_name', 'admin-guard')
                 ->where(function ($q) {
-                    $q->where('name', 'view-dashboard')
-                      ->orWhere('name', 'LIKE', 'view-%')
-                      ->orWhere('name', 'LIKE', 'edit-vehicles%')
-                      ->orWhere('name', 'LIKE', 'create-vehicles%');
+                    $q->where('name', 'view-dashboard');
                 })
                 ->get()
         );

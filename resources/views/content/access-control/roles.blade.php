@@ -64,9 +64,11 @@
     <span class="text-muted fw-light">Access Control /</span> 
     <span class="fw-bold text-primary">Roles</span>
   </h4>
+  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-roles', 'admin-guard'))
   <a href="{{ route('admin.roles.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm">
     <i class="bx bx-plus-circle me-1"></i> Create New Role
   </a>
+  @endif
 </div>
 
 <div class="card role-card overflow-hidden">
@@ -118,9 +120,12 @@
                </div>
             @else
               <div class="d-flex gap-2">
+                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-roles', 'admin-guard'))
                 <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info" title="Edit Role">
                   <i class="bx bx-edit-alt"></i>
                 </a>
+                @endif
+                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-roles', 'admin-guard'))
                 <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this role?')">
                   @csrf
                   @method('DELETE')
@@ -128,6 +133,7 @@
                     <i class="bx bx-trash"></i>
                   </button>
                 </form>
+                @endif
               </div>
             @endif
           </td>
