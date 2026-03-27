@@ -32,7 +32,7 @@
                     @endif
 
                     <div class="table-responsive text-nowrap">
-                        <table class="table table-hover">
+                        <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
                                     <th>Thumbnail</th>
@@ -175,11 +175,56 @@
                         </table>
                     </div>
 
-                    <div class="mt-3">
+                    {{-- <div class="mt-3">
                         {{ $vehicles->links() }}
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('page-script')
+<script>
+$(document).ready(function() {
+    var table = $('#vehicles-table').DataTable({
+        "order": [[ 1, "asc" ]],
+        "pageLength": 10,
+        "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        "language": {
+            "search": "",
+            "searchPlaceholder": "Search Vehicles...",
+            "paginate": {
+                "next": '<i class="bx bx-chevron-right"></i>',
+                "previous": '<i class="bx bx-chevron-left"></i>'
+            }
+        }
+    });
+
+    $('select[name="status"]').on('change', function() {
+        this.form.submit();
+    });
+});
+</script>
+<style>
+.dataTables_filter input {
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d9dee3;
+    margin-bottom: 1rem;
+    width: 250px;
+}
+.dataTables_paginate .pagination {
+    justify-content: flex-end !important;
+}
+.dataTables_length {
+    margin-bottom: 1rem;
+}
+.dataTables_length select {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d9dee3;
+    margin: 0 5px;
+}
+</style>
 @endsection

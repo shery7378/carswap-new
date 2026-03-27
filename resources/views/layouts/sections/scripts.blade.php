@@ -9,8 +9,10 @@
 <script src="https://cdn.jsdelivr.net/npm/perfect-scrollbar@1.5.6/dist/perfect-scrollbar.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/perfect-scrollbar@1.5.6/css/perfect-scrollbar.css">
 
-<!-- Menu JS -->
+<!-- Main JS -->
 <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
 @yield('vendor-script')
 <!-- END: Page Vendor JS-->

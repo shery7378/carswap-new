@@ -27,7 +27,7 @@ class VehicleRelationController extends Controller
             $query->where('type', 'interior');
         }
 
-        $items = $query->orderBy('id', 'desc')->paginate(10);
+        $items = $query->orderBy('id', 'desc')->paginate(500);
         $title = Str::headline($type);
 
         return view('content.dashboard.relationships.index', compact('items', 'type', 'title'));

@@ -10,7 +10,7 @@ class User_Controller extends Controller
 {
     public function index()
     {
-        $users = User::orderBy("created_at", "desc")->paginate(10);
+        $users = User::orderBy("created_at", "desc")->paginate(500);
         return view('content.apps.users.list', compact('users'));
     }
     public function view($id)

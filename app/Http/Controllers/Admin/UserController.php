@@ -13,7 +13,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = Admin::with(['roles', 'permissions'])->paginate(10);
+        $users = Admin::with(['roles', 'permissions'])->paginate(500);
         return view('content.access-control.users', compact('users'));
     }
 

@@ -55,6 +55,27 @@
   .action-btn:hover {
     transform: scale(1.1);
   }
+  
+  /* DataTable overrides to look premium */
+  .dataTables_filter input {
+    border-radius: 0.5rem;
+    padding: 0.375rem 0.75rem;
+    border: 1px solid #d9dee3;
+    width: 250px;
+    margin-bottom: 1rem;
+  }
+  .dataTables_paginate .pagination {
+    justify-content: flex-end !important;
+  }
+  .dataTables_length {
+    margin-bottom: 1rem;
+  }
+  .dataTables_length select {
+    border-radius: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #d9dee3;
+    margin: 0 5px;
+  }
 </style>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -76,80 +97,102 @@
       <p class="text-muted mb-0 small">Manage roles and permissions for backend users.</p>
     </div>
   </div>
-  <div class="table-responsive text-nowrap">
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th style="width: 300px;">Administrator</th>
-          <th>Roles</th>
-          <th>Extra Permissions</th>
-          <th style="width: 100px;">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($users as $user)
-        <tr>
-          <td>
-            <div class="d-flex align-items-center">
-              <div class="avatar-text">
-                {{ strtoupper(substr($user->first_name, 0, 1)) . strtoupper(substr($user->last_name, 0, 1)) }}
+  <div class="card-body pt-4">
+    <div class="table-responsive text-nowrap">
+      <table class="table table-hover" id="admins-table">
+        <thead>
+          <tr>
+            <th style="width: 300px;">Administrator</th>
+            <th>Roles</th>
+            <th>Extra Permissions</th>
+            <th style="width: 100px;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @foreach($users as $user)
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <div class="avatar-text">
+                  {{ strtoupper(substr($user->first_name, 0, 1)) . strtoupper(substr($user->last_name, 0, 1)) }}
+                </div>
+                <div>
+                  <div class="fw-bold mb-0 text-dark">{{ $user->first_name }} {{ $user->last_name }}</div>
+                  <div class="text-muted small">{{ $user->email }}</div>
+                </div>
               </div>
-              <div>
-                <div class="fw-bold mb-0 text-dark">{{ $user->first_name }} {{ $user->last_name }}</div>
-                <div class="text-muted small">{{ $user->email }}</div>
-              </div>
-            </div>
-          </td>
-          <td>
-            @foreach($user->roles as $role)
-            <span class="badge bg-label-primary badge-premium mb-1 me-1">
-              <i class="bx bxs-shield-alt me-1"></i> {{ $role->name }}
-            </span>
-            @endforeach
-          </td>
-          <td>
-            @forelse($user->permissions as $permission)
-            <span class="badge bg-label-warning badge-premium mb-1 me-1">
-               {{ $permission->name }}
-            </span>
-            @empty
-            <span class="text-muted small italic">Default from role</span>
-            @endforelse
-          </td>
-          <td>
-            @if($user->hasRole('super-admin', 'admin-guard'))
-               <div class="d-flex align-items-center">
-                 <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
-               </div>
-            @else
-              <div class="d-flex gap-2">
-                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-users', 'admin-guard'))
-                <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
-                  <i class="bx bx-edit-alt"></i>
-                </a>
-                @endif
-                @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-users', 'admin-guard'))
-                <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="action-btn text-danger bg-label-danger border-0" data-bs-toggle="tooltip" title="Delete Admin">
-                    <i class="bx bx-trash"></i>
-                  </button>
-                </form>
-                @endif
-              </div>
-            @endif
-          </td>
-        </tr>
-        @endforeach
-      </tbody>
-    </table>
+            </td>
+            <td>
+              @foreach($user->roles as $role)
+              <span class="badge bg-label-primary badge-premium mb-1 me-1">
+                <i class="bx bxs-shield-alt me-1"></i> {{ $role->name }}
+              </span>
+              @endforeach
+            </td>
+            <td>
+              @forelse($user->permissions as $permission)
+              <span class="badge bg-label-warning badge-premium mb-1 me-1">
+                 {{ $permission->name }}
+              </span>
+              @empty
+              <span class="text-muted small italic">Default from role</span>
+              @endforelse
+            </td>
+            <td>
+              @if($user->hasRole('super-admin', 'admin-guard'))
+                 <div class="d-flex align-items-center">
+                   <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
+                 </div>
+              @else
+                <div class="d-flex gap-2">
+                  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-users', 'admin-guard'))
+                  <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
+                    <i class="bx bx-edit-alt"></i>
+                  </a>
+                  @endif
+                  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-users', 'admin-guard'))
+                  <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="action-btn text-danger bg-label-danger border-0" data-bs-toggle="tooltip" title="Delete Admin">
+                      <i class="bx bx-trash"></i>
+                    </button>
+                  </form>
+                  @endif
+                </div>
+              @endif
+            </td>
+          </tr>
+          @endforeach
+        </tbody>
+      </table>
+    </div>
   </div>
   <div class="card-footer border-top bg-light-soft py-3">
     <div class="d-flex justify-content-between align-items-center">
       <div class="text-muted small">Showing records for active staff members.</div>
-      <div>{{ $users->links() }}</div>
+      {{-- <div>{{ $users->links() }}</div> --}}
     </div>
   </div>
 </div>
+@endsection
+
+@section('page-script')
+<script>
+$(document).ready(function() {
+    var table = $('#admins-table').DataTable({
+        "order": [[ 0, "asc" ]],
+        "pageLength": 10,
+        "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+        "language": {
+            "search": "",
+            "searchPlaceholder": "Search Admins...",
+            "paginate": {
+                "next": '<i class="bx bx-chevron-right"></i>',
+                "previous": '<i class="bx bx-chevron-left"></i>'
+            }
+        }
+    });
+});
+</script>
 @endsection

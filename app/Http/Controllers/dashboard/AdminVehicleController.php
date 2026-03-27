@@ -28,7 +28,7 @@ class AdminVehicleController extends Controller
             $query->where('ad_status', $request->status);
         }
 
-        $vehicles = $query->orderBy('id', 'desc')->paginate(10);
+        $vehicles = $query->orderBy('id', 'desc')->paginate(500);
         return view('content.dashboard.vehicles.index', compact('vehicles'));
     }
 
