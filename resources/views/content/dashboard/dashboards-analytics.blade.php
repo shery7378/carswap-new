@@ -4,6 +4,18 @@
 
 @section('vendor-style')
 @endsection
+@section('page-style')
+<style>
+    .card-hover-click {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+    .card-hover-click:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+</style>
+@endsection
 
 @section('vendor-script')
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@4.2.0/dist/apexcharts.min.js"></script>
@@ -38,53 +50,35 @@
         <div class="row">
             @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-vehicles', 'admin-guard'))
             <div class="col-lg-6 col-md-12 col-6 mb-6">
-                <div class="card h-100">
+                <a href="{{ route('admin.vehicles.index') }}" class="card h-100 text-decoration-none card-hover-click">
                     <div class="card-body">
                         <div class="card-title d-flex align-items-start justify-content-between mb-4">
                             <div class="avatar flex-shrink-0">
                                 <img src="{{ asset('assets/img/icons/unicons/chart-success.png') }}" alt="chart success" class="rounded" />
                             </div>
-                            <div class="dropdown">
-                                <button class="btn p-0" type="button" id="cardOpt3" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt3">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                </div>
-                            </div>
                         </div>
-                        <p class="mb-1">Total Vehicles</p>
+                        <p class="mb-1 text-muted">Total Vehicles</p>
                         <h4 class="card-title mb-3">{{ $stats['total_vehicles'] }}</h4>
                         <small class="text-success fw-medium"><i class="icon-base bx bx-car"></i> Live Listings</small>
                     </div>
-                </div>
+                </a>
             </div>
             @endif
 
             @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-partners', 'admin-guard'))
             <div class="col-lg-6 col-md-12 col-6 mb-6">
-                <div class="card h-100">
+                <a href="{{ route('admin.partners.index') }}" class="card h-100 text-decoration-none card-hover-click">
                     <div class="card-body">
                         <div class="card-title d-flex align-items-start justify-content-between mb-4">
                             <div class="avatar flex-shrink-0">
                                 <img src="{{ asset('assets/img/icons/unicons/wallet-info.png') }}" alt="wallet info" class="rounded" />
                             </div>
-                            <div class="dropdown">
-                                <button class="btn p-0" type="button" id="cardOpt6" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="icon-base bx bx-dots-vertical-rounded text-body-secondary"></i>
-                                </button>
-                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="cardOpt6">
-                                    <a class="dropdown-item" href="javascript:void(0);">View More</a>
-                                    <a class="dropdown-item" href="javascript:void(0);">Delete</a>
-                                </div>
-                            </div>
                         </div>
-                        <p class="mb-1">Total Partners</p>
+                        <p class="mb-1 text-muted">Total Partners</p>
                         <h4 class="card-title mb-3">{{ $stats['total_partners'] }}</h4>
                         <small class="text-success fw-medium"><i class="icon-base bx bx-group"></i> Active Dealers</small>
                     </div>
-                </div>
+                </a>
             </div>
             @endif
         </div>
@@ -150,7 +144,7 @@
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
                 <h5 class="m-0 me-2">Global Partners</h5>
-                <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-primary">All</a>
+                <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-primary">View All</a>
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">

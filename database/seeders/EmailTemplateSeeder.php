@@ -31,6 +31,8 @@ class EmailTemplateSeeder extends Seeder
             ['name' => 'User listing waiting', 'slug' => 'user-listing-waiting', 'subject' => 'Listing Pending Approval', 'category' => 'Listings', 'shortcodes' => ['car_title', 'review_time_estimate']],
             ['name' => 'User listing approved', 'slug' => 'user-listing-approved', 'subject' => 'Your Listing is Approved!', 'category' => 'Listings', 'shortcodes' => ['car_title', 'live_url']],
             ['name' => 'Message to Dealer', 'slug' => 'message-to-dealer', 'subject' => 'New Message from Buyer', 'category' => 'Communication', 'shortcodes' => ['sender_name', 'message_content', 'reply_link']],
+            ['name' => 'Vehicle Inquiry', 'slug' => 'vehicle-inquiry', 'subject' => 'New Inquiry about your vehicle: [car_title]', 'category' => 'Inquiry', 'shortcodes' => ['car_title', 'sender_name', 'sender_email', 'sender_phone', 'message_content']],
+            ['name' => 'Arrange Viewing Time', 'slug' => 'arrange-viewing-time', 'subject' => 'Viewing Request for [car_title]', 'category' => 'Inquiry', 'shortcodes' => ['car_title', 'sender_name', 'sender_email', 'sender_phone', 'requested_date', 'requested_time', 'message_content']],
         ];
 
         foreach ($templates as $template) {

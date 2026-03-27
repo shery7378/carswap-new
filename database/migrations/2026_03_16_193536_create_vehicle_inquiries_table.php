@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('vehicle_inquiries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('vehicle_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('email');
+            $table->string('phone')->nullable();
+            $table->date('preferred_date')->nullable();
+            $table->string('preferred_time')->nullable();
+            $table->text('message')->nullable();
+            $table->string('status')->default('pending'); // pending, viewed, archived
             $table->timestamps();
         });
     }

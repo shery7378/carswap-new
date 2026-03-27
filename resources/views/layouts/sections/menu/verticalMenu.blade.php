@@ -2,45 +2,73 @@
   use Illuminate\Support\Facades\Route;
 @endphp
 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme shadow-lg"
-  style="background: linear-gradient(180deg, #1d2327 0%, #2b343b 100%); color: #e1e1e1; border-right: 1px solid rgba(255,255,255,0.05);">
+  style="background: #0f172a !important; color: #94a3b8; border-right: 1px solid rgba(255,255,255,0.05);">
 
   <style>
-    #layout-menu .menu-item.active > .menu-link {
-      background: linear-gradient(270deg, rgba(105, 108, 255, 0.2) 0%, rgba(105, 108, 255, 0) 100%);
-      border-left: 3px solid #696cff;
+    #layout-menu .menu-inner {
+        padding: 1rem 0 !important;
+    }
+    #layout-menu .menu-item .menu-link {
+        margin: 0.25rem 0.75rem !important;
+        width: calc(100% - 1.5rem) !important;
+        border-radius: 0.5rem !important;
+        transition: all 0.2s ease;
+        padding: 0.625rem 1rem !important;
+    }
+    /* Parent menu when open */
+    #layout-menu .menu-item.open > .menu-link {
+        background-color: rgba(255,255,255,0.05) !important;
+        color: #fff !important;
+    }
+    /* The actual active page (Leaf node) */
+    #layout-menu .menu-item.active:not(.open) > .menu-link {
+      background-color: #6366f1 !important;
       color: #fff !important;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
     #layout-menu .menu-link:hover {
-      background: rgba(255,255,255,0.03) !important;
-      transition: all 0.3s ease;
+      background: rgba(255,255,255,0.08) !important;
+      color: #fff !important;
+    }
+    /* Hide the submenu dot icons that overlap text */
+    #layout-menu .menu-sub .menu-link::before {
+        display: none !important;
     }
     #layout-menu .menu-header-text {
-      color: #696cff !important;
-      letter-spacing: 1px;
+      color: #475569 !important;
+      letter-spacing: 0.05em;
       font-weight: 700;
-      opacity: 0.85;
+      margin: 1.5rem 1rem 0.5rem 1.5rem;
+      display: block;
     }
     #layout-menu .menu-link i {
       font-size: 1.25rem !important;
       margin-right: 12px;
-      color: rgba(255,255,255,0.7);
+      color: #64748b;
     }
-    #layout-menu .active .menu-link i {
-      color: #696cff !important;
+    #layout-menu .active .menu-link i,
+    #layout-menu .menu-link:hover i {
+      color: #fff !important;
+    }
+    .app-brand {
+        padding: 2rem 1rem !important;
+        height: auto !important;
+        justify-content: center !important;
     }
     .app-brand .app-brand-text {
-      background: linear-gradient(90deg, #fff 0%, #696cff 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 20px rgba(105, 108, 255, 0.3);
+      color: #fff !important;
+      margin-left: 0.5rem !important;
     }
     .menu-inner-shadow {
-      background: transparent !important;
+      display: none !important;
     }
-    .menu-vertical .menu-inner > .menu-header::before {
-      background-color: rgba(255,255,255,0.1) !important;
+    /* Submenu indentation */
+    #layout-menu .menu-sub {
+        background: transparent !important;
+    }
+    #layout-menu .menu-sub .menu-link {
+        padding-left: 3rem !important;
     }
   </style>
 

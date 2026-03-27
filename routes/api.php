@@ -23,6 +23,10 @@ use App\Http\Controllers\Api\ShareController;
 // Public Social Sharing API
 Route::get('/share', [ShareController::class , 'index']);
 
+// Vehicle Viewing & Inquiry API
+Route::post('/vehicles/{vehicleId}/inquiry', [\App\Http\Controllers\Api\VehicleViewingController::class, 'inquiry']);
+Route::post('/vehicles/{vehicleId}/viewing-request', [\App\Http\Controllers\Api\VehicleViewingController::class, 'store']);
+
 // Public Subscription API
 Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
 

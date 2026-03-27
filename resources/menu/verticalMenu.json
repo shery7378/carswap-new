@@ -9,7 +9,7 @@
     {
       "name": "Vehicles",
       "icon": "menu-icon icon-base bx bx-car",
-      "slug": "admin-vehicles",
+      "slug": "admin.vehicles",
       "permission": "view-vehicles",
       "submenu": [
         {
@@ -21,7 +21,7 @@
         {
           "url": "app/vehicles/create",
           "name": "Add Vehicle",
-          "slug": "admin-vehicles-create",
+          "slug": "admin.vehicles.create",
           "permission": "create-vehicles"
         }
       ]
@@ -29,7 +29,7 @@
     {
       "name": "Partners",
       "icon": "menu-icon icon-base bx bx-group",
-      "slug": "admin-partners",
+      "slug": "admin.partners",
       "permission": "view-partners",
       "submenu": [
         {
@@ -41,7 +41,7 @@
         {
           "url": "app/partners/create",
           "name": "Add Partner",
-          "slug": "admin-partners-create",
+          "slug": "admin.partners.create",
           "permission": "create-partners"
         }
       ]
@@ -49,179 +49,89 @@
     {
       "name": "Car Settings",
       "icon": "menu-icon icon-base bx bx-cog",
-      "slug": "admin-vehicle-settings",
+      "slug": "admin.vehicle-settings",
       "permission": "view-car_settings",
       "submenu": [
         {
           "url": "app/vehicle-settings/brands",
           "name": "Brands",
-          "slug": "admin-brands",
+          "slug": "admin.vehicle-settings.brands",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/models",
           "name": "Models",
-          "slug": "admin-models",
+          "slug": "admin.vehicle-settings.models",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/sales-methods",
           "name": "Sales Methods",
-          "slug": "admin-sales-methods",
+          "slug": "admin.vehicle-settings.sales-methods",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/vehicle-statuses",
           "name": "Vehicle Statuses",
-          "slug": "admin-vehicle-statuses",
+          "slug": "admin.vehicle-settings.vehicle-statuses",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/body-types",
           "name": "Body Types",
-          "slug": "admin-body-types",
+          "slug": "admin.vehicle-settings.body-types",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/fuel-types",
           "name": "Fuel Types",
-          "slug": "admin-fuel-types",
+          "slug": "admin.vehicle-settings.fuel-types",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/interior-colors",
           "name": "Interior Colors",
-          "slug": "admin-interior-colors",
+          "slug": "admin.vehicle-settings.interior-colors",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/exterior-colors",
           "name": "Exterior Colors",
-          "slug": "admin-exterior-colors",
+          "slug": "admin.vehicle-settings.exterior-colors",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/document-types",
           "name": "Document Types",
-          "slug": "admin-document-types",
+          "slug": "admin.vehicle-settings.document-types",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/transmissions",
           "name": "Transmissions",
-          "slug": "admin-transmissions",
+          "slug": "admin.vehicle-settings.transmissions",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/drive-types",
           "name": "Drive Types",
-          "slug": "admin-drive-types",
+          "slug": "admin.vehicle-settings.drive-types",
           "permission": "view-car_settings"
         },
         {
           "url": "app/vehicle-settings/extra-features",
           "name": "Extra Features",
-          "slug": "admin-extra-features",
+          "slug": "admin.vehicle-settings.extra-features",
           "permission": "view-car_settings"
         }
       ]
     },
     {
-      "name": "Ecommerce",
-      "icon": "menu-icon icon-base bx bx-cart",
-      "slug": "app-ecommerce",
-      "permission": "view-products",
-      "submenu": [
-        {
-          "url": "app/ecommerce/products/product-list",
-          "name": "Product List",
-          "slug": "app-ecommerce-product-list",
-          "permission": "view-products"
-        },
-        {
-          "url": "app/ecommerce/order",
-          "name": "Orders",
-          "icon": "menu-icon icon-base bx bx-shopping-bag",
-          "slug": "app-ecommerce-order",
-          "permission": "view-orders"
-        },
-        {
-          "url": "app/ecommerce/customer",
-          "name": "Customers",
-          "icon": "menu-icon icon-base bx bx-user",
-          "slug": "app-ecommerce-customer",
-          "permission": "view-customers"
-        }
-      ]
-    },
-    {
-      "name": "Subscription",
-      "icon": "menu-icon icon-base bx bx-credit-card",
-      "slug": "app-subscription",
-      "permission": "view-subscriptions",
-      "submenu": [
-        {
-          "url": "app/subscription/list",
-          "name": "Subscription List",
-          "slug": "app-subscription-list",
-          "permission": "view-subscriptions"
-        },
-        {
-          "url": "app/subscription/create",
-          "name": "Create Subscription",
-          "slug": "app-subscription-create",
-          "permission": "create-subscriptions"
-        },
-        {
-          "url": "app/subscription/plans",
-          "name": "Subscription Plans",
-          "slug": "app-subscription-plans",
-          "permission": "view-subscriptions"
-        },
-        {
-          "url": "app/subscription/payments",
-          "name": "Payment History",
-          "slug": "app-subscription-payments",
-          "permission": "view-subscriptions"
-        }
-      ]
-    },
-    {
-      "name": "Settings",
+      "name": "Site Settings",
       "icon": "menu-icon icon-base bx bx-cog",
       "slug": "app-ecommerce-settings",
       "permission": "view-settings",
       "submenu": [
-        {
-          "url": "app/ecommerce/settings/general",
-          "name": "General",
-          "slug": "app-ecommerce-settings-general",
-          "permission": "view-settings"
-        },
-        {
-          "url": "app/ecommerce/settings/payment",
-          "name": "Payment",
-          "slug": "app-ecommerce-settings-payment",
-          "permission": "view-settings"
-        },
-        {
-          "url": "app/ecommerce/settings/shipping",
-          "name": "Shipping",
-          "slug": "app-ecommerce-settings-shipping",
-          "permission": "view-settings"
-        },
-        {
-          "url": "app/ecommerce/settings/tax",
-          "name": "Tax",
-          "slug": "app-ecommerce-settings-tax",
-          "permission": "view-settings"
-        },
-        {
-          "url": "app/ecommerce/settings/notifications",
-          "name": "Notifications",
-          "slug": "app-ecommerce-settings-notifications",
-          "permission": "view-settings"
-        },
         {
           "url": "app/ecommerce/settings/header-footer",
           "name": "Header & Footer",
