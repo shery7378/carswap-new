@@ -170,13 +170,17 @@
                     <td>
                       <div class="d-flex align-items-center">
                         <div class="avatar avatar-sm me-2">
-                          <img src="{{ $user->profile_picture  ? asset('storage/' . $user->profile_picture) 
-        : 'https://ui-avatars.com/api/?name='.$user->name 
-    }}" alt="{{ $user->name }}"
-                            class="rounded-circle" width="40">
+                          <a href="{{ route('admin.users.view', $user->id) }}">
+                            <img src="{{ $user->profile_picture  ? asset('storage/' . $user->profile_picture) 
+          : 'https://ui-avatars.com/api/?name='.$user->name 
+      }}" alt="{{ $user->name }}"
+                              class="rounded-circle" width="40">
+                          </a>
                         </div>
                         <div>
-                          <div class="fw-medium">{{ $user->name }}</div>
+                          <a href="{{ route('admin.users.view', $user->id) }}" class="text-body fw-medium">
+                            {{ $user->name }}
+                          </a><br>
                           <small class="text-muted">ID: #USR{{ str_pad($user->id,3,'0',STR_PAD_LEFT) }}</small>
                         </div>
                       </div>

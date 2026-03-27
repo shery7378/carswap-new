@@ -36,14 +36,18 @@
                                 <tr>
                                     <td>
                                         @if($partner->image)
-                                            <img src="{{ asset('storage/' . $partner->image) }}"
-                                                alt="{{ $partner->name }}" width="50" class="rounded">
+                                            <a href="{{ route('admin.partners.show', $partner->id) }}">
+                                                <img src="{{ asset('storage/' . $partner->image) }}"
+                                                    alt="{{ $partner->name }}" width="50" class="rounded shadow-xs">
+                                            </a>
                                         @else
                                             <span class="badge bg-secondary">No Logo</span>
                                         @endif
                                     </td>
                                     <td>
-                                        <strong>{{ $partner->name }}</strong>
+                                        <a href="{{ route('admin.partners.show', $partner->id) }}" class="text-body fw-bold">
+                                            {{ $partner->name }}
+                                        </a>
                                     </td>
                                     <td>
                                         <small>

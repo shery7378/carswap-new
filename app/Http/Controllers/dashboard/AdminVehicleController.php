@@ -32,6 +32,21 @@ class AdminVehicleController extends Controller
         return view('content.dashboard.vehicles.index', compact('vehicles'));
     }
 
+    public function show($id, Request $request)
+    {
+        $vehicle = Vehicle::with([
+            'brand', 'model', 'fuelType', 'transmission', 'driveType', 
+            'bodyType', 'exteriorColor', 'interiorColor', 'salesMethod', 
+            'documentType', 'vehicleStatus', 'user', 'properties'
+        ])->findOrFail($id);
+
+        if ($request->ajax()) {
+            return view('content.dashboard.vehicles.partials.show-modal-content', compact('vehicle'));
+        }
+
+        return view('content.dashboard.vehicles.show', compact('vehicle'));
+    }
+
     public function create()
     {
         $brands = Brand::all();

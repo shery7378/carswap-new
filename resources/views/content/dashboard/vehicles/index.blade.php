@@ -50,14 +50,18 @@
                                     <tr>
                                         <td>
                                             @if($vehicle->main_image)
-                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}"
-                                                    alt="{{ $vehicle->title }}" width="50" class="rounded">
+                                                <a href="{{ route('admin.vehicles.show', $vehicle->id) }}">
+                                                    <img src="{{ asset('storage/' . $vehicle->main_image) }}"
+                                                        alt="{{ $vehicle->title }}" width="50" class="rounded shadow-xs">
+                                                </a>
                                             @else
                                                 <span class="badge bg-secondary">No Image</span>
                                             @endif
                                         </td>
                                         <td>
-                                            <strong>{{ $vehicle->title }}</strong><br>
+                                            <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" class="text-body fw-bold">
+                                                {{ $vehicle->title }}
+                                            </a><br>
                                             <small class="text-muted">{{ optional($vehicle->brand)->name }}
                                                 {{ optional($vehicle->model)->name }}</small>
                                         </td>
@@ -142,6 +146,9 @@
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="{{ route('admin.vehicles.show', $vehicle->id) }}">
+                                                        <i class="bx bx-show me-1 text-primary"></i> View Details
+                                                    </a>
                                                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.vehicles.edit', $vehicle->id) }}"><i
@@ -184,27 +191,95 @@
     </div>
 @endsection
 
+<!-- Vehicle Details Modal -->
+<div class="modal fade" id="vehicleDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content" id="vehicleModalContent">
+            <div class="modal-body text-center py-5">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <p class="mt-3">Loading vehicle details...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 @section('page-script')
 <script>
-$(document).ready(function() {
-    var table = $('#vehicles-table').DataTable({
-        "order": [[ 1, "asc" ]],
-        "pageLength": 10,
-        "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        "language": {
-            "search": "",
-            "searchPlaceholder": "Search Vehicles...",
-            "paginate": {
-                "next": '<i class="bx bx-chevron-right"></i>',
-                "previous": '<i class="bx bx-chevron-left"></i>'
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#vehicles-table').DataTable({
+            "order": [[ 1, "asc" ]],
+            "pageLength": 10,
+            "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
+            "language": {
+                "search": "",
+                "searchPlaceholder": "Search Vehicles...",
+                "paginate": {
+                    "next": '<i class="bx bx-chevron-right"></i>',
+                    "previous": '<i class="bx bx-chevron-left"></i>'
+                }
             }
-        }
-    });
+        });
 
-    $('select[name="status"]').on('change', function() {
-        this.form.submit();
+        // Handle Status Filter Change
+        $('select[name="status"]').on('change', function() {
+            this.form.submit();
+        });
+
+        // Handle Details View Click (Modal Trigger)
+        $(document).on('click', '.view-vehicle-details', function(e) {
+            e.preventDefault();
+            const id = $(this).data('id');
+            const modalContent = $('#vehicleModalContent');
+            const modalElement = document.getElementById('vehicleDetailsModal');
+            let bootstrapModal = bootstrap.Modal.getInstance(modalElement);
+            if (!bootstrapModal) {
+                bootstrapModal = new bootstrap.Modal(modalElement);
+            }
+            
+            // Reset modal content to loader
+            modalContent.html(`
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3">Loading vehicle details...</p>
+                </div>
+            `);
+            
+            bootstrapModal.show();
+
+            console.log("Fetching vehicle info for ID:", id);
+            
+            // Fetch Data
+            $.ajax({
+                url: `/app/vehicles/${id}`,
+                method: 'GET',
+                success: function(response) {
+                    console.log("Success! Updating modal content.");
+                    modalContent.html(response);
+                },
+                error: function(xhr) {
+                    console.error("Error fetching vehicle details:", xhr);
+                    const errorMsg = xhr.responseJSON?.message || 'Failed to load vehicle details. Please try again.';
+                    modalContent.html(`
+                        <div class="modal-header border-bottom">
+                            <h5 class="modal-title text-danger"><i class="bx bx-error me-1"></i> Data Load Error</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body text-center py-5">
+                            <i class="bx bx-error-circle fs-1 text-danger"></i>
+                            <h5 class="mt-3">Request Failed</h5>
+                            <p class="text-muted">${errorMsg}</p>
+                            <button type="button" class="btn btn-primary btn-sm mt-3" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    `);
+                }
+            });
+        });
     });
-});
 </script>
 <style>
 .dataTables_filter input {

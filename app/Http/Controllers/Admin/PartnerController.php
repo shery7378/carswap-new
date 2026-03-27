@@ -21,6 +21,12 @@ class PartnerController extends Controller
         return view('content.dashboard.partners.index', compact('partners'));
     }
 
+    public function show($id)
+    {
+        $partner = Partner::with(['services', 'openingHours'])->findOrFail($id);
+        return view('content.dashboard.partners.show', compact('partner'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */

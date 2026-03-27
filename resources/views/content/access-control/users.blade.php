@@ -113,11 +113,15 @@
           <tr>
             <td>
               <div class="d-flex align-items-center">
-                <div class="avatar-text">
-                  {{ strtoupper(substr($user->first_name, 0, 1)) . strtoupper(substr($user->last_name, 0, 1)) }}
-                </div>
+                <a href="{{ $user->hasRole('super-admin', 'admin-guard') ? 'javascript:void(0);' : route('admin.users.edit', $user->id) }}">
+                   <div class="avatar-text">
+                    {{ strtoupper(substr($user->first_name, 0, 1)) . strtoupper(substr($user->last_name, 0, 1)) }}
+                  </div>
+                </a>
                 <div>
-                  <div class="fw-bold mb-0 text-dark">{{ $user->first_name }} {{ $user->last_name }}</div>
+                  <a href="{{ $user->hasRole('super-admin', 'admin-guard') ? 'javascript:void(0);' : route('admin.users.edit', $user->id) }}" class="text-dark fw-bold mb-0">
+                    {{ $user->first_name }} {{ $user->last_name }}
+                  </a>
                   <div class="text-muted small">{{ $user->email }}</div>
                 </div>
               </div>

@@ -173,6 +173,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     // Main VEHICLES Module
     Route::middleware(['permission:view-vehicles,admin-guard'])->group(function () {
         Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
+        Route::get('/app/vehicles/{id}', [AdminVehicleController::class , 'show'])->name('admin.vehicles.show');
         Route::get('/app/vehicles/models-by-brand/{brandId}', [AdminVehicleController::class , 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
         
         // Granular vehicle permissions for modification
@@ -187,6 +188,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     // PARTNERS Module
     Route::middleware(['permission:view-partners,admin-guard'])->group(function () {
         Route::get('/app/partners', [AdminPartnerController::class, 'index'])->name('admin.partners.index');
+        Route::get('/app/partners/{partner}', [AdminPartnerController::class, 'show'])->name('admin.partners.show');
         Route::get('/app/partners/create', [AdminPartnerController::class, 'create'])->name('admin.partners.create')->middleware('permission:create-partners,admin-guard');
         Route::post('/app/partners', [AdminPartnerController::class, 'store'])->name('admin.partners.store')->middleware('permission:create-partners,admin-guard');
         Route::get('/app/partners/{partner}/edit', [AdminPartnerController::class, 'edit'])->name('admin.partners.edit')->middleware('permission:edit-partners,admin-guard');
