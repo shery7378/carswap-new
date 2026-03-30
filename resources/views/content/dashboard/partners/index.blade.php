@@ -99,9 +99,6 @@
 
                                                 <div class="dropdown-menu">
 
-                                                    <a class="dropdown-item view-partner-btn" href="javascript:void(0);" data-id="{{ $partner->id }}">
-                                                        <i class="bx bx-show-alt me-1 text-primary"></i> View Quick Info
-                                                    </a>
                                                     
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.partners.show', $partner->id) }}">
@@ -250,6 +247,7 @@
                 });
         });
     </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
 
     <style>
         /* Search box */

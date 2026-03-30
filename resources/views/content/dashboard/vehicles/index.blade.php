@@ -116,9 +116,6 @@
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu shadow-sm">
-                                                    <a class="dropdown-item view-vehicle-btn" href="javascript:void(0);" data-id="{{ $vehicle->id }}">
-                                                        <i class="bx bx-show-alt me-1 text-primary"></i> Quick Preview
-                                                    </a>
                                                     <a class="dropdown-item text-muted" href="{{ route('admin.vehicles.show', $vehicle->id) }}">
                                                         <i class="bx bx-link-external me-1"></i> Full Detailed Page
                                                     </a>
@@ -213,6 +210,7 @@
         });
     });
     </script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
 
     <style>
 

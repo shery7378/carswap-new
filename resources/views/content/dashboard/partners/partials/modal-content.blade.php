@@ -10,8 +10,8 @@
             @endif
         </div>
         <div>
-            <h5 class="modal-title fw-bold mb-0">{{ $partner->name }}</h5>
-            <small class="text-muted"><i class="bx bx-map-pin me-1"></i> {{ $partner->address ?: 'No address' }}</small>
+            <h5 class="modal-title fw-bold mb-0 text-dark">{{ $partner->name }}</h5>
+            <small class="text-muted small d-block"><i class="bx bx-map-pin me-1 text-primary"></i> {{ $partner->address ?: 'No address specified' }}</small>
         </div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -30,6 +30,7 @@
                     <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">Quick Contact</h6>
                     <p class="mb-1"><i class="bx bx-envelope text-primary me-2"></i> {{ $partner->email ?: 'N/A' }}</p>
                     <p class="mb-1"><i class="bx bx-phone text-success me-2"></i> {{ $partner->phone ?: 'N/A' }}</p>
+                    <p class="mb-1"><i class="bx bx-map-pin text-warning me-2"></i> {{ $partner->address ?: 'No address' }}</p>
                     @if($partner->website)
                         <p class="mb-0"><i class="bx bx-globe text-info me-2"></i> <a href="{{ $partner->website }}" target="_blank">Website</a></p>
                     @endif

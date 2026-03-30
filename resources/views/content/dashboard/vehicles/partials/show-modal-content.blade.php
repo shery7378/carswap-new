@@ -8,7 +8,7 @@
         <div>
             <h5 class="modal-title fw-bold mb-0 text-dark">{{ $vehicle->title }}</h5>
             <small class="text-muted small d-block">
-                <i class="bx bx-purchase-tag-alt me-1"></i> {{ optional($vehicle->brand)->name }} {{ optional($vehicle->model)->name }} 
+                <i class="bx bx-map-pin me-1 text-primary"></i> {{ $vehicle->location ?: ($vehicle->address ?: 'No location specified') }}
                 <span class="mx-1 text-light">|</span> 
                 <i class="bx bx-calendar-event me-1"></i> {{ $vehicle->year }}
             </small>
