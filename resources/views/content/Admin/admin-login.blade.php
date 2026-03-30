@@ -17,16 +17,17 @@
 
   .authentication-wrapper {
     width: 100%;
-    max-width: 420px;
+    max-width: 450px;
     padding: 1.5rem;
   }
 
   .card {
     border: none;
     border-radius: 1.25rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     background: #fff;
     overflow: hidden;
+    width: 100%;
   }
 
   .card-header-brand {
@@ -38,12 +39,12 @@
   }
 
   .card-header-brand img {
-    height: 48px;
-    width: auto;
+    width: 200px;
+    height: auto;
   }
 
   .card-body {
-    padding: 2.5rem;
+    padding: 3rem 2.5rem;
   }
 
   h4 {
@@ -69,16 +70,16 @@
   }
 
   .form-control {
-    border: 1px solid #d1d5db !important;
-    border-radius: 0.75rem !important;
-    padding: 0.75rem 1rem !important;
+    border: 1px solid #d1d5db;
+    border-radius: 0.75rem;
+    padding: 0.75rem 1rem;
     font-size: 1rem;
     transition: all 0.2s;
   }
 
   .form-control:focus {
-    border-color: #3b82f6 !important;
-    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
   }
 
   .btn-primary {
@@ -100,11 +101,19 @@
   }
 
   .input-group-text {
-    background: transparent !important;
-    border: 1px solid #d1d5db !important;
-    border-left: none !important;
+    background: transparent;
+    border: 1px solid #d1d5db;
+    border-left: none;
     border-radius: 0 0.75rem 0.75rem 0;
     color: #6b7280;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Fix for input-group-merge in password field */
+  .input-group-merge .form-control {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: none;
   }
 
   .invalid-feedback {
@@ -116,7 +125,7 @@
   /* Remove default Bootstrap focus shadow for merge inputs */
   .form-password-toggle .input-group:focus-within .form-control,
   .form-password-toggle .input-group:focus-within .input-group-text {
-    border-color: #3b82f6 !important;
+    border-color: #3b82f6;
   }
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
