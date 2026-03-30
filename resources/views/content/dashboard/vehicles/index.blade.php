@@ -287,7 +287,12 @@
     padding: 0.375rem 0.75rem;
     border: 1px solid #d9dee3;
     margin-bottom: 1rem;
+    margin-left: 0.5rem;
     width: 250px;
+    outline: none;
+}
+.dataTables_filter input:focus {
+    border-color: #696cff;
 }
 .dataTables_paginate .pagination {
     justify-content: flex-end !important;
@@ -295,11 +300,23 @@
 .dataTables_length {
     margin-bottom: 1rem;
 }
+.dataTables_length label {
+    display: flex;
+    align-items: center;
+    font-weight: 400;
+}
 .dataTables_length select {
     border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.375rem 2rem 0.375rem 0.75rem;
     border: 1px solid #d9dee3;
-    margin: 0 5px;
+    margin: 0 0.5rem;
+    outline: none;
+    -webkit-appearance: auto;
+    -moz-appearance: auto;
+    appearance: auto;
+}
+.dataTables_length select:focus {
+    border-color: #696cff;
 }
 </style>
 @endsection
