@@ -161,7 +161,7 @@
         },
         {
           "url": "app/access-control/users",
-          "name": "Admins",
+          "name": "Admin Users",
           "slug": "admin.users.index",
           "permission": "view-users"
         }

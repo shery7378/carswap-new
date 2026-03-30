@@ -126,17 +126,17 @@
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
     <h4 class="mb-0">
       <span class="text-muted">Access Control /</span>
-      <span class="fw-bold text-primary">Administrators</span>
+      <span class="fw-bold text-primary">Admin Users</span>
     </h4>
 
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-      <i class="bx bx-plus"></i> Add Admin
+      <i class="bx bx-plus"></i> Add Admin User
     </a>
   </div>
 
   <div class="card admin-card">
     <div class="card-header">
-      <h5 class="mb-0">Admin List</h5>
+      <h5 class="mb-0">Admin Users List</h5>
     </div>
 
     <div class="card-body">
@@ -145,7 +145,7 @@
 
           <thead>
             <tr>
-              <th>Admin</th>
+              <th>Admin User</th>
               <th>Roles</th>
               <th>Permissions</th>
               <th>Actions</th>
@@ -191,7 +191,7 @@
                       @csrf
                       @method('DELETE')
                       <button class="action-btn bg-label-danger text-danger border-0"
-                        onclick="return confirm('Delete admin?')">
+                        onclick="return confirm('Delete admin user?')">
                         <i class="bx bx-trash"></i>
                       </button>
                     </form>
@@ -225,7 +225,7 @@
 
         language: {
           search: "",
-          searchPlaceholder: "Search Admins..."
+          searchPlaceholder: "Search Admin Users..."
         }
       });
 

@@ -49,18 +49,18 @@ class AdminVehicleController extends Controller
 
     public function create()
     {
-        $brands = Brand::all();
-        $fuelTypes = FuelType::all();
-        $transmissions = Transmission::all();
-        $driveTypes = DriveType::all();
-        $bodyTypes = BodyType::all();
-        $salesMethods = SalesMethod::all();
-        $vehicleStatuses = VehicleStatus::all();
-        $properties = Property::all();
-        $colors = Color::all();
-        $exteriorColors = Color::where('type', 'exterior')->get();
-        $interiorColors = Color::where('type', 'interior')->get();
-        $documentTypes = DocumentType::all();
+        $brands = Brand::where('is_active', true)->get();
+        $fuelTypes = FuelType::where('is_active', true)->get();
+        $transmissions = Transmission::where('is_active', true)->get();
+        $driveTypes = DriveType::where('is_active', true)->get();
+        $bodyTypes = BodyType::where('is_active', true)->get();
+        $salesMethods = SalesMethod::where('is_active', true)->get();
+        $vehicleStatuses = VehicleStatus::where('is_active', true)->get();
+        $properties = Property::where('is_active', true)->get();
+        $colors = Color::where('is_active', true)->get();
+        $exteriorColors = Color::where('is_active', true)->where('type', 'exterior')->get();
+        $interiorColors = Color::where('is_active', true)->where('type', 'interior')->get();
+        $documentTypes = DocumentType::where('is_active', true)->get();
 
         return view('content.dashboard.vehicles.create', compact(
             'brands',
@@ -170,19 +170,19 @@ class AdminVehicleController extends Controller
     public function edit($id)
     {
         $vehicle = Vehicle::with('properties')->findOrFail($id);
-        $brands = Brand::all();
-        $models = VehicleModel::where('brand_id', $vehicle->brand_id)->get();
-        $fuelTypes = FuelType::all();
-        $transmissions = Transmission::all();
-        $driveTypes = DriveType::all();
-        $bodyTypes = BodyType::all();
-        $salesMethods = SalesMethod::all();
-        $vehicleStatuses = VehicleStatus::all();
-        $properties = Property::all();
-        $colors = Color::all();
-        $exteriorColors = Color::where('type', 'exterior')->get();
-        $interiorColors = Color::where('type', 'interior')->get();
-        $documentTypes = DocumentType::all();
+        $brands = Brand::where('is_active', true)->get();
+        $models = VehicleModel::where('brand_id', $vehicle->brand_id)->where('is_active', true)->get();
+        $fuelTypes = FuelType::where('is_active', true)->get();
+        $transmissions = Transmission::where('is_active', true)->get();
+        $driveTypes = DriveType::where('is_active', true)->get();
+        $bodyTypes = BodyType::where('is_active', true)->get();
+        $salesMethods = SalesMethod::where('is_active', true)->get();
+        $vehicleStatuses = VehicleStatus::where('is_active', true)->get();
+        $properties = Property::where('is_active', true)->get();
+        $colors = Color::where('is_active', true)->get();
+        $exteriorColors = Color::where('is_active', true)->where('type', 'exterior')->get();
+        $interiorColors = Color::where('is_active', true)->where('type', 'interior')->get();
+        $documentTypes = DocumentType::where('is_active', true)->get();
 
         return view('content.dashboard.vehicles.edit', compact(
             'vehicle',

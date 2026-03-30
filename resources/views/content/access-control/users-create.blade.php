@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add Administrator')
+@section('title', 'Add Admin User')
 
 @section('content')
 <style>
@@ -43,8 +43,8 @@
     <i class="bx bx-chevron-left"></i>
   </a>
   <h4 class="mb-0">
-    <span class="text-muted fw-light">Access Control / Admins /</span>
-    <span class="fw-bold text-primary">Create Administrator</span>
+    <span class="text-muted fw-light">Access Control / Admin Users /</span>
+    <span class="fw-bold text-primary">Create Admin User</span>
   </h4>
 </div>
 
@@ -118,7 +118,7 @@
           @php
             $moduleIconsMap = [
               'vehicles'        => ['icon'=>'bx-car',            'color'=>'primary',   'label'=>'Vehicles'],
-              'users'           => ['icon'=>'bx-user',           'color'=>'info',      'label'=>'Users'],
+              'users'           => ['icon'=>'bx-user',           'color'=>'info',      'label'=>'Admin Users'],
               'roles'           => ['icon'=>'bx-shield-quarter', 'color'=>'warning',   'label'=>'Roles'],
               'subscriptions'   => ['icon'=>'bx-credit-card',    'color'=>'success',   'label'=>'Subscriptions'],
               'orders'          => ['icon'=>'bx-shopping-bag',   'color'=>'danger',    'label'=>'Orders'],
@@ -185,7 +185,7 @@
             <div class="col-12 d-flex justify-content-end gap-3">
               <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary px-4">Discard</a>
               <button type="submit" class="btn btn-primary px-5 shadow-sm">
-                <i class="bx bx-check-circle me-1"></i> Create Administrator
+                <i class="bx bx-check-circle me-1"></i> Create Admin User
               </button>
             </div>
           </div>

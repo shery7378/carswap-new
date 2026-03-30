@@ -60,7 +60,7 @@ class UserController extends Controller
             $admin->syncPermissions($request->permissions);
         }
 
-        return redirect()->route('admin.users.index')->with('success', 'Administrator account created successfully');
+        return redirect()->route('admin.users.index')->with('success', 'Admin User account created successfully');
     }
 
     public function edit($id)
@@ -119,7 +119,7 @@ class UserController extends Controller
         $admin->syncRoles($request->roles ?? []);
         $admin->syncPermissions($request->permissions ?? []);
 
-        return redirect()->route('admin.users.index')->with('success', 'Administrator account updated successfully');
+        return redirect()->route('admin.users.index')->with('success', 'Admin User account updated successfully');
     }
 
     public function destroy($id)
@@ -136,6 +136,6 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete your own account');
         }
         $admin->delete();
-        return redirect()->route('admin.users.index')->with('success', 'Administrator account deleted successfully');
+        return redirect()->route('admin.users.index')->with('success', 'Admin User account deleted successfully');
     }
 }

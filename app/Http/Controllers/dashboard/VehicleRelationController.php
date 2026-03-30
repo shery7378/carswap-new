@@ -27,7 +27,7 @@ class VehicleRelationController extends Controller
             $query->where('type', 'interior');
         }
 
-        $items = $query->orderBy('id', 'desc')->paginate(500);
+        $items = $query->orderBy('id', 'desc')->get();
         $title = Str::headline($type);
 
         return view('content.dashboard.relationships.index', compact('items', 'type', 'title'));
@@ -61,6 +61,44 @@ class VehicleRelationController extends Controller
         DB::table($table)->insert($data);
 
         return redirect()->back()->with('success', Str::headline($type) . ' added successfully.');
+    }
+
+    /**
+     * Update an existing record.
+     */
+    public function update(Request $request, $type, $id)
+    {
+        $table = $this->getTableName($type);
+        if (!$table) abort(404);
+
+        $request->validate(['name' => 'required|string|max:255']);
+
+        $data = ['name' => $request->name, 'updated_at' => now()];
+
+        if ($type === 'models' && $request->has('brand_id')) {
+            $data['brand_id'] = $request->brand_id;
+        }
+
+        DB::table($table)->where('id', $id)->update($data);
+
+        return redirect()->back()->with('success', Str::headline($type) . ' updated successfully.');
+    }
+
+    /**
+     * Toggle the active status of a record.
+     */
+    public function toggleStatus($type, $id)
+    {
+        $table = $this->getTableName($type);
+        if (!$table) abort(404);
+
+        $item = DB::table($table)->where('id', $id)->first();
+        if (!$item) abort(404);
+
+        $new_status = !($item->is_active ?? true);
+        DB::table($table)->where('id', $id)->update(['is_active' => $new_status, 'updated_at' => now()]);
+
+        return response()->json(['success' => true, 'is_active' => $new_status]);
     }
 
     /**

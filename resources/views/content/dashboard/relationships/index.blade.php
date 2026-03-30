@@ -23,7 +23,7 @@
                             <label class="form-label fw-semibold">Link to Brand *</label>
                             <select class="form-select select2-brand" name="brand_id" required>
                                 <option value="">Select Brand</option>
-                                @php $brands = DB::table('brands')->orderBy('name')->get(); @endphp
+                                @php $brands = DB::table('brands')->where('is_active', true)->orderBy('name')->get(); @endphp
                                 @foreach($brands as $brand)
                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                 @endforeach
@@ -65,6 +65,7 @@
                                 @if($type === 'models')
                                     <th>Parent Brand</th>
                                 @endif
+                                <th class="text-center" style="width: 100px;">Status</th>
                                 <th class="text-center" style="width: 120px;">Actions</th>
                             </tr>
                         </thead>
@@ -82,20 +83,38 @@
                                         </td>
                                     @endif
                                     <td class="text-center">
-                                        <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
-                                            method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none"
-                                                onclick="confirmDelete(event, this)">
-                                                <i class="bx bx-trash"></i>
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input class="form-check-input status-toggle" type="checkbox" 
+                                                data-id="{{ $item->id }}" 
+                                                data-type="{{ $type }}"
+                                                {{ ($item->is_active ?? true) ? 'checked' : '' }}>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-2">
+                                            <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn"
+                                                data-id="{{ $item->id }}"
+                                                data-name="{{ $item->name }}"
+                                                @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
+                                                data-bs-toggle="modal" data-bs-target="#editModal">
+                                                <i class="bx bx-edit"></i>
                                             </button>
-                                        </form>
+
+                                            <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
+                                                method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none"
+                                                    onclick="confirmDelete(event, this)">
+                                                    <i class="bx bx-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="{{ $type === 'models' ? 4 : 3 }}" class="text-center py-5">
+                                    <td colspan="{{ $type === 'models' ? 5 : 4 }}" class="text-center py-5">
                                         <div class="opacity-25 mb-2"><i class="bx bx-layers display-4"></i></div>
                                         <h6 class="text-muted">No {{ Str::lower($title) }} records found yet.</h6>
                                     </td>
@@ -109,12 +128,50 @@
     </div>
 </div>
 
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-bottom">
+                <h5 class="modal-title fw-bold">Edit {{ Str::singular($title) }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="editForm" method="POST">
+                @csrf
+                @method('PUT')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Name / Megnevezés *</label>
+                        <input type="text" class="form-control" name="name" id="edit_name" required>
+                    </div>
+
+                    @if($type === 'models')
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Link to Brand *</label>
+                            <select class="form-select" name="brand_id" id="edit_brand_id" required>
+                                <option value="">Select Brand</option>
+                                @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
+                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endif
+                </div>
+                <div class="modal-footer bg-light">
+                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary px-4 shadow-sm">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section('page-script')
 <script>
     $(document).ready(function() {
         $('#relationships-table').DataTable({
             "order": [[1, "asc"]],
-            "pageLength": 15,
+            "pageLength": 25,
             "language": {
                 "search": "",
                 "searchPlaceholder": "Search {{ Str::lower($title) }}...",
@@ -133,9 +190,44 @@
                    '>',
             "buttons": []
         });
+
+        // Edit Button Click
+        $('.edit-btn').on('click', function() {
+            const id = $(this).data('id');
+            const name = $(this).data('name');
+            const brandId = $(this).data('brand');
+            const type = '{{ $type }}';
+
+            $('#edit_name').val(name);
+            $('#edit_brand_id').val(brandId);
+            $('#editForm').attr('action', `{{ url('/app/vehicle-settings') }}/${type}/${id}`);
+        });
+
+        // Status Toggle Change
+        $('.status-toggle').on('change', function() {
+            const id = $(this).data('id');
+            const type = $(this).data('type');
+            const checked = $(this).prop('checked');
+            
+            $.ajax({
+                url: `{{ url('/app/vehicle-settings') }}/${type}/${id}/toggle-status`,
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        toastr.success('Status updated successfully');
+                    }
+                },
+                error: function() {
+                    toastr.error('Failed to update status');
+                }
+            });
+        });
     });
 
-    function confirmDelete(e, form) {
+    function confirmDelete(e, btn) {
         e.preventDefault();
         Swal.fire({
             title: 'Permanent Delete?',
@@ -147,7 +239,7 @@
             confirmButtonText: 'Yes, remove it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                form.closest('form').submit();
+                btn.closest('form').submit();
             }
         });
     }

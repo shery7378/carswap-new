@@ -200,6 +200,8 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::middleware(['permission:view-car_settings,admin-guard'])->group(function () {
         Route::get('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'index'])->name('admin.vehicle-settings.index');
         Route::post('/app/vehicle-settings/{type}', [VehicleRelationController::class , 'store'])->name('admin.vehicle-settings.store')->middleware('permission:create-car_settings,admin-guard');
+        Route::put('/app/vehicle-settings/{type}/{id}', [VehicleRelationController::class , 'update'])->name('admin.vehicle-settings.update')->middleware('permission:edit-car_settings,admin-guard');
+        Route::patch('/app/vehicle-settings/{type}/{id}/toggle-status', [VehicleRelationController::class , 'toggleStatus'])->name('admin.vehicle-settings.toggle-status')->middleware('permission:edit-car_settings,admin-guard');
         Route::delete('/app/vehicle-settings/{type}/{id}', [VehicleRelationController::class , 'destroy'])->name('admin.vehicle-settings.destroy')->middleware('permission:delete-car_settings,admin-guard');
     });
 
