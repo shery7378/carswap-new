@@ -470,6 +470,7 @@
                         } else {
                             modelSelect.innerHTML = '<option value="">No models found</option>';
                         }
+                        $(modelSelect).trigger('change'); // Notify Select2 of new options
                     })
                     .catch(error => {
                         console.error('Error loading models:', error);
@@ -632,6 +633,7 @@
                                 option.textContent = model.name;
                                 modelSelect.appendChild(option);
                             });
+                            $(modelSelect).trigger('change'); // Notify Select2
                         });
                 });
 
@@ -652,6 +654,7 @@
                 });
 
                 preferencesContainer.appendChild(clone);
+                initSelect2(); // Initialize Select2 for newly added selects
                 preferenceIndex++;
             });
         });

@@ -14,9 +14,29 @@
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    // Global Select2 Initialization
+    function initSelect2(selector = 'select:not(.no-select2)') {
+        $(selector).each(function() {
+            const dropdownParent = $(this).closest('.modal').length ? $(this).closest('.modal') : $(document.body);
+            $(this).select2({
+                theme: 'bootstrap-5',
+                dropdownParent: dropdownParent,
+                width: '100%',
+                placeholder: $(this).attr('placeholder') || 'Select an option'
+            });
+        });
+    }
+
+    $(document).ready(function() {
+        initSelect2();
+        
+        // Re-init for dynamically added content if needed 
+        // (but usually better to call it explicitly on the container)
+    });
     // Global Delete Confirmation
     $(document).on('click', '.delete-confirmation', function(e) {
         e.preventDefault();
