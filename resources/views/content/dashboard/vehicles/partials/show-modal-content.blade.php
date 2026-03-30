@@ -15,11 +15,7 @@
         </div>
     </div>
     <div class="ms-auto d-flex align-items-center gap-2">
-        @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm d-none d-sm-inline-flex align-items-center me-2">
-                <i class="bx bx-edit-alt me-1"></i> Edit Vehicle
-            </a>
-        @endif
+
         @if($vehicle->is_featured)
             <span class="badge bg-label-warning d-none d-sm-inline-flex align-items-center"><i class="bx bxs-star me-1"></i> Featured</span>
         @endif

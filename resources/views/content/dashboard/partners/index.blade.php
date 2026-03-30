@@ -90,42 +90,32 @@
                                             </span>
                                         </td>
 
-                                        <td class="text-center">
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                                </button>
+                                        <td>
+                                            <div class="d-flex align-items-center justify-content-center gap-1">
+                                                <a href="{{ route('admin.partners.show', $partner->id) }}"
+                                                   class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
+                                                   data-bs-toggle="tooltip" title="Full Page">
+                                                    <i class="bx bx-show"></i>
+                                                </a>
 
-                                                <div class="dropdown-menu">
-
-
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('admin.partners.show', $partner->id) }}">
-                                                        <i class="bx bx-link-external me-1 text-muted"></i> Full Page
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
+                                                    <a href="{{ route('admin.partners.edit', $partner->id) }}"
+                                                       class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
+                                                       data-bs-toggle="tooltip" title="Edit Partner">
+                                                        <i class="bx bx-edit-alt"></i>
                                                     </a>
+                                                @endif
 
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('admin.partners.edit', $partner->id) }}">
-                                                            <i class="bx bx-edit-alt me-1 text-info"></i> Edit
-                                                        </a>
-                                                    @endif
-
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-partners', 'admin-guard'))
-                                                        <div class="dropdown-divider"></div>
-                                                        <form action="{{ route('admin.partners.destroy', $partner->id) }}"
-                                                            method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger"
-                                                                onclick="confirmDelete(event, this)">
-                                                                <i class="bx bx-trash me-1"></i> Delete
-                                                            </button>
-                                                        </form>
-                                                    @endif
-
-                                                </div>
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-partners', 'admin-guard'))
+                                                    <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
+                                                            data-bs-toggle="tooltip" title="Delete Partner">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -187,25 +177,6 @@
 
         });
 
-        // ✅ DELETE CONFIRM
-        function confirmDelete(e, el) {
-            e.stopPropagation(); // DO NOT OPEN MODAL
-            e.preventDefault();
-
-            Swal.fire({
-                title: 'Delete Partner?',
-                text: "This action cannot be undone!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#ff3e1d',
-                cancelButtonColor: '#8592a3',
-                confirmButtonText: 'Yes, delete it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    el.closest('form').submit();
-                }
-            });
-        }
 
         // ✅ MODAL TRIGGER ON ROW CLICK
         $(document).on('click', '#partners-table tbody tr', function (e) {

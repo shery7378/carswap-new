@@ -16,6 +16,36 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+<script>
+    // Global Delete Confirmation
+    $(document).on('click', '.delete-confirmation', function(e) {
+        e.preventDefault();
+        const button = $(this);
+        const form = button.closest('form');
+        const title = button.data('confirm-title') || 'Are you sure?';
+        const text = button.data('confirm-text') || 'This action cannot be undone!';
+        
+        Swal.fire({
+            title: title,
+            text: text,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ff3e1d',
+            cancelButtonColor: '#8592a3',
+            confirmButtonText: 'Yes, delete it!',
+            customClass: {
+                confirmButton: 'btn btn-danger me-3',
+                cancelButton: 'btn btn-label-secondary'
+            },
+            buttonsStyling: false
+        }).then((result) => {
+            if (result.isConfirmed) {
+                form.submit();
+            }
+        });
+    });
+</script>
+
 @yield('vendor-script')
 <!-- END: Page Vendor JS-->
 <!-- BEGIN: Theme JS-->

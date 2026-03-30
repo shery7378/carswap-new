@@ -122,23 +122,32 @@
                                         </td>
 
                                         <td>
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown">
-                                                    <i class="bx bx-dots-vertical-rounded"></i>
-                                                </button>
-                                                <div class="dropdown-menu shadow-sm">
-                                                    <a class="dropdown-item text-muted"
-                                                        href="{{ route('admin.vehicles.show', $vehicle->id) }}">
-                                                        <i class="bx bx-link-external me-1"></i> Full Detailed Page
+                                            <div class="d-flex align-items-center gap-1">
+                                                <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" 
+                                                   class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
+                                                   data-bs-toggle="tooltip" title="View Details">
+                                                    <i class="bx bx-show"></i>
+                                                </a>
+
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" 
+                                                       class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
+                                                       data-bs-toggle="tooltip" title="Edit Vehicle">
+                                                        <i class="bx bx-edit-alt"></i>
                                                     </a>
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                        <a class="dropdown-item"
-                                                            href="{{ route('admin.vehicles.edit', $vehicle->id) }}">
-                                                            <i class="bx bx-edit-alt me-1 text-info"></i> Edit Vehicle
-                                                        </a>
-                                                    @endif
-                                                </div>
+                                                @endif
+
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                    <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" 
+                                                          method="POST" class="d-inline delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
+                                                            data-bs-toggle="tooltip" title="Delete Vehicle">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>

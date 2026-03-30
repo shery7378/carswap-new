@@ -183,15 +183,15 @@
 
                 <td>
                   <div class="d-flex gap-2">
-                    <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info">
+                    <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info" data-bs-toggle="tooltip" title="Edit Admin User">
                       <i class="bx bx-edit"></i>
                     </a>
 
                     <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}">
                       @csrf
                       @method('DELETE')
-                      <button class="action-btn bg-label-danger text-danger border-0"
-                        onclick="return confirm('Delete admin user?')">
+                      <button type="button" class="action-btn bg-label-danger text-danger border-0 delete-confirmation"
+                        data-confirm-text="Delete this admin user permanently?" data-bs-toggle="tooltip" title="Delete Admin User">
                         <i class="bx bx-trash"></i>
                       </button>
                     </form>
