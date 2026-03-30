@@ -4,16 +4,15 @@ namespace App\Http\Controllers\ecommerce;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Models\Setting;
 
 class SettingsPayment extends Controller
 {
     public function index()
     {
-        $settings = \App\Models\Setting::whereIn('key', [
+        $settings = Setting::whereIn('key', [
             'stripe_public_key',
-            'stripe_secret_key',
-            'paypal_client_id',
-            'paypal_secret'
+            'stripe_secret_key'
         ])->pluck('value', 'key')->toArray();
 
         return view('content.apps.ecommerce.ecommerce-settings-payment', compact('settings'));
@@ -24,19 +23,17 @@ class SettingsPayment extends Controller
         $request->validate([
             'stripe_public_key' => 'nullable|string',
             'stripe_secret_key' => 'nullable|string',
-            'paypal_client_id' => 'nullable|string',
-            'paypal_secret' => 'nullable|string',
         ]);
 
-        $keys = ['stripe_public_key', 'stripe_secret_key', 'paypal_client_id', 'paypal_secret'];
+        $keys = ['stripe_public_key', 'stripe_secret_key'];
 
         foreach ($keys as $key) {
-            \App\Models\Setting::updateOrCreate(
+            Setting::updateOrCreate(
                 ['key' => $key],
                 ['value' => $request->input($key)]
             );
         }
 
-        return back()->with('success', 'Payment credentials updated successfully!');
+        return back()->with('success', 'Stripe credentials updated successfully!');
     }
 }

@@ -45,27 +45,6 @@
                   </div>
                 </div>
 
-                <hr class="my-4">
-
-                <!-- PayPal Settings -->
-                <div class="mb-4">
-                  <h6 class="mb-3 d-flex align-items-center">
-                    <i class="bx bxl-paypal text-info fs-3 me-2"></i> PayPal Credentials
-                  </h6>
-                  <p class="text-muted small mb-3">Configure PayPal API access for standard PayPal checkouts.</p>
-
-                  <div class="row">
-                    <div class="col-md-12 mb-3">
-                      <label class="form-label">PayPal Client ID</label>
-                      <input type="text" name="paypal_client_id" class="form-control" value="{{ $settings['paypal_client_id'] ?? '' }}" placeholder="Enter Client ID">
-                    </div>
-                    <div class="col-md-12 mb-3">
-                      <label class="form-label">PayPal Secret Key</label>
-                      <input type="password" name="paypal_secret" class="form-control" value="{{ $settings['paypal_secret'] ?? '' }}" placeholder="Enter Secret Key">
-                    </div>
-                  </div>
-                </div>
-
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end mt-4">
                   <button type="submit" class="btn btn-primary">
@@ -89,7 +68,6 @@
               </p>
               <ul class="list-unstyled mb-0 small text-muted">
                 <li class="mb-2"><i class="bx bx-check text-success me-1"></i> Check Stripe Dashboard for API keys.</li>
-                <li><i class="bx bx-check text-success me-1"></i> Use your PayPal Developer Console to generate Client IDs.</li>
               </ul>
             </div>
           </div>
