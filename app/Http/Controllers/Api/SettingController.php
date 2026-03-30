@@ -37,6 +37,11 @@ class SettingController extends Controller
             'maintenanceMode' => '0',
             'maintenanceMessage' => '',
             
+            // Email Sender Info (Publicly useful)
+            'mail_from_address' => 'noreply@carswap.com',
+            'mail_from_name' => 'CarSwap',
+            'enable_email_notifications' => '1',
+            
             // Header / Footer Settings
             'header_logo' => null,
             'header_sticky' => '1',
