@@ -47,13 +47,13 @@
                                 <tr>
                                     <th>{{ __('Thumbnail') }}</th>
                                     <th>{{ __('Vehicle') }}</th>
-                                    <th>{{ __('User') }}</th>
-                                    <th>{{ __('Year') }}</th>
+                                    <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
+                                    <th class="d-none d-md-table-cell">{{ __('Year') }}</th>
                                     <th>{{ __('Price') }}</th>
-                                    <th>{{ __('Details') }}</th>
+                                    <th class="d-none d-xl-table-cell">{{ __('Details') }}</th>
                                     <th class="text-center">{{ __('Featured') }}</th>
-                                    <th>{{ __('Status') }}</th>
-                                    <th>{{ __('Actions') }}</th>
+                                    <th class="text-center">{{ __('Status') }}</th>
+                                    <th class="text-end pe-4">{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
 
@@ -77,21 +77,23 @@
                                             </small>
                                         </td>
 
-                                        <td>
-                                            {{ $vehicle->user->first_name ?? 'N/A' }}
-                                            {{ $vehicle->user->last_name ?? '' }}
+                                        <td class="d-none d-lg-table-cell">
+                                            <div class="d-flex flex-column">
+                                                <span class="fw-bold">{{ $vehicle->user->first_name ?? 'N/A' }} {{ $vehicle->user->last_name ?? '' }}</span>
+                                                <small class="text-muted">{{ $vehicle->user->email ?? '' }}</small>
+                                            </div>
                                         </td>
 
-                                        <td>{{ $vehicle->year }}</td>
+                                        <td class="d-none d-md-table-cell"><span class="badge bg-label-secondary">{{ $vehicle->year }}</span></td>
 
-                                        <td>{{ number_format($vehicle->price) }} Ft</td>
+                                        <td><span class="fw-bold text-primary">{{ number_format($vehicle->price) }} Ft</span></td>
 
-                                        <td>
-                                            <small>
-                                                {{ __('Fuel') }}: {{ optional($vehicle->fuelType)->name }} <br>
-                                                {{ __('Trans') }}: {{ optional($vehicle->transmission)->name }} <br>
-                                                {{ __('Mileage') }}: {{ $vehicle->mileage }} km
-                                            </small>
+                                        <td class="d-none d-xl-table-cell">
+                                            <div class="d-flex flex-column small">
+                                                <span><i class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
+                                                <span><i class="bx bx-cog me-1"></i>{{ optional($vehicle->transmission)->name }}</span>
+                                                <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
+                                            </div>
                                         </td>
 
                                         <td class="text-center">
@@ -104,7 +106,7 @@
                                             </button>
                                         </td>
 
-                                        <td>
+                                        <td class="td-status text-center">
                                             @php
                                                 $statusClass = match ($vehicle->ad_status) {
                                                     'published' => 'success',
@@ -116,7 +118,7 @@
                                             @endphp
 
                                             <div class="dropdown">
-                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-boundary="viewport">
+                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config='{"strategy":"fixed"}'>
                                                     <span class="badge bg-{{ $statusClass }}">
                                                         {{ ucfirst($vehicle->ad_status) }}
                                                     </span>
@@ -142,8 +144,8 @@
                                             </div>
                                         </td>
 
-                                        <td>
-                                            <div class="d-flex align-items-center gap-1">
+                                        <td class="text-end pe-4">
+                                            <div class="d-flex justify-content-end align-items-center gap-1">
                                                 <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" 
                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
                                                    data-bs-toggle="tooltip" title="View Details">
@@ -347,6 +349,15 @@
 
         .shadow-xs {
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
+        .table-responsive {
+            overflow: visible !important;
+        }
+        .td-status {
+            position: relative;
+        }
+        .dropdown.show {
+            z-index: 1060 !important;
         }
     </style>
 @endsection

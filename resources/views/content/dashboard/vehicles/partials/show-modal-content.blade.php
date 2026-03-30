@@ -5,13 +5,15 @@
                 {{ strtoupper(substr($vehicle->user?->first_name ?: ($vehicle->user?->last_name ?: ($vehicle->user?->email ?: 'U')), 0, 1)) }}
             </span>
         </div>
-        <div>
-            <h5 class="modal-title fw-bold mb-0 text-dark">{{ $vehicle->title }}</h5>
-            <small class="text-muted small d-block">
-                <i class="bx bx-map-pin me-1 text-primary"></i> {{ $vehicle->location ?: ($vehicle->address ?: 'No location specified') }}
-                <span class="mx-1 text-light">|</span> 
-                <i class="bx bx-calendar-event me-1"></i> {{ $vehicle->year }}
-            </small>
+        <div class="pe-3 overflow-hidden">
+            <h5 class="modal-title fw-bold mb-0 text-dark text-truncate">{{ $vehicle->title }}</h5>
+            <div class="d-flex align-items-center flex-wrap gap-x-2 small mt-1">
+                <span class="text-muted"><i class="bx bx-map-pin me-1 text-primary"></i>{{ $vehicle->location ?: 'N/A' }}</span>
+                <span class="badge badge-center rounded-pill bg-label-secondary w-px-2 h-px-2 mx-1"></span>
+                <span class="text-muted"><i class="bx bx-calendar me-1"></i>{{ $vehicle->year }}</span>
+                <span class="badge badge-center rounded-pill bg-label-secondary w-px-2 h-px-2 mx-1"></span>
+                <span class="text-primary fw-bold"><i class="bx bx-user me-1 text-primary"></i>{{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : 'System' }}</span>
+            </div>
         </div>
     </div>
     <div class="ms-auto d-flex align-items-center gap-2">

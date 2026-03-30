@@ -14,8 +14,14 @@
                         </span>
                     </div>
                     <div>
-                        <h5 class="mb-0 fw-bold">{{ $vehicle->title }}</h5>
-                        <small class="text-muted">{{ optional($vehicle->brand)->name }} {{ optional($vehicle->model)->name }} • {{ $vehicle->year }}</small>
+                        <h5 class="mb-1 fw-bold">{{ $vehicle->title }}</h5>
+                        <div class="d-flex align-items-center flex-wrap gap-2">
+                            <small class="text-muted"><i class="bx bx-purchase-tag-alt me-1"></i> {{ optional($vehicle->brand)->name }} {{ optional($vehicle->model)->name }}</small>
+                            <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
+                            <small class="text-muted"><i class="bx bx-calendar me-1"></i> {{ $vehicle->year }}</small>
+                            <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
+                            <small class="text-primary fw-bold"><i class="bx bx-user me-1 text-primary"></i> Posted by: {{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : 'System' }}</small>
+                        </div>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
