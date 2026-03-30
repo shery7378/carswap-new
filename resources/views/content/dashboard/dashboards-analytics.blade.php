@@ -32,8 +32,8 @@
             <div class="d-flex align-items-start row">
                 <div class="col-sm-7">
                     <div class="card-body">
-                        <h5 class="card-title text-primary mb-3">Welcome, {{ Auth::user()->first_name ?? 'Admin' }}! 🚗</h5>
-                        <p class="mb-6">Here is an overview of your CarSwap platform today.</p>
+                        <h5 class="card-title text-primary mb-1">Welcome back, {{ Auth::user()->first_name ?? 'Admin' }}! 👋</h5>
+                        <p class="mb-4">You are logged in as <span class="badge bg-label-primary text-capitalize">{{ Auth::user()->roles->pluck('name')->first() ?? 'Staff' }}</span></p>
 
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">Manage Vehicles</a>
                     </div>

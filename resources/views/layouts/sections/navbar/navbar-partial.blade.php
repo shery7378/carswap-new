@@ -32,7 +32,13 @@ use Illuminate\Support\Facades\Route;
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                    @if(Auth::user()->profile_picture)
+                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
+                    @else
+                        <div class="avatar-initial rounded-circle bg-label-primary shadow-sm fw-bold">
+                            {{ strtoupper(substr(Auth::user()->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr(Auth::user()->last_name ?? 'D', 0, 1)) }}
+                        </div>
+                    @endif
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -41,18 +47,30 @@ use Illuminate\Support\Facades\Route;
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    <img src="{{ asset('assets/img/avatars/1.png') }}" alt class="w-px-40 h-auto rounded-circle">
+                                    @if(Auth::user()->profile_picture)
+                                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
+                                    @else
+                                        <div class="avatar-initial rounded-circle bg-label-primary shadow-sm fw-bold">
+                                            {{ strtoupper(substr(Auth::user()->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr(Auth::user()->last_name ?? 'D', 0, 1)) }}
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                             <div class="flex-grow-1">
-                                <h6 class="mb-0">
+                                <h6 class="mb-1 fw-bold text-dark text-nowrap">
                                   @if (Auth::check())
                                     {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
                                   @else
                                     John Doe
                                   @endif
                                 </h6>
-                                <small class="text-muted">Admin</small>
+                                <small class="text-muted d-block" style="font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase;">
+                                   @if (Auth::check())
+                                      {{ Auth::user()->roles->pluck('name')->map(fn($r) => str_replace('-', ' ', $r))->join(' & ') ?: 'Staff' }}
+                                   @else
+                                      Admin Role
+                                   @endif
+                                </small>
                             </div>
                         </div>
                     </a>
@@ -61,21 +79,8 @@ use Illuminate\Support\Facades\Route;
                     <div class="dropdown-divider my-1"></div>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class="icon-base bx bx-user icon-md me-3"></i><span>My Profile</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <i class="icon-base bx bx-cog icon-md me-3"></i><span>Settings</span>
-                    </a>
-                </li>
-                <li>
-                    <a class="dropdown-item" href="javascript:void(0);">
-                        <span class="d-flex align-items-center align-middle">
-                            <i class="flex-shrink-0 icon-base bx bx-credit-card icon-md me-3"></i><span class="flex-grow-1 align-middle">Billing Plan</span>
-                            <span class="flex-shrink-0 badge rounded-pill bg-danger">4</span>
-                        </span>
+                    <a class="dropdown-item" href="{{ route('admin.profile.index') }}">
+                        <i class="icon-base bx bx-user icon-md me-3"></i><span>Profile Settings</span>
                     </a>
                 </li>
                 <li>

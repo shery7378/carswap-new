@@ -19,7 +19,7 @@
         'vehicle-statuses' => 'bx-check-shield',
         'extra-features' => 'bx-list-plus'
     ];
-    $icon = $icons[$type] ?? 'bx-collection';
+    $icon = $icons[(string)$type] ?? 'bx-collection';
     $activeCount = $items->where('is_active', 1)->count();
     $inactiveCount = $items->where('is_active', 0)->count();
 @endphp

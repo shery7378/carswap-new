@@ -60,6 +60,7 @@ use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
 use App\Http\Controllers\Admin\EmailTemplateController;
+use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 
 
 // Admin Authentication (Publicly accessible but handled by guard)
@@ -72,6 +73,11 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     // General Dashboard & Logout
     Route::get('/dashboard', [Analytics::class , 'index'])->name('dashboard-analytics');
     Route::post('/logout', [AuthController::class , 'logout'])->name('logout');
+
+    // Admin Profile
+    Route::get('/profile', [AdminProfileController::class, 'index'])->name('admin.profile.index');
+    Route::post('/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+    Route::post('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.update-password');
     
     // Layout, UI, & Forms (Accessible Utility Pages for all authorized staff)
     Route::get('/layouts/without-menu', [WithoutMenu::class , 'index'])->name('layouts-without-menu');
