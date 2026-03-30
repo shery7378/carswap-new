@@ -17,9 +17,12 @@
                         <form action="{{ route('admin.vehicles.index') }}" method="GET">
                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="">All Statuses</option>
-                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected</option>
+                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published
+                                </option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
+                                </option>
+                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected
+                                </option>
                                 <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
                             </select>
                         </form>
@@ -61,9 +64,8 @@
                                     <tr data-id="{{ $vehicle->id }}">
                                         <td>
                                             @if($vehicle->main_image)
-                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}"
-                                                     width="50"
-                                                     class="rounded">
+                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
+                                                    class="rounded">
                                             @else
                                                 <span class="badge bg-secondary">No Image</span>
                                             @endif
@@ -112,15 +114,18 @@
 
                                         <td>
                                             <div class="dropdown">
-                                                <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown">
                                                     <i class="bx bx-dots-vertical-rounded"></i>
                                                 </button>
                                                 <div class="dropdown-menu shadow-sm">
-                                                    <a class="dropdown-item text-muted" href="{{ route('admin.vehicles.show', $vehicle->id) }}">
+                                                    <a class="dropdown-item text-muted"
+                                                        href="{{ route('admin.vehicles.show', $vehicle->id) }}">
                                                         <i class="bx bx-link-external me-1"></i> Full Detailed Page
                                                     </a>
                                                     @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                        <a class="dropdown-item" href="{{ route('admin.vehicles.edit', $vehicle->id) }}">
+                                                        <a class="dropdown-item"
+                                                            href="{{ route('admin.vehicles.edit', $vehicle->id) }}">
                                                             <i class="bx bx-edit-alt me-1 text-info"></i> Edit Vehicle
                                                         </a>
                                                     @endif
@@ -159,109 +164,112 @@
 
 @section('page-script')
     <script>
-    $(document).ready(function () {
-        $('#vehicles-table').DataTable({
-            order: [[1, "asc"]],
-            pageLength: 25,
-            dom:
-                "<'row align-items-center mb-3'<'col-md-6 d-flex align-items-center'l><'col-md-6 d-flex justify-content-end'f>>" +
-                "t" +
-                "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
-            language: {
-                search: "",
-                searchPlaceholder: "Quick Search Vehicles...",
-                paginate: {
-                    next: '<i class="bx bx-chevron-right"></i>',
-                    previous: '<i class="bx bx-chevron-left"></i>'
+        $(document).ready(function () {
+            $('#vehicles-table').DataTable({
+                order: [[1, "asc"]],
+                pageLength: 25,
+                dom:
+                    "<'row align-items-center mb-3'<'col-md-6 d-flex align-items-center'l><'col-md-6 d-flex justify-content-end'f>>" +
+                    "t" +
+                    "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
+                language: {
+                    search: "",
+                    searchPlaceholder: "Quick Search Vehicles...",
+                    paginate: {
+                        next: '<i class="bx bx-chevron-right"></i>',
+                        previous: '<i class="bx bx-chevron-left"></i>'
+                    }
                 }
-            }
+            });
+
+            // ✅ MODAL TRIGGER ON ROW CLICK
+            $(document).on('click', '#vehicles-table tbody tr', function (e) {
+                // IGNORE DROPDOWNS OR ACTIONS
+                if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button').length) return;
+
+                const vehicleId = $(this).data('id');
+                if (!vehicleId) return;
+
+                const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
+                const container = document.getElementById('v-modal-loader-content');
+
+                // SHOW LOADER
+                container.innerHTML = `
+                    <div class="modal-body text-center py-5">
+                        <div class="spinner-grow text-primary" role="status"></div>
+                        <p class="mt-3 text-muted fw-semibold small">Fetching vehicle data...</p>
+                    </div>
+                `;
+
+                modal.show();
+
+                // FETCH VIA AJAX
+                fetch(`{{ url('/app/vehicles') }}/${vehicleId}?modal=1`)
+                    .then(res => res.text())
+                    .then(html => {
+                        container.innerHTML = html;
+                    })
+                    .catch(err => {
+                        container.innerHTML = `<div class="modal-body text-center py-5 text-danger font-bold">Error loading vehicle details. Please try again.</div>`;
+                    });
+            });
         });
-
-        // ✅ MODAL TRIGGER ON ROW CLICK
-        $(document).on('click', '#vehicles-table tbody tr', function(e) {
-            // IGNORE DROPDOWNS OR ACTIONS
-            if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button').length) return;
-            
-            const vehicleId = $(this).data('id');
-            if(!vehicleId) return;
-
-            const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
-            const container = document.getElementById('v-modal-loader-content');
-            
-            // SHOW LOADER
-            container.innerHTML = `
-                <div class="modal-body text-center py-5">
-                    <div class="spinner-grow text-primary" role="status"></div>
-                    <p class="mt-3 text-muted fw-semibold small">Fetching vehicle data...</p>
-                </div>
-            `;
-            
-            modal.show();
-
-            // FETCH VIA AJAX
-            fetch(`{{ url('/app/vehicles') }}/${vehicleId}`)
-                .then(res => res.text())
-                .then(html => {
-                    container.innerHTML = html;
-                })
-                .catch(err => {
-                    container.innerHTML = `<div class="modal-body text-center py-5 text-danger font-bold">Error loading vehicle details. Please try again.</div>`;
-                });
-        });
-    });
     </script>
     <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
 
     <style>
-
-    /* Search box */
-    .dataTables_filter input {
-        border-radius: 8px;
-        padding: 6px 10px;
-        border: 1px solid #ddd;
-        width: 220px;
-    }
-
-    /* Align controls properly */
-    .dataTables_wrapper .dataTables_filter {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    .dataTables_wrapper .dataTables_length {
-        display: flex;
-        align-items: center;
-    }
-
-    .dataTables_length select {
-        padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
-        border-radius: 6px !important;
-        border: 1px solid #ddd !important;
-        min-width: 80px !important;
-    }
-
-    /* Pagination */
-    .dataTables_paginate {
-        display: flex;
-        justify-content: flex-end;
-    }
-
-    /* Mobile fix */
-    @media (max-width: 768px) {
-        .dataTables_filter {
-            justify-content: start !important;
-            margin-top: 10px;
+        /* Search box */
+        .dataTables_filter input {
+            border-radius: 8px;
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            width: 220px;
         }
-    }
 
-    #vehicles-table tbody tr {
-        cursor: pointer;
-        transition: all 0.15s ease;
-    }
-    #vehicles-table tbody tr:hover {
-        background-color: rgba(105, 108, 255, 0.04) !important;
-        transform: scale(1.002);
-    }
-    .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+        /* Align controls properly */
+        .dataTables_wrapper .dataTables_filter {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .dataTables_wrapper .dataTables_length {
+            display: flex;
+            align-items: center;
+        }
+
+        .dataTables_length select {
+            padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
+            border-radius: 6px !important;
+            border: 1px solid #ddd !important;
+            min-width: 80px !important;
+        }
+
+        /* Pagination */
+        .dataTables_paginate {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        /* Mobile fix */
+        @media (max-width: 768px) {
+            .dataTables_filter {
+                justify-content: start !important;
+                margin-top: 10px;
+            }
+        }
+
+        #vehicles-table tbody tr {
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        #vehicles-table tbody tr:hover {
+            background-color: rgba(105, 108, 255, 0.04) !important;
+            transform: scale(1.002);
+        }
+
+        .shadow-xs {
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+        }
     </style>
 @endsection

@@ -40,7 +40,7 @@ class AdminVehicleController extends Controller
             'documentType', 'vehicleStatus', 'user', 'properties'
         ])->findOrFail($id);
 
-        if ($request->ajax()) {
+        if ($request->ajax() || $request->has('modal')) {
             return view('content.dashboard.vehicles.partials.show-modal-content', compact('vehicle'));
         }
 

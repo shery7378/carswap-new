@@ -99,7 +99,7 @@
 
                                                 <div class="dropdown-menu">
 
-                                                    
+
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.partners.show', $partner->id) }}">
                                                         <i class="bx bx-link-external me-1 text-muted"></i> Full Page
@@ -208,24 +208,24 @@
         }
 
         // ✅ MODAL TRIGGER ON ROW CLICK
-        $(document).on('click', '#partners-table tbody tr', function(e) {
+        $(document).on('click', '#partners-table tbody tr', function (e) {
             // IGNORE DOTS OR ACTIONS
             if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form').length) return;
-            
+
             const partnerId = $(this).data('id');
-            if(!partnerId) return;
+            if (!partnerId) return;
 
             const modal = new bootstrap.Modal(document.getElementById('partnerDetailsModal'));
             const container = document.getElementById('modal-loader-content');
-            
+
             // SHOW LOADER
             container.innerHTML = `
-                <div class="modal-body text-center py-5">
-                    <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted small">Loading partner information...</p>
-                </div>
-            `;
-            
+                    <div class="modal-body text-center py-5">
+                        <div class="spinner-border text-primary" role="status"></div>
+                        <p class="mt-2 text-muted small">Loading partner information...</p>
+                    </div>
+                `;
+
             modal.show();
 
             // FETCH VIA AJAX
@@ -233,7 +233,7 @@
                 .then(res => res.text())
                 .then(html => {
                     container.innerHTML = html;
-                    
+
                     // RE-INIT MAP IF SCRIPT EXISTS IN HTML
                     const scripts = container.querySelectorAll('script');
                     scripts.forEach(oldScript => {
@@ -306,6 +306,7 @@
             cursor: pointer;
             transition: background 0.15s ease;
         }
+
         #partners-table tbody tr:hover {
             background-color: rgba(105, 108, 255, 0.04) !important;
         }

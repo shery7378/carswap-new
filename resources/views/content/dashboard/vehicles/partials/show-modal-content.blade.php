@@ -2,7 +2,7 @@
     <div class="d-flex align-items-center">
         <div class="avatar avatar-md me-3">
              <span class="avatar-initial rounded-circle bg-label-primary border shadow-xs">
-                {{ strtoupper(substr($vehicle->user?->first_name ?? 'U', 0, 1)) }}
+                {{ strtoupper(substr($vehicle->user?->first_name ?: ($vehicle->user?->last_name ?: ($vehicle->user?->email ?: 'U')), 0, 1)) }}
             </span>
         </div>
         <div>
@@ -15,6 +15,11 @@
         </div>
     </div>
     <div class="ms-auto d-flex align-items-center gap-2">
+        @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm d-none d-sm-inline-flex align-items-center me-2">
+                <i class="bx bx-edit-alt me-1"></i> Edit Vehicle
+            </a>
+        @endif
         @if($vehicle->is_featured)
             <span class="badge bg-label-warning d-none d-sm-inline-flex align-items-center"><i class="bx bxs-star me-1"></i> Featured</span>
         @endif
@@ -64,10 +69,16 @@
                 <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">Seller Details</h6>
                 <div class="d-flex align-items-center">
                     <div class="avatar avatar-sm me-2">
-                        <span class="avatar-initial rounded-circle bg-label-info shadow-xs border">{{ substr($vehicle->user?->first_name ?? 'U', 0, 1) }}</span>
+                        <span class="avatar-initial rounded-circle bg-label-info shadow-xs border">{{ strtoupper(substr($vehicle->user?->first_name ?: ($vehicle->user?->last_name ?: ($vehicle->user?->email ?: 'U')), 0, 1)) }}</span>
                     </div>
                     <div class="text-truncate">
-                        <p class="mb-0 fw-bold text-dark small text-truncate">{{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : 'Guest User' }}</p>
+                        <p class="mb-0 fw-bold text-dark small text-truncate">
+                            @if($vehicle->user)
+                                {{ trim($vehicle->user->first_name . ' ' . $vehicle->user->last_name) ?: 'Internal User' }}
+                            @else
+                                Guest User
+                            @endif
+                        </p>
                         <p class="mb-0 text-muted smaller text-truncate">{{ $vehicle->user->email ?? 'No email set' }}</p>
                     </div>
                 </div>
@@ -103,29 +114,64 @@
                     <!-- Overview -->
                     <div class="tab-pane fade show active" id="v-modal-overview" role="tabpanel">
                         <div class="row g-3 mb-4">
+                            <!-- Mileage -->
                             <div class="col-6 col-sm-4">
-                                <div class="p-3 border rounded bg-white shadow-xs border-start border-4 border-primary">
-                                    <small class="text-muted d-block uppercase fw-bold mb-1" style="font-size: 0.65rem;">Engine Power</small>
-                                    <span class="fw-bold fs-5">{{ $vehicle->performance ?? '0' }} <small class="fw-normal">HP</small></span>
+                                <div class="p-3 border-start border-primary border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Mileage</small>
+                                    <span class="fw-bold fs-5">{{ number_format($vehicle->mileage ?? 0, 0, ',', ' ') }} <small class="fw-normal">km</small></span>
                                 </div>
                             </div>
+                            <!-- Fuel Type -->
                             <div class="col-6 col-sm-4">
-                                <div class="p-3 border rounded bg-white shadow-xs border-start border-4 border-info">
-                                    <small class="text-muted d-block uppercase fw-bold mb-1" style="font-size: 0.65rem;">Drive Type</small>
-                                    <span class="fw-bold text-dark">{{ optional($vehicle->driveType)->name ?: 'N/A' }}</span>
+                                <div class="p-3 border-start border-info border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Fuel Type</small>
+                                    <span class="fw-bold fs-5 text-truncate d-block">{{ optional($vehicle->fuelType)->name ?? 'N/A' }}</span>
                                 </div>
                             </div>
+                            <!-- Transmission -->
                             <div class="col-6 col-sm-4">
-                                <div class="p-3 border rounded bg-white shadow-xs border-start border-4 border-success">
-                                    <small class="text-muted d-block uppercase fw-bold mb-1" style="font-size: 0.65rem;">Body Style</small>
-                                    <span class="fw-bold text-dark">{{ optional($vehicle->bodyType)->name ?: 'N/A' }}</span>
+                                <div class="p-3 border-start border-success border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Transmission</small>
+                                    <span class="fw-bold fs-6 d-block lh-sm overflow-hidden" style="max-height: 44px;">{{ optional($vehicle->transmission)->name ?? 'N/A' }}</span>
+                                </div>
+                            </div>
+                            <!-- Power -->
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border-start border-warning border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Power</small>
+                                    <span class="fw-bold fs-5">{{ $vehicle->performance ?? 'N/A' }} <small class="fw-normal">HP</small></span>
+                                </div>
+                            </div>
+                            <!-- Status -->
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border-start border-secondary border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Status</small>
+                                    <span class="badge bg-label-{{ $vehicle->ad_status == 'published' ? 'success' : 'warning' }} mt-1">{{ ucfirst($vehicle->ad_status) }}</span>
+                                </div>
+                            </div>
+                            <!-- Location -->
+                            <div class="col-6 col-sm-4">
+                                <div class="p-3 border-start border-danger border-4 rounded bg-white shadow-xs h-100">
+                                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">Location</small>
+                                    <span class="fw-bold fs-6 d-block text-truncate">{{ $vehicle->location ?: 'N/A' }}</span>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold text-uppercase small text-muted mb-3 d-flex align-items-center">
+                                <i class="bx bx-info-circle me-2"></i> Quick Overview
+                            </h6>
+                            <div class="bg-light p-3 rounded border text-muted small lh-base">
+                                This {{ optional($vehicle->brand)->name }} {{ optional($vehicle->model)->name }} is a {{ $vehicle->year }} model with {{ number_format($vehicle->mileage) }} km. 
+                                Currently listed as <strong>{{ $vehicle->ad_status }}</strong> in {{ $vehicle->location ?: 'Not specified' }}.
+                            </div>
+                        </div>
+
                         <h6 class="fw-bold text-uppercase small text-muted mb-3 d-flex align-items-center">
                             <i class="bx bx-text me-2"></i> Description
                         </h6>
-                        <div class="lh-base text-dark bg-light p-3 rounded border" style="font-size: 0.95rem;">
+                        <div class="lh-base text-dark bg-light p-3 rounded border" style="font-size: 0.9rem;">
                             {!! $vehicle->description ? nl2br(e(Str::limit($vehicle->description, 500))) : '<em>No detailed description provided for this vehicle.</em>' !!}
                         </div>
                     </div>
