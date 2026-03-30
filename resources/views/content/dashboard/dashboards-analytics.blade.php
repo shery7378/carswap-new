@@ -32,7 +32,18 @@
             <div class="d-flex align-items-start row">
                 <div class="col-sm-7">
                     <div class="card-body">
-                        <h5 class="card-title text-primary mb-1">Welcome back, {{ Auth::user()->first_name ?? 'Admin' }}! 👋</h5>
+                        <div class="d-flex align-items-center mb-4">
+                            @if(Auth::user()->profile_picture)
+                                <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt="user-avatar" class="rounded-circle me-3" height="40" width="40" style="object-fit: cover;" />
+                            @else
+                                <div class="avatar avatar-sm me-3">
+                                    <div class="avatar-initial rounded-circle bg-label-primary fw-bold">
+                                        {{ strtoupper(substr(Auth::user()->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr(Auth::user()->last_name ?? 'D', 0, 1)) }}
+                                    </div>
+                                </div>
+                            @endif
+                            <h5 class="card-title text-primary mb-0">Welcome back, {{ Auth::user()->first_name ?? 'Admin' }}! 👋</h5>
+                        </div>
                         <p class="mb-4">You are logged in as <span class="badge bg-label-primary text-capitalize">{{ Auth::user()->roles->pluck('name')->first() ?? 'Staff' }}</span></p>
 
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">Manage Vehicles</a>
