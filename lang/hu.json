@@ -34,7 +34,6 @@
     "Active": "Aktív",
     "Inactive": "Inaktív",
     "Banned": "Kitiltva",
-    "Vehicles List": "Járművek listája",
     "All Statuses": "Minden státusz",
     "Published": "Közzétéve",
     "Pending": "Függőben",
@@ -70,5 +69,13 @@
     "Admin Users List": "Admin felhasználók listája",
     "Admin User": "Admin felhasználó",
     "Permissions": "Jogosultságok",
-    "No extra permissions": "Nincsenek extra jogosultságok"
+    "No extra permissions": "Nincsenek extra jogosultságok",
+    "Quick Addition": "Gyors hozzáadás",
+    "Register a new": "Új regisztrálása:",
+    "Display Name / Megnevezés": "Megnevezés",
+    "Link to Parent Brand": "Kapcsolódó márka",
+    "Subscription": "Előfizetés",
+    "Subscription List": "Előfizetések listája",
+    "Create Subscription": "Előfizetés létrehozása",
+    "Subscription Plans": "Előfizetési csomagok"
 }

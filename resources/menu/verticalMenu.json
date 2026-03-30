@@ -147,6 +147,26 @@
       ]
     },
     {
+      "name": "Subscription",
+      "icon": "menu-icon icon-base bx bx-credit-card",
+      "slug": "app-subscription",
+      "permission": "view-subscriptions",
+      "submenu": [
+        {
+          "url": "app/subscription/list",
+          "name": "User Subscriptions",
+          "slug": "app-subscription-list",
+          "permission": "view-subscriptions"
+        },
+        {
+          "url": "app/subscription/plans",
+          "name": "Subscription Plans",
+          "slug": "app-subscription-plans",
+          "permission": "view-subscriptions"
+        }
+      ]
+    },
+    {
       "url": "app/email-templates",
       "name": "Email Templates",
       "icon": "menu-icon icon-base bx bx-envelope",

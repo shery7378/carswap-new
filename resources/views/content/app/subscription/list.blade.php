@@ -1,20 +1,26 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Subscriptions Management')
+@section('title', __('User Subscriptions'))
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card border-0 shadow-sm overflow-hidden">
-            <div class="card-header bg-white border-bottom d-flex justify-content-between align-items-center py-3">
-                <h5 class="card-title mb-0 fw-bold">Active Subscriptions</h5>
-                <div class="d-flex gap-2">
-                    <a href="{{ route('app-subscription-create') }}" class="btn btn-primary btn-sm shadow-sm">
-                        <i class="bx bx-plus me-1"></i> New Subscription
-                    </a>
-                    <button type="button" class="btn btn-label-secondary btn-sm waves-effect">
-                        <i class="bx bx-export me-1"></i> Export Data
-                    </button>
+            <div class="card-header border-bottom">
+                <h5 class="card-title mb-3 fw-bold">{{ __('User Subscriptions') }}</h5>
+                <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
+                    <div class="col-md-4 plan_filter"></div>
+                    <div class="col-md-4 status_filter"></div>
+                    <div class="col-md-4 dropdown text-md-end text-start">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bx bx-export me-1"></i> Export Data
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" id="export-excel" href="javascript:void(0);">Export to Excel</a></li>
+                            <li><a class="dropdown-item" id="export-csv" href="javascript:void(0);">Export to CSV</a></li>
+                            <li><a class="dropdown-item" id="export-pdf" href="javascript:void(0);">Export to PDF</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="card-body p-0 pt-3">
@@ -114,7 +120,7 @@
 @section('page-script')
 <script>
     $(document).ready(function() {
-        $('#subscriptions-table').DataTable({
+        var table = $('#subscriptions-table').DataTable({
             "order": [[4, "asc"]],
             "pageLength": 10,
             "language": {
@@ -127,14 +133,68 @@
             },
             "dom": '<"row mx-2"' +
                    '<"col-md-2"<"me-3 mt-3"l>>' +
-                   '<"col-md-10"<"dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0 mt-3"fB>>' +
+                   '<"col-md-10"<"text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0 mt-3"f>>' +
                    '>t' +
                    '<"row mx-2"' +
                    '<"col-sm-12 col-md-6"i>' +
                    '<"col-sm-12 col-md-6"p>' +
                    '>',
-            "buttons": []
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    className: 'd-none',
+                    exportOptions: { columns: [0, 1, 2, 3, 4] }
+                },
+                {
+                    extend: 'csvHtml5',
+                    className: 'd-none',
+                    exportOptions: { columns: [0, 1, 2, 3, 4] }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    className: 'd-none',
+                    exportOptions: { columns: [0, 1, 2, 3, 4] }
+                }
+            ],
+            initComplete: function () {
+                // Plan Filter (Column 1)
+                this.api().columns(1).every(function () {
+                    var column = this;
+                    var select = $('<select class="form-select text-capitalize"><option value=""> Filter by Plan </option></select>')
+                        .appendTo('.plan_filter')
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        var textVal = $.trim($(d).text());
+                        if(textVal) select.append('<option value="' + textVal + '">' + textVal + '</option>');
+                    });
+                });
+
+                // Status Filter (Column 3)
+                this.api().columns(3).every(function () {
+                    var column = this;
+                    var select = $('<select class="form-select text-capitalize"><option value=""> Filter by Status </option></select>')
+                        .appendTo('.status_filter')
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                            column.search(val ? '^' + val + '$' : '', true, false).draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        var textVal = $.trim($(d).text());
+                        if(textVal) select.append('<option value="' + textVal + '">' + textVal + '</option>');
+                    });
+                });
+            }
         });
+
+        // Trigger exports
+        $('#export-excel').on('click', function() { table.button('.buttons-excel').trigger(); });
+        $('#export-csv').on('click', function() { table.button('.buttons-csv').trigger(); });
+        $('#export-pdf').on('click', function() { table.button('.buttons-pdf').trigger(); });
     });
 </script>
 @endsection

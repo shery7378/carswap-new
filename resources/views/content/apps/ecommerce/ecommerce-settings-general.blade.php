@@ -86,6 +86,7 @@
                     <div class="col-md-6 mb-3">
                       <label for="defaultCurrency" class="form-label">Default Currency</label>
                       <select class="form-select" name="defaultCurrency" id="defaultCurrency">
+                        <option value="HUF" {{ ($settings['defaultCurrency'] ?? 'HUF') == 'HUF' ? 'selected' : '' }}>HUF - Hungarian Forint</option>
                         <option value="USD" {{ ($settings['defaultCurrency'] ?? '') == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
                         <option value="EUR" {{ ($settings['defaultCurrency'] ?? '') == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
                         <option value="GBP" {{ ($settings['defaultCurrency'] ?? '') == 'GBP' ? 'selected' : '' }}>GBP - British Pound</option>
@@ -100,18 +101,18 @@
                         <option value="left" {{ ($settings['currencyPosition'] ?? '') == 'left' ? 'selected' : '' }}>Left ($100.00)</option>
                         <option value="right" {{ ($settings['currencyPosition'] ?? '') == 'right' ? 'selected' : '' }}>Right (100.00$)</option>
                         <option value="left_space" {{ ($settings['currencyPosition'] ?? '') == 'left_space' ? 'selected' : '' }}>Left with space ($ 100.00)</option>
-                        <option value="right_space" {{ ($settings['currencyPosition'] ?? '') == 'right_space' ? 'selected' : '' }}>Right with space (100.00 $)</option>
+                        <option value="right_space" {{ ($settings['currencyPosition'] ?? 'right_space') == 'right_space' ? 'selected' : '' }}>Right with space (100.00 $)</option>
                       </select>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="thousandSeparator" class="form-label">Thousand Separator</label>
-                      <input type="text" class="form-control" name="thousandSeparator" id="thousandSeparator" value="{{ $settings['thousandSeparator'] ?? ',' }}" maxlength="1">
+                      <input type="text" class="form-control" name="thousandSeparator" id="thousandSeparator" value="{{ $settings['thousandSeparator'] ?? '.' }}" maxlength="1">
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="decimalSeparator" class="form-label">Decimal Separator</label>
-                      <input type="text" class="form-control" name="decimalSeparator" id="decimalSeparator" value="{{ $settings['decimalSeparator'] ?? '.' }}" maxlength="1">
+                      <input type="text" class="form-control" name="decimalSeparator" id="decimalSeparator" value="{{ $settings['decimalSeparator'] ?? ',' }}" maxlength="1">
                     </div>
                   </div>
                 </div>

@@ -36,8 +36,8 @@
             <h4 class="mb-0 fw-bold">{{ $title }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mb-0">
-                    <li class="breadcrumb-item"><a href="javascript:void(0);">Car Settings</a></li>
-                    <li class="breadcrumb-item active">{{ $title }}</li>
+                    <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Car Settings') }}</a></li>
+                    <li class="breadcrumb-item active">{{ __($title) }}</li>
                 </ol>
             </nav>
         </div>
@@ -47,14 +47,14 @@
         <div class="stat-badge d-flex align-items-center px-3 py-2 bg-white rounded shadow-xs border">
             <div class="badge bg-label-success rounded-circle p-2 me-2"><i class="bx bx-check"></i></div>
             <div>
-                <small class="text-muted d-block line-height-1">Active</small>
+                <small class="text-muted d-block line-height-1">{{ __('Active') }}</small>
                 <span class="fw-bold stat-active-count">{{ $activeCount }}</span>
             </div>
         </div>
         <div class="stat-badge d-flex align-items-center px-3 py-2 bg-white rounded shadow-xs border">
             <div class="badge bg-label-warning rounded-circle p-2 me-2"><i class="bx bx-power-off"></i></div>
             <div>
-                <small class="text-muted d-block line-height-1">Inactive</small>
+                <small class="text-muted d-block line-height-1">{{ __('Inactive') }}</small>
                 <span class="fw-bold stat-inactive-count">{{ $inactiveCount }}</span>
             </div>
         </div>
@@ -67,8 +67,8 @@
         <div class="card mb-4 border-0 shadow-sm premium-card overflow-hidden">
             <div class="card-header bg-primary text-white py-4 position-relative overflow-hidden">
                 <div class="position-relative z-index-1">
-                    <h5 class="card-title mb-1 text-white fw-bold">Quick Addition</h5>
-                    <p class="mb-0 text-white-50 small">Register a new {{ Str::singular(Str::lower($title)) }} item.</p>
+                    <h5 class="card-title mb-1 text-white fw-bold">{{ __('Quick Addition') }}</h5>
+                    <p class="mb-0 text-white-50 small">{{ __('Register a new') }} {{ __($title) }}.</p>
                 </div>
                 <i class="bx {{ $icon }} position-absolute" style="right: -10px; bottom: -10px; font-size: 5rem; opacity: 0.15;"></i>
             </div>
@@ -86,7 +86,7 @@
                 <form id="addForm" action="{{ route('admin.vehicle-settings.store', $type) }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label class="form-label fw-bold text-dark small text-uppercase mb-2">Display Name / Megnevezés</label>
+                        <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Display Name / Megnevezés') }}</label>
                         <div class="input-group input-group-merge shadow-none border-0">
                             <span class="input-group-text bg-light border-0"><i class="bx bx-rename"></i></span>
                             <input type="text" class="form-control bg-light border-0 px-3 py-2" name="name" id="add_name" required 
@@ -96,7 +96,7 @@
 
                     @if($type === 'models')
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">Link to Parent Brand</label>
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Link to Parent Brand') }}</label>
                             <div class="input-group input-group-merge shadow-none border-0">
                                 <span class="input-group-text bg-light border-0"><i class="bx bx-purchase-tag"></i></span>
                                 <select class="form-select bg-light border-0 px-3 py-2" name="brand_id" id="add_brand_id" required>
