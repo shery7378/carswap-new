@@ -180,6 +180,13 @@
         align-items: center;
     }
 
+    .dataTables_length select {
+        padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
+        border-radius: 6px !important;
+        border: 1px solid #ddd !important;
+        min-width: 80px !important;
+    }
+
     /* Pagination */
     .dataTables_paginate {
         display: flex;

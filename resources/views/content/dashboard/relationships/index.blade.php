@@ -167,7 +167,8 @@
 }
 .dataTables_length select {
     border-radius: 0.4rem !important;
-    padding: 0.35rem 0.5rem !important;
+    padding: 0.35rem 1.5rem 0.35rem 0.5rem !important;
+    min-width: 80px !important;
 }
 .shadow-xs {
     box-shadow: 0 1px 3px rgba(0,0,0,0.08);

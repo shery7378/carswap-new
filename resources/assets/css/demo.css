@@ -131,3 +131,11 @@
 #layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link {
   color: black !important;
 }
+
+/* DataTables Select Overlap Fix */
+.dataTables_length select {
+  min-width: 65px !important;
+  padding-right: 1.5rem !important;
+  background-position: right 8px center !important;
+}
+

@@ -16,9 +16,10 @@
   }
   .dataTables_length select {
     border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
+    padding: 0.25rem 1.5rem 0.25rem 0.5rem !important;
     border: 1px solid #d9dee3;
     margin: 0 5px;
+    min-width: 80px !important;
   }
   .nav-tabs .nav-link.active {
     border-bottom: 2px solid #696cff;

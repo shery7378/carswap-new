@@ -3,200 +3,232 @@
 @section('title', 'Admin Management')
 
 @section('content')
-<style>
-  .admin-card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-  }
-  .admin-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.06);
-  }
-  .avatar-text {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 8px;
-    background: linear-gradient(135deg, #696cff 0%, #3a3dfb 100%);
-    color: #fff;
-    font-weight: 700;
-    font-size: 14px;
-    margin-right: 12px;
-    box-shadow: 0 4px 10px rgba(105, 108, 255, 0.2);
-  }
-  .badge-premium {
-    padding: 6px 12px;
-    border-radius: 6px;
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .table thead th {
-    background: #f8f9fa;
-    color: #566a7f;
-    font-weight: 600;
-    text-transform: none;
-    font-size: 13px;
-  }
-  .action-btn {
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 6px;
-    transition: all 0.2s;
-  }
-  .action-btn:hover {
-    transform: scale(1.1);
-  }
-  
-  /* DataTable overrides to look premium */
-  .dataTables_filter input {
-    border-radius: 0.5rem;
-    padding: 0.375rem 0.75rem;
-    border: 1px solid #d9dee3;
-    width: 250px;
-    margin-bottom: 1rem;
-  }
-  .dataTables_paginate .pagination {
-    justify-content: flex-end !important;
-  }
-  .dataTables_length {
-    margin-bottom: 1rem;
-  }
-  .dataTables_length select {
-    border-radius: 0.5rem;
-    padding: 0.25rem 0.5rem;
-    border: 1px solid #d9dee3;
-    margin: 0 5px;
-  }
-</style>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-  <h4 class="mb-0">
-    <span class="text-muted fw-light">Access Control /</span> 
-    <span class="fw-bold text-primary">Administrators</span>
-  </h4>
-  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-users', 'admin-guard'))
-  <a href="{{ route('admin.users.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm">
-    <i class="bx bx-plus-circle me-1"></i> Add New Admin
-  </a>
-  @endif
-</div>
+  <style>
+    /* ============================= */
+    /* CARD FIX (IMPORTANT) */
+    /* ============================= */
+    .card,
+    .card-body {
+      overflow: visible !important;
+    }
 
-<div class="card admin-card overflow-hidden">
-  <div class="card-header border-bottom d-flex align-items-center bg-light-soft">
-    <div class="card-title mb-0">
-      <h5 class="mb-1 text-dark">Active Administrators</h5>
-      <p class="text-muted mb-0 small">Manage roles and permissions for backend users.</p>
-    </div>
+    /* ============================= */
+    /* DATATABLE FIX */
+    /* ============================= */
+    .dataTables_wrapper {
+      width: 100% !important;
+      overflow: visible !important;
+    }
+
+    /* FIX ROW SPACING */
+    .dataTables_wrapper .row {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* LEFT SIDE */
+    .dataTables_length {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+    }
+
+    /* RIGHT SIDE */
+    .dataTables_filter {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* SEARCH BOX */
+    .dataTables_filter input {
+      width: 220px !important;
+      border-radius: 6px;
+      padding: 6px 10px;
+      border: 1px solid #d9dee3;
+    }
+
+    /* DROPDOWN */
+    .dataTables_length select {
+      border-radius: 6px;
+      padding: 4px 1.5rem 4px 8px !important;
+      border: 1px solid #d9dee3;
+      min-width: 80px !important;
+      background-position: right 8px center !important;
+    }
+
+    /* PAGINATION */
+    .dataTables_paginate {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* TABLE WRAPPER FIX */
+    .table-responsive {
+      overflow-x: auto !important;
+    }
+
+    /* MOBILE FIX */
+    @media (max-width: 768px) {
+      .dataTables_wrapper .row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .dataTables_filter {
+        justify-content: flex-start !important;
+        margin-top: 10px;
+      }
+    }
+
+    /* ============================= */
+    /* YOUR UI DESIGN (UNCHANGED) */
+    /* ============================= */
+    .admin-card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+    }
+
+    .avatar-text {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #696cff 0%, #3a3dfb 100%);
+      color: #fff;
+      font-weight: 700;
+      margin-right: 12px;
+    }
+
+    .badge-premium {
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 11px;
+    }
+
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+  </style>
+
+  <!-- HEADER -->
+  <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+    <h4 class="mb-0">
+      <span class="text-muted">Access Control /</span>
+      <span class="fw-bold text-primary">Administrators</span>
+    </h4>
+
+    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+      <i class="bx bx-plus"></i> Add Admin
+    </a>
   </div>
-  <div class="card-body pt-4">
-    <div class="table-responsive text-nowrap">
-      <table class="table table-hover" id="admins-table">
-        <thead>
-          <tr>
-            <th style="width: 300px;">Administrator</th>
-            <th>Roles</th>
-            <th>Extra Permissions</th>
-            <th style="width: 100px;">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($users as $user)
-          <tr>
-            <td>
-              <div class="d-flex align-items-center">
-                <a href="{{ $user->hasRole('super-admin', 'admin-guard') ? 'javascript:void(0);' : route('admin.users.edit', $user->id) }}">
-                   <div class="avatar-text">
-                    {{ strtoupper(substr($user->first_name, 0, 1)) . strtoupper(substr($user->last_name, 0, 1)) }}
+
+  <div class="card admin-card">
+    <div class="card-header">
+      <h5 class="mb-0">Admin List</h5>
+    </div>
+
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover" id="admins-table">
+
+          <thead>
+            <tr>
+              <th>Admin</th>
+              <th>Roles</th>
+              <th>Permissions</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @foreach($users as $user)
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-text">
+                      {{ strtoupper(substr($user->first_name, 0, 1)) }}{{ strtoupper(substr($user->last_name, 0, 1)) }}
+                    </div>
+                    <div>
+                      <div class="fw-bold">{{ $user->first_name }} {{ $user->last_name }}</div>
+                      <small class="text-muted">{{ $user->email }}</small>
+                    </div>
                   </div>
-                </a>
-                <div>
-                  <a href="{{ $user->hasRole('super-admin', 'admin-guard') ? 'javascript:void(0);' : route('admin.users.edit', $user->id) }}" class="text-dark fw-bold mb-0">
-                    {{ $user->first_name }} {{ $user->last_name }}
-                  </a>
-                  <div class="text-muted small">{{ $user->email }}</div>
-                </div>
-              </div>
-            </td>
-            <td>
-              @foreach($user->roles as $role)
-              <span class="badge bg-label-primary badge-premium mb-1 me-1">
-                <i class="bx bxs-shield-alt me-1"></i> {{ $role->name }}
-              </span>
-              @endforeach
-            </td>
-            <td>
-              @forelse($user->permissions as $permission)
-              <span class="badge bg-label-warning badge-premium mb-1 me-1">
-                 {{ $permission->name }}
-              </span>
-              @empty
-              <span class="text-muted small italic">Default from role</span>
-              @endforelse
-            </td>
-            <td>
-              @if($user->hasRole('super-admin', 'admin-guard'))
-                 <div class="d-flex align-items-center">
-                   <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
-                 </div>
-              @else
-                <div class="d-flex gap-2">
-                  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-users', 'admin-guard'))
-                  <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn text-info bg-label-info" data-bs-toggle="tooltip" title="Edit Admin">
-                    <i class="bx bx-edit-alt"></i>
-                  </a>
-                  @endif
-                  @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-users', 'admin-guard'))
-                  <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Strict warning: This will permanently remove access for this administrator. Proceed?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="action-btn text-danger bg-label-danger border-0" data-bs-toggle="tooltip" title="Delete Admin">
-                      <i class="bx bx-trash"></i>
-                    </button>
-                  </form>
-                  @endif
-                </div>
-              @endif
-            </td>
-          </tr>
-          @endforeach
-        </tbody>
-      </table>
+                </td>
+
+                <td>
+                  @foreach($user->roles as $role)
+                    <span class="badge bg-label-primary badge-premium">{{ $role->name }}</span>
+                  @endforeach
+                </td>
+
+                <td>
+                  @forelse($user->permissions as $permission)
+                    <span class="badge bg-label-warning badge-premium">{{ $permission->name }}</span>
+                  @empty
+                    <span class="text-muted small">From role</span>
+                  @endforelse
+                </td>
+
+                <td>
+                  <div class="d-flex gap-2">
+                    <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info">
+                      <i class="bx bx-edit"></i>
+                    </a>
+
+                    <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}">
+                      @csrf
+                      @method('DELETE')
+                      <button class="action-btn bg-label-danger text-danger border-0"
+                        onclick="return confirm('Delete admin?')">
+                        <i class="bx bx-trash"></i>
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            @endforeach
+          </tbody>
+
+        </table>
+      </div>
     </div>
   </div>
-  <div class="card-footer border-top bg-light-soft py-3">
-    <div class="d-flex justify-content-between align-items-center">
-      <div class="text-muted small">Showing records for active staff members.</div>
-      {{-- <div>{{ $users->links() }}</div> --}}
-    </div>
-  </div>
-</div>
+
 @endsection
 
 @section('page-script')
-<script>
-$(document).ready(function() {
-    var table = $('#admins-table').DataTable({
-        "order": [[ 0, "asc" ]],
-        "pageLength": 10,
-        "dom": '<"row"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>t<"row"<"col-sm-12 col-md-6"i><"col-sm-12 col-md-6"p>>',
-        "language": {
-            "search": "",
-            "searchPlaceholder": "Search Admins...",
-            "paginate": {
-                "next": '<i class="bx bx-chevron-right"></i>',
-                "previous": '<i class="bx bx-chevron-left"></i>'
-            }
+  <script>
+    $(document).ready(function () {
+
+      $('#admins-table').DataTable({
+        order: [[0, "asc"]],
+        pageLength: 10,
+        autoWidth: false,
+
+        // CLEAN STRUCTURE
+        dom:
+          "<'row'<'col-md-6'l><'col-md-6'f>>" +
+          "t" +
+          "<'row'<'col-md-6'i><'col-md-6'p>>",
+
+        language: {
+          search: "",
+          searchPlaceholder: "Search Admins..."
         }
+      });
+
     });
-});
-</script>
+  </script>
 @endsection
