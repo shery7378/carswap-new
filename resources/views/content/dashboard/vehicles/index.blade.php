@@ -115,9 +115,31 @@
                                                 };
                                             @endphp
 
-                                            <span class="badge bg-{{ $statusClass }}">
-                                                {{ ucfirst($vehicle->ad_status) }}
-                                            </span>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <span class="badge bg-{{ $statusClass }}">
+                                                        {{ ucfirst($vehicle->ad_status) }}
+                                                    </span>
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" name="ad_status" value="published" class="dropdown-item d-flex align-items-center">
+                                                            <span class="badge badge-dot bg-success me-2"></span> Published
+                                                        </button>
+                                                        <button type="submit" name="ad_status" value="pending" class="dropdown-item d-flex align-items-center">
+                                                            <span class="badge badge-dot bg-warning me-2"></span> Pending
+                                                        </button>
+                                                        <button type="submit" name="ad_status" value="rejected" class="dropdown-item d-flex align-items-center">
+                                                            <span class="badge badge-dot bg-danger me-2"></span> Rejected
+                                                        </button>
+                                                        <button type="submit" name="ad_status" value="draft" class="dropdown-item d-flex align-items-center">
+                                                            <span class="badge badge-dot bg-secondary me-2"></span> Draft
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </div>
                                         </td>
 
                                         <td>
