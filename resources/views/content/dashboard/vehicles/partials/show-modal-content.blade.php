@@ -16,9 +16,13 @@
     </div>
     <div class="ms-auto d-flex align-items-center gap-2">
 
-        @if($vehicle->is_featured)
-            <span class="badge bg-label-warning d-none d-sm-inline-flex align-items-center"><i class="bx bxs-star me-1"></i> Featured</span>
-        @endif
+        <button type="button" 
+            class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
+            data-id="{{ $vehicle->id }}" 
+            data-bs-toggle="tooltip" 
+            title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
+            <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+        </button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 </div>

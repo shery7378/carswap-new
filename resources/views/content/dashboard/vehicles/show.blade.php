@@ -23,6 +23,13 @@
                         <i class="bx bx-arrow-back me-1"></i> Back to List
                     </a>
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                        <button type="button" 
+                            class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn shadow-none" 
+                            data-id="{{ $vehicle->id }}" 
+                            data-bs-toggle="tooltip" 
+                            title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
+                            <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+                        </button>
                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm shadow-sm">
                             <i class="bx bx-edit-alt me-1"></i> Edit Vehicle
                         </a>
@@ -343,4 +350,48 @@
     border-color: #696cff !important;
 }
 </style>
+@section('page-script')
+<script>
+    $(document).ready(function() {
+        // ✅ FEATURED TOGGLE
+        $(document).on('click', '.featured-toggle-btn', function() {
+            const button = $(this);
+            const id = button.data('id');
+            const icon = button.find('i');
+
+            $.ajax({
+                url: `{{ url('/app/vehicles') }}/${id}/toggle-featured`,
+                type: 'PATCH',
+                data: { _token: '{{ csrf_token() }}' },
+                success: function(response) {
+                    if (response.success) {
+                        if (response.is_featured) {
+                            button.removeClass('btn-label-secondary').addClass('btn-label-warning');
+                            icon.removeClass('bx-star').addClass('bxs-star');
+                            button.attr('data-bs-original-title', 'Remove from Featured');
+                        } else {
+                            button.removeClass('btn-label-warning').addClass('btn-label-secondary');
+                            icon.removeClass('bxs-star').addClass('bx-star');
+                            button.attr('data-bs-original-title', 'Mark as Featured');
+                        }
+                        
+                        // Update Bootstrap tooltip
+                        var tooltip = bootstrap.Tooltip.getInstance(button[0]);
+                        if (tooltip) {
+                            tooltip.hide();
+                            button.attr('title', response.is_featured ? 'Remove from Featured' : 'Mark as Featured');
+                            tooltip = new bootstrap.Tooltip(button[0]);
+                        }
+                        
+                        toastr.success(response.message, 'Updated');
+                    }
+                },
+                error: function() {
+                    toastr.error('Could not update featured status.', 'Error');
+                }
+            });
+        });
+    });
+</script>
+@endsection
 @endsection

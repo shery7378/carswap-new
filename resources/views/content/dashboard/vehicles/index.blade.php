@@ -98,11 +98,13 @@
                                         </td>
 
                                         <td class="text-center">
-                                            <div class="form-check form-switch d-flex justify-content-center">
-                                                <input class="form-check-input featured-toggle-switch" type="checkbox" 
-                                                    data-id="{{ $vehicle->id }}" 
-                                                    {{ $vehicle->is_featured ? 'checked' : '' }}>
-                                            </div>
+                                            <button type="button" 
+                                                class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
+                                                data-id="{{ $vehicle->id }}" 
+                                                data-bs-toggle="tooltip" 
+                                                title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
+                                                <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+                                            </button>
                                         </td>
 
                                         <td>
@@ -204,23 +206,36 @@
             });
 
             // ✅ FEATURED TOGGLE
-            $(document).on('change', '.featured-toggle-switch', function() {
-                const id = $(this).data('id');
-                const checked = $(this).prop('checked');
-                const el = $(this);
-                
+            $(document).on('click', '.featured-toggle-btn', function() {
+                const button = $(this);
+                const id = button.data('id');
+                const icon = button.find('i');
+
                 $.ajax({
                     url: `{{ url('/app/vehicles') }}/${id}/toggle-featured`,
                     type: 'PATCH',
                     data: { _token: '{{ csrf_token() }}' },
                     success: function(response) {
                         if (response.success) {
-                            toastr.success(response.message, 'Success');
+                            // Sync all buttons for this vehicle (list + modal)
+                            $(`.featured-toggle-btn[data-id="${id}"]`).each(function() {
+                                const targetBtn = $(this);
+                                const targetIcon = targetBtn.find('i');
+                                if (response.is_featured) {
+                                    targetBtn.removeClass('btn-label-secondary').addClass('btn-label-warning');
+                                    targetIcon.removeClass('bx-star').addClass('bxs-star');
+                                    targetBtn.attr('data-bs-original-title', 'Remove from Featured');
+                                } else {
+                                    targetBtn.removeClass('btn-label-warning').addClass('btn-label-secondary');
+                                    targetIcon.removeClass('bxs-star').addClass('bx-star');
+                                    targetBtn.attr('data-bs-original-title', 'Mark as Featured');
+                                }
+                            });
+                            toastr.success(response.message, 'Updated');
                         }
                     },
-                    error: function(xhr) {
-                        el.prop('checked', !checked);
-                        toastr.error('Error updating status', 'Failed');
+                    error: function() {
+                        toastr.error('Could not update featured status.', 'Error');
                     }
                 });
             });
