@@ -38,7 +38,7 @@
                         </thead>
                         <tbody class="table-border-bottom-0">
                             @foreach($subscriptions as $subscription)
-                            <tr>
+                            <tr class="cursor-pointer subscription-row" data-id="{{ $subscription->id }}">
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-md me-3">
@@ -65,7 +65,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold fs-6">${{ number_format($subscription->amount, 2) }}</span>
+                                        <span class="fw-bold fs-6">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
                                         <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Every {{ $subscription->plan->billing_period ?? 'Month' }}</small>
                                     </div>
                                 </td>
@@ -95,13 +95,13 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-show-alt me-1 text-primary"></i> View Details</a>
-                                            <a class="dropdown-item" href="javascript:void(0);"><i class="bx bx-edit-alt me-1 text-info"></i> Adjust Plan</a>
+                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> View Details</a>
+                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> Adjust Plan</a>
                                             <div class="dropdown-divider"></div>
                                             @if($subscription->status === 'active')
-                                                <a class="dropdown-item text-warning" href="javascript:void(0);"><i class="bx bx-pause-circle me-1"></i> Suspend</a>
+                                                <a class="dropdown-item text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> Suspend</a>
                                             @else
-                                                <a class="dropdown-item text-success" href="javascript:void(0);"><i class="bx bx-play-circle me-1"></i> Reactivate</a>
+                                                <a class="dropdown-item text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> Reactivate</a>
                                             @endif
                                             <a class="dropdown-item text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> Cancel Flow</a>
                                         </div>
@@ -195,11 +195,73 @@
         $('#export-excel').on('click', function() { table.button('.buttons-excel').trigger(); });
         $('#export-csv').on('click', function() { table.button('.buttons-csv').trigger(); });
         $('#export-pdf').on('click', function() { table.button('.buttons-pdf').trigger(); });
+
+        // Row Click: Show Invoice Modal
+        $(document).on('click', '.subscription-row td:not(:last-child)', function() {
+            var id = $(this).closest('tr').data('id');
+            var url = '{{ route("app-subscription-view", ":id") }}'.replace(':id', id);
+            
+            $('#invoiceModalContent').html('<div class="p-5 text-center"><div class="spinner-border text-primary" role="status"></div></div>');
+            $('#invoiceModal').modal('show');
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+                success: function(response) {
+                    $('#invoiceModalContent').html(response);
+                },
+                error: function() {
+                    $('#invoiceModalContent').html('<div class="p-5 text-center text-danger">Failed to load invoice details.</div>');
+                }
+            });
+        });
+
+        // Quick Status Toggle
+        $(document).on('click', '.status-toggle-btn', function(e) {
+            e.stopPropagation();
+            var id = $(this).data('id');
+            var status = $(this).data('status');
+            var url = '{{ route("app-subscription-status", ":id") }}'.replace(':id', id);
+
+            if(confirm('Are you sure you want to ' + (status == 'active' ? 'reactivate' : 'suspend') + ' this subscription?')) {
+                $.ajax({
+                    url: url,
+                    method: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        status: status
+                    },
+                    success: function(response) {
+                        if(response.success) {
+                            location.reload();
+                        }
+                    },
+                    error: function() {
+                        alert('Something went wrong!');
+                    }
+                });
+            }
+        });
     });
 </script>
 @endsection
 
+<!-- Invoice Modal -->
+<div class="modal fade" id="invoiceModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content overflow-hidden border-0 shadow-lg">
+            <div id="invoiceModalContent"></div>
+        </div>
+    </div>
+</div>
+
 <style>
+.cursor-pointer {
+    cursor: pointer;
+}
+.subscription-row:hover {
+    background-color: rgba(67, 89, 113, 0.04) !important;
+}
 .dataTables_filter {
     width: 350px;
 }

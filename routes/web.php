@@ -152,6 +152,10 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/subscription/plans', [SubscriptionPlans::class , 'index'])->name('app-subscription-plans');
         Route::get('/app/subscription/payments', [SubscriptionPayments::class , 'index'])->name('app-subscription-payments');
         
+        Route::get('/app/subscription/view/{id}', [SubscriptionList::class, 'show'])->name('app-subscription-view');
+        Route::patch('/app/subscription/{id}/status', [SubscriptionList::class, 'updateStatus'])->name('app-subscription-status');
+        Route::put('/app/subscription/{id}/update', [SubscriptionList::class, 'update'])->name('app-subscription-update');
+
         // Subscription creation
         Route::get('/app/subscription/create', [SubscriptionCreate::class , 'index'])->name('app-subscription-create')->middleware('permission:create-subscriptions,admin-guard');
         Route::post('/app/subscription/create', [SubscriptionCreate::class , 'store'])->name('app-subscription-store')->middleware('permission:create-subscriptions,admin-guard');
