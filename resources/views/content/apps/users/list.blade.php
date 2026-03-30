@@ -252,7 +252,19 @@
       </div>
     </div>
   </div>
-</div>
+  </div>
+
+  <!-- User Details Modal -->
+  <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+      <div class="modal-content shadow-lg border-0 rounded-3" id="u-modal-loader-content">
+        <div class="modal-body text-center py-5">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-3 text-muted fw-bold">Connecting to user secure data...</p>
+        </div>
+      </div>
+    </div>
+  </div>
 @endsection
 
 @section('page-script')
@@ -287,6 +299,45 @@ $(document).ready(function() {
     $('#checkAll').on('change', function() {
         $('tbody input[type="checkbox"]').prop('checked', $(this).prop('checked'));
     });
+
+    // ✅ MODAL TRIGGER ON ROW CLICK
+    $(document).on('click', '#users-table tbody tr', function(e) {
+        // IGNORE CHECKBOXES, DROPDOWNS OR LINKS
+        if ($(e.target).closest('.form-check, .dropdown, a, button').length) return;
+        
+        const userId = $(this).find('input[type="checkbox"]').val();
+        if(!userId) return;
+
+        const modal = new bootstrap.Modal(document.getElementById('userDetailsModal'));
+        const container = document.getElementById('u-modal-loader-content');
+        
+        container.innerHTML = `
+            <div class="modal-body text-center py-5">
+                <div class="spinner-grow text-primary" role="status"></div>
+                <p class="mt-3 text-muted small">Loading user profile...</p>
+            </div>
+        `;
+        
+        modal.show();
+
+        // FETCH AJAX
+        fetch(`{{ url('/app/apps/user/view') }}/${userId}`)
+            .then(res => res.text())
+            .then(html => {
+                container.innerHTML = html;
+            });
+    });
 });
 </script>
+
+<style>
+#users-table tbody tr {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+#users-table tbody tr:hover {
+    background-color: rgba(105, 108, 255, 0.05) !important;
+}
+.shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+</style>
 @endsection

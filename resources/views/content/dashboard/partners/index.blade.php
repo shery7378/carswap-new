@@ -99,9 +99,13 @@
 
                                                 <div class="dropdown-menu">
 
+                                                    <a class="dropdown-item view-partner-btn" href="javascript:void(0);" data-id="{{ $partner->id }}">
+                                                        <i class="bx bx-show-alt me-1 text-primary"></i> View Quick Info
+                                                    </a>
+                                                    
                                                     <a class="dropdown-item"
                                                         href="{{ route('admin.partners.show', $partner->id) }}">
-                                                        <i class="bx bx-show-alt me-1 text-primary"></i> View
+                                                        <i class="bx bx-link-external me-1 text-muted"></i> Full Page
                                                     </a>
 
                                                     @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
@@ -144,6 +148,20 @@
             </div>
         </div>
     </div>
+
+    <!-- Partner Details Modal -->
+    <div class="modal fade" id="partnerDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0" id="modal-loader-content">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Fetching partner details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('page-script')
@@ -174,6 +192,7 @@
 
         // ✅ DELETE CONFIRM
         function confirmDelete(e, el) {
+            e.stopPropagation(); // DO NOT OPEN MODAL
             e.preventDefault();
 
             Swal.fire({
@@ -190,6 +209,46 @@
                 }
             });
         }
+
+        // ✅ MODAL TRIGGER ON ROW CLICK
+        $(document).on('click', '#partners-table tbody tr', function(e) {
+            // IGNORE DOTS OR ACTIONS
+            if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form').length) return;
+            
+            const partnerId = $(this).find('.view-partner-btn').data('id');
+            if(!partnerId) return;
+
+            const modal = new bootstrap.Modal(document.getElementById('partnerDetailsModal'));
+            const container = document.getElementById('modal-loader-content');
+            
+            // SHOW LOADER
+            container.innerHTML = `
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted small">Loading partner information...</p>
+                </div>
+            `;
+            
+            modal.show();
+
+            // FETCH VIA AJAX
+            fetch(`{{ url('/app/partners') }}/${partnerId}?modal=1`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                    
+                    // RE-INIT MAP IF SCRIPT EXISTS IN HTML
+                    const scripts = container.querySelectorAll('script');
+                    scripts.forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        newScript.text = oldScript.text;
+                        oldScript.parentNode.replaceChild(newScript, oldScript);
+                    });
+                })
+                .catch(err => {
+                    container.innerHTML = `<div class="modal-body text-center py-5 text-danger">Failed to load details.</div>`;
+                });
+        });
     </script>
 
     <style>
@@ -243,6 +302,14 @@
                 justify-content: start !important;
                 margin-top: 10px;
             }
+        }
+
+        #partners-table tbody tr {
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+        #partners-table tbody tr:hover {
+            background-color: rgba(105, 108, 255, 0.04) !important;
         }
     </style>
 @endsection

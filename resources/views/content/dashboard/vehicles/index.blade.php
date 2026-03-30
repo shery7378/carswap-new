@@ -111,10 +111,24 @@
                                         </td>
 
                                         <td>
-                                            <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                               class="btn btn-sm btn-outline-primary">
-                                                View
-                                            </a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu shadow-sm">
+                                                    <a class="dropdown-item view-vehicle-btn" href="javascript:void(0);" data-id="{{ $vehicle->id }}">
+                                                        <i class="bx bx-show-alt me-1 text-primary"></i> Quick Preview
+                                                    </a>
+                                                    <a class="dropdown-item text-muted" href="{{ route('admin.vehicles.show', $vehicle->id) }}">
+                                                        <i class="bx bx-link-external me-1"></i> Full Detailed Page
+                                                    </a>
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                        <a class="dropdown-item" href="{{ route('admin.vehicles.edit', $vehicle->id) }}">
+                                                            <i class="bx bx-edit-alt me-1 text-info"></i> Edit Vehicle
+                                                        </a>
+                                                    @endif
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
                                 @empty
@@ -130,25 +144,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Vehicle Details Modal -->
+    <div class="modal fade" id="vehicleDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0 rounded-3" id="v-modal-loader-content">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-grow text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted fw-semibold">Acquiring vehicle specifications...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('page-script')
     <script>
     $(document).ready(function () {
-
         $('#vehicles-table').DataTable({
             order: [[1, "asc"]],
-            pageLength: 10,
-
-            // ✅ FIXED HEADER ALIGNMENT
+            pageLength: 25,
             dom:
                 "<'row align-items-center mb-3'<'col-md-6 d-flex align-items-center'l><'col-md-6 d-flex justify-content-end'f>>" +
                 "t" +
                 "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
-
             language: {
                 search: "",
-                searchPlaceholder: "Search Vehicles...",
+                searchPlaceholder: "Quick Search Vehicles...",
                 paginate: {
                     next: '<i class="bx bx-chevron-right"></i>',
                     previous: '<i class="bx bx-chevron-left"></i>'
@@ -156,6 +180,37 @@
             }
         });
 
+        // ✅ MODAL TRIGGER ON ROW CLICK
+        $(document).on('click', '#vehicles-table tbody tr', function(e) {
+            // IGNORE DROPDOWNS OR ACTIONS
+            if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, .btn').length) return;
+            
+            const vehicleId = $(this).find('.view-vehicle-btn').data('id');
+            if(!vehicleId) return;
+
+            const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
+            const container = document.getElementById('v-modal-loader-content');
+            
+            // SHOW LOADER
+            container.innerHTML = `
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-grow text-primary" role="status"></div>
+                    <p class="mt-3 text-muted fw-semibold small">Fetching vehicle data...</p>
+                </div>
+            `;
+            
+            modal.show();
+
+            // FETCH VIA AJAX
+            fetch(`{{ url('/app/vehicles') }}/${vehicleId}`)
+                .then(res => res.text())
+                .then(html => {
+                    container.innerHTML = html;
+                })
+                .catch(err => {
+                    container.innerHTML = `<div class="modal-body text-center py-5 text-danger font-bold">Error loading vehicle details. Please try again.</div>`;
+                });
+        });
     });
     </script>
 
@@ -201,5 +256,14 @@
         }
     }
 
+    #vehicles-table tbody tr {
+        cursor: pointer;
+        transition: all 0.15s ease;
+    }
+    #vehicles-table tbody tr:hover {
+        background-color: rgba(105, 108, 255, 0.04) !important;
+        transform: scale(1.002);
+    }
+    .shadow-xs { box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
     </style>
 @endsection
