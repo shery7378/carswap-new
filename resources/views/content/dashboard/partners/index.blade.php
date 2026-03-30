@@ -67,14 +67,20 @@
                                         </td>
 
                                         <td>
-                                            <small class="text-muted d-block">
+                                            <small class="text-muted d-block mb-1">
                                                 <i class="bx bx-envelope me-1"></i>
                                                 {{ $partner->email ?? 'N/A' }}
                                             </small>
-                                            <small class="text-muted d-block">
+                                            <small class="text-muted d-block mb-1">
                                                 <i class="bx bx-phone me-1"></i>
                                                 {{ $partner->phone ?? 'N/A' }}
                                             </small>
+                                            @if($partner->address)
+                                                <small class="text-dark d-block">
+                                                    <i class="bx bx-map-pin me-1 text-primary"></i>
+                                                    {{ Str::limit($partner->address, 35) }}
+                                                </small>
+                                            @endif
                                         </td>
 
                                         <td>

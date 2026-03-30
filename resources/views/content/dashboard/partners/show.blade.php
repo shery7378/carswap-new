@@ -81,7 +81,7 @@
                                         <span class="fw-bold text-dark">{{ $partner->phone ?: 'N/A' }}</span>
                                     </div>
                                 </li>
-                                <li class="mb-0 d-flex align-items-start">
+                                <li class="mb-3 d-flex align-items-start">
                                     <i class="bx bx-globe text-info me-3 mt-1 fs-4"></i>
                                     <div>
                                         <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Website</small>
@@ -90,6 +90,13 @@
                                         @else
                                             <span class="fw-bold text-dark">N/A</span>
                                         @endif
+                                    </div>
+                                </li>
+                                <li class="mb-0 d-flex align-items-start">
+                                    <i class="bx bx-map text-warning me-3 mt-1 fs-4"></i>
+                                    <div>
+                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Location Address</small>
+                                        <span class="fw-bold text-dark">{{ $partner->address ?: 'N/A' }}</span>
                                     </div>
                                 </li>
                             </ul>
@@ -197,7 +204,10 @@
                                 <div class="tab-pane fade" id="nav-location" role="tabpanel">
                                     <div class="p-4 border rounded shadow-xs bg-light bg-opacity-10 h-100" style="min-height: 400px;">
                                         <h5 class="fw-bold mb-3">Interactive Map Pin</h5>
-                                        <p class="text-muted small"><i class="bx bx-info-circle me-1"></i> Exact GPS Coordinates: {{ $partner->latitude }}, {{ $partner->longitude }}</p>
+                                        @if($partner->address)
+                                            <p class="mb-2 fw-bold text-dark"><i class="bx bx-map-pin me-1 text-primary"></i> {{ $partner->address }}</p>
+                                        @endif
+                                        <p class="text-muted small mb-3"><i class="bx bx-info-circle me-1"></i> Exact GPS Coordinates: {{ $partner->latitude }}, {{ $partner->longitude }}</p>
                                         @if($partner->latitude && $partner->longitude)
                                             <div id="partner-map" class="rounded border shadow-sm" style="height: 350px; width: 100%;"></div>
                                         @else
