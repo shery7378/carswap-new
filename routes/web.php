@@ -214,6 +214,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/partners/{partner}/edit', [AdminPartnerController::class, 'edit'])->name('admin.partners.edit')->middleware('permission:edit-partners,admin-guard');
         Route::put('/app/partners/{partner}', [AdminPartnerController::class, 'update'])->name('admin.partners.update')->middleware('permission:edit-partners,admin-guard');
         Route::delete('/app/partners/{partner}', [AdminPartnerController::class, 'destroy'])->name('admin.partners.destroy')->middleware('permission:delete-partners,admin-guard');
+        Route::patch('/app/partners/{partner}/toggle-status', [AdminPartnerController::class, 'toggleStatus'])->name('admin.partners.toggle-status')->middleware('permission:edit-partners,admin-guard');
     });
 
     // CAR / VEHICLE SETTINGS Module

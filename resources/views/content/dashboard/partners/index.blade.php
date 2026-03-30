@@ -84,10 +84,33 @@
                                         </td>
 
                                         <td>
-                                            <span
-                                                class="badge {{ $partner->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
-                                                {{ $partner->is_active ? __('Active') : __('Inactive') }}
-                                            </span>
+                                            @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
+                                                <div class="dropdown">
+                                                    <button type="button" 
+                                                            class="btn btn-sm btn-{{ $partner->is_active ? 'label-success' : 'label-danger' }} dropdown-toggle hide-arrow p-1 px-2" 
+                                                            data-bs-toggle="dropdown" 
+                                                            aria-expanded="false"
+                                                            data-bs-popper-config='{"strategy":"fixed"}'>
+                                                        {{ $partner->is_active ? __('Active') : __('Inactive') }}
+                                                    </button>
+                                                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="z-index: 1060; min-width: 120px;">
+                                                        <li>
+                                                            <form action="{{ route('admin.partners.toggle-status', $partner->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('PATCH')
+                                                                <button type="submit" class="dropdown-item d-flex align-items-center py-2">
+                                                                    <i class="bx {{ $partner->is_active ? 'bx-block text-danger' : 'bx-check-circle text-success' }} me-2 fs-5"></i>
+                                                                    <span>{{ $partner->is_active ? __('Set Inactive') : __('Set Active') }}</span>
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            @else
+                                                <span class="badge {{ $partner->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
+                                                    {{ $partner->is_active ? __('Active') : __('Inactive') }}
+                                                </span>
+                                            @endif
                                         </td>
 
                                         <td>
@@ -280,6 +303,15 @@
 
         #partners-table tbody tr:hover {
             background-color: rgba(105, 108, 255, 0.04) !important;
+        }
+
+        /* Dropdown fix for table-responsive */
+        .table-responsive {
+            overflow: visible !important;
+        }
+        
+        .dropdown-menu {
+            margin-top: 0.125rem !important;
         }
     </style>
 @endsection

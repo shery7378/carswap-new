@@ -4,203 +4,203 @@
 
 @section('content')
     <div class="row">
-        <div class="col-12">
-            <div class="card">
+            <div class="col-12">
+                <div class="card">
 
-                <!-- ✅ HEADER FIXED -->
-                <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h5 class="mb-0">{{ __('Vehicles List') }}</h5>
+                    <!-- ✅ HEADER FIXED -->
+                    <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
+                        <h5 class="mb-0">{{ __('Vehicles List') }}</h5>
 
-                    <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
 
-                        <!-- Status Filter -->
-                        <form action="{{ route('admin.vehicles.index') }}" method="GET">
-                            <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="">{{ __('All Statuses') }}</option>
-                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>{{ __('Published') }}</option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
-                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>{{ __('Draft') }}</option>
-                            </select>
-                        </form>
+                            <!-- Status Filter -->
+                            <form action="{{ route('admin.vehicles.index') }}" method="GET">
+                                <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
+                                    <option value="">{{ __('All Statuses') }}</option>
+                                    <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>{{ __('Published') }}</option>
+                                    <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                    <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
+                                    <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>{{ __('Draft') }}</option>
+                                </select>
+                            </form>
 
-                        @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-vehicles', 'admin-guard'))
-                            <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">
-                                {{ __('Add New Vehicle') }}
-                            </a>
-                        @endif
-                    </div>
-                </div>
-
-                <div class="card-body">
-
-                    @if(session('success'))
-                        <div class="alert alert-success alert-dismissible" role="alert">
-                            {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-vehicles', 'admin-guard'))
+                                <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">
+                                    {{ __('Add New Vehicle') }}
+                                </a>
+                            @endif
                         </div>
-                    @endif
+                    </div>
 
-                    <div class="table-responsive">
-                        <table class="table table-hover" id="vehicles-table">
-                            <thead>
-                                <tr>
-                                    <th>{{ __('Thumbnail') }}</th>
-                                    <th>{{ __('Vehicle') }}</th>
-                                    <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
-                                    <th class="d-none d-md-table-cell">{{ __('Year') }}</th>
-                                    <th>{{ __('Price') }}</th>
-                                    <th class="d-none d-xl-table-cell">{{ __('Details') }}</th>
-                                    <th class="text-center">{{ __('Featured') }}</th>
-                                    <th class="text-center">{{ __('Status') }}</th>
-                                    <th class="text-end pe-4">{{ __('Actions') }}</th>
-                                </tr>
-                            </thead>
+                    <div class="card-body">
 
-                            <tbody>
-                                @forelse($vehicles as $vehicle)
-                                    <tr data-id="{{ $vehicle->id }}">
-                                        <td>
-                                            @if($vehicle->main_image)
-                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
-                                                    class="rounded">
-                                            @else
-                                                <span class="badge bg-secondary">{{ __('No Image') }}</span>
-                                            @endif
-                                        </td>
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        @endif
 
-                                        <td>
-                                            <strong>{{ $vehicle->title }}</strong><br>
-                                            <small class="text-muted">
-                                                {{ optional($vehicle->brand)->name }}
-                                                {{ optional($vehicle->model)->name }}
-                                            </small>
-                                        </td>
-
-                                        <td class="d-none d-lg-table-cell">
-                                            <div class="d-flex flex-column">
-                                                <span class="fw-bold">{{ $vehicle->user->first_name ?? 'N/A' }} {{ $vehicle->user->last_name ?? '' }}</span>
-                                                <small class="text-muted">{{ $vehicle->user->email ?? '' }}</small>
-                                            </div>
-                                        </td>
-
-                                        <td class="d-none d-md-table-cell"><span class="badge bg-label-secondary">{{ $vehicle->year }}</span></td>
-
-                                        <td><span class="fw-bold text-primary">{{ number_format($vehicle->price) }} Ft</span></td>
-
-                                        <td class="d-none d-xl-table-cell">
-                                            <div class="d-flex flex-column small">
-                                                <span><i class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
-                                                <span><i class="bx bx-cog me-1"></i>{{ optional($vehicle->transmission)->name }}</span>
-                                                <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
-                                            </div>
-                                        </td>
-
-                                        <td class="text-center">
-                                            <button type="button" 
-                                                class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
-                                                data-id="{{ $vehicle->id }}" 
-                                                data-bs-toggle="tooltip" 
-                                                title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
-                                                <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
-                                            </button>
-                                        </td>
-
-                                        <td class="td-status text-center">
-                                            @php
-                                                $statusClass = match ($vehicle->ad_status) {
-                                                    'published' => 'success',
-                                                    'pending' => 'warning',
-                                                    'rejected' => 'danger',
-                                                    'draft' => 'secondary',
-                                                    default => 'primary',
-                                                };
-                                            @endphp
-
-                                            <div class="dropdown">
-                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config='{"strategy":"fixed"}'>
-                                                    <span class="badge bg-{{ $statusClass }}">
-                                                        {{ ucfirst($vehicle->ad_status) }}
-                                                    </span>
-                                                </button>
-                                                <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-1">
-                                                    <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('PATCH')
-                                                        <button type="submit" name="ad_status" value="published" class="dropdown-item d-flex align-items-center py-2">
-                                                            <span class="badge badge-dot bg-success me-2"></span> Published
-                                                        </button>
-                                                        <button type="submit" name="ad_status" value="pending" class="dropdown-item d-flex align-items-center py-2">
-                                                            <span class="badge badge-dot bg-warning me-2"></span> Pending
-                                                        </button>
-                                                        <button type="submit" name="ad_status" value="rejected" class="dropdown-item d-flex align-items-center py-2">
-                                                            <span class="badge badge-dot bg-danger me-2"></span> Rejected
-                                                        </button>
-                                                        <button type="submit" name="ad_status" value="draft" class="dropdown-item d-flex align-items-center py-2">
-                                                            <span class="badge badge-dot bg-secondary me-2"></span> Draft
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </td>
-
-                                        <td class="text-end pe-4">
-                                            <div class="d-flex justify-content-end align-items-center gap-1">
-                                                <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" 
-                                                   class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                   data-bs-toggle="tooltip" title="View Details">
-                                                    <i class="bx bx-show"></i>
-                                                </a>
-
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" 
-                                                       class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                       data-bs-toggle="tooltip" title="Edit Vehicle">
-                                                        <i class="bx bx-edit-alt"></i>
-                                                    </a>
-                                                @endif
-
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                    <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" 
-                                                          method="POST" class="d-inline delete-form">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="Delete Vehicle">
-                                                            <i class="bx bx-trash"></i>
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="vehicles-table">
+                                <thead>
                                     <tr>
-                                        <td colspan="9" class="text-center">No vehicles found.</td>
+                                        <th>{{ __('Thumbnail') }}</th>
+                                        <th>{{ __('Vehicle') }}</th>
+                                        <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
+                                        <th class="d-none d-md-table-cell">{{ __('Year') }}</th>
+                                        <th>{{ __('Price') }}</th>
+                                        <th class="d-none d-xl-table-cell">{{ __('Details') }}</th>
+                                        <th class="text-center">{{ __('Featured') }}</th>
+                                        <th class="text-center">{{ __('Status') }}</th>
+                                        <th class="text-end pe-4">{{ __('Actions') }}</th>
                                     </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
-                    </div>
+                                </thead>
 
+                                <tbody>
+                                    @forelse($vehicles as $vehicle)
+                                        <tr data-id="{{ $vehicle->id }}">
+                                            <td>
+                                                @if($vehicle->main_image)
+                                                    <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
+                                                        class="rounded">
+                                                @else
+                                                    <span class="badge bg-secondary">{{ __('No Image') }}</span>
+                                                @endif
+                                            </td>
+
+                                            <td>
+                                                <strong>{{ $vehicle->title }}</strong><br>
+                                                <small class="text-muted">
+                                                    {{ optional($vehicle->brand)->name }}
+                                                    {{ optional($vehicle->model)->name }}
+                                                </small>
+                                            </td>
+
+                                            <td class="d-none d-lg-table-cell">
+                                                <div class="d-flex flex-column">
+                                                    <span class="fw-bold">{{ $vehicle->user->first_name ?? 'N/A' }} {{ $vehicle->user->last_name ?? '' }}</span>
+                                                    <small class="text-muted">{{ $vehicle->user->email ?? '' }}</small>
+                                                </div>
+                                            </td>
+
+                                            <td class="d-none d-md-table-cell"><span class="badge bg-label-secondary">{{ $vehicle->year }}</span></td>
+
+                                            <td><span class="fw-bold text-primary">{{ number_format($vehicle->price) }} Ft</span></td>
+
+                                            <td class="d-none d-xl-table-cell">
+                                                <div class="d-flex flex-column small">
+                                                    <span><i class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
+                                                    <span><i class="bx bx-cog me-1"></i>{{ optional($vehicle->transmission)->name }}</span>
+                                                    <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-center">
+                                                <button type="button" 
+                                                    class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
+                                                    data-id="{{ $vehicle->id }}" 
+                                                    data-bs-toggle="tooltip" 
+                                                    title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
+                                                    <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+                                                </button>
+                                            </td>
+
+                                            <td class="td-status text-center">
+                                                @php
+                                                    $statusClass = match ($vehicle->ad_status) {
+                                                        'published' => 'success',
+                                                        'pending' => 'warning',
+                                                        'rejected' => 'danger',
+                                                        'draft' => 'secondary',
+                                                        default => 'primary',
+                                                    };
+                                                @endphp
+
+                                                <div class="dropdown">
+                                                    <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown" aria-expanded="false" data-bs-popper-config='{"strategy":"fixed"}'>
+                                                        <span class="badge bg-{{ $statusClass }}">
+                                                            {{ ucfirst($vehicle->ad_status) }}
+                                                        </span>
+                                                    </button>
+                                                    <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-1">
+                                                        <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" name="ad_status" value="published" class="dropdown-item d-flex align-items-center py-2">
+                                                                <span class="badge badge-dot bg-success me-2"></span> Published
+                                                            </button>
+                                                            <button type="submit" name="ad_status" value="pending" class="dropdown-item d-flex align-items-center py-2">
+                                                                <span class="badge badge-dot bg-warning me-2"></span> Pending
+                                                            </button>
+                                                            <button type="submit" name="ad_status" value="rejected" class="dropdown-item d-flex align-items-center py-2">
+                                                                <span class="badge badge-dot bg-danger me-2"></span> Rejected
+                                                            </button>
+                                                            <button type="submit" name="ad_status" value="draft" class="dropdown-item d-flex align-items-center py-2">
+                                                                <span class="badge badge-dot bg-secondary me-2"></span> Draft
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </td>
+
+                                            <td class="text-end pe-4">
+                                                <div class="d-flex justify-content-end align-items-center gap-1">
+                                                    <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" 
+                                                       class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
+                                                       data-bs-toggle="tooltip" title="View Details">
+                                                        <i class="bx bx-show"></i>
+                                                    </a>
+
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                        <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" 
+                                                           class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
+                                                           data-bs-toggle="tooltip" title="Edit Vehicle">
+                                                            <i class="bx bx-edit-alt"></i>
+                                                        </a>
+                                                    @endif
+
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" 
+                                                              method="POST" class="d-inline delete-form">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
+                                                                data-bs-toggle="tooltip" title="Delete Vehicle">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
+                                                        </form>
+                                                    @endif
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @empty
+                                        <tr>
+                                            <td colspan="9" class="text-center">No vehicles found.</td>
+                                        </tr>
+                                    @endforelse
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-    <!-- Vehicle Details Modal -->
-    <div class="modal fade" id="vehicleDetailsModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered">
-            <div class="modal-content shadow-lg border-0 rounded-3" id="v-modal-loader-content">
-                <div class="modal-body text-center py-5">
-                    <div class="spinner-grow text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+        <!-- Vehicle Details Modal -->
+        <div class="modal fade" id="vehicleDetailsModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content shadow-lg border-0 rounded-3" id="v-modal-loader-content">
+                    <div class="modal-body text-center py-5">
+                        <div class="spinner-grow text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3 text-muted fw-semibold">Acquiring vehicle specifications...</p>
                     </div>
-                    <p class="mt-3 text-muted fw-semibold">Acquiring vehicle specifications...</p>
                 </div>
             </div>
         </div>
-    </div>
 @endsection
 
 @section('page-script')
