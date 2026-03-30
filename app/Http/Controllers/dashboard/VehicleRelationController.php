@@ -58,7 +58,17 @@ class VehicleRelationController extends Controller
             $data['type'] = 'interior';
         }
 
-        DB::table($table)->insert($data);
+        $id = DB::table($table)->insertGetId($data);
+        $item = DB::table($table)->where('id', $id)->first();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => Str::headline($type) . ' added successfully.',
+                'item' => $item,
+                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null
+            ]);
+        }
 
         return redirect()->back()->with('success', Str::headline($type) . ' added successfully.');
     }
@@ -80,6 +90,16 @@ class VehicleRelationController extends Controller
         }
 
         DB::table($table)->where('id', $id)->update($data);
+        $item = DB::table($table)->where('id', $id)->first();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => Str::headline($type) . ' updated successfully.',
+                'item' => $item,
+                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null
+            ]);
+        }
 
         return redirect()->back()->with('success', Str::headline($type) . ' updated successfully.');
     }
@@ -104,13 +124,20 @@ class VehicleRelationController extends Controller
     /**
      * Remove the specified record.
      */
-    public function destroy($type, $id)
+    public function destroy(Request $request, $type, $id)
     {
         $table = $this->getTableName($type);
         if (!$table)
             abort(404);
 
         DB::table($table)->where('id', $id)->delete();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => Str::headline($type) . ' deleted successfully.'
+            ]);
+        }
 
         return redirect()->back()->with('success', Str::headline($type) . ' deleted successfully.');
     }
