@@ -54,6 +54,7 @@
                                     <th>Year</th>
                                     <th>Price</th>
                                     <th>Details</th>
+                                    <th class="text-center">Featured</th>
                                     <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
@@ -96,6 +97,14 @@
                                             </small>
                                         </td>
 
+                                        <td class="text-center">
+                                            <div class="form-check form-switch d-flex justify-content-center">
+                                                <input class="form-check-input featured-toggle-switch" type="checkbox" 
+                                                    data-id="{{ $vehicle->id }}" 
+                                                    {{ $vehicle->is_featured ? 'checked' : '' }}>
+                                            </div>
+                                        </td>
+
                                         <td>
                                             @php
                                                 $statusClass = match ($vehicle->ad_status) {
@@ -135,7 +144,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No vehicles found.</td>
+                                        <td colspan="9" class="text-center">No vehicles found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -179,7 +188,32 @@
                         next: '<i class="bx bx-chevron-right"></i>',
                         previous: '<i class="bx bx-chevron-left"></i>'
                     }
-                }
+                },
+                columnDefs: [
+                    { "orderable": false, "targets": [0, 6, 7, 8] } // Non-sortable: Thumb, Featured, Status, Actions
+                ]
+            });
+
+            // ✅ FEATURED TOGGLE
+            $(document).on('change', '.featured-toggle-switch', function() {
+                const id = $(this).data('id');
+                const checked = $(this).prop('checked');
+                const el = $(this);
+                
+                $.ajax({
+                    url: `{{ url('/app/vehicles') }}/${id}/toggle-featured`,
+                    type: 'PATCH',
+                    data: { _token: '{{ csrf_token() }}' },
+                    success: function(response) {
+                        if (response.success) {
+                            toastr.success(response.message, 'Success');
+                        }
+                    },
+                    error: function(xhr) {
+                        el.prop('checked', !checked);
+                        toastr.error('Error updating status', 'Failed');
+                    }
+                });
             });
 
             // ✅ MODAL TRIGGER ON ROW CLICK

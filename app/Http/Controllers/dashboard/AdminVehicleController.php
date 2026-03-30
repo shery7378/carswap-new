@@ -338,4 +338,21 @@ class AdminVehicleController extends Controller
 
         return redirect()->back()->with('success', 'Vehicle status updated to ' . $request->ad_status);
     }
+
+    public function toggleFeatured($id)
+    {
+        try {
+            $vehicle = Vehicle::findOrFail($id);
+            $new_status = !$vehicle->is_featured;
+            $vehicle->update(['is_featured' => $new_status]);
+
+            return response()->json([
+                'success' => true,
+                'is_featured' => $new_status,
+                'message' => 'Vehicle ' . ($new_status ? 'Marked as Featured' : 'Removed from Featured')
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
+    }
 }

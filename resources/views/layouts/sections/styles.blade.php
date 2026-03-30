@@ -15,6 +15,11 @@
 
 <!-- Vendor Styles -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+<style>
+    .toast-success { background-color: #696cff !important; box-shadow: 0 4px 12px rgba(105, 108, 255, 0.4) !important; border-radius: 8px !important; }
+    .toast-error { background-color: #ff3e1d !important; box-shadow: 0 4px 12px rgba(255, 62, 29, 0.4) !important; border-radius: 8px !important; }
+</style>
 @yield('vendor-style')
 
 <!-- Page Styles -->
