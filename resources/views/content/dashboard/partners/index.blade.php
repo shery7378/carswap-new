@@ -41,7 +41,7 @@
 
                             <tbody>
                                 @forelse($partners as $partner)
-                                    <tr>
+                                    <tr data-id="{{ $partner->id }}">
                                         <td>
                                             @if($partner->image)
                                                 <img src="{{ asset('storage/' . $partner->image) }}" width="55" height="55"
@@ -212,7 +212,7 @@
             // IGNORE DOTS OR ACTIONS
             if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form').length) return;
             
-            const partnerId = $(this).find('.view-partner-btn').data('id');
+            const partnerId = $(this).data('id');
             if(!partnerId) return;
 
             const modal = new bootstrap.Modal(document.getElementById('partnerDetailsModal'));

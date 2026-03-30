@@ -58,7 +58,7 @@
 
                             <tbody>
                                 @forelse($vehicles as $vehicle)
-                                    <tr>
+                                    <tr data-id="{{ $vehicle->id }}">
                                         <td>
                                             @if($vehicle->main_image)
                                                 <img src="{{ asset('storage/' . $vehicle->main_image) }}"
@@ -180,9 +180,9 @@
         // ✅ MODAL TRIGGER ON ROW CLICK
         $(document).on('click', '#vehicles-table tbody tr', function(e) {
             // IGNORE DROPDOWNS OR ACTIONS
-            if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, .btn').length) return;
+            if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button').length) return;
             
-            const vehicleId = $(this).find('.view-vehicle-btn').data('id');
+            const vehicleId = $(this).data('id');
             if(!vehicleId) return;
 
             const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
