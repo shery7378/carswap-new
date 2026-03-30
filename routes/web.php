@@ -55,7 +55,7 @@ use App\Http\Controllers\subscription\SubscriptionPayments;
 use App\Http\Controllers\users\User;
 use App\Http\Controllers\users\UserAdd;
 use App\Http\Controllers\Controller;
-use APP\Http\Controllers\users\User_Controller;
+use App\Http\Controllers\users\User_Controller;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\RoleController as AdminRoleController;
 use App\Http\Controllers\Admin\PartnerController as AdminPartnerController;
@@ -174,6 +174,12 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class , 'edit'])->name('admin.users.edit')->middleware('permission:edit-users,admin-guard');
         Route::put('/app/access-control/users/{id}', [AdminUserController::class , 'update'])->name('admin.users.update')->middleware('permission:edit-users,admin-guard');
         Route::delete('/app/access-control/users/{id}', [AdminUserController::class , 'destroy'])->name('admin.users.destroy')->middleware('permission:delete-users,admin-guard');
+    });
+
+    // Access Control: WEB USERS
+    Route::middleware(['permission:view-users,admin-guard'])->group(function () {
+        Route::get('/app/users', [User_Controller::class, 'index'])->name('admin.web-users.index');
+        Route::get('/app/users/{id}', [User_Controller::class, 'view'])->name('admin.web-users.view');
     });
 
     // Main VEHICLES Module

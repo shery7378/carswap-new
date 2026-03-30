@@ -164,6 +164,12 @@
           "name": "Admin Users",
           "slug": "admin.users.index",
           "permission": "view-users"
+        },
+        {
+          "url": "app/users",
+          "name": "Web Users",
+          "slug": "admin.web-users.index",
+          "permission": "view-users"
         }
       ]
     }

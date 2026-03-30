@@ -178,14 +178,14 @@
                                       <td>
                                         <div class="d-flex align-items-center">
                                           <div class="avatar avatar-sm me-2">
-                                            <a href="{{ route('admin.users.view', $user->id) }}">
+                                            <a href="{{ route('admin.web-users.view', $user->id) }}">
                                               <img src="{{ $user->profile_picture ? asset('storage/' . $user->profile_picture)
                       : 'https://ui-avatars.com/api/?name=' . $user->name 
                         }}" alt="{{ $user->name }}" class="rounded-circle" width="40">
                                             </a>
                                           </div>
                                           <div>
-                                            <a href="{{ route('admin.users.view', $user->id) }}" class="text-body fw-medium">
+                                            <a href="{{ route('admin.web-users.view', $user->id) }}" class="text-body fw-medium">
                                               {{ $user->name }}
                                             </a><br>
                                             <small class="text-muted">ID: #USR{{ str_pad($user->id, 3, '0', STR_PAD_LEFT) }}</small>
@@ -224,7 +224,7 @@
                                           </button>
 
                                           <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="{{ route('admin.users.view', $user->id) }}">View</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('admin.web-users.view', $user->id) }}">View</a></li>
                                             <li><a class="dropdown-item" href="javascript:void(0);">Edit</a></li>
                                             <li><a class="dropdown-item" href="javascript:void(0);">Reset Password</a></li>
                                             <li>
@@ -322,7 +322,7 @@
         modal.show();
 
         // FETCH AJAX
-        fetch(`{{ url('/app/apps/user/view') }}/${userId}`)
+        fetch(`{{ url('/app/users') }}/${userId}`)
           .then(res => res.text())
           .then(html => {
             container.innerHTML = html;
