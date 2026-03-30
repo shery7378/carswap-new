@@ -139,12 +139,6 @@
           "permission": "view-settings"
         },
         {
-          "url": "app/ecommerce/settings/header-footer",
-          "name": "Header & Footer",
-          "slug": "app-ecommerce-settings-header-footer",
-          "permission": "view-settings"
-        },
-        {
           "url": "app/ecommerce/settings/payment",
           "name": "Payment Methods",
           "slug": "app-ecommerce-settings-payment",

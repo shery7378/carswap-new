@@ -6,35 +6,41 @@
 
   <style>
     #layout-menu .menu-inner {
-        padding: 1rem 0 !important;
+      padding: 1rem 0 !important;
     }
+
     #layout-menu .menu-item .menu-link {
-        margin: 0.25rem 0.75rem !important;
-        width: calc(100% - 1.5rem) !important;
-        border-radius: 0.5rem !important;
-        transition: all 0.2s ease;
-        padding: 0.625rem 1rem !important;
+      margin: 0.25rem 0.75rem !important;
+      width: calc(100% - 1.5rem) !important;
+      border-radius: 0.5rem !important;
+      transition: all 0.2s ease;
+      padding: 0.625rem 1rem !important;
     }
+
     /* Parent menu when open */
-    #layout-menu .menu-item.open > .menu-link {
-        background-color: rgba(255,255,255,0.05) !important;
-        color: #fff !important;
+    #layout-menu .menu-item.open>.menu-link {
+      background-color: rgba(255, 255, 255, 0.05) !important;
+      color: #fff !important;
     }
+
     /* The actual active page (Leaf node) */
-    #layout-menu .menu-item.active:not(.open) > .menu-link {
+    #layout-menu .menu-item.active:not(.open)>.menu-link {
       background-color: #6366f1 !important;
       color: #fff !important;
       font-weight: 600;
       box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
     }
+
     #layout-menu .menu-link:hover {
-      background: rgba(255,255,255,0.08) !important;
+      background: rgba(255, 255, 255, 0.08) !important;
       color: #fff !important;
     }
+
     /* Hide the submenu dot icons that overlap text */
     #layout-menu .menu-sub .menu-link::before {
-        display: none !important;
+      display: none !important;
     }
+
     #layout-menu .menu-header-text {
       color: #475569 !important;
       letter-spacing: 0.05em;
@@ -42,33 +48,40 @@
       margin: 1.5rem 1rem 0.5rem 1.5rem;
       display: block;
     }
+
     #layout-menu .menu-link i {
       font-size: 1.25rem !important;
       margin-right: 12px;
       color: #64748b;
     }
+
     #layout-menu .active .menu-link i,
     #layout-menu .menu-link:hover i {
       color: #fff !important;
     }
+
     .app-brand {
-        padding: 2rem 1rem !important;
-        height: auto !important;
-        justify-content: center !important;
+      padding: 2rem 1rem !important;
+      height: auto !important;
+      justify-content: center !important;
     }
+
     .app-brand .app-brand-text {
       color: #fff !important;
       margin-left: 0.5rem !important;
     }
+
     .menu-inner-shadow {
       display: none !important;
     }
+
     /* Submenu indentation */
     #layout-menu .menu-sub {
-        background: transparent !important;
+      background: transparent !important;
     }
+
     #layout-menu .menu-sub .menu-link {
-        padding-left: 3rem !important;
+      padding-left: 3rem !important;
     }
   </style>
 
@@ -112,27 +125,26 @@
             $currentRouteName = Route::currentRouteName();
 
             if ($currentRouteName === $menu->slug) {
-                $activeClass = 'active';
+              $activeClass = 'active';
             } elseif (isset($menu->submenu)) {
-                if (gettype($menu->slug) === 'array') {
-                    foreach ($menu->slug as $slug) {
-                        if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
-                            $activeClass = 'active open';
-                        }
-                    }
-                } else {
-                    if (str_contains($currentRouteName, $menu->slug) and strpos($currentRouteName, $menu->slug) === 0) {
-                        $activeClass = 'active open';
-                    }
+              if (gettype($menu->slug) === 'array') {
+                foreach ($menu->slug as $slug) {
+                  if (str_contains($currentRouteName, $slug) and strpos($currentRouteName, $slug) === 0) {
+                    $activeClass = 'active open';
+                  }
                 }
+              } else {
+                if (str_contains($currentRouteName, $menu->slug) and strpos($currentRouteName, $menu->slug) === 0) {
+                  $activeClass = 'active open';
+                }
+              }
             }
           @endphp
 
           {{-- main menu --}}
           <li class="menu-item {{ $activeClass }}">
             <a href="{{ isset($menu->url) ? url($menu->url) : 'javascript:void(0);' }}"
-              class="{{ isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}"
-              @if (isset($menu->target) and !empty($menu->target)) target="_blank" @endif>
+              class="{{ isset($menu->submenu) ? 'menu-link menu-toggle' : 'menu-link' }}" @if (isset($menu->target) and !empty($menu->target)) target="_blank" @endif>
               @isset($menu->icon)
                 <i class="{{ $menu->icon }}"></i>
               @endisset
