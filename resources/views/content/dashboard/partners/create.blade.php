@@ -296,6 +296,32 @@ document.addEventListener('DOMContentLoaded', function() {
     descInput.addEventListener('input', function() {
         seoDesc.textContent = this.value.substring(0, 160) || 'Write an introduction to see SEO description preview...';
     });
+
+    // Form Submission Geocoding Fallback
+    const form = document.getElementById('partnerForm');
+    form.addEventListener('submit', function(e) {
+        const lat = document.getElementById('latitude').value;
+        const lng = document.getElementById('longitude').value;
+        const address = document.getElementById('address').value;
+
+        if (address && (!lat || !lng)) {
+            e.preventDefault();
+            const geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ address: address }, function(results, status) {
+                if (status === 'OK' && results[0]) {
+                    document.getElementById('latitude').value = results[0].geometry.location.lat();
+                    document.getElementById('longitude').value = results[0].geometry.location.lng();
+                    form.submit();
+                } else {
+                    Swal.fire({
+                        title: 'Coordinates Missing',
+                        text: 'We couldn\'t find the exact location for this address. Please select a valid address from the dropdown.',
+                        icon: 'warning'
+                    });
+                }
+            });
+        }
+    });
 });
 
 // Google Maps & Places Autocomplete Logic
