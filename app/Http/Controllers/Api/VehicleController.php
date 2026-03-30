@@ -25,7 +25,8 @@ class VehicleController extends Controller
             'salesMethod',
             'documentType',
             'vehicleStatus',
-            'properties'
+            'properties',
+            'user'
         ])->where('ad_status', 'published');
 
         // Filtering by Featured Status

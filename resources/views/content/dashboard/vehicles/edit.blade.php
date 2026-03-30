@@ -95,8 +95,7 @@
                             <div class="row">
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">Title</label>
-                                    <input type="text" class="form-control" name="title" value="{{ old('title', $vehicle->title) }}"
-                                        required>
+                                    <input type="text" class="form-control" name="title" value="{{ old('title', $vehicle->title) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Sales Method</label>
@@ -275,7 +274,7 @@
                                 <label class="form-label">Address</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
-                                    <input type="text" class="form-control" name="address" id="address" value="{{ old('address', $vehicle->address) }}" placeholder="Search for address..." required>
+                                    <input type="text" class="form-control" name="address" id="address" value="{{ old('address', $vehicle->address) }}" placeholder="Search for address...">
                                 </div>
                                 <input type="hidden" name="latitude" id="latitude" value="{{ old('latitude', $vehicle->latitude) }}">
                                 <input type="hidden" name="longitude" id="longitude" value="{{ old('longitude', $vehicle->longitude) }}">
@@ -552,209 +551,225 @@
         </div>
     </div>
 
+@section('page-script')
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             const brandSelect = document.getElementById('brand_select');
             const modelSelect = document.getElementById('model_select');
 
-            brandSelect.addEventListener('change', function () {
-                const brandId = this.value;
-                if (!brandId) {
-                    modelSelect.innerHTML = '<option value="">Select Model</option>';
-                    return;
-                }
-                modelSelect.innerHTML = '<option value="">Loading...</option>';
-                fetch(`/api/brands/${brandId}/models`)
-                    .then(response => response.json())
-                    .then(data => {
+            if (brandSelect && modelSelect) {
+                brandSelect.addEventListener('change', function() {
+                    const brandId = this.value;
+                    if (!brandId) {
                         modelSelect.innerHTML = '<option value="">Select Model</option>';
-                        if (data && Array.isArray(data) && data.length > 0) {
-                            data.forEach(model => {
-                                const option = document.createElement('option');
-                                option.value = model.id;
-                                option.textContent = model.name;
-                                modelSelect.appendChild(option);
-                            });
-                        }
-                });
-        });
-    });
-
-    // Google Maps & Places Autocomplete Logic
-    function initAutocomplete() {
-        const addressInput = document.getElementById('address');
-        const locationInput = document.getElementById('location');
-        const latInput = document.getElementById('latitude');
-        const lngInput = document.getElementById('longitude');
-        const mapDiv = document.getElementById('map');
-
-        const autocomplete = new google.maps.places.Autocomplete(addressInput, {
-            fields: ["geometry", "formatted_address", "address_components"],
-        });
-
-        let map = null;
-        let marker = null;
-
-        // Function to create/update map and marker
-        function updateMap(lat, lng) {
-            mapDiv.style.display = 'block';
-            const position = { lat: lat, lng: lng };
-            
-            if (!map) {
-                map = new google.maps.Map(mapDiv, {
-                    center: position,
-                    zoom: 15,
-                    mapTypeControl: false,
-                    streetViewControl: false,
-                });
-                marker = new google.maps.Marker({
-                    map: map,
-                    position: position,
-                    draggable: true
-                });
-
-                marker.addListener('dragend', function() {
-                    const newPos = marker.getPosition();
-                    latInput.value = newPos.lat();
-                    lngInput.value = newPos.lng();
-                });
-            } else {
-                map.setCenter(position);
-                marker.setPosition(position);
-            }
-        }
-
-        autocomplete.addListener('place_changed', function() {
-            const place = autocomplete.getPlace();
-
-            if (!place.geometry) {
-                console.log("No details available for input: '" + place.name + "'");
-                return;
-            }
-
-            const lat = place.geometry.location.lat();
-            const lng = place.geometry.location.lng();
-
-            // Set inputs
-            addressInput.value = place.formatted_address;
-            latInput.value = lat;
-            lngInput.value = lng;
-
-            // Try to extract city from address components if location is empty
-            if (place.address_components) {
-                for (const component of place.address_components) {
-                    if (component.types.includes('locality')) {
-                        locationInput.value = component.long_name;
-                        break;
+                        return;
                     }
-                }
-            }
-
-            updateMap(lat, lng);
-        });
-
-        // Handle initial map load for existing data
-        if (latInput.value && lngInput.value) {
-            const initialLat = parseFloat(latInput.value);
-            const initialLng = parseFloat(lngInput.value);
-            if (!isNaN(initialLat) && !isNaN(initialLng)) {
-                updateMap(initialLat, initialLng);
-            }
-        }
-    }
-
-    // Exchange Preferences Logic
-    document.addEventListener('DOMContentLoaded', function () {
-        const salesMethodSelect = document.getElementById('sales_method_select');
-        const exchangeTab = document.getElementById('tab-exchange');
-        const preferencesContainer = document.getElementById('preferences-container');
-        const addPreferenceBtn = document.getElementById('add-preference');
-        const template = document.getElementById('preference-template');
-
-        // Map names to keep it flexible
-        const exchangeMethods = ['Exchange Only', 'For Sale / Exchange', 'Interchangeable'];
-
-        function toggleExchangeTab() {
-            const selectedText = salesMethodSelect.options[salesMethodSelect.selectedIndex]?.text.trim();
-            const isExchange = exchangeMethods.includes(selectedText);
-            
-            if (isExchange) {
-                exchangeTab.classList.remove('d-none');
-            } else {
-                exchangeTab.classList.add('d-none');
-                if (exchangeTab.classList.contains('active')) {
-                    const firstTab = document.querySelector('[data-bs-target="#content-options"]');
-                    if (firstTab) firstTab.click();
-                }
-            }
-        }
-
-        salesMethodSelect.addEventListener('change', toggleExchangeTab);
-        toggleExchangeTab(); // Run on load
-
-        let preferenceIndex = document.querySelectorAll('.preference-item').length;
-
-        function initPreferenceItem(item) {
-            const brandSelect = item.querySelector('.brand-select');
-            const modelSelect = item.querySelector('.model-select');
-            const removeBtn = item.querySelector('.remove-preference');
-
-            brandSelect.addEventListener('change', function () {
-                const brandId = this.value;
-                if (!brandId) {
-                    modelSelect.innerHTML = '<option value="">Any Model</option>';
-                    return;
-                }
-                modelSelect.innerHTML = '<option value="">Loading...</option>';
-                fetch(`/api/brands/${brandId}/models`)
-                    .then(response => response.json())
-                    .then(data => {
-                        modelSelect.innerHTML = '<option value="">Any Model</option>';
-                        data.forEach(model => {
-                            const option = document.createElement('option');
-                            option.value = model.id;
-                            option.textContent = model.name;
-                            modelSelect.appendChild(option);
+                    modelSelect.innerHTML = '<option value="">Loading...</option>';
+                    fetch(`/api/brands/${brandId}/models`)
+                        .then(response => response.json())
+                        .then(data => {
+                            modelSelect.innerHTML = '<option value="">Select Model</option>';
+                            if (data && Array.isArray(data) && data.length > 0) {
+                                data.forEach(model => {
+                                    const option = document.createElement('option');
+                                    option.value = model.id;
+                                    option.textContent = model.name;
+                                    modelSelect.appendChild(option);
+                                });
+                            }
                         });
-                    });
-            });
-
-            removeBtn.addEventListener('click', function () {
-                item.remove();
-            });
-
-            // Capacity slider logic
-            const slider = item.querySelector('.capacity-slider');
-            const valueLabel = item.querySelector('.capacity-value');
-            if (slider && valueLabel) {
-                slider.addEventListener('input', function() {
-                    if (this.value == 0) {
-                        valueLabel.textContent = 'Any';
-                    } else {
-                        valueLabel.textContent = this.value + ' cm³';
-                    }
                 });
             }
-        }
 
-        // Initialize existing items
-        document.querySelectorAll('.preference-item').forEach(initPreferenceItem);
+            // Google Maps & Places Autocomplete Logic
+            window.initAutocomplete = function() {
+                const addressInput = document.getElementById('address');
+                const locationInput = document.getElementById('location');
+                const latInput = document.getElementById('latitude');
+                const lngInput = document.getElementById('longitude');
+                const mapDiv = document.getElementById('map');
 
-        addPreferenceBtn.addEventListener('click', function () {
-            const clone = template.content.cloneNode(true);
-            const item = clone.querySelector('.preference-item');
-            
-            // Replace INDEX placeholder in names
-            const inputs = item.querySelectorAll('[name*="INDEX"]');
-            inputs.forEach(input => {
-                input.name = input.name.replace('INDEX', preferenceIndex);
-            });
+                if (!addressInput) return;
 
-            initPreferenceItem(item);
-            preferencesContainer.appendChild(clone);
-            preferenceIndex++;
+                const autocomplete = new google.maps.places.Autocomplete(addressInput, {
+                    fields: ["geometry", "formatted_address", "address_components"],
+                });
+
+                let map = null;
+                let marker = null;
+
+                // Function to create/update map and marker
+                function updateMap(lat, lng) {
+                    mapDiv.style.display = 'block';
+                    const position = {
+                        lat: lat,
+                        lng: lng
+                    };
+
+                    if (!map) {
+                        map = new google.maps.Map(mapDiv, {
+                            center: position,
+                            zoom: 15,
+                            mapTypeControl: false,
+                            streetViewControl: false,
+                        });
+                        marker = new google.maps.Marker({
+                            map: map,
+                            position: position,
+                            draggable: true
+                        });
+
+                        marker.addListener('dragend', function() {
+                            const newPos = marker.getPosition();
+                            latInput.value = newPos.lat();
+                            lngInput.value = newPos.lng();
+                        });
+                    } else {
+                        map.setCenter(position);
+                        marker.setPosition(position);
+                    }
+                }
+
+                autocomplete.addListener('place_changed', function() {
+                    const place = autocomplete.getPlace();
+
+                    if (!place.geometry) {
+                        console.log("No details available for input: '" + place.name + "'");
+                        return;
+                    }
+
+                    const lat = place.geometry.location.lat();
+                    const lng = place.geometry.location.lng();
+
+                    // Set inputs
+                    addressInput.value = place.formatted_address;
+                    latInput.value = lat;
+                    lngInput.value = lng;
+
+                    // Try to extract city from address components if location is empty
+                    if (place.address_components) {
+                        for (const component of place.address_components) {
+                            if (component.types.includes('locality')) {
+                                locationInput.value = component.long_name;
+                                break;
+                            }
+                        }
+                    }
+
+                    updateMap(lat, lng);
+                });
+
+                // Handle initial map load for existing data
+                if (latInput && latInput.value && lngInput && lngInput.value) {
+                    const initialLat = parseFloat(latInput.value);
+                    const initialLng = parseFloat(lngInput.value);
+                    if (!isNaN(initialLat) && !isNaN(initialLng)) {
+                        updateMap(initialLat, initialLng);
+                    }
+                }
+            };
+
+            // Exchange Preferences Logic
+            const salesMethodSelect = document.getElementById('sales_method_select');
+            const exchangeTab = document.getElementById('tab-exchange');
+            const preferencesContainer = document.getElementById('preferences-container');
+            const addPreferenceBtn = document.getElementById('add-preference');
+            const template = document.getElementById('preference-template');
+
+            if (salesMethodSelect && exchangeTab) {
+                const exchangeMethods = ['Exchange Only', 'For Sale / Exchange', 'Interchangeable'];
+
+                function toggleExchangeTab() {
+                    const selectedText = salesMethodSelect.options[salesMethodSelect.selectedIndex]?.text.trim();
+                    const isExchange = exchangeMethods.includes(selectedText);
+
+                    if (isExchange) {
+                        exchangeTab.classList.remove('d-none');
+                    } else {
+                        exchangeTab.classList.add('d-none');
+                        if (exchangeTab.classList.contains('active')) {
+                            const firstTab = document.querySelector('[data-bs-target="#content-options"]');
+                            if (firstTab) firstTab.click();
+                        }
+                    }
+                }
+
+                salesMethodSelect.addEventListener('change', toggleExchangeTab);
+                toggleExchangeTab(); // Run on load
+            }
+
+            let preferenceIndex = document.querySelectorAll('.preference-item').length;
+
+            function initPreferenceItem(item) {
+                const brandSelectPref = item.querySelector('.brand-select');
+                const modelSelectPref = item.querySelector('.model-select');
+                const removeBtn = item.querySelector('.remove-preference');
+
+                if (brandSelectPref) {
+                    brandSelectPref.addEventListener('change', function() {
+                        const brandId = this.value;
+                        if (!brandId) {
+                            modelSelectPref.innerHTML = '<option value="">Any Model</option>';
+                            return;
+                        }
+                        modelSelectPref.innerHTML = '<option value="">Loading...</option>';
+                        fetch(`/api/brands/${brandId}/models`)
+                            .then(response => response.json())
+                            .then(data => {
+                                modelSelectPref.innerHTML = '<option value="">Any Model</option>';
+                                data.forEach(model => {
+                                    const option = document.createElement('option');
+                                    option.value = model.id;
+                                    option.textContent = model.name;
+                                    modelSelectPref.appendChild(option);
+                                });
+                            });
+                    });
+                }
+
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', function() {
+                        item.remove();
+                    });
+                }
+
+                // Capacity slider logic
+                const slider = item.querySelector('.capacity-slider');
+                const valueLabel = item.querySelector('.capacity-value');
+                if (slider && valueLabel) {
+                    slider.addEventListener('input', function() {
+                        if (this.value == 0) {
+                            valueLabel.textContent = 'Any';
+                        } else {
+                            valueLabel.textContent = this.value + ' cm³';
+                        }
+                    });
+                }
+            }
+
+            // Initialize existing items
+            document.querySelectorAll('.preference-item').forEach(initPreferenceItem);
+
+            if (addPreferenceBtn && template && preferencesContainer) {
+                addPreferenceBtn.addEventListener('click', function() {
+                    const clone = template.content.cloneNode(true);
+                    const item = clone.querySelector('.preference-item');
+
+                    // Replace INDEX placeholder in names
+                    const inputs = item.querySelectorAll('[name*="INDEX"]');
+                    inputs.forEach(input => {
+                        input.name = input.name.replace('INDEX', preferenceIndex);
+                    });
+
+                    initPreferenceItem(item);
+                    preferencesContainer.appendChild(clone);
+                    preferenceIndex++;
+                });
+            }
         });
-    });
-</script>
-<script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initAutocomplete"></script>
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}&libraries=places&callback=initAutocomplete">
+    </script>
+@endsection
 @endsection

@@ -51,7 +51,7 @@ class Vehicle extends Model
         'exchange_preferences',
     ];
 
-    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited', 'status'];
+    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited', 'status', 'posted_by'];
 
     protected $casts = [
         'gallery_images'       => 'json',
@@ -60,6 +60,15 @@ class Vehicle extends Model
         'request_price_option' => 'boolean',
         'exchange_preferences' => 'json',
     ];
+
+    public function getPostedByAttribute(): ?string
+    {
+        if (!$this->user) {
+            return 'Internal User';
+        }
+
+        return trim($this->user->first_name . ' ' . $this->user->last_name) ?: 'System User';
+    }
     
     public function getStatusAttribute(): string
     {
