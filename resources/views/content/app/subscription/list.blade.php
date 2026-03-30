@@ -11,16 +11,7 @@
                 <div class="d-flex justify-content-between align-items-center row pb-2 gap-3 gap-md-0">
                     <div class="col-md-4 plan_filter"></div>
                     <div class="col-md-4 status_filter"></div>
-                    <div class="col-md-4 dropdown text-md-end text-start">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="bx bx-export me-1"></i> Export Data
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            <li><a class="dropdown-item" id="export-excel" href="javascript:void(0);">Export to Excel</a></li>
-                            <li><a class="dropdown-item" id="export-csv" href="javascript:void(0);">Export to CSV</a></li>
-                            <li><a class="dropdown-item" id="export-pdf" href="javascript:void(0);">Export to PDF</a></li>
-                        </ul>
-                    </div>
+                    <div class="col-md-4"></div>
                 </div>
             </div>
             <div class="card-body p-0 pt-3">
@@ -139,23 +130,6 @@
                    '<"col-sm-12 col-md-6"i>' +
                    '<"col-sm-12 col-md-6"p>' +
                    '>',
-            buttons: [
-                {
-                    extend: 'excelHtml5',
-                    className: 'd-none',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] }
-                },
-                {
-                    extend: 'csvHtml5',
-                    className: 'd-none',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] }
-                },
-                {
-                    extend: 'pdfHtml5',
-                    className: 'd-none',
-                    exportOptions: { columns: [0, 1, 2, 3, 4] }
-                }
-            ],
             initComplete: function () {
                 // Plan Filter (Column 1)
                 this.api().columns(1).every(function () {
@@ -191,10 +165,7 @@
             }
         });
 
-        // Trigger exports
-        $('#export-excel').on('click', function() { table.button('.buttons-excel').trigger(); });
-        $('#export-csv').on('click', function() { table.button('.buttons-csv').trigger(); });
-        $('#export-pdf').on('click', function() { table.button('.buttons-pdf').trigger(); });
+
 
         // Row Click: Show Invoice Modal
         $(document).on('click', '.subscription-row td:not(:last-child)', function() {

@@ -149,6 +149,12 @@
           "name": "Payment Methods",
           "slug": "app-ecommerce-settings-payment",
           "permission": "view-settings"
+        },
+        {
+          "url": "app/ecommerce/settings/notifications",
+          "name": "Notifications",
+          "slug": "app-ecommerce-settings-notifications",
+          "permission": "view-settings"
         }
       ]
     },

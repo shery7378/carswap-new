@@ -225,26 +225,6 @@
 
         <!-- Settings Sidebar -->
         <div class="col-lg-4">
-          <!-- Quick Actions -->
-          <div class="card mb-4">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Quick Actions</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-grid gap-2">
-                <button class="btn btn-outline-primary">
-                  <i class="bx bx-download me-2"></i>Export Settings
-                </button>
-                <button class="btn btn-outline-secondary">
-                  <i class="bx bx-upload me-2"></i>Import Settings
-                </button>
-                <button class="btn btn-outline-warning">
-                  <i class="bx bx-refresh me-2"></i>Clear Cache
-                </button>
-              </div>
-            </div>
-          </div>
-
           <!-- System Information -->
           <div class="card mb-4">
             <div class="card-header">
@@ -268,23 +248,6 @@
                   <span>Last Backup:</span>
                   <span class="badge bg-warning">2 days ago</span>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Help & Support -->
-          <div class="card">
-            <div class="card-header">
-              <h5 class="card-title mb-0">Help & Support</h5>
-            </div>
-            <div class="card-body">
-              <div class="d-grid gap-2">
-                <a href="#" class="btn btn-outline-info">
-                  <i class="bx bx-book me-2"></i>Documentation
-                </a>
-                <a href="#" class="btn btn-outline-success">
-                  <i class="bx bx-support me-2"></i>Get Support
-                </a>
               </div>
             </div>
           </div>

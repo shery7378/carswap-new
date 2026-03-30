@@ -18,9 +18,7 @@
                     <button type="button" class="btn btn-outline-secondary waves-effect">
                         <i class="bx bx-filter me-1"></i> Filter
                     </button>
-                    <button type="button" class="btn btn-outline-secondary waves-effect">
-                        <i class="bx bx-export me-1"></i> Export
-                    </button>
+
                 </div>
             </div>
             <div class="card-datatable table-responsive">
