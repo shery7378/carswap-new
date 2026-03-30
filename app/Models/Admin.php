@@ -29,6 +29,7 @@ class Admin extends Authenticatable
         'email',
         'password',
         'profile_picture',
+        'gender',
     ];
 
     /**
@@ -56,4 +57,17 @@ class Admin extends Authenticatable
      * @var string
      */
     protected $guard_name = 'admin-guard';
+
+    /**
+     * Get the avatar URL: uploaded photo or gender-based default.
+     */
+    public function getAvatarUrl(): string
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        // Male: 1.png  |  Female: 3.png
+        $avatar = ($this->gender === 'female') ? '3.png' : '1.png';
+        return asset('assets/img/avatars/' . $avatar);
+    }
 }

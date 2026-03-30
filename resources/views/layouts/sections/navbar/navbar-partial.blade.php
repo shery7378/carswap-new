@@ -32,13 +32,7 @@ use Illuminate\Support\Facades\Route;
         <li class="nav-item navbar-dropdown dropdown-user dropdown">
             <a class="nav-link dropdown-toggle hide-arrow p-0" href="javascript:void(0);" data-bs-toggle="dropdown">
                 <div class="avatar avatar-online">
-                    @if(Auth::user()->profile_picture)
-                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
-                    @else
-                        <div class="avatar-initial rounded-circle bg-label-primary shadow-sm fw-bold">
-                            {{ strtoupper(substr(Auth::user()->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr(Auth::user()->last_name ?? 'D', 0, 1)) }}
-                        </div>
-                    @endif
+                    <img src="{{ Auth::user()->getAvatarUrl() }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
                 </div>
             </a>
             <ul class="dropdown-menu dropdown-menu-end">
@@ -47,13 +41,7 @@ use Illuminate\Support\Facades\Route;
                         <div class="d-flex">
                             <div class="flex-shrink-0 me-3">
                                 <div class="avatar avatar-online">
-                                    @if(Auth::user()->profile_picture)
-                                        <img src="{{ asset('storage/' . Auth::user()->profile_picture) }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
-                                    @else
-                                        <div class="avatar-initial rounded-circle bg-label-primary shadow-sm fw-bold">
-                                            {{ strtoupper(substr(Auth::user()->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr(Auth::user()->last_name ?? 'D', 0, 1)) }}
-                                        </div>
-                                    @endif
+                                    <img src="{{ Auth::user()->getAvatarUrl() }}" alt class="w-px-40 h-auto rounded-circle" style="object-fit: cover;">
                                 </div>
                             </div>
                             <div class="flex-grow-1">

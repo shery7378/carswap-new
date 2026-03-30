@@ -24,12 +24,14 @@ class ProfileController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email,' . $user->id,
+            'gender' => 'required|in:male,female',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
         $user->email = $request->email;
+        $user->gender = $request->gender;
 
         if ($request->hasFile('profile_picture')) {
             // Delete old picture if exists

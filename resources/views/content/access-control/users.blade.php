@@ -158,15 +158,9 @@
                 <td>
                   <div class="d-flex align-items-center">
                     <div class="me-3">
-                      @if($user->profile_picture)
-                        <div class="avatar">
-                          <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
-                        </div>
-                      @else
-                        <div class="avatar-text">
-                          {{ strtoupper(substr($user->first_name, 0, 1)) }}{{ strtoupper(substr($user->last_name, 0, 1)) }}
-                        </div>
-                      @endif
+                      <div class="avatar">
+                        <img src="{{ $user->getAvatarUrl() }}" alt="avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                      </div>
                     </div>
                     <div>
                       <div class="fw-bold">{{ $user->first_name }} {{ $user->last_name }}</div>

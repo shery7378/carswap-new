@@ -20,14 +20,10 @@
                             @csrf
                             <div class="d-flex align-items-start align-items-sm-center gap-4 border-bottom pb-4 mb-4">
                                 @if($user->profile_picture)
-                                    <img src="{{ asset('storage/' . $user->profile_picture) }}" alt="user-avatar" class="d-block rounded" height="100" width="100" id="uploadedAvatar" style="object-fit: cover;" />
+                                    <img src="{{ $user->getAvatarUrl() }}" alt="user-avatar" class="d-block rounded-circle" height="100" width="100" id="uploadedAvatar" style="object-fit: cover; border: 3px solid #e9ecef;" />
                                 @else
-                                    <div class="avatar avatar-xl d-block" id="placeholderAvatar">
-                                        <div class="avatar-initial rounded bg-label-primary fs-2 fw-bold">
-                                            {{ strtoupper(substr($user->first_name ?? 'A', 0, 1)) }}{{ strtoupper(substr($user->last_name ?? 'D', 0, 1)) }}
-                                        </div>
-                                    </div>
-                                    <img src="" alt="user-avatar" class="d-none rounded" height="100" width="100" id="uploadedAvatar" style="object-fit: cover;" />
+                                    <img src="{{ $user->getAvatarUrl() }}" alt="user-avatar" class="d-block rounded-circle" height="100" width="100" id="uploadedAvatar" style="object-fit: cover; border: 3px solid #e9ecef;" />
+                                    <div id="placeholderAvatar" class="d-none"></div>
                                 @endif
 
                                 <div class="button-wrapper">
@@ -58,7 +54,14 @@
                                     <input class="form-control" type="email" id="email" name="email" value="{{ old('email', $user->email) }}" placeholder="john.doe@example.com" required />
                                     @error('email')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
                                 </div>
-                                <div class="mb-3 col-md-6">
+                                <div class="mb-3 col-md-3">
+                                    <label class="form-label">Gender</label>
+                                    <select name="gender" class="form-select">
+                                        <option value="male" {{ ($user->gender ?? 'male') === 'male' ? 'selected' : '' }}>Male</option>
+                                        <option value="female" {{ ($user->gender ?? '') === 'female' ? 'selected' : '' }}>Female</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-md-3">
                                     <label class="form-label">Role</label>
                                     <input class="form-control bg-light" type="text" value="{{ $user->roles->pluck('name')->join(', ') }}" readonly />
                                     <small class="text-muted italic">Role cannot be changed by yourself.</small>
