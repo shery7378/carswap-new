@@ -9,11 +9,11 @@
 
                 <!-- ✅ HEADER FIXED -->
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2 py-3">
-                    <h5 class="mb-0 fw-bold">Partners Management</h5>
+                    <h5 class="mb-0 fw-bold">{{ __('Partners Management') }}</h5>
 
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-partners', 'admin-guard'))
                         <a href="{{ route('admin.partners.create') }}" class="btn btn-primary btn-sm shadow-sm">
-                            <i class="bx bx-plus me-1"></i> Add New Partner
+                            <i class="bx bx-plus me-1"></i> {{ __('Add New Partner') }}
                         </a>
                     @endif
                 </div>
@@ -31,11 +31,11 @@
                         <table class="table table-hover align-middle border-top" id="partners-table">
                             <thead class="bg-light bg-opacity-50">
                                 <tr>
-                                    <th style="width: 80px;">Logo</th>
-                                    <th>Partner Name</th>
-                                    <th>Contact Information</th>
-                                    <th>Status</th>
-                                    <th class="text-center" style="width: 100px;">Actions</th>
+                                    <th style="width: 80px;">{{ __('Logo') }}</th>
+                                    <th>{{ __('Partner Name') }}</th>
+                                    <th>{{ __('Contact Information') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th class="text-center" style="width: 100px;">{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
 
@@ -86,7 +86,7 @@
                                         <td>
                                             <span
                                                 class="badge {{ $partner->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
-                                                {{ $partner->is_active ? 'Active' : 'Inactive' }}
+                                                {{ $partner->is_active ? __('Active') : __('Inactive') }}
                                             </span>
                                         </td>
 

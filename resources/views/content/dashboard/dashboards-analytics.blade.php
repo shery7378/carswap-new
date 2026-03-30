@@ -38,7 +38,7 @@
                         </div>
                         <p class="mb-4">You are logged in as <span class="badge bg-label-primary text-capitalize">{{ Auth::user()->roles->pluck('name')->first() ?? 'Staff' }}</span></p>
 
-                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">Manage Vehicles</a>
+                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">{{ __('Manage Vehicles') }}</a>
                     </div>
                 </div>
                 <div class="col-sm-5 text-center text-sm-left">
@@ -60,9 +60,9 @@
                                 <img src="{{ asset('assets/img/icons/unicons/chart-success.png') }}" alt="chart success" class="rounded" />
                             </div>
                         </div>
-                        <p class="mb-1 text-muted">Total Vehicles</p>
+                        <p class="mb-1 text-muted">{{ __('Total Vehicles') }}</p>
                         <h4 class="card-title mb-3">{{ $stats['total_vehicles'] }}</h4>
-                        <small class="text-success fw-medium"><i class="icon-base bx bx-car"></i> Live Listings</small>
+                        <small class="text-success fw-medium"><i class="icon-base bx bx-car"></i> {{ __('Live Listings') }}</small>
                     </div>
                 </a>
             </div>
@@ -77,9 +77,9 @@
                                 <img src="{{ asset('assets/img/icons/unicons/wallet-info.png') }}" alt="wallet info" class="rounded" />
                             </div>
                         </div>
-                        <p class="mb-1 text-muted">Total Partners</p>
+                        <p class="mb-1 text-muted">{{ __('Total Partners') }}</p>
                         <h4 class="card-title mb-3">{{ $stats['total_partners'] }}</h4>
-                        <small class="text-success fw-medium"><i class="icon-base bx bx-group"></i> Active Dealers</small>
+                        <small class="text-success fw-medium"><i class="icon-base bx bx-group"></i> {{ __('Active Dealers') }}</small>
                     </div>
                 </a>
             </div>
@@ -91,8 +91,8 @@
     <div class="col-12 col-xxl-8 order-2 order-md-3 order-xxl-2 mb-6">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="m-0 me-2">Recent Vehicle Listings</h5>
-                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-primary">View All</a>
+                <h5 class="m-0 me-2">{{ __('Recent Vehicle Listings') }}</h5>
+                <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-primary">{{ __('View All') }}</a>
             </div>
             <div class="card-body">
                 <div class="table-responsive">

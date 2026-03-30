@@ -15,179 +15,204 @@
               <h5 class="card-title mb-0">General Settings</h5>
             </div>
             <div class="card-body">
-              <form id="generalSettingsForm">
+              <form id="generalSettingsForm" method="POST" action="{{ route('app-ecommerce-settings-general-store') }}" enctype="multipart/form-data">
+                @csrf
+                
+                @if(session('success'))
+                  <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ session('success') }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                @endif
+                
                 <!-- Store Information -->
-                <div class="mb-4">
+                <div class="mb-4 border-bottom pb-4">
                   <h6 class="mb-3">Store Information</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="storeName" class="form-label">Store Name</label>
-                      <input type="text" class="form-control" id="storeName" value="My eCommerce Store" required>
+                      <input type="text" class="form-control" name="storeName" id="storeName" value="{{ $settings['storeName'] ?? '' }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="storeEmail" class="form-label">Store Email</label>
-                      <input type="email" class="form-control" id="storeEmail" value="store@example.com" required>
+                      <input type="email" class="form-control" name="storeEmail" id="storeEmail" value="{{ $settings['storeEmail'] ?? '' }}" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="storePhone" class="form-label">Store Phone</label>
-                      <input type="tel" class="form-control" id="storePhone" value="+1 234 567 8900">
+                      <input type="tel" class="form-control" name="storePhone" id="storePhone" value="{{ $settings['storePhone'] ?? '' }}">
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="storeWebsite" class="form-label">Store Website</label>
-                      <input type="url" class="form-control" id="storeWebsite" value="https://mystore.com">
+                      <input type="url" class="form-control" name="storeWebsite" id="storeWebsite" value="{{ $settings['storeWebsite'] ?? '' }}">
                     </div>
                   </div>
                   <div class="mb-3">
                     <label for="storeAddress" class="form-label">Store Address</label>
-                    <textarea class="form-control" id="storeAddress" rows="3">123 Main Street, City, State 12345</textarea>
+                    <textarea class="form-control" name="storeAddress" id="storeAddress" rows="3">{{ $settings['storeAddress'] ?? '' }}</textarea>
+                  </div>
+                </div>
+
+                <!-- Branding / Graphics -->
+                <div class="mb-4 border-bottom pb-4">
+                  <h6 class="mb-3">Branding Options</h6>
+                  <div class="row">
+                    <div class="col-md-6 mb-3">
+                      <label for="storeLogo" class="form-label">Store Logo (Primary)</label>
+                      <input class="form-control" type="file" name="storeLogo" id="storeLogo" accept="image/*">
+                      @if(isset($settings['storeLogo']))
+                        <div class="mt-2">
+                          <img src="{{ asset('storage/' . $settings['storeLogo']) }}" alt="Store Logo" height="50">
+                        </div>
+                      @endif
+                    </div>
+                    <div class="col-md-6 mb-3">
+                      <label for="storeFavicon" class="form-label">Favicon (Browser Tab Icon)</label>
+                      <input class="form-control" type="file" name="storeFavicon" id="storeFavicon" accept="image/*">
+                      @if(isset($settings['storeFavicon']))
+                        <div class="mt-2 d-flex align-items-center">
+                          <img src="{{ asset('storage/' . $settings['storeFavicon']) }}" alt="Favicon" width="32" height="32" class="border p-1 rounded">
+                        </div>
+                      @endif
+                    </div>
                   </div>
                 </div>
 
                 <!-- Currency Settings -->
-                <div class="mb-4">
+                <div class="mb-4 border-bottom pb-4">
                   <h6 class="mb-3">Currency Settings</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="defaultCurrency" class="form-label">Default Currency</label>
-                      <select class="form-select" id="defaultCurrency">
-                        <option value="USD" selected>USD - US Dollar</option>
-                        <option value="EUR">EUR - Euro</option>
-                        <option value="GBP">GBP - British Pound</option>
-                        <option value="JPY">JPY - Japanese Yen</option>
-                        <option value="CAD">CAD - Canadian Dollar</option>
+                      <select class="form-select" name="defaultCurrency" id="defaultCurrency">
+                        <option value="USD" {{ ($settings['defaultCurrency'] ?? '') == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
+                        <option value="EUR" {{ ($settings['defaultCurrency'] ?? '') == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
+                        <option value="GBP" {{ ($settings['defaultCurrency'] ?? '') == 'GBP' ? 'selected' : '' }}>GBP - British Pound</option>
+                        <option value="JPY" {{ ($settings['defaultCurrency'] ?? '') == 'JPY' ? 'selected' : '' }}>JPY - Japanese Yen</option>
+                        <option value="CAD" {{ ($settings['defaultCurrency'] ?? '') == 'CAD' ? 'selected' : '' }}>CAD - Canadian Dollar</option>
+                        <option value="AUD" {{ ($settings['defaultCurrency'] ?? '') == 'AUD' ? 'selected' : '' }}>AUD - Australian Dollar</option>
                       </select>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="currencyPosition" class="form-label">Currency Position</label>
-                      <select class="form-select" id="currencyPosition">
-                        <option value="left" selected>Left ($100.00)</option>
-                        <option value="right">Right (100.00$)</option>
-                        <option value="left_space">Left with space ($ 100.00)</option>
-                        <option value="right_space">Right with space (100.00 $)</option>
+                      <select class="form-select" name="currencyPosition" id="currencyPosition">
+                        <option value="left" {{ ($settings['currencyPosition'] ?? '') == 'left' ? 'selected' : '' }}>Left ($100.00)</option>
+                        <option value="right" {{ ($settings['currencyPosition'] ?? '') == 'right' ? 'selected' : '' }}>Right (100.00$)</option>
+                        <option value="left_space" {{ ($settings['currencyPosition'] ?? '') == 'left_space' ? 'selected' : '' }}>Left with space ($ 100.00)</option>
+                        <option value="right_space" {{ ($settings['currencyPosition'] ?? '') == 'right_space' ? 'selected' : '' }}>Right with space (100.00 $)</option>
                       </select>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="thousandSeparator" class="form-label">Thousand Separator</label>
-                      <input type="text" class="form-control" id="thousandSeparator" value="," maxlength="1">
+                      <input type="text" class="form-control" name="thousandSeparator" id="thousandSeparator" value="{{ $settings['thousandSeparator'] ?? ',' }}" maxlength="1">
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="decimalSeparator" class="form-label">Decimal Separator</label>
-                      <input type="text" class="form-control" id="decimalSeparator" value="." maxlength="1">
+                      <input type="text" class="form-control" name="decimalSeparator" id="decimalSeparator" value="{{ $settings['decimalSeparator'] ?? '.' }}" maxlength="1">
                     </div>
                   </div>
                 </div>
 
                 <!-- Localization Settings -->
-                <div class="mb-4">
+                <div class="mb-4 border-bottom pb-4">
                   <h6 class="mb-3">Localization</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="timezone" class="form-label">Timezone</label>
-                      <select class="form-select" id="timezone">
-                        <option value="UTC">UTC</option>
-                        <option value="America/New_York" selected>America/New_York (EST)</option>
-                        <option value="America/Los_Angeles">America/Los_Angeles (PST)</option>
-                        <option value="Europe/London">Europe/London (GMT)</option>
-                        <option value="Asia/Tokyo">Asia/Tokyo (JST)</option>
+                      <select class="form-select" name="timezone" id="timezone">
+                        <option value="Europe/Budapest" {{ ($settings['timezone'] ?? 'Europe/Budapest') == 'Europe/Budapest' ? 'selected' : '' }}>Europe/Budapest (CET/CEST)</option>
+                        <option value="UTC" {{ ($settings['timezone'] ?? '') == 'UTC' ? 'selected' : '' }}>UTC</option>
+                        <option value="Europe/London" {{ ($settings['timezone'] ?? '') == 'Europe/London' ? 'selected' : '' }}>Europe/London (GMT)</option>
+                        <option value="Asia/Tokyo" {{ ($settings['timezone'] ?? '') == 'Asia/Tokyo' ? 'selected' : '' }}>Asia/Tokyo (JST)</option>
+                        <option value="Asia/Dubai" {{ ($settings['timezone'] ?? '') == 'Asia/Dubai' ? 'selected' : '' }}>Asia/Dubai (GST)</option>
                       </select>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="dateFormat" class="form-label">Date Format</label>
-                      <select class="form-select" id="dateFormat">
-                        <option value="Y-m-d" selected>2024-01-15</option>
-                        <option value="m/d/Y">01/15/2024</option>
-                        <option value="d/m/Y">15/01/2024</option>
-                        <option value="M d, Y">Jan 15, 2024</option>
-                        <option value="F d, Y">January 15, 2024</option>
+                      <select class="form-select" name="dateFormat" id="dateFormat">
+                        <option value="Y-m-d" {{ ($settings['dateFormat'] ?? '') == 'Y-m-d' ? 'selected' : '' }}>2024-01-15 (Y-m-d)</option>
+                        <option value="m/d/Y" {{ ($settings['dateFormat'] ?? '') == 'm/d/Y' ? 'selected' : '' }}>01/15/2024 (m/d/Y)</option>
+                        <option value="d/m/Y" {{ ($settings['dateFormat'] ?? '') == 'd/m/Y' ? 'selected' : '' }}>15/01/2024 (d/m/Y)</option>
+                        <option value="M d, Y" {{ ($settings['dateFormat'] ?? '') == 'M d, Y' ? 'selected' : '' }}>Jan 15, 2024 (M d, Y)</option>
+                        <option value="F d, Y" {{ ($settings['dateFormat'] ?? '') == 'F d, Y' ? 'selected' : '' }}>January 15, 2024 (F d, Y)</option>
                       </select>
                     </div>
                   </div>
                   <div class="row">
-                    <div class="col-md-6 mb-3">
+                    <div class="col-md-12 mb-3">
                       <label for="language" class="form-label">Default Language</label>
-                      <select class="form-select" id="language">
-                        <option value="en" selected>English</option>
-                        <option value="es">Spanish</option>
-                        <option value="fr">French</option>
-                        <option value="de">German</option>
-                        <option value="zh">Chinese</option>
-                      </select>
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label for="weightUnit" class="form-label">Weight Unit</label>
-                      <select class="form-select" id="weightUnit">
-                        <option value="kg" selected>Kilograms (kg)</option>
-                        <option value="g">Grams (g)</option>
-                        <option value="lbs">Pounds (lbs)</option>
-                        <option value="oz">Ounces (oz)</option>
+                      <select class="form-select" name="language" id="language">
+                        <option value="hu" {{ ($settings['language'] ?? 'hu') == 'hu' ? 'selected' : '' }}>Hungarian</option>
+                        <option value="en" {{ ($settings['language'] ?? '') == 'en' ? 'selected' : '' }}>English</option>
+                        <option value="es" {{ ($settings['language'] ?? '') == 'es' ? 'selected' : '' }}>Spanish</option>
+                        <option value="fr" {{ ($settings['language'] ?? '') == 'fr' ? 'selected' : '' }}>French</option>
+                        <option value="de" {{ ($settings['language'] ?? '') == 'de' ? 'selected' : '' }}>German</option>
                       </select>
                     </div>
                   </div>
                 </div>
 
                 <!-- SEO Settings -->
-                <div class="mb-4">
+                <div class="mb-4 border-bottom pb-4">
                   <h6 class="mb-3">SEO Settings</h6>
                   <div class="row">
                     <div class="col-md-12 mb-3">
                       <label for="metaTitle" class="form-label">Default Meta Title</label>
-                      <input type="text" class="form-control" id="metaTitle"
-                        value="My eCommerce Store - Best Products Online">
+                      <input type="text" class="form-control" name="metaTitle" id="metaTitle"
+                        value="{{ $settings['metaTitle'] ?? '' }}">
                       <small class="text-muted">Default title for pages when no specific title is set</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-3">
                       <label for="metaDescription" class="form-label">Default Meta Description</label>
-                      <textarea class="form-control" id="metaDescription" rows="3">Shop the best products online at My eCommerce Store. Quality items, great prices, and fast shipping.</textarea>
+                      <textarea class="form-control" name="metaDescription" id="metaDescription" rows="3">{{ $settings['metaDescription'] ?? '' }}</textarea>
                       <small class="text-muted">Default meta description for pages</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
                       <label for="metaKeywords" class="form-label">Default Meta Keywords</label>
-                      <input type="text" class="form-control" id="metaKeywords"
-                        value="ecommerce, online store, shopping, products">
+                      <input type="text" class="form-control" name="metaKeywords" id="metaKeywords"
+                        value="{{ $settings['metaKeywords'] ?? '' }}">
                       <small class="text-muted">Comma-separated keywords</small>
                     </div>
                     <div class="col-md-6 mb-3">
                       <label for="googleAnalytics" class="form-label">Google Analytics ID</label>
-                      <input type="text" class="form-control" id="googleAnalytics" placeholder="GA_MEASUREMENT_ID">
+                      <input type="text" class="form-control" name="googleAnalytics" id="googleAnalytics" value="{{ $settings['googleAnalytics'] ?? '' }}" placeholder="G-XXXXXXXXXX">
                       <small class="text-muted">Google Analytics 4 Measurement ID</small>
                     </div>
                   </div>
                 </div>
 
                 <!-- Maintenance Mode -->
-                <div class="mb-4">
+                <div class="mb-4 pb-2">
                   <h6 class="mb-3">Maintenance Mode</h6>
                   <div class="row">
                     <div class="col-md-12 mb-3">
                       <div class="form-check form-switch mb-3">
-                        <input class="form-check-input" type="checkbox" id="maintenanceMode">
+                        <input class="form-check-input" type="checkbox" name="maintenanceMode" id="maintenanceMode" value="1" {{ ($settings['maintenanceMode'] ?? '0') === '1' ? 'checked' : '' }}>
                         <label class="form-check-label" for="maintenanceMode">
                           Enable Maintenance Mode
                         </label>
                       </div>
-                      <small class="text-muted">When enabled, visitors will see a maintenance page while administrators
-                        can still access the site.</small>
+                      <small class="text-muted">When enabled, visitors will see a maintenance page while administrators can still access the site.</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-3">
                       <label for="maintenanceMessage" class="form-label">Maintenance Message</label>
-                      <textarea class="form-control" id="maintenanceMessage" rows="3">We are currently performing maintenance. We'll be back shortly!</textarea>
+                      <textarea class="form-control" name="maintenanceMessage" id="maintenanceMessage" rows="3">{{ $settings['maintenanceMessage'] ?? "We are currently performing maintenance. We'll be back shortly!" }}</textarea>
                     </div>
                   </div>
                 </div>
 
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end">
-                  <button type="button" class="btn btn-outline-secondary me-2">Reset</button>
+                  <button type="reset" class="btn btn-outline-secondary me-2">Cancel</button>
                   <button type="submit" class="btn btn-primary">
                     <i class="bx bx-save me-1"></i> Save Changes
                   </button>

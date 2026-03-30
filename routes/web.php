@@ -141,6 +141,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/ecommerce/settings/header-footer', [\App\Http\Controllers\ecommerce\SettingsHeaderFooter::class , 'index'])->name('app-ecommerce-settings-header-footer');
         
         // Settings write/edit operations
+        Route::post('/app/ecommerce/settings/general', [SettingsGeneral::class , 'store'])->name('app-ecommerce-settings-general-store')->middleware('permission:edit-settings,admin-guard');
         Route::post('/app/ecommerce/settings/payment', [SettingsPayment::class , 'store'])->name('app-ecommerce-settings-payment-store')->middleware('permission:edit-settings,admin-guard');
         Route::post('/app/ecommerce/settings/header-footer', [\App\Http\Controllers\ecommerce\SettingsHeaderFooter::class, 'store'])->name('app-ecommerce-settings-header-footer-store')->middleware('permission:edit-settings,admin-guard');
     });

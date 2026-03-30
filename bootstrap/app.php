@@ -21,6 +21,10 @@ return Application::configure(basePath: dirname(__DIR__))
       'permission' => PermissionMiddleware::class,
       'role_or_permission' => RoleOrPermissionMiddleware::class,
     ]);
+
+    $middleware->web(append: [
+        \App\Http\Middleware\ApplyGlobalSettings::class,
+    ]);
   })
   ->withExceptions(function (Exceptions $exceptions) {
     //

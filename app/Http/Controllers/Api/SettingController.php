@@ -15,6 +15,29 @@ class SettingController extends Controller
     {
         // Define default values for each setting
         $defaults = [
+            // General Settings
+            'storeName' => 'CarSwap',
+            'storeEmail' => 'contact@carswap.com',
+            'storePhone' => '',
+            'storeWebsite' => '',
+            'storeAddress' => '',
+            'storeLogo' => null,
+            'storeFavicon' => null,
+            'defaultCurrency' => 'USD',
+            'currencyPosition' => 'left',
+            'thousandSeparator' => ',',
+            'decimalSeparator' => '.',
+            'timezone' => 'Europe/Budapest',
+            'dateFormat' => 'Y-m-d',
+            'language' => 'hu',
+            'metaTitle' => '',
+            'metaDescription' => '',
+            'metaKeywords' => '',
+            'googleAnalytics' => '',
+            'maintenanceMode' => '0',
+            'maintenanceMessage' => '',
+            
+            // Header / Footer Settings
             'header_logo' => null,
             'header_sticky' => '1',
             'header_contact_number' => '',
@@ -58,6 +81,14 @@ class SettingController extends Controller
 
         // Fetch all values currently in DB
         $dbValues = Setting::all()->pluck('value', 'key')->toArray();
+
+        // Format Logo / Favicon as full URLs
+        if (!empty($dbValues['storeLogo'])) {
+            $dbValues['storeLogo'] = asset('storage/' . $dbValues['storeLogo']);
+        }
+        if (!empty($dbValues['storeFavicon'])) {
+            $dbValues['storeFavicon'] = asset('storage/' . $dbValues['storeFavicon']);
+        }
 
         // Merge DB values into defaults (DB overwrites defaults)
         $finalSettings = array_merge($defaults, $dbValues);

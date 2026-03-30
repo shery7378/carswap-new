@@ -125,18 +125,18 @@
   <!-- HEADER -->
   <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
     <h4 class="mb-0">
-      <span class="text-muted">Access Control /</span>
-      <span class="fw-bold text-primary">Admin Users</span>
+      <span class="text-muted">{{ __('Access Control') }} /</span>
+      <span class="fw-bold text-primary">{{ __('Admin Users') }}</span>
     </h4>
 
     <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-      <i class="bx bx-plus"></i> Add Admin User
+      <i class="bx bx-plus"></i> {{ __('Add Admin User') }}
     </a>
   </div>
 
   <div class="card admin-card">
     <div class="card-header">
-      <h5 class="mb-0">Admin Users List</h5>
+      <h5 class="mb-0">{{ __('Admin Users List') }}</h5>
     </div>
 
     <div class="card-body">
@@ -145,10 +145,10 @@
 
           <thead>
             <tr>
-              <th>Admin User</th>
-              <th>Roles</th>
-              <th>Permissions</th>
-              <th>Actions</th>
+              <th>{{ __('Admin User') }}</th>
+              <th>{{ __('Roles') }}</th>
+              <th>{{ __('Permissions') }}</th>
+              <th>{{ __('Actions') }}</th>
             </tr>
           </thead>
 
@@ -179,7 +179,7 @@
                   @forelse($user->permissions as $permission)
                     <span class="badge bg-label-warning badge-premium">{{ $permission->name }}</span>
                   @empty
-                    <span class="text-muted small">From role</span>
+                    <span class="text-muted">{{ __('No extra permissions') }}</span>
                   @endforelse
                 </td>
 

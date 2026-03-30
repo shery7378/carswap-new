@@ -9,27 +9,24 @@
 
                 <!-- ✅ HEADER FIXED -->
                 <div class="card-header d-flex justify-content-between align-items-center flex-wrap gap-2">
-                    <h5 class="mb-0">Vehicles List</h5>
+                    <h5 class="mb-0">{{ __('Vehicles List') }}</h5>
 
                     <div class="d-flex align-items-center gap-2 flex-wrap">
 
                         <!-- Status Filter -->
                         <form action="{{ route('admin.vehicles.index') }}" method="GET">
                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                <option value="">All Statuses</option>
-                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published
-                                </option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending
-                                </option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>Rejected
-                                </option>
-                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                <option value="">{{ __('All Statuses') }}</option>
+                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>{{ __('Published') }}</option>
+                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
+                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>{{ __('Draft') }}</option>
                             </select>
                         </form>
 
                         @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('create-vehicles', 'admin-guard'))
                             <a href="{{ route('admin.vehicles.create') }}" class="btn btn-primary btn-sm">
-                                Add New Vehicle
+                                {{ __('Add New Vehicle') }}
                             </a>
                         @endif
                     </div>
@@ -48,15 +45,15 @@
                         <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
-                                    <th>Thumbnail</th>
-                                    <th>Vehicle</th>
-                                    <th>User</th>
-                                    <th>Year</th>
-                                    <th>Price</th>
-                                    <th>Details</th>
-                                    <th class="text-center">Featured</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
+                                    <th>{{ __('Thumbnail') }}</th>
+                                    <th>{{ __('Vehicle') }}</th>
+                                    <th>{{ __('User') }}</th>
+                                    <th>{{ __('Year') }}</th>
+                                    <th>{{ __('Price') }}</th>
+                                    <th>{{ __('Details') }}</th>
+                                    <th class="text-center">{{ __('Featured') }}</th>
+                                    <th>{{ __('Status') }}</th>
+                                    <th>{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
 
@@ -68,7 +65,7 @@
                                                 <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
                                                     class="rounded">
                                             @else
-                                                <span class="badge bg-secondary">No Image</span>
+                                                <span class="badge bg-secondary">{{ __('No Image') }}</span>
                                             @endif
                                         </td>
 
@@ -91,9 +88,9 @@
 
                                         <td>
                                             <small>
-                                                Fuel: {{ optional($vehicle->fuelType)->name }} <br>
-                                                Trans: {{ optional($vehicle->transmission)->name }} <br>
-                                                Mileage: {{ $vehicle->mileage }} km
+                                                {{ __('Fuel') }}: {{ optional($vehicle->fuelType)->name }} <br>
+                                                {{ __('Trans') }}: {{ optional($vehicle->transmission)->name }} <br>
+                                                {{ __('Mileage') }}: {{ $vehicle->mileage }} km
                                             </small>
                                         </td>
 

@@ -133,6 +133,12 @@
       "permission": "view-settings",
       "submenu": [
         {
+          "url": "app/ecommerce/settings/general",
+          "name": "General Settings",
+          "slug": "app-ecommerce-settings-general",
+          "permission": "view-settings"
+        },
+        {
           "url": "app/ecommerce/settings/header-footer",
           "name": "Header & Footer",
           "slug": "app-ecommerce-settings-header-footer",
