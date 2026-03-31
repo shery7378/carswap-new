@@ -11,7 +11,7 @@ use Illuminate\Mail\Message;
 try {
     Mail::raw('This is a test email from your CarSwap backend with SMTP Gmail configuration. If you received this, your email setup is working correctly!', function (Message $message) {
         $message->to('mehtabali001@gmail.com')
-                ->subject('✅ Test Email - CarSwap Backend SMTP Working');
+            ->subject('✅ Test Email - CarSwap Backend SMTP Working');
     });
 
     echo "✅ Test email sent successfully to mehtabali001@gmail.com\n";

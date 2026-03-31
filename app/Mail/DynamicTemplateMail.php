@@ -41,6 +41,9 @@ class DynamicTemplateMail extends Mailable
     {
         return new Content(
             view: 'emails.dynamic_template',
+            with: [
+                'body' => $this->body,
+            ],
         );
     }
 }

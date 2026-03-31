@@ -145,6 +145,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::post('/app/ecommerce/settings/payment', [SettingsPayment::class , 'store'])->name('app-ecommerce-settings-payment-store')->middleware('permission:edit-settings,admin-guard');
         Route::post('/app/ecommerce/settings/header-footer', [\App\Http\Controllers\ecommerce\SettingsHeaderFooter::class, 'store'])->name('app-ecommerce-settings-header-footer-store')->middleware('permission:edit-settings,admin-guard');
         Route::post('/app/ecommerce/settings/notifications', [SettingsNotifications::class , 'store'])->name('app-ecommerce-settings-notifications-store')->middleware('permission:edit-settings,admin-guard');
+        Route::post('/app/ecommerce/settings/notifications/test', [SettingsNotifications::class , 'testConnectivity'])->name('app-ecommerce-settings-notifications-test')->middleware('permission:edit-settings,admin-guard');
     });
 
     // Subscription Management
@@ -193,12 +194,12 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     // Main VEHICLES Module
     Route::middleware(['permission:view-vehicles,admin-guard'])->group(function () {
         Route::get('/app/vehicles', [AdminVehicleController::class , 'index'])->name('admin.vehicles.index');
+        Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create')->middleware('permission:create-vehicles,admin-guard');
         Route::get('/app/vehicles/{id}', [AdminVehicleController::class , 'show'])->name('admin.vehicles.show');
         Route::patch('/app/vehicles/{vehicle}/toggle-featured', [AdminVehicleController::class, 'toggleFeatured'])->name('admin.vehicles.toggle-featured');
         Route::get('/app/get-models-by-brand/{brandId}', [AdminVehicleController::class, 'getModelsByBrand'])->name('admin.vehicles.models-by-brand');
         
         // Granular vehicle permissions for modification
-        Route::get('/app/vehicles/create', [AdminVehicleController::class , 'create'])->name('admin.vehicles.create')->middleware('permission:create-vehicles,admin-guard');
         Route::post('/app/vehicles', [AdminVehicleController::class , 'store'])->name('admin.vehicles.store')->middleware('permission:create-vehicles,admin-guard');
         Route::get('/app/vehicles/{id}/edit', [AdminVehicleController::class , 'edit'])->name('admin.vehicles.edit')->middleware('permission:edit-vehicles,admin-guard');
         Route::put('/app/vehicles/{id}', [AdminVehicleController::class , 'update'])->name('admin.vehicles.update')->middleware('permission:edit-vehicles,admin-guard');

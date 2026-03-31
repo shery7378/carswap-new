@@ -165,7 +165,7 @@
             <div class="col-12 mt-5 text-end">
                 <div class="d-flex align-items-center justify-content-end p-3 bg-lighter rounded">
                     <div class="d-flex gap-2">
-                        <button type="button" class="btn btn-outline-secondary waves-effect d-flex align-items-center">
+                        <button type="button" id="testConnectivityBtn" class="btn btn-outline-secondary waves-effect d-flex align-items-center">
                             <i class="bx bx-test-tube me-2"></i> Test Connectivity
                         </button>
                         <button type="submit" class="btn btn-primary d-flex align-items-center shadow-primary px-5">
@@ -193,6 +193,33 @@
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
 $(function() {
+    $('#testConnectivityBtn').on('click', function() {
+        let formData = $('#notificationSettingsForm').serialize();
+        let testBtn = $(this);
+        let originalText = testBtn.html();
+        
+        testBtn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-1"></span> Testing...');
+        
+        $.ajax({
+            url: "{{ route('app-ecommerce-settings-notifications-test') }}",
+            method: 'POST',
+            data: formData,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                toastr.success(response.message || 'Connection successful!');
+            },
+            error: function(xhr) {
+                let error = xhr.responseJSON ? xhr.responseJSON.message : 'Connection failed';
+                toastr.error(error);
+            },
+            complete: function() {
+                testBtn.prop('disabled', false).html(originalText);
+            }
+        });
+    });
+
     $('#notificationSettingsForm').on('submit', function(e) {
         e.preventDefault();
         

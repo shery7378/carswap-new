@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\ShareController;
 /* |-------------------------------------------------------------------------- | API Routes |-------------------------------------------------------------------------- | | Here is where you can register API routes for your application. These | routes are loaded by the RouteServiceProvider and all of them will | be assigned to the "api" middleware group. Make something great! | */
 
 // Public Social Sharing API
-Route::get('/share', [ShareController::class , 'index']);
+Route::get('/share', [ShareController::class, 'index']);
 
 // Vehicle Viewing & Inquiry API
 Route::post('/vehicles/{vehicleId}/inquiry', [\App\Http\Controllers\Api\VehicleViewingController::class, 'inquiry']);
@@ -31,14 +31,14 @@ Route::post('/vehicles/{vehicleId}/viewing-request', [\App\Http\Controllers\Api\
 Route::post('/newsletter/subscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribe']);
 
 // Public Subscription API
-Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
+Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
 
 // Public Settings API (Header, Footer, Social links, etc.)
 Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
 
 // Public API route for registration
-Route::post('/register', [RegisterController::class , 'register']);
-Route::post('/login', [RegisterController::class , 'login']);
+Route::post('/register', [RegisterController::class, 'register']);
+Route::post('/login', [RegisterController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     $user = $request->user();
@@ -56,56 +56,56 @@ Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {
     }
 
     return response()->json([
-    'success' => true,
-    'data' => $userData
+        'success' => true,
+        'data' => $userData
     ]);
 });
 
-Route::post('/logout', [RegisterController::class , 'logout'])->middleware('auth:sanctum');
-Route::post('/profile/update', [RegisterController::class , 'updateProfile'])->middleware('auth:sanctum');
+Route::post('/logout', [RegisterController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/profile/update', [RegisterController::class, 'updateProfile'])->middleware('auth:sanctum');
 
 // Forgot Password Routes
-Route::post('/forgot-password', [ForgotPasswordController::class , 'sendResetEmail']);
-Route::post('/verify-reset-token', [ForgotPasswordController::class , 'verifyToken']);
-Route::post('/reset-password', [ForgotPasswordController::class , 'resetPassword']);
+Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetEmail']);
+Route::post('/verify-reset-token', [ForgotPasswordController::class, 'verifyToken']);
+Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword']);
 
 // Public Vehicle Options API
-Route::get('/vehicle-options', [VehicleOptionController::class , 'getOptions']);
-Route::get('/brands', [VehicleOptionController::class , 'getBrands']);
-Route::get('/brands/{brandId}/models', [VehicleOptionController::class , 'getModels']);
+Route::get('/vehicle-options', [VehicleOptionController::class, 'getOptions']);
+Route::get('/brands', [VehicleOptionController::class, 'getBrands']);
+Route::get('/brands/{brandId}/models', [VehicleOptionController::class, 'getModels']);
 
 // Public Ads API Routes
 // These routes use UserAdController and are open to all visitors.
-Route::get('/ad', [UserAdController::class , 'index']);
-Route::get('/ads/{id}', [UserAdController::class , 'show']);
-Route::get('/compare', [CompareController::class , 'compare']);
+Route::get('/ad', [UserAdController::class, 'index']);
+Route::get('/ads/{id}', [UserAdController::class, 'show']);
+Route::get('/compare', [CompareController::class, 'compare']);
 
 // Public Partner API Routes
-Route::get('/partners', [ApiPartnerController::class , 'index']);
-Route::get('/partners/filters', [ApiPartnerController::class , 'getFiltersData']);
-Route::get('/partners/{idOrSlug}', [ApiPartnerController::class , 'show']);
-Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class , 'storeReview']);
+Route::get('/partners', [ApiPartnerController::class, 'index']);
+Route::get('/partners/filters', [ApiPartnerController::class, 'getFiltersData']);
+Route::get('/partners/{idOrSlug}', [ApiPartnerController::class, 'show']);
+Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class, 'storeReview']);
 
 // Legacy vehicle routes (kept for backwards compatibility)
-Route::get('/vehicles', [VehicleController::class , 'index']);
-Route::get('/vehicles/{id}', [VehicleController::class , 'show']);
+Route::get('/vehicles', [VehicleController::class, 'index']);
+Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
 Route::get('/vehicles/{id}/related', [VehicleController::class, 'similarVehiclesByUser']);
 
 // Authenticated Ad Routes (user must be logged in)
 // IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel
 // from matching the literal string 'my' as an {id} parameter.
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('/garage', [UserAdController::class , 'garage']);
-    Route::get('/ads/my', [UserAdController::class , 'myAds']);
-    Route::post('/ads', [UserAdController::class , 'store']);
-    Route::match(['get', 'post'], '/ads/{id}/edit', [UserAdController::class , 'edit']);
-    Route::post('/ads/{id}', [UserAdController::class , 'update']); // Combined update method using POST for file support
-    Route::delete('/ads/{id}', [UserAdController::class , 'destroy']);
-    Route::patch('/ads/{id}/status', [UserAdController::class , 'changeStatus']);
+    Route::get('/garage', [UserAdController::class, 'garage']);
+    Route::get('/ads/my', [UserAdController::class, 'myAds']);
+    Route::post('/ads', [UserAdController::class, 'store']);
+    Route::match(['get', 'post'], '/ads/{id}/edit', [UserAdController::class, 'edit']);
+    Route::post('/ads/{id}', [UserAdController::class, 'update']); // Combined update method using POST for file support
+    Route::delete('/ads/{id}', [UserAdController::class, 'destroy']);
+    Route::patch('/ads/{id}/status', [UserAdController::class, 'changeStatus']);
 
     // Favorite Routes
-    Route::get('/favorites', [FavoriteController::class , 'index']);
-    Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class , 'toggle']);
+    Route::get('/favorites', [FavoriteController::class, 'index']);
+    Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class, 'toggle']);
 
     // Subscriptions
     Route::get('/subscriptions/my', [SubscriptionController::class, 'mySubscription']);
@@ -120,30 +120,31 @@ Route::post('/webhooks/stripe', [StripeController::class, 'handleWebhook']);
 // Admin Routes
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:sanctum'], function () {
     // Vehicle / Ad Management
-    Route::get('/brands/{brandId}/models', [AdminVehicleController::class , 'getModelsByBrand']);
-    Route::get('/vehicles', [AdminVehicleController::class , 'index']);
-    Route::get('/vehicles/{id}', [AdminVehicleController::class , 'show']);
-    Route::post('/vehicles', [AdminVehicleController::class , 'store']);
-    Route::post('/vehicles/{id}', [AdminVehicleController::class , 'update']);
-    Route::delete('/vehicles/{id}', [AdminVehicleController::class , 'destroy']);
-    Route::patch('/vehicles/{id}/status', [AdminVehicleController::class , 'changeStatus']);
-    Route::patch('/vehicles/{id}/featured', [AdminVehicleController::class , 'toggleFeatured']);
+    Route::get('/brands/{brandId}/models', [AdminVehicleController::class, 'getModelsByBrand']);
+    Route::get('/vehicles', [AdminVehicleController::class, 'index']);
+    Route::get('/vehicles/{id}', [AdminVehicleController::class, 'show']);
+    Route::post('/vehicles', [AdminVehicleController::class, 'store']);
+    Route::post('/vehicles/{id}', [AdminVehicleController::class, 'update']);
+    Route::delete('/vehicles/{id}', [AdminVehicleController::class, 'destroy']);
+    Route::patch('/vehicles/{id}/status', [AdminVehicleController::class, 'changeStatus']);
+    Route::patch('/vehicles/{id}/featured', [AdminVehicleController::class, 'toggleFeatured']);
 
     // Role Management
-    Route::middleware('role:admin')->group(function () {
-            Route::get('/roles', [RoleController::class , 'index']);
-            Route::post('/roles', [RoleController::class , 'store']);
-            Route::get('/roles/{id}', [RoleController::class , 'show']);
-            Route::put('/roles/{id}', [RoleController::class , 'update']);
-            Route::delete('/roles/{id}', [RoleController::class , 'destroy']);
-            Route::get('/permissions', [RoleController::class , 'permissions']);
+    Route::middleware('role:admin')->group(
+        function () {
+            Route::get('/roles', [RoleController::class, 'index']);
+            Route::post('/roles', [RoleController::class, 'store']);
+            Route::get('/roles/{id}', [RoleController::class, 'show']);
+            Route::put('/roles/{id}', [RoleController::class, 'update']);
+            Route::delete('/roles/{id}', [RoleController::class, 'destroy']);
+            Route::get('/permissions', [RoleController::class, 'permissions']);
 
             // User Management
-            Route::get('/users', [UserController::class , 'index']);
-            Route::post('/users', [UserController::class , 'store']);
-            Route::get('/users/{id}', [UserController::class , 'show']);
-            Route::put('/users/{id}', [UserController::class , 'update']);
-            Route::delete('/users/{id}', [UserController::class , 'destroy']);
+            Route::get('/users', [UserController::class, 'index']);
+            Route::post('/users', [UserController::class, 'store']);
+            Route::get('/users/{id}', [UserController::class, 'show']);
+            Route::put('/users/{id}', [UserController::class, 'update']);
+            Route::delete('/users/{id}', [UserController::class, 'destroy']);
         }
-        );
-    });
+    );
+});
