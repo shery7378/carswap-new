@@ -39,6 +39,9 @@ Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
 // Public Settings API (Header, Footer, Social links, etc.)
 Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
 
+// Public CMS API (Dynamic Sections)
+Route::get('/cms/{slug}', [\App\Http\Controllers\Api\CMSController::class, 'show']);
+
 // Public API route for registration
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [RegisterController::class, 'login']);

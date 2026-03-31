@@ -40,7 +40,12 @@ class CMSController extends Controller
             'status' => 'required|boolean',
         ]);
 
-        CMSSection::create($request->all());
+        $data = $request->except('image');
+        if ($request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('cms', 'public');
+        }
+
+        CMSSection::create($data);
 
         return redirect()->route('admin.cms.index')->with('success', 'Section created successfully.');
     }

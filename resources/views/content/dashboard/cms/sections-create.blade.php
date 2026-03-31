@@ -41,6 +41,11 @@
             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
           </div>
 
+          <div class="mb-3">
+            <label class="form-label" for="image">Image Header (Optional)</label>
+            <input type="file" class="form-control" id="image" name="image" />
+          </div>
+
           <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label">Status</label>
