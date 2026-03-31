@@ -5,6 +5,13 @@
 @section('content')
 <h4 class="py-3 mb-4"><span class="text-muted fw-light">Newsletter /</span> Subscribers</h4>
 
+@if(session('success'))
+    <div class="alert alert-success alert-dismissible" role="alert">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+@endif
+
 <!-- Basic Bootstrap Table -->
 <div class="card">
   <div class="card-header d-flex justify-content-between align-items-center">
@@ -29,16 +36,13 @@
           <td><strong>{{ $subscriber->email }}</strong></td>
           <td>{{ $subscriber->created_at->format('Y-m-d H:i') }}</td>
           <td>
-            <div class="dropdown">
-              <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown"><i class="ti ti-dots-vertical"></i></button>
-              <div class="dropdown-menu">
-                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this subscriber?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="dropdown-item text-danger"><i class="ti ti-trash me-1"></i> Delete</button>
-                </form>
-              </div>
-            </div>
+            <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this subscriber?');">
+                @csrf
+                @method('DELETE')
+                <button type="submit" class="btn btn-sm btn-danger shadow-none">
+                    <i class="bx bx-trash me-1"></i> Delete
+                </button>
+            </form>
           </td>
         </tr>
         @empty
