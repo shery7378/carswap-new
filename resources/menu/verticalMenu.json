@@ -180,6 +180,12 @@
       "permission": "view-email_templates"
     },
     {
+      "url": "app/newsletter",
+      "name": "Newsletter",
+      "icon": "menu-icon icon-base bx bx-news",
+      "slug": "admin.newsletter.index"
+    },
+    {
       "name": "Access Control",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",

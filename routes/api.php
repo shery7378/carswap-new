@@ -27,6 +27,9 @@ Route::get('/share', [ShareController::class , 'index']);
 Route::post('/vehicles/{vehicleId}/inquiry', [\App\Http\Controllers\Api\VehicleViewingController::class, 'inquiry']);
 Route::post('/vehicles/{vehicleId}/viewing-request', [\App\Http\Controllers\Api\VehicleViewingController::class, 'store']);
 
+// Newsletter
+Route::post('/newsletter/subscribe', [\App\Http\Controllers\Api\NewsletterController::class, 'subscribe']);
+
 // Public Subscription API
 Route::get('/subscriptions/plans', [SubscriptionController::class , 'index']);
 

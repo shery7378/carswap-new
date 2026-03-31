@@ -233,4 +233,10 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::put('/app/email-templates/{id}', [EmailTemplateController::class, 'update'])->name('admin.email-templates.update')->middleware('permission:edit-email_templates,admin-guard');
         Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update')->middleware('permission:edit-email_templates,admin-guard');
     });
+    // NEWSLETTER Module
+    Route::group(['prefix' => 'app/newsletter'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NewsletterController::class, 'index'])->name('admin.newsletter.index');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    });
+
 });
