@@ -33,7 +33,22 @@ class VehicleViewingController extends Controller
         if (!$vehicle) return response()->json(['success' => false, 'message' => 'Vehicle not found'], 404);
 
         $owner = $vehicle->user;
-        if (!$owner || empty($owner->email)) return response()->json(['success' => false, 'message' => 'Owner email not found'], 400);
+        $ownerEmail = $owner ? $owner->email : null;
+        
+        // If not found in users table, check if it was created by an admin (admin table)
+        if (empty($ownerEmail) && $vehicle->user_id) {
+            $admin = \App\Models\Admin::find($vehicle->user_id);
+            if ($admin && !empty($admin->email)) {
+                $ownerEmail = $admin->email;
+            }
+        }
+        
+        // Fallback to system email if the vehicle is completely orphaned
+        if (empty($ownerEmail)) {
+            $ownerEmail = config('settings.contactEmail') ?? config('mail.from.address') ?? 'admin@yoursite.com';
+        }
+        
+        if (empty($ownerEmail)) return response()->json(['success' => false, 'message' => 'Owner email not found and no fallback configured'], 400);
 
         // Save
         $inquiry = VehicleInquiry::create([
@@ -56,7 +71,7 @@ class VehicleViewingController extends Controller
                 'message_content' => $request->message,
             ];
             $rendered = $template->render($data);
-            Mail::to($owner->email)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body']));
+            Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body']));
         }
 
         return response()->json(['success' => true, 'message' => 'Inquiry sent to vehicle owner.', 'data' => $inquiry]);
@@ -84,7 +99,22 @@ class VehicleViewingController extends Controller
         if (!$vehicle) return response()->json(['success' => false, 'message' => 'Vehicle not found'], 404);
 
         $owner = $vehicle->user;
-        if (!$owner || empty($owner->email)) return response()->json(['success' => false, 'message' => 'Owner email not found'], 400);
+        $ownerEmail = $owner ? $owner->email : null;
+        
+        // If not found in users table, check if it was created by an admin (admin table)
+        if (empty($ownerEmail) && $vehicle->user_id) {
+            $admin = \App\Models\Admin::find($vehicle->user_id);
+            if ($admin && !empty($admin->email)) {
+                $ownerEmail = $admin->email;
+            }
+        }
+        
+        // Fallback to system email if the vehicle is completely orphaned
+        if (empty($ownerEmail)) {
+            $ownerEmail = config('settings.contactEmail') ?? config('mail.from.address') ?? 'admin@yoursite.com';
+        }
+
+        if (empty($ownerEmail)) return response()->json(['success' => false, 'message' => 'Owner email not found and no fallback configured'], 400);
 
         $inquiry = VehicleInquiry::create([
             'vehicle_id' => $vehicle->id,
@@ -110,7 +140,7 @@ class VehicleViewingController extends Controller
                 'message_content' => $request->message ?? 'No message provided.',
             ];
             $rendered = $template->render($data);
-            Mail::to($owner->email)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body']));
+            Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body']));
         }
 
         return response()->json(['success' => true, 'message' => 'Viewing request sent to owner.', 'data' => $inquiry]);
