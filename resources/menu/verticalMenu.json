@@ -180,6 +180,9 @@
       "permission": "view-email_templates"
     },
     {
+      "menuHeader": "Customer Support"
+    },
+    {
       "url": "app/newsletter",
       "name": "Newsletter",
       "icon": "menu-icon icon-base bx bx-news",

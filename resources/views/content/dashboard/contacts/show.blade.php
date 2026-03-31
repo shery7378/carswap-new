@@ -66,27 +66,39 @@
                     
                     <button type="submit" class="btn btn-primary w-100">Update Status</button>
                 </form>
-
-                <hr>
-
-                <div class="mt-3">
-                    <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this requests?')">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger w-100">
-                            <i class="bx bx-trash me-1"></i> Delete Request
-                        </button>
-                    </form>
-                </div>
             </div>
         </div>
 
         <div class="card">
-            <h5 class="card-header">Quick Actions</h5>
+            <h5 class="card-header">Quick Reply</h5>
             <div class="card-body">
-                <a href="mailto:{{ $contact->email }}?subject=RE: {{ $contact->subject }}" class="btn btn-info w-100 mb-2">
-                    <i class="bx bx-reply me-1"></i> Send Reply Email
-                </a>
+                @if(session('error'))
+                    <div class="alert alert-danger">{{ session('error') }}</div>
+                @endif
+                <form action="{{ route('admin.contacts.reply', $contact->id) }}" method="POST">
+                    @csrf
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <input type="text" name="subject" class="form-control" value="RE: {{ $contact->subject }}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Message</label>
+                        <textarea name="message" class="form-control" rows="5" placeholder="Type your reply here..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-info w-100">
+                        <i class="bx bx-send me-1"></i> Send Reply
+                    </button>
+                </form>
+
+                <hr>
+
+                <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this request?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-outline-danger w-100">
+                        <i class="bx bx-trash me-1"></i> Delete Request
+                    </button>
+                </form>
             </div>
         </div>
     </div>

@@ -239,6 +239,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contacts.index');
         Route::get('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('admin.contacts.show');
         Route::patch('/{id}/status', [\App\Http\Controllers\Admin\ContactController::class, 'updateStatus'])->name('admin.contacts.update-status');
+        Route::post('/{id}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('admin.contacts.reply');
         Route::delete('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contacts.destroy');
     });
 
