@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 
     <title>
-        {{ @yield('title') }} | {{ config('settings.storeName') ?? config('variables.templateName') ?? 'Template' }}
+        @yield('title') | {{ config('settings.storeName') ?? config('variables.templateName') ?? 'Template' }}
     </title>
     <meta name="description"
         content="{{ config('settings.metaDescription') ?? config('variables.templateDescription') ?? '' }}" />
