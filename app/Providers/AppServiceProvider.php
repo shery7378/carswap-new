@@ -37,9 +37,10 @@ class AppServiceProvider extends ServiceProvider
                 // Set mail configuration
                 if ($allSettings->has('mail_host')) {
                     config([
+                        'mail.default' => $allSettings->get('mail_mailer', 'smtp'),
                         'mail.mailers.smtp.host' => $allSettings->get('mail_host'),
                         'mail.mailers.smtp.port' => $allSettings->get('mail_port'),
-                        'mail.mailers.smtp.encryption' => $allSettings->get('mail_encryption'),
+                        'mail.mailers.smtp.encryption' => $allSettings->get('mail_encryption') === 'none' ? null : $allSettings->get('mail_encryption'),
                         'mail.mailers.smtp.username' => $allSettings->get('mail_username'),
                         'mail.mailers.smtp.password' => $allSettings->get('mail_password'),
                         'mail.from.address' => $allSettings->get('mail_from_address'),

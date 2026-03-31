@@ -48,7 +48,27 @@
         display: flex;
         flex-direction: column;
         gap: 8px;
-        margin-bottom: 2rem;
+        margin-bottom: 1.5rem;
+        max-height: 550px;
+        overflow-y: auto;
+        padding-right: 5px;
+    }
+
+    .template-nav-list::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .template-nav-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .template-nav-list::-webkit-scrollbar-thumb {
+        background: #e2e8f0;
+        border-radius: 10px;
+    }
+
+    .template-nav-list::-webkit-scrollbar-thumb:hover {
+        background: var(--text-muted);
     }
 
     .template-nav-item {

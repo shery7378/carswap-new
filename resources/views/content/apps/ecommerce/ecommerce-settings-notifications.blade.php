@@ -73,10 +73,10 @@
                                     <input type="radio" class="btn-check" name="mail_encryption" id="enc-tls" value="tls" {{ ($settings['mail_encryption'] ?? 'tls') == 'tls' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-primary" for="enc-tls">TLS</label>
                                     
-                                    <input type="radio" class="btn-check" name="mail_encryption" id="enc-ssl" value="ssl" {{ ($settings['mail_encryption'] ?? '') == 'ssl' ? 'selected' : '' }}>
+                                    <input type="radio" class="btn-check" name="mail_encryption" id="enc-ssl" value="ssl" {{ ($settings['mail_encryption'] ?? '') == 'ssl' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-primary" for="enc-ssl">SSL</label>
                                     
-                                    <input type="radio" class="btn-check" name="mail_encryption" id="enc-none" value="none" {{ ($settings['mail_encryption'] ?? '') == 'none' ? 'selected' : '' }}>
+                                    <input type="radio" class="btn-check" name="mail_encryption" id="enc-none" value="none" {{ ($settings['mail_encryption'] ?? '') == 'none' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-primary" for="enc-none">NONE</label>
                                 </div>
                             </div>
