@@ -186,6 +186,12 @@
       "slug": "admin.newsletter.index"
     },
     {
+      "url": "app/contacts",
+      "name": "Contact Us",
+      "icon": "menu-icon icon-base bx bx-chat",
+      "slug": "admin.contacts.index"
+    },
+    {
       "name": "Access Control",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",
