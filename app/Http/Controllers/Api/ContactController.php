@@ -39,7 +39,11 @@ class ContactController extends Controller
         ]);
 
         // Send Email Notification to Admin
-        $adminEmail = config('settings.contactEmail') ?? config('mail.from.address') ?? 'admin@carswap.com';
+        $adminEmail = config('settings.storeEmail') 
+                      ?? config('settings.contactEmail') 
+                      ?? config('settings.mail_from_address') 
+                      ?? config('mail.from.address') 
+                      ?? 'admin@carswap.com';
         
         $template = EmailTemplate::where('slug', 'contact-us')->first();
         if ($template) {
