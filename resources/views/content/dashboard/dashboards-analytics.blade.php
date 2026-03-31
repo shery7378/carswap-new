@@ -21,9 +21,7 @@
 <script src="https://cdn.jsdelivr.net/npm/apexcharts@4.2.0/dist/apexcharts.min.js"></script>
 @endsection
 
-@section('page-script')
-<script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
-@endsection
+
 
 @section('content')
 <div class="row">
@@ -107,7 +105,7 @@
                         </thead>
                         <tbody>
                             @forelse($recent_vehicles as $vehicle)
-                            <tr>
+                            <tr class="clickable-vehicle-row" data-id="{{ $vehicle->id }}" style="cursor: pointer;">
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div class="avatar avatar-sm me-3">
@@ -152,7 +150,7 @@
             <div class="card-body">
                 <ul class="p-0 m-0">
                     @forelse($recent_partners as $partner)
-                    <li class="d-flex align-items-center mb-6">
+                    <li class="d-flex align-items-center mb-6 clickable-partner-item" data-id="{{ $partner->id }}" style="cursor: pointer;">
                         <div class="avatar flex-shrink-0 me-3">
                             @if($partner->image)
                                 <img src="{{ asset('storage/' . $partner->image) }}" alt="partner" class="rounded" />
@@ -639,4 +637,74 @@
     <!--/ Transactions -->
     @endif
 </div>
+    <!-- Vehicle Details Modal -->
+    <div class="modal fade" id="vehicleDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0" id="vehicle-modal-content">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-grow text-primary" role="status"></div>
+                    <p class="mt-3 text-muted fw-semibold">Loading vehicle details...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Partner Details Modal -->
+    <div class="modal fade" id="partnerDetailsModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content shadow-lg border-0" id="partner-modal-content">
+                <div class="modal-body text-center py-5">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Loading partner information...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('page-script')
+<script>
+$(document).ready(function() {
+    // Vehicle Modal Trigger
+    $(document).on('click', '.clickable-vehicle-row', function() {
+        const id = $(this).data('id');
+        const modal = new bootstrap.Modal(document.getElementById('vehicleDetailsModal'));
+        const container = document.getElementById('vehicle-modal-content');
+
+        container.innerHTML = `
+            <div class="modal-body text-center py-5">
+                <div class="spinner-grow text-primary" role="status"></div>
+                <p class="mt-3 text-muted fw-semibold">Fetching vehicle data...</p>
+            </div>
+        `;
+        modal.show();
+
+        fetch(`{{ url('/app/vehicles') }}/${id}?modal=1`)
+            .then(res => res.text())
+            .then(html => { container.innerHTML = html; })
+            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">Error loading vehicle data.</div>'; });
+    });
+
+    // Partner Modal Trigger
+    $(document).on('click', '.clickable-partner-item', function() {
+        const id = $(this).data('id');
+        const modal = new bootstrap.Modal(document.getElementById('partnerDetailsModal'));
+        const container = document.getElementById('partner-modal-content');
+
+        container.innerHTML = `
+            <div class="modal-body text-center py-5">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2 text-muted">Loading partner information...</p>
+            </div>
+        `;
+        modal.show();
+
+        fetch(`{{ url('/app/partners') }}/${id}?modal=1`)
+            .then(res => res.text())
+            .then(html => { container.innerHTML = html; })
+            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">Error loading partner data.</div>'; });
+    });
+});
+</script>
+<script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 @endsection
