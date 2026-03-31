@@ -180,17 +180,17 @@
       "permission": "view-email_templates"
     },
     {
-      "menuHeader": "Customer Support"
+      "menuHeader": "Ügyfélszolgálat"
     },
     {
       "url": "app/newsletter",
-      "name": "Newsletter",
+      "name": "Hírlevél",
       "icon": "menu-icon icon-base bx bx-news",
       "slug": "admin.newsletter.index"
     },
     {
       "url": "app/contacts",
-      "name": "Contact Us",
+      "name": "Kapcsolat",
       "icon": "menu-icon icon-base bx bx-chat",
       "slug": "admin.contacts.index"
     },

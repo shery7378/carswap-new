@@ -41,12 +41,22 @@
       display: none !important;
     }
 
+    #layout-menu .menu-header {
+      margin-top: 1.5rem !important;
+      margin-bottom: 0.5rem !important;
+    }
+
+    #layout-menu .menu-header::before {
+      display: none !important;
+    }
+
     #layout-menu .menu-header-text {
-      color: #475569 !important;
-      letter-spacing: 0.05em;
+      color: #71717a !important;
+      letter-spacing: 0.1em;
       font-weight: 700;
-      margin: 1.5rem 1rem 0.5rem 1.5rem;
-      display: block;
+      margin: 0 1.5rem !important;
+      text-transform: uppercase;
+      font-size: 0.75rem;
     }
 
     #layout-menu .menu-link i {
