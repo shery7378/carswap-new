@@ -57,7 +57,6 @@ class VehicleViewingController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'message' => $request->message,
-            'status' => 'pending',
         ]);
 
         // Send Dynamic Email
@@ -124,7 +123,6 @@ class VehicleViewingController extends Controller
             'preferred_date' => $request->preferred_date,
             'preferred_time' => $request->preferred_time,
             'message' => $request->message,
-            'status' => 'pending',
         ]);
 
         // Send Dynamic Email
