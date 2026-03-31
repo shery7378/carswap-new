@@ -89,7 +89,7 @@ Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class , 'sto
 // Legacy vehicle routes (kept for backwards compatibility)
 Route::get('/vehicles', [VehicleController::class , 'index']);
 Route::get('/vehicles/{id}', [VehicleController::class , 'show']);
-Route::get('/vehicles/{id}/similar-by-user', [VehicleController::class, 'similarVehiclesByUser']);
+Route::get('/vehicles/{id}/related', [VehicleController::class, 'similarVehiclesByUser']);
 
 // Authenticated Ad Routes (user must be logged in)
 // IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel
