@@ -181,4 +181,31 @@ class VehicleController extends Controller
 
         return response()->json($vehicle);
     }
+
+    /**
+     * Display top 3 other vehicles listed by the exact same user.
+     */
+    public function similarVehiclesByUser($id)
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        $similar = Vehicle::with([
+            'brand',
+            'model',
+            'fuelType',
+            'transmission',
+            'user'
+        ])
+        ->where('ad_status', 'published')
+        ->where('user_id', $vehicle->user_id) // Same user
+        ->where('id', '!=', $vehicle->id) // Exclude the current vehicle
+        ->orderBy('created_at', 'desc')
+        ->limit(3)
+        ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => $similar
+        ]);
+    }
 }
