@@ -195,6 +195,9 @@
       "slug": "admin.contacts.index"
     },
     {
+      "menuHeader": "Adminisztráció"
+    },
+    {
       "name": "Access Control",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",
