@@ -173,6 +173,15 @@
       ]
     },
     {
+      "menuHeader": "Content Management"
+    },
+    {
+      "url": "app/cms",
+      "name": "Page Content (CMS)",
+      "icon": "menu-icon icon-base bx bx-layout",
+      "slug": "admin.cms.index"
+    },
+    {
       "url": "app/email-templates",
       "name": "Email Templates",
       "icon": "menu-icon icon-base bx bx-envelope",

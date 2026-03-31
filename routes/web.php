@@ -243,4 +243,19 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::delete('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contacts.destroy');
     });
 
+    // CMS Module
+    Route::group(['prefix' => 'app/cms'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\CMSController::class, 'index'])->name('admin.cms.index');
+        Route::get('/create', [\App\Http\Controllers\Admin\CMSController::class, 'create'])->name('admin.cms.create');
+        Route::post('/', [\App\Http\Controllers\Admin\CMSController::class, 'store'])->name('admin.cms.store');
+        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CMSController::class, 'edit'])->name('admin.cms.edit');
+        Route::put('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'update'])->name('admin.cms.update');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'destroy'])->name('admin.cms.destroy');
+
+        // CMS Items Management (within a section)
+        Route::post('/{sectionId}/items', [\App\Http\Controllers\Admin\CMSController::class, 'storeItem'])->name('admin.cms.items.store');
+        Route::put('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'updateItem'])->name('admin.cms.items.update');
+        Route::delete('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyItem'])->name('admin.cms.items.destroy');
+    });
+
 });
