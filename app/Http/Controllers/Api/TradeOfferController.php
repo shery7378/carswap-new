@@ -258,7 +258,7 @@ class TradeOfferController extends Controller
         ]);
 
         // Send Email using Dynamic Template
-        $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
+        $template = EmailTemplate::where('slug', 'trade-offer-garage-received')->first();
         if ($template) {
             $data = [
                 'car_title'            => $vehicle->title,
