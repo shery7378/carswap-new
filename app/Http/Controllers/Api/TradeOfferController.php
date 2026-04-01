@@ -32,19 +32,19 @@ class TradeOfferController extends Controller
             'drive_type' => 'nullable|string|max:50',
             'exterior_color' => 'nullable|string|max:50',
             'interior_color' => 'nullable|string|max:50',
-            
+
             // Files & Info
             'photos' => 'nullable|array',
             'photos.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120', // 5MB max
             'video_url' => 'nullable|url|max:255',
             'chassis_number' => 'nullable|string|max:100',
             'owner_name' => 'nullable|string|max:255',
-            
+
             // Condition
             'exterior_condition' => 'nullable|string|max:100',
             'interior_condition' => 'nullable|string|max:100',
             'is_accident' => 'nullable|string|max:100',
-            
+
             // Contact
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -55,7 +55,7 @@ class TradeOfferController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'errors' => $validator->errors(),
                 'received_data' => $request->all() // Diagnostic helper
             ], 422);
@@ -120,38 +120,38 @@ class TradeOfferController extends Controller
         $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
         if ($template) {
             $data = [
-                'car_title'            => $vehicle->title,
-                'target_car_title'     => $vehicle->title,
-                'offered_car_title'    => trim(($request->brand ?? '') . ' ' . ($request->model ?? '') . ' ' . ($request->year ?? '')),
-                'offered_car_brand'    => $request->brand ?? 'N/A',
-                'offered_car_model'    => $request->model ?? 'N/A',
-                'offered_car_year'     => $request->year ?? 'N/A',
+                'car_title' => $vehicle->title,
+                'target_car_title' => $vehicle->title,
+                'offered_car_title' => trim(($request->brand ?? '') . ' ' . ($request->model ?? '') . ' ' . ($request->year ?? '')),
+                'offered_car_brand' => $request->brand ?? 'N/A',
+                'offered_car_model' => $request->model ?? 'N/A',
+                'offered_car_year' => $request->year ?? 'N/A',
                 'offered_car_odometer' => $request->odometer ?? 'N/A',
-                'offered_car_fuel'     => $request->fuel_type ?? 'N/A',
-                'offered_car_gearbox'  => $request->gearbox_type ?? 'N/A',
-                'offered_car_drive'    => $request->drive_type ?? 'N/A',
-                'offered_car_ext_color'=> $request->exterior_color ?? 'N/A',
-                'offered_car_int_color'=> $request->interior_color ?? 'N/A',
-                'offered_car_chassis'  => $request->chassis_number ?? 'N/A',
-                'offered_car_owner'    => $request->owner_name ?? 'N/A',
-                'exterior_condition'   => $request->exterior_condition ?? 'N/A',
-                'interior_condition'   => $request->interior_condition ?? 'N/A',
-                'is_accident'          => $request->is_accident ?? 'N/A',
-                'sender_name'          => $request->first_name . ' ' . $request->last_name,
-                'sender_email'         => $request->email,
-                'sender_phone'         => $request->phone,
-                'comment'              => !empty($offerComment) ? $offerComment : 'No comment provided.',
+                'offered_car_fuel' => $request->fuel_type ?? 'N/A',
+                'offered_car_gearbox' => $request->gearbox_type ?? 'N/A',
+                'offered_car_drive' => $request->drive_type ?? 'N/A',
+                'offered_car_ext_color' => $request->exterior_color ?? 'N/A',
+                'offered_car_int_color' => $request->interior_color ?? 'N/A',
+                'offered_car_chassis' => $request->chassis_number ?? 'N/A',
+                'offered_car_owner' => $request->owner_name ?? 'N/A',
+                'exterior_condition' => $request->exterior_condition ?? 'N/A',
+                'interior_condition' => $request->interior_condition ?? 'N/A',
+                'is_accident' => $request->is_accident ?? 'N/A',
+                'sender_name' => $request->first_name . ' ' . $request->last_name,
+                'sender_email' => $request->email,
+                'sender_phone' => $request->phone,
+                'comment' => !empty($offerComment) ? $offerComment : 'No comment provided.',
             ];
-            
+
             $rendered = $template->render($data);
-            
+
             try {
                 Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body'], $photoPaths));
             } catch (\Exception $e) {
                 // Email failed but record is saved
                 return response()->json([
-                    'success' => true, 
-                    'message' => 'Trade offer saved, but email notification failed.', 
+                    'success' => true,
+                    'message' => 'Trade offer saved, but email notification failed.',
                     'data' => $tradeOffer,
                     'debug' => $e->getMessage()
                 ]);
@@ -159,8 +159,8 @@ class TradeOfferController extends Controller
         }
 
         return response()->json([
-            'success' => true, 
-            'message' => 'Trade offer sent successfully to the vehicle owner.', 
+            'success' => true,
+            'message' => 'Trade offer sent successfully to the vehicle owner.',
             'data' => $tradeOffer
         ]);
     }
@@ -177,7 +177,7 @@ class TradeOfferController extends Controller
             'exterior_condition' => 'nullable|string|max:100',
             'interior_condition' => 'nullable|string|max:100',
             'is_accident' => 'nullable|string|max:100',
-            
+
             // Contact
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -188,7 +188,7 @@ class TradeOfferController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'success' => false, 
+                'success' => false,
                 'errors' => $validator->errors()
             ], 422);
         }
@@ -199,7 +199,13 @@ class TradeOfferController extends Controller
         }
 
         $offeredVehicle = Vehicle::with([
-            'brand', 'model', 'fuelType', 'transmission', 'driveType', 'exteriorColor', 'interiorColor'
+            'brand',
+            'model',
+            'fuelType',
+            'transmission',
+            'driveType',
+            'exteriorColor',
+            'interiorColor'
         ])->where('user_id', auth()->id())->find($request->offered_vehicle_id);
 
         if (!$offeredVehicle) {
@@ -263,38 +269,38 @@ class TradeOfferController extends Controller
         $template = EmailTemplate::where('slug', 'trade-offer-garage-received')->first();
         if ($template) {
             $data = [
-                'car_title'            => $vehicle->title,
-                'target_car_title'     => $vehicle->title,
-                'offered_car_title'    => $offeredVehicle->title,
-                'offered_car_brand'    => $tradeOffer->brand,
-                'offered_car_model'    => $tradeOffer->model,
-                'offered_car_year'     => $tradeOffer->year,
+                'car_title' => $vehicle->title,
+                'target_car_title' => $vehicle->title,
+                'offered_car_title' => $offeredVehicle->title,
+                'offered_car_brand' => $tradeOffer->brand,
+                'offered_car_model' => $tradeOffer->model,
+                'offered_car_year' => $tradeOffer->year,
                 'offered_car_odometer' => $tradeOffer->odometer,
-                'offered_car_fuel'     => $tradeOffer->fuel_type,
-                'offered_car_gearbox'  => $tradeOffer->gearbox_type,
-                'offered_car_drive'    => $tradeOffer->drive_type,
-                'offered_car_ext_color'=> $tradeOffer->exterior_color,
-                'offered_car_int_color'=> $tradeOffer->interior_color,
-                'offered_car_chassis'  => $tradeOffer->chassis_number,
-                'offered_car_owner'    => $tradeOffer->owner_name,
-                'exterior_condition'   => $tradeOffer->exterior_condition ?? 'N/A',
-                'interior_condition'   => $tradeOffer->interior_condition ?? 'N/A',
-                'is_accident'          => $tradeOffer->is_accident ?? 'N/A',
-                'sender_name'          => $tradeOffer->sender_first_name . ' ' . $tradeOffer->sender_last_name,
-                'sender_email'         => $tradeOffer->sender_email,
-                'sender_phone'         => $tradeOffer->sender_phone,
-                'comment'              => !empty($offerComment) ? $offerComment : 'No comment provided.',
+                'offered_car_fuel' => $tradeOffer->fuel_type,
+                'offered_car_gearbox' => $tradeOffer->gearbox_type,
+                'offered_car_drive' => $tradeOffer->drive_type,
+                'offered_car_ext_color' => $tradeOffer->exterior_color,
+                'offered_car_int_color' => $tradeOffer->interior_color,
+                'offered_car_chassis' => $tradeOffer->chassis_number,
+                'offered_car_owner' => $tradeOffer->owner_name,
+                'exterior_condition' => $tradeOffer->exterior_condition ?? 'N/A',
+                'interior_condition' => $tradeOffer->interior_condition ?? 'N/A',
+                'is_accident' => $tradeOffer->is_accident ?? 'N/A',
+                'sender_name' => $tradeOffer->sender_first_name . ' ' . $tradeOffer->sender_last_name,
+                'sender_email' => $tradeOffer->sender_email,
+                'sender_phone' => $tradeOffer->sender_phone,
+                'comment' => !empty($offerComment) ? $offerComment : 'No comment provided.',
             ];
-            
+
             $rendered = $template->render($data);
-            
+
             try {
                 Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body'], $photoPaths));
             } catch (\Exception $e) {
                 // Email failed but record is saved
                 return response()->json([
-                    'success' => true, 
-                    'message' => 'Trade offer saved, but email notification failed.', 
+                    'success' => true,
+                    'message' => 'Trade offer saved, but email notification failed.',
                     'data' => $tradeOffer,
                     'debug' => $e->getMessage()
                 ]);
@@ -302,8 +308,8 @@ class TradeOfferController extends Controller
         }
 
         return response()->json([
-            'success' => true, 
-            'message' => 'Trade offer sent successfully to the vehicle owner.', 
+            'success' => true,
+            'message' => 'Trade offer sent successfully to the vehicle owner.',
             'data' => $tradeOffer
         ]);
     }
