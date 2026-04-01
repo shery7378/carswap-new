@@ -118,16 +118,6 @@ class TradeOfferController extends Controller
 
         $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
         if ($template) {
-            // Generate HTML for trade offer images
-            $imagesHtml = '<em>No images provided.</em>';
-            if (!empty($photoPaths)) {
-                $imagesHtml = '';
-                foreach ($photoPaths as $path) {
-                    $url = asset('storage/' . $path);
-                    $imagesHtml .= '<img src="' . $url . '" alt="Trade Offer Image" style="max-width: 100%; max-height: 250px; margin: 5px; border-radius: 4px; display: inline-block;">';
-                }
-            }
-
             $data = [
                 'target_car_title'     => $vehicle->title,
                 'offered_car_brand'    => $request->brand ?? 'N/A',
@@ -141,7 +131,6 @@ class TradeOfferController extends Controller
                 'offered_car_int_color'=> $request->interior_color ?? 'N/A',
                 'offered_car_chassis'  => $request->chassis_number ?? 'N/A',
                 'offered_car_owner'    => $request->owner_name ?? 'N/A',
-                'trade_offer_images'   => $imagesHtml,
                 'exterior_condition'   => $request->exterior_condition ?? 'N/A',
                 'interior_condition'   => $request->interior_condition ?? 'N/A',
                 'is_accident'          => $request->is_accident ?? 'N/A',
@@ -154,7 +143,7 @@ class TradeOfferController extends Controller
             $rendered = $template->render($data);
             
             try {
-                Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body']));
+                Mail::to($ownerEmail)->send(new DynamicTemplateMail($rendered['subject'], $rendered['body'], $photoPaths));
             } catch (\Exception $e) {
                 // Email failed but record is saved
                 return response()->json([

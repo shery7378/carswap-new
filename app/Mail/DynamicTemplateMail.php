@@ -14,14 +14,16 @@ class DynamicTemplateMail extends Mailable
 
     public $subject;
     public $body;
+    public $attachmentFiles;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($subject, $body)
+    public function __construct($subject, $body, $attachmentFiles = [])
     {
         $this->subject = $subject;
         $this->body = $body;
+        $this->attachmentFiles = $attachmentFiles;
     }
 
     /**
@@ -45,5 +47,21 @@ class DynamicTemplateMail extends Mailable
                 'body' => $this->body,
             ],
         );
+    }
+
+    /**
+     * Get the attachments for the message.
+     *
+     * @return array<int, \Illuminate\Mail\Mailables\Attachment>
+     */
+    public function attachments(): array
+    {
+        $attachments = [];
+        
+        foreach ($this->attachmentFiles as $file) {
+            $attachments[] = \Illuminate\Mail\Mailables\Attachment::fromStorageDisk('public', $file);
+        }
+
+        return $attachments;
     }
 }
