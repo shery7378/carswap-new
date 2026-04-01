@@ -119,7 +119,9 @@ class TradeOfferController extends Controller
         $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
         if ($template) {
             $data = [
+                'car_title'            => $vehicle->title,
                 'target_car_title'     => $vehicle->title,
+                'offered_car_title'    => trim(($request->brand ?? '') . ' ' . ($request->model ?? '') . ' ' . ($request->year ?? '')),
                 'offered_car_brand'    => $request->brand ?? 'N/A',
                 'offered_car_model'    => $request->model ?? 'N/A',
                 'offered_car_year'     => $request->year ?? 'N/A',
@@ -259,7 +261,9 @@ class TradeOfferController extends Controller
         $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
         if ($template) {
             $data = [
+                'car_title'            => $vehicle->title,
                 'target_car_title'     => $vehicle->title,
+                'offered_car_title'    => $offeredVehicle->title,
                 'offered_car_brand'    => $tradeOffer->brand,
                 'offered_car_model'    => $tradeOffer->model,
                 'offered_car_year'     => $tradeOffer->year,

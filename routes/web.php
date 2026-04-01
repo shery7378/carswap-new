@@ -163,6 +163,10 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         // Subscription creation
         Route::get('/app/subscription/create', [SubscriptionCreate::class, 'index'])->name('app-subscription-create')->middleware('permission:create-subscriptions,admin-guard');
         Route::post('/app/subscription/create', [SubscriptionCreate::class, 'store'])->name('app-subscription-store')->middleware('permission:create-subscriptions,admin-guard');
+
+        // Subscription edit (full-page)
+        Route::get('/app/subscription/plans/{id}/edit', [SubscriptionCreate::class, 'edit'])->name('app-subscription-plan-edit')->middleware('permission:edit-subscriptions,admin-guard');
+        Route::put('/app/subscription/plans/{id}', [SubscriptionCreate::class, 'update'])->name('app-subscription-plan-update')->middleware('permission:edit-subscriptions,admin-guard');
     });
 
     // Access Control: ROLES

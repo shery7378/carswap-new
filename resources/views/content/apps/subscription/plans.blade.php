@@ -124,7 +124,7 @@
         <div class="plan-actions px-4 pb-4 mt-auto">
           @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-subscriptions', 'admin-guard'))
           <div class="d-flex gap-2">
-            <a href="javascript:void(0);" class="btn btn-outline-{{ $plan->color }} flex-grow-1 edit-plan-btn" data-id="{{ $plan->id }}">
+            <a href="{{ route('app-subscription-plan-edit', $plan->id) }}" class="btn btn-outline-{{ $plan->color }} flex-grow-1">
               <i class="bx bx-edit-alt small me-1"></i> Edit
             </a>
             <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} p-2 toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
@@ -139,6 +139,16 @@
               <span class="badge bg-label-secondary small">Disabled</span>
             @endif
           </div>
+          <div class="mt-2 text-center">
+            <small class="text-muted d-block" style="font-size: 0.7rem;">
+              <i class="bx bx-calendar me-1"></i>Created: {{ $plan->created_at->format('M d, Y') }}
+            </small>
+            @if($plan->updated_at && $plan->updated_at->ne($plan->created_at))
+            <small class="text-muted d-block" style="font-size: 0.7rem;">
+              <i class="bx bx-edit me-1"></i>Updated: {{ $plan->updated_at->format('M d, Y h:i A') }}
+            </small>
+            @endif
+          </div>
         </div>
       </div>
     </div>
@@ -146,117 +156,10 @@
   </div>
 </div>
 
-<!-- Plan Edit Modal -->
-<div class="modal fade" id="editPlanModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow-lg">
-            <div class="modal-header bg-label-primary">
-                <h5 class="modal-title">Edit Plan: <span id="modalPlanName"></span></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <form id="editPlanForm" method="POST">
-                @csrf
-                @method('PUT')
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Plan Name</label>
-                            <input type="text" name="name" id="edit_name" class="form-control" required>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Slug (URL Key)</label>
-                            <input type="text" name="slug" id="edit_slug" class="form-control" required>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col-6 mb-3">
-                            <label class="form-label fw-bold">Price (HUF)</label>
-                            <input type="number" name="price" id="edit_price" class="form-control" required>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label fw-bold">Yearly Price (HUF)</label>
-                            <input type="number" name="yearly_price" id="edit_yearly_price" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label class="form-label fw-bold">Billing Cycle</label>
-                            <select name="billing_period" id="edit_billing_period" class="form-select">
-                                <option value="monthly">Monthly</option>
-                                <option value="yearly">Yearly</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label fw-bold">Description</label>
-                        <textarea name="description" id="edit_description" class="form-control" rows="2"></textarea>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-bold">Active Ads Limit</label>
-                            <input type="number" name="active_ads_limit" id="edit_active_limit" class="form-control" placeholder="-1 for unlimited">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-bold">Garage Limit</label>
-                            <input type="number" name="garage_ads_limit" id="edit_garage_limit" class="form-control" placeholder="-1 for unlimited">
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label fw-bold">Expand Slots</label>
-                            <input type="number" name="expandable_slots" id="edit_expandable_slots" class="form-control">
-                        </div>
-                    </div>
-
-                    <div class="row mt-2">
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="is_popular" id="edit_is_popular" value="1">
-                                <label class="form-check-label fw-bold">Popular Badge</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="highlight_ads" id="edit_highlight_ads" value="1">
-                                <label class="form-check-label fw-bold">Highlight Ads</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 mb-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" name="hd_images" id="edit_hd_images" value="1">
-                                <label class="form-check-label fw-bold">HD Images</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small">Stripe Monthly ID</label>
-                            <input type="text" name="stripe_price_id_monthly" id="edit_stripe_monthly" class="form-control form-control-sm">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label small">Stripe Yearly ID</label>
-                            <input type="text" name="stripe_price_id_yearly" id="edit_stripe_yearly" class="form-control form-control-sm">
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary shadow-sm px-4">Update Plan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 @endsection
 
 @section('page-script')
 <script>
-const plansData = @json($plans->keyBy('id'));
-
 $(document).on('click', '.toggle-plan-status', function() {
     const planId = $(this).data('id');
     const button = $(this);
@@ -292,48 +195,6 @@ $(document).on('click', '.toggle-plan-status', function() {
         }
     });
 });
-
-// Edit Plan Modal Logic
-$(document).on('click', '.edit-plan-btn', function() {
-    const planId = $(this).data('id');
-    const plan = plansData[planId];
-    
-    if (!plan) {
-        console.error('Plan not found for ID:', planId);
-        return;
-    }
-    
-    const form = $('#editPlanForm');
-    
-    // Set form action
-    form.attr('action', `/app/subscription/plans/${plan.id}/update`);
-    
-    // Fill fields
-    $('#modalPlanName').text(plan.name);
-    $('#edit_name').val(plan.name);
-    $('#edit_slug').val(plan.slug);
-    $('#edit_price').val(plan.price ? parseFloat(plan.price) : 0);
-    $('#edit_yearly_price').val(plan.yearly_price ? parseFloat(plan.yearly_price) : '');
-    $('#edit_description').val(plan.description);
-    $('#edit_billing_period').val(plan.billing_period || 'monthly');
-    
-    // Limits
-    $('#edit_active_limit').val(plan.active_ads_limit);
-    $('#edit_garage_limit').val(plan.garage_ads_limit);
-    $('#edit_expandable_slots').val(plan.expandable_slots);
-    
-    // Toggles
-    $('#edit_is_popular').prop('checked', !!plan.is_popular);
-    $('#edit_highlight_ads').prop('checked', !!plan.highlight_ads);
-    $('#edit_hd_images').prop('checked', !!plan.hd_images);
-    
-    // Stripe IDs
-    $('#edit_stripe_monthly').val(plan.stripe_price_id_monthly);
-    $('#edit_stripe_yearly').val(plan.stripe_price_id_yearly);
-    
-    // Show modal
-    var myModal = new bootstrap.Modal(document.getElementById('editPlanModal'));
-    myModal.show();
-});
 </script>
 @endsection
+

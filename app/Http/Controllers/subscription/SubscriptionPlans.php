@@ -45,11 +45,21 @@ class SubscriptionPlans extends Controller
             'active_ads_limit' => 'nullable|integer',
             'garage_ads_limit' => 'nullable|integer',
             'expandable_slots' => 'nullable|integer',
+            'features' => 'nullable|array',
+            'features.*' => 'nullable|string',
         ]);
 
         $plan = \App\Models\Plan::findOrFail($id);
         
-        $data = $request->all();
+        $data = $request->except('features');
+        
+        if ($request->has('features') && is_array($request->features)) {
+            $featuresArray = array_values(array_filter(array_map('trim', $request->features)));
+            $data['features'] = empty($featuresArray) ? [] : $featuresArray;
+        } else {
+            $data['features'] = [];
+        }
+
         // Handle checkboxes (since they don't send anything if unchecked)
         $data['is_popular'] = $request->has('is_popular');
         $data['highlight_ads'] = $request->has('highlight_ads');
