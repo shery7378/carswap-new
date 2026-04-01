@@ -19,6 +19,7 @@ class TradeOfferController extends Controller
      */
     public function store(Request $request, $vehicleId)
     {
+        $offerComment = $request->input('comment') ?? $request->input('comments');
         $validator = Validator::make($request->all(), [
             // Car Info
             'brand' => 'nullable|string|max:255',
@@ -113,7 +114,7 @@ class TradeOfferController extends Controller
             'sender_last_name' => $request->last_name,
             'sender_email' => $request->email,
             'sender_phone' => $request->phone,
-            'comment' => $request->comment,
+            'comment' => $offerComment,
         ]);
 
         $template = EmailTemplate::where('slug', 'trade-offer-received')->first();
@@ -139,7 +140,7 @@ class TradeOfferController extends Controller
                 'sender_name'          => $request->first_name . ' ' . $request->last_name,
                 'sender_email'         => $request->email,
                 'sender_phone'         => $request->phone,
-                'comment'              => $request->comment ?? 'No comment provided.',
+                'comment'              => !empty($offerComment) ? $offerComment : 'No comment provided.',
             ];
             
             $rendered = $template->render($data);
@@ -169,6 +170,7 @@ class TradeOfferController extends Controller
      */
     public function storeFromGarage(Request $request, $vehicleId)
     {
+        $offerComment = $request->input('comment') ?? $request->input('comments');
         $validator = Validator::make($request->all(), [
             'offered_vehicle_id' => 'required|exists:vehicles,id',
             // Condition
@@ -254,7 +256,7 @@ class TradeOfferController extends Controller
             'sender_last_name' => $request->last_name,
             'sender_email' => $request->email,
             'sender_phone' => $request->phone,
-            'comment' => $request->comment,
+            'comment' => $offerComment,
         ]);
 
         // Send Email using Dynamic Template
@@ -281,7 +283,7 @@ class TradeOfferController extends Controller
                 'sender_name'          => $tradeOffer->sender_first_name . ' ' . $tradeOffer->sender_last_name,
                 'sender_email'         => $tradeOffer->sender_email,
                 'sender_phone'         => $tradeOffer->sender_phone,
-                'comment'              => $tradeOffer->comment ?? 'No comment provided.',
+                'comment'              => !empty($offerComment) ? $offerComment : 'No comment provided.',
             ];
             
             $rendered = $template->render($data);
