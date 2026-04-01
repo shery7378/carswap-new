@@ -110,6 +110,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/ads/{id}', [UserAdController::class, 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class, 'changeStatus']);
 
+    // Trade Offer from Garage
+    Route::post('/vehicles/{vehicleId}/trade-offer/garage', [\App\Http\Controllers\Api\TradeOfferController::class, 'storeFromGarage']);
+
     // Favorite Routes
     Route::get('/favorites', [FavoriteController::class, 'index']);
     Route::post('/favorites/{vehicleId}/toggle', [FavoriteController::class, 'toggle']);
