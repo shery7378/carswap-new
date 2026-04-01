@@ -258,4 +258,12 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::delete('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyItem'])->name('admin.cms.items.destroy');
     });
 
+    // TRADE OFFERS Module
+    Route::group(['prefix' => 'app/trade-offers'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\TradeOfferController::class, 'index'])->name('admin.trade-offers.index');
+        Route::get('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'show'])->name('admin.trade-offers.show');
+        Route::patch('/{id}/status', [\App\Http\Controllers\Admin\TradeOfferController::class, 'updateStatus'])->name('admin.trade-offers.update-status');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'destroy'])->name('admin.trade-offers.destroy');
+    });
+
 });

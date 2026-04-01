@@ -25,6 +25,7 @@ Route::get('/share', [ShareController::class, 'index']);
 
 // Vehicle Viewing & Inquiry API
 Route::post('/vehicles/{vehicleId}/inquiry', [\App\Http\Controllers\Api\VehicleViewingController::class, 'inquiry']);
+Route::post('/vehicles/{vehicleId}/trade-offer', [\App\Http\Controllers\Api\TradeOfferController::class, 'store']);
 Route::post('/vehicles/{vehicleId}/viewing-request', [\App\Http\Controllers\Api\VehicleViewingController::class, 'store']);
 
 // Contact Us API

@@ -204,6 +204,12 @@
       "slug": "admin.contacts.index"
     },
     {
+      "url": "app/trade-offers",
+      "name": "Csereajánlatok",
+      "icon": "menu-icon icon-base bx bx-transfer",
+      "slug": "admin.trade-offers.index"
+    },
+    {
       "menuHeader": "Adminisztráció"
     },
     {
