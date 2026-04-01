@@ -53,7 +53,11 @@ class TradeOfferController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['success' => false, 'errors' => $validator->errors()], 422);
+            return response()->json([
+                'success' => false, 
+                'errors' => $validator->errors(),
+                'received_data' => $request->all() // Diagnostic helper
+            ], 422);
         }
 
         $vehicle = Vehicle::with('user')->find($vehicleId);
