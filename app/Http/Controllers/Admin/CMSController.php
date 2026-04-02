@@ -127,8 +127,33 @@ class CMSController extends Controller
     }
 
     /**
-     * Update a CMS item.
+     * Update a CMS item directly (optimized for document mode).
      */
+    public function updateItemDirect(Request $request)
+    {
+        $request->validate([
+            'section_id' => 'required|exists:cms_sections,id',
+            'item_id' => 'nullable|exists:cms_items,id',
+            'description' => 'required|string',
+        ]);
+
+        if ($request->filled('item_id')) {
+            $item = CMSItem::findOrFail($request->item_id);
+            $item->update([
+                'description' => $request->description
+            ]);
+        } else {
+            CMSItem::create([
+                'section_id' => $request->section_id,
+                'title' => 'Main Content',
+                'description' => $request->description,
+                'order' => 0
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Document content saved successfully.');
+    }
+
     public function updateItem(Request $request, $itemId)
     {
         $item = CMSItem::findOrFail($itemId);

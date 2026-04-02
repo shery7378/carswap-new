@@ -42,6 +42,7 @@ class Vehicle extends Model
         'longitude',
         'main_image',
         'gallery_images',
+        'documents',
         'technical_expiration',
         'is_featured',
         'video_url',
@@ -51,10 +52,11 @@ class Vehicle extends Model
         'exchange_preferences',
     ];
 
-    protected $appends = ['main_image_url', 'gallery_image_urls', 'is_favorited', 'status', 'posted_by'];
+    protected $appends = ['main_image_url', 'gallery_image_urls', 'document_urls', 'is_favorited', 'status', 'posted_by'];
 
     protected $casts = [
         'gallery_images'       => 'json',
+        'documents'            => 'json',
         'is_featured'          => 'boolean',
         'technical_expiration' => 'date:Y-m-d',
         'request_price_option' => 'boolean',
@@ -115,6 +117,26 @@ class Vehicle extends Model
                 return Storage::disk('public')->url($path);
             },
             $images
+        );
+    }
+
+    public function getDocumentUrlsAttribute(): array
+    {
+        $docs = $this->documents;
+        if (empty($docs)) {
+            return [];
+        }
+
+        if (is_string($docs)) {
+            $decoded = json_decode($docs, true);
+            $docs = is_array($decoded) ? $decoded : [$docs];
+        } elseif (!is_array($docs)) {
+            $docs = [];
+        }
+
+        return array_map(
+            fn ($path) => Storage::disk('public')->url($path),
+            $docs
         );
     }
 

@@ -258,6 +258,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
 
         // CMS Items Management (within a section)
         Route::post('/{sectionId}/items', [\App\Http\Controllers\Admin\CMSController::class, 'storeItem'])->name('admin.cms.items.store');
+        Route::post('/items/update-direct', [\App\Http\Controllers\Admin\CMSController::class, 'updateItemDirect'])->name('admin.cms.items.update-direct');
         Route::put('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'updateItem'])->name('admin.cms.items.update');
         Route::delete('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyItem'])->name('admin.cms.items.destroy');
     });

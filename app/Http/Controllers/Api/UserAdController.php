@@ -182,15 +182,13 @@ class UserAdController extends Controller
             $vehicle->update(['gallery_images' => $galleryPaths]);
         }
 
-        // Handle document uploads
+        // Handle document uploads — save paths to the documents JSON column
         if ($request->hasFile('documents')) {
             $docPaths = [];
             foreach ($request->file('documents') as $doc) {
                 $docPaths[] = $doc->store('ads/documents', 'public');
             }
-        // Store document paths in a separate JSON column if you have one,
-        // or leave as a response-only field for now.
-        // For now we attach them to the response only.
+            $vehicle->update(['documents' => $docPaths]);
         }
 
         $vehicle->load($this->relations);
@@ -302,6 +300,21 @@ class UserAdController extends Controller
                 $galleryPaths[] = $image->store('ads/gallery', 'public');
             }
             $vehicle->update(['gallery_images' => $galleryPaths]);
+        }
+
+        // Replace documents if new ones are uploaded
+        if ($request->hasFile('documents')) {
+            // Delete old documents
+            if ($vehicle->documents) {
+                foreach ($vehicle->documents as $old) {
+                    Storage::disk('public')->delete($old);
+                }
+            }
+            $docPaths = [];
+            foreach ($request->file('documents') as $doc) {
+                $docPaths[] = $doc->store('ads/documents', 'public');
+            }
+            $vehicle->update(['documents' => $docPaths]);
         }
 
         $vehicle->load($this->relations);

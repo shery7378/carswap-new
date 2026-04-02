@@ -238,6 +238,15 @@ class AdminVehicleController extends Controller
             $vehicle->update(['gallery_images' => $galleryPaths]);
         }
 
+        // Documents — save paths to the documents JSON column
+        if ($request->hasFile('documents')) {
+            $docPaths = [];
+            foreach ($request->file('documents') as $doc) {
+                $docPaths[] = $doc->store('vehicles/documents', 'public');
+            }
+            $vehicle->update(['documents' => $docPaths]);
+        }
+
         $vehicle->load($this->relations);
 
         return response()->json([
@@ -338,6 +347,20 @@ class AdminVehicleController extends Controller
                 $galleryPaths[] = $img->store('vehicles/gallery', 'public');
             }
             $vehicle->update(['gallery_images' => $galleryPaths]);
+        }
+
+        // Replace documents if new ones are uploaded
+        if ($request->hasFile('documents')) {
+            if ($vehicle->documents) {
+                foreach ($vehicle->documents as $old) {
+                    Storage::disk('public')->delete($old);
+                }
+            }
+            $docPaths = [];
+            foreach ($request->file('documents') as $doc) {
+                $docPaths[] = $doc->store('vehicles/documents', 'public');
+            }
+            $vehicle->update(['documents' => $docPaths]);
         }
 
         $vehicle->load($this->relations);

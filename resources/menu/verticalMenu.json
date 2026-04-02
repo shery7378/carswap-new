@@ -193,13 +193,13 @@
     },
     {
       "url": "app/cms/2/edit",
-      "name": "General Terms and Conditions",
+      "name": "Terms & Conditions",
       "icon": "menu-icon icon-base bx bx-edit-alt",
       "slug": "admin.cms.edit.terms"
     },
     {
       "url": "app/cms/3/edit",
-      "name": "Data Protection Notice",
+      "name": "Privacy Notice",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "admin.cms.edit.privacy"
     },

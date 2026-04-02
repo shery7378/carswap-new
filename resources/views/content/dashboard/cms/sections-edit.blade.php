@@ -1,135 +1,151 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Edit CMS Section')
+@section('title', 'CMS Editor - ' . $section->name)
+
+@section('page-style')
+<style>
+    .edit-panel {
+        background: #ffffff;
+        border: 1px solid #eef0f7;
+        border-radius: 0.75rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+    .nav-breadcrumb {
+        font-size: 0.85rem;
+        color: #acb1c6;
+    }
+    .nav-breadcrumb a { color: #696cff; text-decoration: none; }
+    .section-title { font-size: 1.5rem; font-weight: 700; color: #32325d; }
+    .btn-save { background: #696cff; color: #fff; border: none; padding: 0.6rem 1.5rem; border-radius: 8px; font-weight: 600; }
+    .btn-save:hover { background: #5f61e6; color: #fff; transform: translateY(-1px); }
+    .component-card { background: #fcfdfe; border: 1px solid #f0f2ff; border-radius: 8px; padding: 1.25rem; }
+    .component-card:hover { border-color: #696cff; }
+</style>
+@endsection
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">CMS /</span> Edit Section: {{ $section->name }}</h4>
-
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible" role="alert">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+@php
+    $isDocumentMode = in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice']);
+@endphp
+<div class="d-flex justify-content-between align-items-center mb-5 mt-2">
+    <div>
+        <div class="nav-breadcrumb mb-1"><a href="{{ route('admin.cms.index') }}">CMS Dashboard</a> / Editor</div>
+        <h3 class="section-title mb-0">{{ $section->name }}</h3>
     </div>
-@endif
+    <div class="d-flex gap-2">
+        <a href="{{ route('admin.cms.index') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+        <button type="submit" form="section-main-form" class="btn btn-save shadow-sm">Update Section</button>
+    </div>
+</div>
 
-<div class="row">
-    <!-- Section Details -->
-    <div class="col-md-5">
-        <div class="card mb-4">
-            <h5 class="card-header">Section Details</h5>
-            <div class="card-body">
-                <form action="{{ route('admin.cms.update', $section->id) }}" method="POST" enctype="multipart/form-data">
-                    @csrf
-                    @method('PUT')
-                    
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card edit-panel border-0">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-4 pb-2 border-bottom">
+                    <i class="bx bx-cog text-primary fs-4 me-2"></i>
+                    <h6 class="mb-0 fw-bold">Configuration</h6>
+                </div>
+                <form id="section-main-form" action="{{ route('admin.cms.update', $section->id) }}" method="POST">
+                    @csrf @method('PUT')
                     <div class="mb-3">
-                        <label class="form-label" for="name">Internal Name</label>
-                        <input type="text" class="form-control" name="name" value="{{ $section->name }}" required />
+                        <label class="form-label small fw-bold text-muted">Internal Name</label>
+                        <input type="text" name="name" class="form-control border-1" value="{{ $section->name }}" required>
                     </div>
-
                     <div class="mb-3">
-                        <label class="form-label" for="slug">Slug (Unique Key)</label>
-                        <input type="text" class="form-control" name="slug" value="{{ $section->slug }}" required />
+                        <label class="form-label small fw-bold text-muted">Web Slug</label>
+                        <input type="text" name="slug" class="form-control border-1 bg-light" value="{{ $section->slug }}" readonly>
                     </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="title">Public Title</label>
-                        <input type="text" class="form-control" name="title" value="{{ $section->title }}" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="subtitle">Subtitle / Caption</label>
-                        <input type="text" class="form-control" name="subtitle" value="{{ $section->subtitle }}" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label" for="description">Main Description / Content</label>
-                        <textarea class="form-control" name="description" rows="3">{{ $section->description }}</textarea>
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Image Header (Optional)</label>
-                        @if($section->image)
-                            <div class="mb-2">
-                                <img src="{{ asset('storage/'.$section->image) }}" width="100" class="rounded shadow-sm">
-                            </div>
-                        @endif
-                        <input type="file" class="form-control" name="image" />
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Status</label>
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-muted">Status</label>
                         <select name="status" class="form-select">
-                            <option value="1" {{ $section->status ? 'selected' : '' }}>Active</option>
-                            <option value="0" {{ !$section->status ? 'selected' : '' }}>Inactive</option>
+                            <option value="1" {{ $section->status ? 'selected' : '' }}>Publicly Visible</option>
+                            <option value="0" {{ !$section->status ? 'selected' : '' }}>Hidden / Draft</option>
                         </select>
-                    </div>
-
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-primary w-100">Update Section</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
-    <!-- Items List (Grid data as shown in user image) -->
-    <div class="col-md-7">
-        <div class="card mb-4">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Section Items / Grid Elements</h5>
-                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
-                    <i class="bx bx-plus me-1"></i> Add New Item
-                </button>
-            </div>
-            <div class="table-responsive text-nowrap">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Icon/Image</th>
-                            <th>Title</th>
-                            <th>Order</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="table-border-bottom-0">
-                        @forelse($section->items as $item)
-                            <tr>
-                                <td>
-                                    @if($item->icon)
-                                        <div class="badge bg-label-info p-2"><i class="bx {{ $item->icon }}"></i></div>
-                                    @elseif($item->image)
-                                        <img src="{{ asset('storage/'.$item->image) }}" width="32" height="32" class="rounded">
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td>{{ $item->title }}</td>
-                                <td><span class="badge bg-secondary">{{ $item->order }}</span></td>
-                                <td>
-                                    <div class="d-flex">
-                                        <button class="btn btn-sm btn-icon btn-outline-primary me-2 edit-item" 
+    <!-- Right column: Main Editor -->
+    <div class="col-md-8">
+        <div class="card edit-panel border-1 shadow-none">
+            @if($isDocumentMode)
+                <div class="card-header bg-light-template border-bottom p-4">
+                    <div class="d-flex align-items-center">
+                        <i class="bx bxs-file-doc text-warning fs-3 me-2"></i>
+                        <h6 class="mb-0 fw-bold">Professional Document Editor</h6>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <form action="{{ route('admin.cms.items.update-direct') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="section_id" value="{{ $section->id }}">
+                        @php $mainItem = $section->items->first(); @endphp
+                        <input type="hidden" name="item_id" value="{{ $mainItem->id ?? '' }}">
+                        
+                        <div class="doc-editor-wrapper mb-4">
+                            <textarea id="document-editor" name="description" class="form-control border-0">{{ $mainItem->description ?? '' }}</textarea>
+                        </div>
+                        
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-save px-5">
+                                Save Document Content
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            @else
+                <div class="card-header p-4 border-bottom d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                        <i class="bx bx-list-ul text-primary fs-3 me-2"></i>
+                        <h6 class="mb-0 fw-bold">Section Components</h6>
+                    </div>
+                    <button type="button" class="btn btn-outline-primary btn-sm px-3" data-bs-toggle="modal" data-bs-target="#addItemModal">
+                        Add New
+                    </button>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3">
+                        @forelse($section->items->sortBy('order') as $item)
+                            <div class="col-12">
+                                <div class="component-card d-flex align-items-center justify-content-between">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-label-primary p-2 rounded me-3">
+                                            @if($item->icon)
+                                                <i class="bx {{ $item->icon }} fs-4"></i>
+                                            @else
+                                                <i class="bx bx-circle fs-4"></i>
+                                            @endif
+                                        </div>
+                                        <div>
+                                            <h6 class="mb-0 fw-bold text-dark">{{ $item->title }}</h6>
+                                            <small class="text-muted">Index: {{ $item->order }}</small>
+                                        </div>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-icon btn-outline-light text-muted border-1 edit-item" 
                                                 data-item="{{ json_encode($item) }}" data-bs-toggle="modal" data-bs-target="#editItemModal">
-                                            <i class="bx bx-edit"></i>
+                                            <i class="bx bx-edit-alt"></i>
                                         </button>
-                                        <form action="{{ route('admin.cms.items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger shadow-none">
+                                        <form action="{{ route('admin.cms.items.destroy', $item->id) }}" method="POST">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="btn btn-icon btn-outline-light text-danger border-1" onclick="return confirm('Remove?')">
                                                 <i class="bx bx-trash"></i>
                                             </button>
                                         </form>
                                     </div>
-                                </td>
-                            </tr>
+                                </div>
+                            </div>
                         @empty
-                            <tr>
-                                <td colspan="4" class="text-center">No grid items found for this section.</td>
-                            </tr>
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted mb-0">No components defined.</p>
+                            </div>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -213,6 +229,8 @@
     </div>
 </div>
 
+@endsection
+
 @section('page-script')
 <script src="https://cdn.tiny.cloud/1/{{ $tinymce_api_key ?? 'no-api-key' }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 
@@ -239,6 +257,7 @@ document.addEventListener('DOMContentLoaded', function() {
     @if(in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice']))
         // Apply TinyMCE to the Main Item Description
         initTinyMCE('#edit-item-description');
+        initTinyMCE('#document-editor');
         initTinyMCE('textarea[name="description"]'); // For the add item modal
     @endif
 
