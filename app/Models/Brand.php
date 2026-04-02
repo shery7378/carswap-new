@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'image', 'is_active'];
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);

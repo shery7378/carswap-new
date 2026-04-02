@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class VehicleRelationController extends Controller
 {
@@ -42,9 +43,17 @@ class VehicleRelationController extends Controller
         if (!$table)
             abort(404);
 
-        $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+        ]);
 
         $data = ['name' => $request->name, 'created_at' => now(), 'updated_at' => now()];
+
+        // Upload image for brands
+        if ($type === 'brands' && $request->hasFile('image')) {
+            $data['image'] = $request->file('image')->store('brands', 'public');
+        }
 
         // Add brand_id for models
         if ($type === 'models' && $request->has('brand_id')) {
@@ -81,9 +90,23 @@ class VehicleRelationController extends Controller
         $table = $this->getTableName($type);
         if (!$table) abort(404);
 
-        $request->validate(['name' => 'required|string|max:255']);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+        ]);
 
         $data = ['name' => $request->name, 'updated_at' => now()];
+
+        if ($type === 'brands') {
+            if ($request->hasFile('image')) {
+                // Delete old image if it exists
+                $oldItem = DB::table($table)->where('id', $id)->first();
+                if ($oldItem && !empty($oldItem->image)) {
+                    Storage::disk('public')->delete($oldItem->image);
+                }
+                $data['image'] = $request->file('image')->store('brands', 'public');
+            }
+        }
 
         if ($type === 'models' && $request->has('brand_id')) {
             $data['brand_id'] = $request->brand_id;
@@ -129,6 +152,14 @@ class VehicleRelationController extends Controller
         $table = $this->getTableName($type);
         if (!$table)
             abort(404);
+
+        // Delete image if it exists for brands
+        if ($type === 'brands') {
+            $item = DB::table($table)->where('id', $id)->first();
+            if ($item && !empty($item->image)) {
+                Storage::disk('public')->delete($item->image);
+            }
+        }
 
         DB::table($table)->where('id', $id)->delete();
 

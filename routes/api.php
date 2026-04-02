@@ -80,6 +80,7 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'resetPassword'
 Route::get('/vehicle-options', [VehicleOptionController::class, 'getOptions']);
 Route::get('/brands', [VehicleOptionController::class, 'getBrands']);
 Route::get('/brands/{brandId}/models', [VehicleOptionController::class, 'getModels']);
+Route::get('/brands-body-types', [VehicleOptionController::class, 'getBrandsBodyTypes']);
 
 // Public Ads API Routes
 // These routes use UserAdController and are open to all visitors.

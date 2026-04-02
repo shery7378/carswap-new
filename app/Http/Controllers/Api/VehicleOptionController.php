@@ -59,4 +59,15 @@ class VehicleOptionController extends Controller
 
         return response()->json($models);
     }
+
+    /**
+     * Get brands and body types list.
+     */
+    public function getBrandsBodyTypes()
+    {
+        return response()->json([
+            'brands' => Brand::where('is_active', true)->orderBy('name')->get(),
+            'body_types' => BodyType::where('is_active', true)->orderBy('name')->get(),
+        ]);
+    }
 }

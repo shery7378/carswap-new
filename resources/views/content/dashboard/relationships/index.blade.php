@@ -83,7 +83,7 @@
                     </div>
                 @endif
 
-                <form id="addForm" action="{{ route('admin.vehicle-settings.store', $type) }}" method="POST">
+                <form id="addForm" action="{{ route('admin.vehicle-settings.store', $type) }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="mb-4">
                         <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Display Name / Megnevezés') }}</label>
@@ -93,6 +93,17 @@
                                 placeholder="e.g. {{ $type === 'brands' ? 'BMW' : ($type === 'fuel-types' ? 'Hybrid' : 'New Item') }}">
                         </div>
                     </div>
+
+                    @if($type === 'brands')
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Brand Logo / Badge') }}</label>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-image-alt"></i></span>
+                                <input type="file" class="form-control bg-light border-0 px-3 py-2" name="image" id="add_image" accept="image/*">
+                            </div>
+                            <small class="text-muted mt-1 d-block">Recommended: SVG or PNG with transparency</small>
+                        </div>
+                    @endif
 
                     @if($type === 'models')
                         <div class="mb-4">
@@ -141,6 +152,9 @@
                         <thead>
                             <tr class="bg-light">
                                 <th class="ps-4">ID</th>
+                                @if($type === 'brands')
+                                    <th style="width: 50px;">Logo</th>
+                                @endif
                                 <th>Name / Label</th>
                                 @if($type === 'models')
                                     <th>Parent Brand</th>
@@ -153,6 +167,17 @@
                             @forelse($items as $item)
                                 <tr class="transition-all hover-bg-light" data-id="{{ $item->id }}">
                                     <td class="ps-4"><span class="text-muted fw-semibold">#{{ $item->id }}</span></td>
+                                    @if($type === 'brands')
+                                        <td class="logo-cell">
+                                            @if(!empty($item->image))
+                                                <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">
+                                            @else
+                                                <div class="avatar avatar-xs">
+                                                    <span class="avatar-initial rounded bg-label-secondary small"><i class="bx bx-image-alt"></i></span>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    @endif
                                     <td class="name-cell">
                                         <div class="d-flex align-items-center">
                                             <div class="indicator badge rounded-pill bg-{{ $item->is_active ? 'success' : 'secondary' }} me-2 p-1"></div>
@@ -184,6 +209,7 @@
                                             <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
                                                 data-id="{{ $item->id }}"
                                                 data-name="{{ $item->name }}"
+                                                @if($type === 'brands') data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                 @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
                                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Item">
                                                 <i class="bx bx-edit-alt"></i>
@@ -225,7 +251,7 @@
                 <h5 class="modal-title fw-bold text-white"><i class="bx bx-edit-alt me-2"></i>Edit {{ Str::singular($title) }}</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form id="editForm" method="POST">
+            <form id="editForm" method="POST" enctype="multipart/form-data">
                 @csrf
                 @method('PUT')
                 <div class="modal-body p-4">
@@ -233,6 +259,22 @@
                         <label class="form-label fw-bold text-muted small text-uppercase">Identification Label / Name</label>
                         <input type="text" class="form-control border-light shadow-none bg-light" name="name" id="edit_name" required>
                     </div>
+
+                    @if($type === 'brands')
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">Brand Logo</label>
+                            <div class="d-flex align-items-center mb-2" id="edit_image_preview_container">
+                                <img src="" id="edit_image_preview" class="rounded me-3 d-none shadow-xs" style="width: 48px; height: 48px; object-fit: contain; background: #f8f9fa;">
+                                <div id="edit_image_placeholder" class="avatar avatar-md me-3">
+                                    <span class="avatar-initial rounded bg-label-secondary fs-4"><i class="bx bx-image-alt"></i></span>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <input type="file" class="form-control border-light shadow-none bg-light" name="image" id="edit_image" accept="image/*">
+                                    <small class="text-muted mt-1 d-block">Leave empty to keep current logo</small>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
 
                     @if($type === 'models')
                         <div class="mb-3">
@@ -304,14 +346,30 @@
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST',
-                data: form.serialize(),
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     if (response.success) {
                         const item = response.item;
                         const type = '{{ $type }}';
                         let rowHtml = `
                             <tr class="transition-all hover-bg-light" data-id="${item.id}">
-                                <td class="ps-4"><span class="text-muted fw-semibold">#${item.id}</span></td>
+                                <td class="ps-4"><span class="text-muted fw-semibold">#${item.id}</span></td>`;
+
+                        if (type === 'brands') {
+                            const logoSrc = item.image ? `{{ asset('storage') }}/${item.image}` : '';
+                            rowHtml += `
+                                <td class="logo-cell">
+                                    ${item.image ? `<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">` : `
+                                        <div class="avatar avatar-xs">
+                                            <span class="avatar-initial rounded bg-label-secondary small"><i class="bx bx-image-alt"></i></span>
+                                        </div>
+                                    `}
+                                </td>`;
+                        }
+
+                        rowHtml += `
                                 <td class="name-cell">
                                     <div class="d-flex align-items-center">
                                         <div class="indicator badge rounded-pill bg-success me-2 p-1"></div>
@@ -339,6 +397,7 @@
                                     <div class="d-flex justify-content-center gap-2">
                                         <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
                                             data-id="${item.id}" data-name="${item.name}" 
+                                            ${type === 'brands' ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
                                             ${type === 'models' ? `data-brand="${item.brand_id}"` : ''}
                                             data-bs-toggle="tooltip" title="Edit Item">
                                             <i class="bx bx-edit-alt"></i>
@@ -378,10 +437,23 @@
             const id = $(this).data('id');
             const name = $(this).data('name');
             const brandId = $(this).data('brand');
+            const image = $(this).data('image');
             const type = '{{ $type }}';
 
             $('#edit_name').val(name);
             $('#edit_brand_id').val(brandId);
+            
+            if (type === 'brands') {
+                if (image) {
+                    $('#edit_image_preview').attr('src', image).removeClass('d-none');
+                    $('#edit_image_placeholder').addClass('d-none');
+                } else {
+                    $('#edit_image_preview').addClass('d-none');
+                    $('#edit_image_placeholder').removeClass('d-none');
+                }
+                $('#edit_image').val(''); // Clear file input
+            }
+
             $('#editForm').attr('action', `{{ url('/app/vehicle-settings') }}/${type}/${id}`);
             
             const editModal = new bootstrap.Modal(document.getElementById('editModal'));
@@ -395,13 +467,21 @@
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST', // Blade method field handles PUT
-                data: form.serialize(),
+                data: new FormData(form[0]),
+                processData: false,
+                contentType: false,
                 success: function(response) {
                     if (response.success) {
                         const item = response.item;
                         const row = $(`tr[data-id="${item.id}"]`);
                         
                         row.find('.item-name').text(item.name);
+                        
+                        if (type === 'brands' && item.image) {
+                            const logoSrc = `{{ asset('storage') }}/${item.image}`;
+                            row.find('.logo-cell').html(`<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">`);
+                        }
+
                         if (response.brand_name) {
                             row.find('.brand-badge').html(`<i class="bx bx-award me-1 small"></i> ${response.brand_name}`);
                         }
@@ -409,6 +489,7 @@
                         // Update data attributes on edit button
                         const editBtn = row.find('.edit-btn');
                         editBtn.data('name', item.name);
+                        if (item.image) editBtn.data('image', `{{ asset('storage') }}/${item.image}`);
                         if (item.brand_id) editBtn.data('brand', item.brand_id);
 
                         bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
