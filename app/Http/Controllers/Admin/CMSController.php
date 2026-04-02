@@ -135,20 +135,30 @@ class CMSController extends Controller
             'section_id' => 'required|exists:cms_sections,id',
             'item_id' => 'nullable|exists:cms_items,id',
             'description' => 'required|string',
+            'icon' => 'nullable|string',
+            'image' => 'nullable|image',
         ]);
+
+        $itemData = [
+            'description' => $request->description,
+            'icon' => $request->icon,
+        ];
+
+        if ($request->hasFile('image')) {
+            $itemData['image'] = $request->file('image')->store('cms/items', 'public');
+        }
 
         if ($request->filled('item_id')) {
             $item = CMSItem::findOrFail($request->item_id);
-            $item->update([
-                'description' => $request->description
-            ]);
+            if ($request->hasFile('image') && $item->image) {
+                Storage::disk('public')->delete($item->image);
+            }
+            $item->update($itemData);
         } else {
-            CMSItem::create([
-                'section_id' => $request->section_id,
-                'title' => 'Main Content',
-                'description' => $request->description,
-                'order' => 0
-            ]);
+            $itemData['section_id'] = $request->section_id;
+            $itemData['title'] = 'Main Content';
+            $itemData['order'] = 0;
+            CMSItem::create($itemData);
         }
 
         return redirect()->back()->with('success', 'Document content saved successfully.');

@@ -42,10 +42,17 @@ class UserAdController extends Controller
 
         // --- Filtering ---
         $filters = [
-            'brand_id', 'model_id', 'body_type_id', 'fuel_type_id',
-            'transmission_id', 'drive_type_id', 'sales_method_id',
-            'document_type_id', 'vehicle_status_id',
-            'exterior_color_id', 'interior_color_id',
+            'brand_id',
+            'model_id',
+            'body_type_id',
+            'fuel_type_id',
+            'transmission_id',
+            'drive_type_id',
+            'sales_method_id',
+            'document_type_id',
+            'vehicle_status_id',
+            'exterior_color_id',
+            'interior_color_id',
         ];
         foreach ($filters as $filter) {
             if ($request->filled($filter)) {
@@ -85,11 +92,11 @@ class UserAdController extends Controller
 
         // --- Sorting ---
         match ($request->input('sort', 'newest')) {
-                'price_low' => $query->orderBy('price', 'asc'),
-                'price_high' => $query->orderBy('price', 'desc'),
-                'oldest' => $query->orderBy('created_at', 'asc'),
-                default => $query->orderBy('created_at', 'desc'),
-            };
+            'price_low' => $query->orderBy('price', 'asc'),
+            'price_high' => $query->orderBy('price', 'desc'),
+            'oldest' => $query->orderBy('created_at', 'asc'),
+            default => $query->orderBy('created_at', 'desc'),
+        };
 
         $ads = $query->paginate($request->input('limit', 12));
 
@@ -150,8 +157,7 @@ class UserAdController extends Controller
         // Default ad_status for users is 'pending' for approval, unless they explicitly saved it as 'draft'
         if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
             $validated['ad_status'] = 'draft';
-        }
-        else {
+        } else {
             $validated['ad_status'] = 'pending';
         }
 
@@ -266,8 +272,7 @@ class UserAdController extends Controller
         // Reset status to pending for approval if updated, unless saving as draft
         if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
             $validated['ad_status'] = 'draft';
-        }
-        else {
+        } else {
             $validated['ad_status'] = 'pending';
         }
 

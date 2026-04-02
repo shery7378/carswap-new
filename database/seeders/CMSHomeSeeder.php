@@ -14,17 +14,17 @@ class CMSHomeSeeder extends Seeder
         $hero = CMSSection::updateOrCreate(
             ['slug' => 'home-hero'],
             [
-                'name' => 'Home Hero Section',
+                'name' => 'Home Intro Text',
                 'title' => 'Trusted Partner for Car Enthusiasts',
-                'description' => 'CARSWAP is a trusted partner for car enthusiasts looking to swap or sell used cars. On our platform, you can easily upload your vehicle, trade it in, or find a buyer.',
+                'description' => 'This is the main introduction paragraph displayed on the Home Page next to the logo.',
                 'status' => 1,
             ]
         );
 
         CMSItem::updateOrCreate(
-            ['section_id' => $hero->id, 'title' => 'Call to Action'],
+            ['section_id' => $hero->id, 'title' => 'Main Content'],
             [
-                'description' => 'Join the CARSWAP community and make your car transactions seamless!',
+                'description' => '<p>CARSWAP&reg; is a trusted partner for car enthusiasts looking to swap or sell used cars. On our platform, you can easily upload your vehicle, trade it in, or find a buyer.</p><p><br></p><p>Join the CARSWAP&reg; community and make your car transactions seamless!</p>',
                 'order' => 0
             ]
         );
@@ -97,6 +97,35 @@ class CMSHomeSeeder extends Seeder
                 [
                     'description' => $item['description'],
                     'icon' => $item['icon'],
+                    'order' => $item['order']
+                ]
+            );
+        }
+
+        // 3. Home Page Headings
+        $headings = CMSSection::updateOrCreate(
+            ['slug' => 'home-headings'],
+            [
+                'name' => 'Home Page Headings',
+                'title' => 'Home Section Titles',
+                'description' => 'Manage the titles for various layout sections on the home page.',
+                'status' => 1,
+            ]
+        );
+
+        $heading_items = [
+            ['title' => 'Top Cars Header', 'description' => 'New and used cars', 'order' => 1],
+            ['title' => 'Browse By Brands Header', 'description' => 'Browse by Brand', 'order' => 2],
+            ['title' => 'Browse By Design Header', 'description' => '..or By design', 'order' => 3],
+            ['title' => 'Featured Ads Header', 'description' => 'FEATURED ADS', 'order' => 4],
+            ['title' => 'Latest Ads Header', 'description' => 'LATEST ADS', 'order' => 5],
+        ];
+
+        foreach ($heading_items as $item) {
+            CMSItem::updateOrCreate(
+                ['section_id' => $headings->id, 'title' => $item['title']],
+                [
+                    'description' => $item['description'],
                     'order' => $item['order']
                 ]
             );

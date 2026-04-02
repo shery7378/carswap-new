@@ -271,4 +271,10 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::delete('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'destroy'])->name('admin.trade-offers.destroy');
     });
 
+    // NEWSLETTER Module
+    Route::group(['prefix' => 'app/newsletter'], function () {
+        Route::get('/', [\App\Http\Controllers\Admin\NewsletterController::class, 'index'])->name('admin.newsletter.index');
+        Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    });
+
 });
