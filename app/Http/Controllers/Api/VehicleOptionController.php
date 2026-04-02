@@ -70,4 +70,12 @@ class VehicleOptionController extends Controller
             'body_types' => BodyType::where('is_active', true)->orderBy('name')->get(),
         ]);
     }
+
+    /**
+     * Get only body types list.
+     */
+    public function getBodyTypes()
+    {
+        return response()->json(BodyType::where('is_active', true)->orderBy('name')->get());
+    }
 }
