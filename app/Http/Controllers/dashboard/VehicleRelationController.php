@@ -50,9 +50,11 @@ class VehicleRelationController extends Controller
 
         $data = ['name' => $request->name, 'created_at' => now(), 'updated_at' => now()];
 
-        // Upload image for brands
-        if ($type === 'brands' && $request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('brands', 'public');
+        // Upload image for supported types
+        $imageTypes = ['brands', 'body-types'];
+        if (in_array($type, $imageTypes) && $request->hasFile('image')) {
+            $folder = str_replace('-', '_', $type);
+            $data['image'] = $request->file('image')->store($folder, 'public');
         }
 
         // Add brand_id for models
@@ -97,14 +99,16 @@ class VehicleRelationController extends Controller
 
         $data = ['name' => $request->name, 'updated_at' => now()];
 
-        if ($type === 'brands') {
+        $imageTypes = ['brands', 'body-types'];
+        if (in_array($type, $imageTypes)) {
             if ($request->hasFile('image')) {
                 // Delete old image if it exists
                 $oldItem = DB::table($table)->where('id', $id)->first();
                 if ($oldItem && !empty($oldItem->image)) {
                     Storage::disk('public')->delete($oldItem->image);
                 }
-                $data['image'] = $request->file('image')->store('brands', 'public');
+                $folder = str_replace('-', '_', $type);
+                $data['image'] = $request->file('image')->store($folder, 'public');
             }
         }
 
@@ -153,8 +157,9 @@ class VehicleRelationController extends Controller
         if (!$table)
             abort(404);
 
-        // Delete image if it exists for brands
-        if ($type === 'brands') {
+        // Delete image if it exists for supported types
+        $imageTypes = ['brands', 'body-types'];
+        if (in_array($type, $imageTypes)) {
             $item = DB::table($table)->where('id', $id)->first();
             if ($item && !empty($item->image)) {
                 Storage::disk('public')->delete($item->image);

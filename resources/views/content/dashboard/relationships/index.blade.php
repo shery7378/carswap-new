@@ -22,6 +22,7 @@
     $icon = $icons[(string)$type] ?? 'bx-collection';
     $activeCount = $items->where('is_active', 1)->count();
     $inactiveCount = $items->where('is_active', 0)->count();
+    $showImageField = in_array($type, ['brands', 'body-types']);
 @endphp
 
 <!-- TITLE & STATS -->
@@ -94,9 +95,9 @@
                         </div>
                     </div>
 
-                    @if($type === 'brands')
+                    @if($showImageField)
                         <div class="mb-4">
-                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Brand Logo / Badge') }}</label>
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ $type === 'brands' ? __('Brand Logo / Badge') : __('Body Type Icon / Image') }}</label>
                             <div class="input-group input-group-merge shadow-none border-0">
                                 <span class="input-group-text bg-light border-0"><i class="bx bx-image-alt"></i></span>
                                 <input type="file" class="form-control bg-light border-0 px-3 py-2" name="image" id="add_image" accept="image/*">
@@ -152,8 +153,8 @@
                         <thead>
                             <tr class="bg-light">
                                 <th class="ps-4">ID</th>
-                                @if($type === 'brands')
-                                    <th style="width: 50px;">Logo</th>
+                                @if($showImageField)
+                                    <th style="width: 50px;">Icon</th>
                                 @endif
                                 <th>Name / Label</th>
                                 @if($type === 'models')
@@ -167,7 +168,7 @@
                             @forelse($items as $item)
                                 <tr class="transition-all hover-bg-light" data-id="{{ $item->id }}">
                                     <td class="ps-4"><span class="text-muted fw-semibold">#{{ $item->id }}</span></td>
-                                    @if($type === 'brands')
+                                    @if($showImageField)
                                         <td class="logo-cell">
                                             @if(!empty($item->image))
                                                 <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">
@@ -209,7 +210,7 @@
                                             <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
                                                 data-id="{{ $item->id }}"
                                                 data-name="{{ $item->name }}"
-                                                @if($type === 'brands') data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
+                                                @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                 @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
                                                 data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Item">
                                                 <i class="bx bx-edit-alt"></i>
@@ -260,9 +261,9 @@
                         <input type="text" class="form-control border-light shadow-none bg-light" name="name" id="edit_name" required>
                     </div>
 
-                    @if($type === 'brands')
+                    @if($showImageField)
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Brand Logo</label>
+                            <label class="form-label fw-bold text-muted small text-uppercase">Icon / Image</label>
                             <div class="d-flex align-items-center mb-2" id="edit_image_preview_container">
                                 <img src="" id="edit_image_preview" class="rounded me-3 d-none shadow-xs" style="width: 48px; height: 48px; object-fit: contain; background: #f8f9fa;">
                                 <div id="edit_image_placeholder" class="avatar avatar-md me-3">
@@ -270,7 +271,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <input type="file" class="form-control border-light shadow-none bg-light" name="image" id="edit_image" accept="image/*">
-                                    <small class="text-muted mt-1 d-block">Leave empty to keep current logo</small>
+                                    <small class="text-muted mt-1 d-block">Leave empty to keep current image</small>
                                 </div>
                             </div>
                         </div>
@@ -357,7 +358,7 @@
                             <tr class="transition-all hover-bg-light" data-id="${item.id}">
                                 <td class="ps-4"><span class="text-muted fw-semibold">#${item.id}</span></td>`;
 
-                        if (type === 'brands') {
+                        if (type === 'brands' || type === 'body-types') {
                             const logoSrc = item.image ? `{{ asset('storage') }}/${item.image}` : '';
                             rowHtml += `
                                 <td class="logo-cell">
@@ -397,7 +398,7 @@
                                     <div class="d-flex justify-content-center gap-2">
                                         <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
                                             data-id="${item.id}" data-name="${item.name}" 
-                                            ${type === 'brands' ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
+                                            ${(type === 'brands' || type === 'body-types') ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
                                             ${type === 'models' ? `data-brand="${item.brand_id}"` : ''}
                                             data-bs-toggle="tooltip" title="Edit Item">
                                             <i class="bx bx-edit-alt"></i>
@@ -443,7 +444,7 @@
             $('#edit_name').val(name);
             $('#edit_brand_id').val(brandId);
             
-            if (type === 'brands') {
+            if (type === 'brands' || type === 'body-types') {
                 if (image) {
                     $('#edit_image_preview').attr('src', image).removeClass('d-none');
                     $('#edit_image_placeholder').addClass('d-none');
@@ -477,7 +478,7 @@
                         
                         row.find('.item-name').text(item.name);
                         
-                        if (type === 'brands' && item.image) {
+                        if ((type === 'brands' || type === 'body-types') && item.image) {
                             const logoSrc = `{{ asset('storage') }}/${item.image}`;
                             row.find('.logo-cell').html(`<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">`);
                         }
