@@ -10,7 +10,7 @@ class NewsletterController extends Controller
 {
     public function index()
     {
-        $subscribers = NewsletterSubscriber::orderBy('created_at', 'desc')->paginate(50);
+        $subscribers = NewsletterSubscriber::orderBy('created_at', 'desc')->get();
         return view('content.dashboard.newsletter.index', compact('subscribers'));
     }
 
