@@ -176,17 +176,32 @@
       "menuHeader": "Content Management"
     },
     {
-      "url": "app/cms",
-      "name": "Page Content (CMS)",
-      "icon": "menu-icon icon-base bx bx-layout",
-      "slug": "admin.cms.index"
-    },
-    {
       "url": "app/email-templates",
       "name": "Email Templates",
       "icon": "menu-icon icon-base bx bx-envelope",
       "slug": "admin.email-templates.index",
       "permission": "view-email_templates"
+    },
+    {
+      "menuHeader": "Legal & CMS"
+    },
+    {
+      "url": "app/cms",
+      "name": "General CMS Content",
+      "icon": "menu-icon icon-base bx bx-layout",
+      "slug": "admin.cms.index"
+    },
+    {
+      "url": "app/cms/2/edit",
+      "name": "General Terms and Conditions",
+      "icon": "menu-icon icon-base bx bx-edit-alt",
+      "slug": "admin.cms.edit.terms"
+    },
+    {
+      "url": "app/cms/3/edit",
+      "name": "Data Protection Notice",
+      "icon": "menu-icon icon-base bx bx-shield-quarter",
+      "slug": "admin.cms.edit.privacy"
     },
     {
       "menuHeader": "Ügyfélszolgálat"

@@ -56,7 +56,8 @@ class CMSController extends Controller
     public function edit($id)
     {
         $section = CMSSection::with('items')->findOrFail($id);
-        return view('content.dashboard.cms.sections-edit', compact('section'));
+        $tinymce_api_key = \App\Models\Setting::where('key', 'tinymce_api_key')->first()->value ?? 'zhq60pp8shp0wjkatmio4l9686eu1aqofwzmu475rtgnd098';
+        return view('content.dashboard.cms.sections-edit', compact('section', 'tinymce_api_key'));
     }
 
     /**

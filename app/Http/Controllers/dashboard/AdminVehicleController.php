@@ -147,7 +147,7 @@ class AdminVehicleController extends Controller
                 foreach ($request->file('gallery_images') as $image) {
                     $gallery[] = $image->store('vehicles/gallery', 'public');
                 }
-                $validated['gallery_images'] = json_encode($gallery);
+                $validated['gallery_images'] = $gallery;
             }
 
             $validated['is_featured'] = $request->has('is_featured');
@@ -279,7 +279,7 @@ class AdminVehicleController extends Controller
                 foreach ($request->file('gallery_images') as $image) {
                     $gallery[] = $image->store('vehicles/gallery', 'public');
                 }
-                $validated['gallery_images'] = json_encode($gallery);
+                $validated['gallery_images'] = $gallery;
             }
 
             $validated['is_featured'] = $request->has('is_featured');
@@ -305,8 +305,13 @@ class AdminVehicleController extends Controller
                 Storage::disk('public')->delete($vehicle->main_image);
             }
 
-            if ($vehicle->gallery_images && is_array(json_decode($vehicle->gallery_images, true))) {
-                foreach (json_decode($vehicle->gallery_images, true) as $img) {
+            $gallery = $vehicle->gallery_images;
+            if (is_string($gallery)) {
+                $gallery = json_decode($gallery, true);
+            }
+            
+            if (is_array($gallery)) {
+                foreach ($gallery as $img) {
                     Storage::disk('public')->delete($img);
                 }
             }

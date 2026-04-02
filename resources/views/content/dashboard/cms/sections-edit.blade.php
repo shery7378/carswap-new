@@ -213,17 +213,53 @@
     </div>
 </div>
 
+@section('page-script')
+<script src="https://cdn.tiny.cloud/1/{{ $tinymce_api_key ?? 'no-api-key' }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+
 <script>
-document.querySelectorAll('.edit-item').forEach(button => {
-    button.addEventListener('click', function() {
-        const item = JSON.parse(this.dataset.item);
-        const form = document.querySelector('#editItemForm');
-        form.action = `/app/cms/items/${item.id}`;
-        
-        document.querySelector('#edit-item-title').value = item.title;
-        document.querySelector('#edit-item-description').value = item.description;
-        document.querySelector('#edit-item-icon').value = item.icon || '';
-        document.querySelector('#edit-item-order').value = item.order || 0;
+document.addEventListener('DOMContentLoaded', function() {
+    // Shared TinyMCE Init for both modal areas
+    function initTinyMCE(selector) {
+        tinymce.init({
+            selector: selector,
+            plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
+            menubar: false,
+            height: 350,
+            skin: 'oxide',
+            setup: function (editor) {
+                editor.on('change', function () {
+                    editor.save();
+                });
+            }
+        });
+    }
+
+    // Apply only if the sections were specifically intended as legal/long document sections
+    @if(in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice']))
+        // Apply TinyMCE to the Main Item Description
+        initTinyMCE('#edit-item-description');
+        initTinyMCE('textarea[name="description"]'); // For the add item modal
+    @endif
+
+    document.querySelectorAll('.edit-item').forEach(button => {
+        button.addEventListener('click', function() {
+            const item = JSON.parse(this.dataset.item);
+            const form = document.querySelector('#editItemForm');
+            form.action = `/app/cms/items/${item.id}`;
+            
+            document.querySelector('#edit-item-title').value = item.title;
+            const descField = document.querySelector('#edit-item-description');
+            
+            if (tinymce.get('edit-item-description')) {
+                tinymce.get('edit-item-description').setContent(item.description || '');
+            } else {
+                descField.value = item.description;
+            }
+
+            document.querySelector('#edit-item-icon').value = item.icon || '';
+            document.querySelector('#edit-item-order').value = item.order || 0;
+        });
     });
 });
 </script>
