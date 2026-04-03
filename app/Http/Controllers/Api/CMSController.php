@@ -67,4 +67,35 @@ class CMSController extends Controller
             'data' => $item
         ]);
     }
+
+    /**
+     * Get all active blog posts directly as a list.
+     */
+    public function getBlogPosts()
+    {
+        $section = CMSSection::where('slug', 'blog-posts')->first();
+
+        if (!$section) {
+            return response()->json([
+                'success' => true,
+                'data' => []
+            ]);
+        }
+
+        $posts = \App\Models\CMSItem::where('section_id', $section->id)
+            ->where('status', true)
+            ->orderBy('order')
+            ->get();
+
+        $posts->each(function($item) {
+            if ($item->image) {
+                $item->image_url = asset('storage/' . $item->image);
+            }
+        });
+
+        return response()->json([
+            'success' => true,
+            'data' => $posts
+        ]);
+    }
 }
