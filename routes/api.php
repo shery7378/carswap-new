@@ -41,6 +41,7 @@ Route::get('/subscriptions/plans', [SubscriptionController::class, 'index']);
 Route::get('/settings', [\App\Http\Controllers\Api\SettingController::class, 'index']);
 
 // Public CMS API (Dynamic Sections)
+Route::get('/cms/items/{id}', [\App\Http\Controllers\Api\CMSController::class, 'showItem']);
 Route::get('/cms/{slug}', [\App\Http\Controllers\Api\CMSController::class, 'show']);
 
 // Public API route for registration
