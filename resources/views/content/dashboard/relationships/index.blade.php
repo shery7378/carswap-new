@@ -465,6 +465,7 @@
         $('#editForm').on('submit', function(e) {
             e.preventDefault();
             const form = $(this);
+            const type = '{{ $type }}';
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST', // Blade method field handles PUT
