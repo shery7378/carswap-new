@@ -104,36 +104,42 @@ class SubscriptionCreate extends Controller
 
         $plan = Plan::findOrFail($id);
 
-        if ($request->billing_period == 'both') {
-            // Find or create the other one
-            // We update the current one, and either find its sibling or create a new one
-            $this->handleBothUpdate($request, $plan);
+        try {
+            \Illuminate\Support\Facades\DB::beginTransaction();
 
-            return redirect()->route('app-subscription-plans')->with('success', 'Plans updated successfully');
+            if ($request->billing_period == 'both') {
+                $this->handleBothUpdate($request, $plan);
+            } else {
+                $this->updatePlan($request, $plan, $request->billing_period);
+            }
+
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->route('app-subscription-plans')->with('success', 'Plan updated successfully');
+            
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            return back()->with('error', 'Error updating plan: ' . $e->getMessage());
         }
-
-        $this->updatePlan($request, $plan, $request->billing_period);
-        return redirect()->route('app-subscription-plans')->with('success', 'Plan updated successfully');
     }
 
     private function handleBothUpdate(Request $request, Plan $currentPlan)
     {
         // 1. Update the Current Plan
-        // If current plan is monthly, we update it as monthly
-        // If current plan is yearly, we update it as yearly
         $currentPeriod = $currentPlan->billing_period;
         $this->updatePlan($request, $currentPlan, $currentPeriod);
 
         // 2. Find or Create the Counterpart
         $counterPartPeriod = ($currentPeriod == 'monthly') ? 'yearly' : 'monthly';
-        $counterPartSlug = Str::slug($request->title) . '-' . $counterPartPeriod;
+        
+        // Use a more robust base-slug search to find siblings on live servers
+        $baseName = preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($currentPlan->slug));
+        $counterPartSlug = $baseName . '-' . $counterPartPeriod;
 
         $counterPart = Plan::where('slug', $counterPartSlug)->first();
 
         if ($counterPart) {
             $this->updatePlan($request, $counterPart, $counterPartPeriod);
         } else {
-            // Create it from scratch using createPlan
             $this->createPlan($request, $counterPartPeriod);
         }
     }
