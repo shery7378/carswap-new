@@ -42,7 +42,7 @@ class SettingsGeneral extends Controller
         }
 
         // Clear the cache so new settings are immediately applied
-        \Illuminate\Support\Facades\Cache::forget('global_settings');
+        \Illuminate\Support\Facades\Cache::forget('site_settings');
 
         return redirect()->back()->with('success', 'General settings updated successfully.');
     }

@@ -88,7 +88,7 @@
     @php
       $monthly = $group->where('billing_period', 'monthly')->first();
       $yearly = $group->where('billing_period', 'yearly')->first();
-      $main = $monthly ?? $yearly; // The primary display plan
+      $main = $monthly ?: ($yearly ?: $group->first()); 
     @endphp
     <div class="col-lg-4 col-md-6 mb-4">
       <div class="card pricing-card h-100 border-{{ $main->color }}">
@@ -170,10 +170,13 @@
           <div class="d-grid gap-2">
             @if($monthly)
             <div class="d-flex gap-2 align-items-center">
+              <span class="badge bg-label-{{ $monthly->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
+                 {{ $monthly->is_active ? 'LIVE' : 'OFF' }}
+              </span>
               <a href="{{ route('app-subscription-plan-edit', $monthly->id) }}" class="btn btn-sm btn-outline-primary flex-grow-1">
                 Edit Monthly
               </a>
-              <button class="btn btn-sm btn-label-{{ $monthly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $monthly->id }}">
+              <button class="btn btn-sm btn-label-{{ $monthly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $monthly->id }}" title="{{ $monthly->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
               </button>
             </div>
@@ -181,10 +184,13 @@
 
             @if($yearly)
             <div class="d-flex gap-2 align-items-center">
+              <span class="badge bg-label-{{ $yearly->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
+                 {{ $yearly->is_active ? 'LIVE' : 'OFF' }}
+              </span>
               <a href="{{ route('app-subscription-plan-edit', $yearly->id) }}" class="btn btn-sm btn-outline-info flex-grow-1">
                 Edit Yearly
               </a>
-              <button class="btn btn-sm btn-label-{{ $yearly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $yearly->id }}">
+              <button class="btn btn-sm btn-label-{{ $yearly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $yearly->id }}" title="{{ $yearly->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
               </button>
             </div>
