@@ -253,14 +253,39 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <i class="bx bx-expand me-2 text-warning fs-4"></i>
-                                            <span class="fw-semibold">Expandable Slots</span>
+                                            <div>
+                                                <span class="d-block fw-semibold">Expandable ad slots</span>
+                                                <small class="text-muted">Allow garage expansion?</small>
+                                            </div>
                                         </div>
                                     </td>
                                     <td>
-                                        <input type="number" name="expandable_slots" class="form-control text-center" value="{{ isset($plan) ? $plan->expandable_slots : old('expandable_slots', 0) }}">
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input type="checkbox" name="expandable_slots" class="form-check-input scale-150" value="1" {{ (isset($plan) && $plan->expandable_slots == 1) ? 'checked' : '' }}>
+                                        </div>
                                     </td>
                                     <td class="yearly-only-col" style="display: none;">
-                                        <input type="number" name="yearly_expandable_slots" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_expandable_slots', 0) }}">
+                                        <div class="form-check form-switch d-flex justify-content-center">
+                                            <input type="checkbox" name="yearly_expandable_slots" class="form-check-input scale-150 border-info" value="1">
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-star me-2 text-primary fs-4"></i>
+                                            <div>
+                                                <span class="d-block fw-semibold">Highlighting Limit</span>
+                                                <small class="text-muted">No. of ads per month</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="highlight_ad_count" class="form-control text-center" value="{{ isset($plan) ? $plan->highlight_ad_count : old('highlight_ad_count', 0) }}">
+                                    </td>
+                                    <td class="yearly-only-col" style="display: none;">
+                                        <input type="number" name="yearly_highlight_ad_count" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_highlight_ad_count', 0) }}">
                                     </td>
                                 </tr>
                                 <tr>

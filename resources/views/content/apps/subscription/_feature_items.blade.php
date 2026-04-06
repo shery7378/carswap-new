@@ -1,4 +1,4 @@
-{{-- Service Limits from Plan --}}
+{{-- 1. Active Ads --}}
 @if($plan->active_ads_limit != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
@@ -6,32 +6,40 @@
     </div>
 @endif
 
+{{-- 2. Garage Slots --}}
 @if($plan->garage_ads_limit != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>{{ $plan->garage_ads_limit == -1 ? 'Unlimited' : $plan->garage_ads_limit }} Garage Spaces</span>
+    <span>{{ $plan->garage_ads_limit == -1 ? 'Unlimited' : $plan->garage_ads_limit }} garage slots</span>
     </div>
 @endif
 
-@if($plan->hd_images != 0)
+{{-- 3. Expandable Slots --}}
+@if($plan->expandable_slots > 0)
+    <div class="feature-item">
+    <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
+    <span>Expandable active ad slots</span>
+    </div>
+@endif
+
+{{-- 4. Dynamic HD Logic (Priority) --}}
+@if($plan->hd_images_count > 0)
+    <div class="feature-item">
+    <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
+    <span>HD images, {{ $plan->hd_images_count }} instead of {{ $plan->hd_images_normal_count }} — usable for {{ $plan->hd_images_ad_count }} {{ Str::plural('ad', $plan->hd_images_ad_count) }} per month</span>
+    </div>
+@elseif($plan->hd_images != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
     <span>{{ $plan->hd_images == -1 ? 'Unlimited' : $plan->hd_images }} HD Images</span>
     </div>
 @endif
 
-{{-- Dynamic HD Logic Display --}}
-@if($plan->hd_images_count > 0 && $plan->hd_images_count != $plan->hd_images_normal_count)
+{{-- 5. Highlighting Logic --}}
+@if($plan->highlight_ad_count > 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span class="fw-medium">HD images, {{ $plan->hd_images_count }} instead of {{ $plan->hd_images_normal_count }} — usable for {{ $plan->hd_images_ad_count }} {{ Str::plural('ad', $plan->hd_images_ad_count) }} per month</span>
-    </div>
-@endif
-
-@if($plan->expandable_slots > 0)
-    <div class="feature-item">
-    <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>{{ $plan->expandable_slots }} Expandable Slots</span>
+    <span>Highlighting — usable for {{ $plan->highlight_ad_count }} {{ Str::plural('ad', $plan->highlight_ad_count) }} per month</span>
     </div>
 @endif
 
