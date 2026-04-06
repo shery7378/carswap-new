@@ -84,73 +84,80 @@
   </div>
 
   <div class="row">
-    @foreach($plans as $plan)
-    <div class="col-lg-3 col-md-6 mb-4">
-      <div class="card pricing-card h-100 border-{{ $plan->color }}">
+    @foreach($plans as $slug => $group)
+    @php
+      $monthly = $group->where('billing_period', 'monthly')->first();
+      $yearly = $group->where('billing_period', 'yearly')->first();
+      $main = $monthly ?? $yearly; // The primary display plan
+    @endphp
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card pricing-card h-100 border-{{ $main->color }}">
         <div class="pricing-header text-center">
-          @if($plan->is_popular)
-          <span class="badge bg-{{ $plan->color }} popular-badge rounded-pill shadow-sm">Popular Choice</span>
+          @if($main->is_popular)
+          <span class="badge bg-{{ $main->color }} popular-badge rounded-pill shadow-sm">Popular Choice</span>
           @endif
           <div class="avatar avatar-md mx-auto mb-3">
-             <span class="avatar-initial rounded-circle bg-label-{{ $plan->color }}">
-                <i class="bx {{ $plan->slug === 'free' ? 'bx-gift' : ($plan->slug === 'partner-package' ? 'bx-buildings' : ($plan->slug === 'several-cars' ? 'bx-car' : 'bx-crown')) }} fs-3"></i>
+             <span class="avatar-initial rounded-circle bg-label-{{ $main->color }}">
+                <i class="bx {{ $main->slug === 'free' ? 'bx-gift' : ($main->slug === 'partner-package' ? 'bx-buildings' : ($main->slug === 'several-cars' ? 'bx-car' : 'bx-crown')) }} fs-3"></i>
              </span>
           </div>
-          <h4 class="fw-bold mb-0">{{ $plan->name }}</h4>
-          <p class="text-muted small mt-1 mb-0">{{ $plan->description }}</p>
-          <div class="price-box">
-            <span class="h2 fw-extrabold text-{{ $plan->color }} mb-0">{{ number_format($plan->price, 0) }}</span>
-            <span class="ms-1 text-muted fw-medium">HUF</span>
-            <span class="ms-1 text-muted small">/{{ $plan->billing_period }}</span>
+          <h4 class="fw-bold mb-0">{{ $main->name }}</h4>
+          <p class="text-muted small mt-1 mb-0">{{ $main->description }}</p>
+          
+          {{-- Dual Pricing Display --}}
+          <div class="d-flex justify-content-center gap-4 mt-3">
+             @if($monthly)
+             <div class="text-center">
+                <div class="price-box mb-0">
+                  <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($monthly->price, 0) }}</span>
+                </div>
+                <small class="text-muted">HUF / Monthly</small>
+             </div>
+             @endif
+             
+             @if($yearly)
+             <div class="text-center border-start ps-4">
+                <div class="price-box mb-0">
+                   <span class="h3 fw-extrabold text-info mb-0">{{ number_format($yearly->price, 0) }}</span>
+                </div>
+                <small class="text-muted">HUF / Yearly</small>
+             </div>
+             @endif
           </div>
         </div>
         
         <div class="card-body p-0">
           <div class="feature-list px-4 mt-3">
-            {{-- Service Limits (Auto-generated from columns) --}}
-            @if($plan->active_ads_limit != 0)
+            {{-- Service Limits from Main Plan --}}
+            @if($main->active_ads_limit != 0)
               <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-                <span>{{ $plan->active_ads_limit == -1 ? 'Unlimited' : $plan->active_ads_limit }} Active Ads</span>
+                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
+                <span>{{ $main->active_ads_limit == -1 ? 'Unlimited' : $main->active_ads_limit }} Active Ads</span>
               </div>
             @endif
 
-            @if($plan->garage_ads_limit != 0)
+            @if($main->garage_ads_limit != 0)
               <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-                <span>{{ $plan->garage_ads_limit == -1 ? 'Unlimited' : $plan->garage_ads_limit }} Garage Spaces</span>
+                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
+                <span>{{ $main->garage_ads_limit == -1 ? 'Unlimited' : $main->garage_ads_limit }} Garage Spaces</span>
               </div>
             @endif
 
-            @if($plan->expandable_slots > 0)
+            @if($main->hd_images != 0)
               <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-                <span>{{ $plan->expandable_slots }} Expandable Slots</span>
-              </div>
-            @endif
-
-            @if($plan->hd_images != 0)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-                <span>{{ $plan->hd_images == -1 ? 'Unlimited' : $plan->hd_images }} HD Images</span>
-              </div>
-            @endif
-
-            @if($plan->highlight_ads)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-                <span>Highlight Ads Included</span>
+                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
+                <span>{{ $main->hd_images == -1 ? 'Unlimited' : $main->hd_images }} HD Images</span>
               </div>
             @endif
 
             {{-- Manual Features Loop --}}
             @php
-              $features = is_string($plan->features) ? json_decode($plan->features, true) : $plan->features;
+              $features = is_string($main->features) ? json_decode($main->features, true) : $main->features;
             @endphp
             @if(is_array($features))
               @foreach($features as $feature)
               <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
+                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
                 <span>{{ $feature }}</span>
               </div>
               @endforeach
@@ -160,34 +167,39 @@
 
         <div class="plan-actions px-4 pb-4 mt-auto">
           @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-subscriptions', 'admin-guard'))
-          <div class="d-flex gap-2">
-            <a href="{{ route('app-subscription-plan-edit', $plan->id) }}" class="btn btn-outline-{{ $plan->color }} flex-grow-1">
-              <i class="bx bx-edit-alt small me-1"></i> Edit
-            </a>
-            <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} p-2 toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
-              <i class="bx bx-power-off"></i>
-            </button>
-            <button class="btn btn-label-danger p-2 delete-plan" data-id="{{ $plan->id }}" title="Delete Package">
-              <i class="bx bx-trash"></i>
+          <div class="d-grid gap-2">
+            @if($monthly)
+            <div class="d-flex gap-2 align-items-center">
+              <a href="{{ route('app-subscription-plan-edit', $monthly->id) }}" class="btn btn-sm btn-outline-primary flex-grow-1">
+                Edit Monthly
+              </a>
+              <button class="btn btn-sm btn-label-{{ $monthly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $monthly->id }}">
+                <i class="bx bx-power-off"></i>
+              </button>
+            </div>
+            @endif
+
+            @if($yearly)
+            <div class="d-flex gap-2 align-items-center">
+              <a href="{{ route('app-subscription-plan-edit', $yearly->id) }}" class="btn btn-sm btn-outline-info flex-grow-1">
+                Edit Yearly
+              </a>
+              <button class="btn btn-sm btn-label-{{ $yearly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $yearly->id }}">
+                <i class="bx bx-power-off"></i>
+              </button>
+            </div>
+            @endif
+
+            <button class="btn btn-sm btn-label-danger w-100 mt-1 delete-plan" data-id="{{ $main->id }}">
+               <i class="bx bx-trash me-1"></i> Delete Package Card
             </button>
           </div>
           @endif
-          <div class="mt-3 text-center">
-            @if($plan->is_active)
-              <span class="badge bg-label-success small"><i class="bx bxs-circle me-1" style="font-size: 6px;"></i> Live Package</span>
-            @else
-              <span class="badge bg-label-secondary small">Disabled</span>
-            @endif
-          </div>
-          <div class="mt-2 text-center">
-            <small class="text-muted d-block" style="font-size: 0.7rem;">
-              <i class="bx bx-calendar me-1"></i>Created: {{ $plan->created_at->format('M d, Y') }}
+          
+          <div class="mt-3 text-center border-top pt-2">
+            <small class="text-muted d-block" style="font-size: 0.65rem;">
+              <i class="bx bx-calendar me-1"></i>Card ID Prefix: {{ $slug }}
             </small>
-            @if($plan->updated_at && $plan->updated_at->ne($plan->created_at))
-            <small class="text-muted d-block" style="font-size: 0.7rem;">
-              <i class="bx bx-edit me-1"></i>Updated: {{ $plan->updated_at->format('M d, Y h:i A') }}
-            </small>
-            @endif
           </div>
         </div>
       </div>
