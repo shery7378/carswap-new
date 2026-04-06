@@ -9,38 +9,65 @@ class SubscriptionController extends Controller
 {
     public function index(Request $request)
     {
-        $plans = \App\Models\Plan::where('is_active', true)
+        // Get only active plans, ordered by price (monthly)
+        $allPlans = \App\Models\Plan::where('is_active', true)
             ->orderBy('price', 'asc')
             ->get();
 
-        $activePlanId = null;
-        $activeSubscription = null;
-
         $user = $request->user('sanctum');
+        $activePlanId = null;
         if ($user) {
-            $activeSubscription = $user->load('activeSubscription.plan')->activeSubscription;
-            $activePlanId = $activeSubscription?->plan_id;
+            $user->load('activeSubscription');
+            $activePlanId = $user->activeSubscription?->plan_id;
         }
 
-        // Attach per-plan metadata for the frontend to use
-        $plans = $plans->map(function ($plan) use ($activePlanId) {
-            $isCurrent = $activePlanId && $plan->id === $activePlanId;
+        // Group and structure for frontend "Dual Pricing" cards
+        $groupedPlans = $allPlans->groupBy(function($item) {
+             return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
+        })->map(function($group) use ($activePlanId) {
+             $monthly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['month', 'monthly']))->first();
+             $yearly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['year', 'yearly']))->first();
+             $main = $monthly ?? ($yearly ?? $group->first());
 
-            $plan->is_current       = $isCurrent;
-            $plan->is_disabled      = $isCurrent;
-            $plan->status_message   = $isCurrent ? 'Already subscribed' : null;
-            // Frontend should redirect here when user clicks Upgrade
-            $plan->upgrade_url      = $isCurrent ? null : '/account/billing?upgrade=' . $plan->slug;
-
-            return $plan;
-        });
+             return [
+                 'slug_base' => preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($main->slug)),
+                 'name' => $main->name,
+                 'description' => $main->description,
+                 'color' => $main->color,
+                 'is_popular' => (bool) $main->is_popular,
+                 'monthly' => $monthly ? $this->formatPlanData($monthly, $activePlanId) : null,
+                 'yearly' => $yearly ? $this->formatPlanData($yearly, $activePlanId) : null,
+             ];
+        })->values();
 
         return response()->json([
-            'success'             => true,
-            'message'             => 'Subscription plans retrieved successfully.',
-            'data'                => $plans,
-            'active_subscription' => $activeSubscription,
+            'success' => true,
+            'message' => 'Subscription plans retrieved successfully.',
+            'data' => $groupedPlans,
         ]);
+    }
+
+    /**
+     * Helper to format individual plan data for the API
+     */
+    private function formatPlanData($plan, $activePlanId)
+    {
+        $isCurrent = $activePlanId && $plan->id === $activePlanId;
+        
+        return [
+            'id' => $plan->id,
+            'slug' => $plan->slug,
+            'price' => (float) $plan->price,
+            'billing_period' => $plan->billing_period,
+            'active_ads_limit' => $plan->active_ads_limit,
+            'garage_ads_limit' => $plan->garage_ads_limit,
+            'hd_images' => $plan->hd_images,
+            'expandable_slots' => $plan->expandable_slots,
+            'features' => is_string($plan->features) ? json_decode($plan->features, true) : $plan->features,
+            'is_current' => $isCurrent,
+            'status_message' => $isCurrent ? 'Current Plan' : null,
+            'upgrade_url' => '/account/billing?upgrade=' . $plan->slug
+        ];
     }
 
     public function mySubscription(Request $request)
