@@ -173,62 +173,56 @@
       ]
     },
     {
-      "menuHeader": "Content Management"
-    },
-    {
-      "url": "app/email-templates",
-      "name": "Email Templates",
-      "icon": "menu-icon icon-base bx bx-envelope",
-      "slug": "admin.email-templates.index",
-      "permission": "view-email_templates"
-    },
-    {
-      "menuHeader": "Legal & CMS"
-    },
-    {
-      "url": "app/cms",
-      "name": "General CMS Content",
+      "name": "CMS Manager",
       "icon": "menu-icon icon-base bx bx-layout",
-      "slug": "admin.cms.index"
+      "slug": "admin.cms",
+      "submenu": [
+        {
+          "url": "app/cms",
+          "name": "Section List",
+          "slug": "admin.cms.index"
+        },
+        {
+          "url": "app/cms/2/edit",
+          "name": "Terms & Conditions",
+          "slug": "admin.cms.edit.terms"
+        },
+        {
+          "url": "app/cms/3/edit",
+          "name": "Privacy Notice",
+          "slug": "admin.cms.edit.privacy"
+        },
+        {
+          "url": "app/email-templates",
+          "name": "Email Templates",
+          "slug": "admin.email-templates.index"
+        }
+      ]
     },
     {
-      "url": "app/cms/2/edit",
-      "name": "Terms & Conditions",
-      "icon": "menu-icon icon-base bx bx-edit-alt",
-      "slug": "admin.cms.edit.terms"
+      "name": "Customer Support",
+      "icon": "menu-icon icon-base bx bx-support",
+      "slug": "admin.support",
+      "submenu": [
+        {
+          "url": "app/newsletter",
+          "name": "Newsletter",
+          "slug": "admin.newsletter.index"
+        },
+        {
+          "url": "app/contacts",
+          "name": "Contact Messages",
+          "slug": "admin.contacts.index"
+        },
+        {
+          "url": "app/trade-offers",
+          "name": "Trade Offers",
+          "slug": "admin.trade-offers.index"
+        }
+      ]
     },
     {
-      "url": "app/cms/3/edit",
-      "name": "Privacy Notice",
-      "icon": "menu-icon icon-base bx bx-shield-quarter",
-      "slug": "admin.cms.edit.privacy"
-    },
-    {
-      "menuHeader": "Ügyfélszolgálat"
-    },
-    {
-      "url": "app/newsletter",
-      "name": "Hírlevél",
-      "icon": "menu-icon icon-base bx bx-news",
-      "slug": "admin.newsletter.index"
-    },
-    {
-      "url": "app/contacts",
-      "name": "Kapcsolat",
-      "icon": "menu-icon icon-base bx bx-chat",
-      "slug": "admin.contacts.index"
-    },
-    {
-      "url": "app/trade-offers",
-      "name": "Csereajánlatok",
-      "icon": "menu-icon icon-base bx bx-transfer",
-      "slug": "admin.trade-offers.index"
-    },
-    {
-      "menuHeader": "Adminisztráció"
-    },
-    {
-      "name": "Access Control",
+      "name": "Admin Management",
       "icon": "menu-icon icon-base bx bx-shield-quarter",
       "slug": "app-access-control",
       "permission": "view-roles",

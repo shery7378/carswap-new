@@ -5,45 +5,94 @@
   style="background: #0f172a !important; color: #94a3b8; border-right: 1px solid rgba(255,255,255,0.05);">
 
   <style>
+    :root {
+      --menu-bg: #0f172a;
+      --menu-accent: #6366f1;
+      --menu-text: #94a3b8;
+      --menu-hover: rgba(255, 255, 255, 0.08);
+      --menu-active: #6366f1;
+    }
+
+    #layout-menu {
+      background: var(--menu-bg) !important;
+      color: var(--menu-text);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      font-family: 'Outfit', sans-serif;
+    }
+
     #layout-menu .menu-inner {
-      padding: 1rem 0 !important;
+      padding: 1.25rem 0 !important;
     }
 
     #layout-menu .menu-item .menu-link {
-      margin: 0.25rem 0.75rem !important;
-      width: calc(100% - 1.5rem) !important;
-      border-radius: 0.5rem !important;
-      transition: all 0.2s ease;
-      padding: 0.625rem 1rem !important;
+      margin: 0.25rem 1rem !important;
+      width: calc(100% - 2rem) !important;
+      border-radius: 10px !important;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 0.75rem 1.25rem !important;
+      color: var(--menu-text) !important;
     }
 
-    /* Parent menu when open */
-    #layout-menu .menu-item.open>.menu-link {
-      background-color: rgba(255, 255, 255, 0.05) !important;
+    /* Hover State */
+    #layout-menu .menu-link:hover {
+      background: var(--menu-hover) !important;
+      color: #fff !important;
+      transform: translateX(4px);
+    }
+
+    #layout-menu .menu-link:hover i {
       color: #fff !important;
     }
 
-    /* The actual active page (Leaf node) */
+    /* Active Page (Leaf Node) */
     #layout-menu .menu-item.active:not(.open)>.menu-link {
-      background-color: #6366f1 !important;
+      background: var(--menu-active) !important;
       color: #fff !important;
       font-weight: 600;
-      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+      box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
     }
 
-    #layout-menu .menu-link:hover {
-      background: rgba(255, 255, 255, 0.08) !important;
+    #layout-menu .menu-item.active:not(.open) i {
       color: #fff !important;
     }
 
-    /* Hide the submenu dot icons that overlap text */
-    #layout-menu .menu-sub .menu-link::before {
-      display: none !important;
+    /* Open parent item */
+    #layout-menu .menu-item.open>.menu-link {
+      background: rgba(255, 255, 255, 0.03) !important;
+      color: #fff !important;
+    }
+
+    #layout-menu .menu-item.open>.menu-link i {
+      color: #fff !important;
+    }
+
+    /* Submenu styling */
+    #layout-menu .menu-sub {
+      background: transparent !important;
+      padding-top: 0.25rem;
+      padding-bottom: 0.5rem;
+    }
+
+    #layout-menu .menu-sub .menu-link {
+      padding-left: 3.5rem !important;
+      opacity: 0.8;
+      font-size: 0.875rem;
+    }
+
+    #layout-menu .menu-sub .menu-link:hover {
+      opacity: 1;
+    }
+
+    #layout-menu .menu-sub .menu-item.active .menu-link {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.05) !important;
+      color: var(--menu-active) !important;
     }
 
     #layout-menu .menu-header {
-      margin-top: 1.5rem !important;
-      margin-bottom: 0.5rem !important;
+      margin-top: 2rem !important;
+      margin-bottom: 0.75rem !important;
+      opacity: 0.5;
     }
 
     #layout-menu .menu-header::before {
@@ -51,47 +100,34 @@
     }
 
     #layout-menu .menu-header-text {
-      color: #71717a !important;
-      letter-spacing: 0.1em;
+      color: #94a3b8 !important;
+      letter-spacing: 0.15em;
       font-weight: 700;
-      margin: 0 1.5rem !important;
+      margin: 0 1.75rem !important;
       text-transform: uppercase;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
     }
 
     #layout-menu .menu-link i {
-      font-size: 1.25rem !important;
-      margin-right: 12px;
+      font-size: 1.35rem !important;
+      margin-right: 14px;
       color: #64748b;
+      transition: color 0.2s ease;
     }
 
-    #layout-menu .active .menu-link i,
-    #layout-menu .menu-link:hover i {
-      color: #fff !important;
-    }
-
-    .app-brand {
-      padding: 2rem 1rem !important;
-      height: auto !important;
-      justify-content: center !important;
+    #layout-menu .app-brand {
+      padding: 1.5rem 1.25rem !important;
+      justify-content: flex-start !important;
     }
 
     .app-brand .app-brand-text {
-      color: #fff !important;
-      margin-left: 0.5rem !important;
+      font-size: 1.25rem !important;
+      letter-spacing: -0.5px;
+      font-weight: 800 !important;
     }
 
     .menu-inner-shadow {
       display: none !important;
-    }
-
-    /* Submenu indentation */
-    #layout-menu .menu-sub {
-      background: transparent !important;
-    }
-
-    #layout-menu .menu-sub .menu-link {
-      padding-left: 3rem !important;
     }
   </style>
 
