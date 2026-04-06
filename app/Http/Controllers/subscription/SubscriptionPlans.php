@@ -69,4 +69,14 @@ class SubscriptionPlans extends Controller
 
         return redirect()->back()->with('success', 'Plan updated successfully!');
     }
+    public function destroy($id)
+    {
+        try {
+            $plan = \App\Models\Plan::findOrFail($id);
+            $plan->delete();
+            return response()->json(['success' => true, 'message' => 'Plan deleted successfully.']);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Failed to delete plan.'], 500);
+        }
+    }
 }

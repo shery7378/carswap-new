@@ -154,6 +154,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/subscription/plans', [SubscriptionPlans::class, 'index'])->name('app-subscription-plans');
         Route::patch('/app/subscription/plans/{id}/status', [SubscriptionPlans::class, 'updateStatus'])->name('app-subscription-plans-status');
         Route::put('/app/subscription/plans/{id}/update', [SubscriptionPlans::class, 'update'])->name('app-subscription-plans-update');
+        Route::delete('/app/subscription/plans/{id}', [SubscriptionPlans::class, 'destroy'])->name('app-subscription-plans-destroy');
         Route::get('/app/subscription/payments', [SubscriptionPayments::class, 'index'])->name('app-subscription-payments');
 
         Route::get('/app/subscription/view/{id}', [SubscriptionList::class, 'show'])->name('app-subscription-view');

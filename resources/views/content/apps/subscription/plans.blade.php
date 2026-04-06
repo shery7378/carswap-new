@@ -167,6 +167,9 @@
             <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} p-2 toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
               <i class="bx bx-power-off"></i>
             </button>
+            <button class="btn btn-label-danger p-2 delete-plan" data-id="{{ $plan->id }}" title="Delete Package">
+              <i class="bx bx-trash"></i>
+            </button>
           </div>
           @endif
           <div class="mt-3 text-center">
@@ -229,6 +232,57 @@ $(document).on('click', '.toggle-plan-status', function() {
                 text: 'Something went wrong while updating the plan status'
             });
             button.prop('disabled', false);
+        }
+    });
+});
+$(document).on('click', '.delete-plan', function() {
+    const planId = $(this).data('id');
+    const button = $(this);
+    
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This will permanently delete the subscription plan!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#ff3e1d',
+        cancelButtonColor: '#8592a3',
+        confirmButtonText: 'Yes, delete it!',
+        customClass: {
+            confirmButton: 'btn btn-danger me-3',
+            cancelButton: 'btn btn-label-secondary'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            button.prop('disabled', true);
+            $.ajax({
+                url: `/app/subscription/plans/${planId}`,
+                method: 'DELETE',
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Deleted!',
+                            text: response.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        }).then(() => {
+                            location.reload();
+                        });
+                    }
+                },
+                error: function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to delete the plan.'
+                    });
+                    button.prop('disabled', false);
+                }
+            });
         }
     });
 });
