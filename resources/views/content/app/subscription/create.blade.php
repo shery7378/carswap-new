@@ -257,6 +257,23 @@
                                         <input type="number" name="yearly_expandable_slots" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_expandable_slots', 0) }}">
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-camera me-2 text-danger fs-4"></i>
+                                            <div>
+                                                <span class="d-block fw-semibold">HD Images</span>
+                                                <small class="text-muted text-nowrap">-1 for unlimited</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="hd_images" class="form-control text-center" value="{{ isset($plan) ? $plan->hd_images : old('hd_images', 0) }}">
+                                    </td>
+                                    <td class="yearly-only-col" style="display: none;">
+                                        <input type="number" name="yearly_hd_images" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_hd_images', 0) }}">
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
