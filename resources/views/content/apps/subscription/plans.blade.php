@@ -86,8 +86,8 @@
   <div class="row">
     @foreach($plans as $slug => $group)
     @php
-      $monthly = $group->where('billing_period', 'monthly')->first();
-      $yearly = $group->where('billing_period', 'yearly')->first();
+      $monthly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['month', 'monthly']))->first();
+      $yearly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['year', 'yearly']))->first();
       $main = $monthly ?: ($yearly ?: $group->first()); 
     @endphp
     <div class="col-lg-4 col-md-6 mb-4">

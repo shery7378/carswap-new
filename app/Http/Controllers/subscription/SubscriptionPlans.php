@@ -9,12 +9,24 @@ class SubscriptionPlans extends Controller
 {
     public function index()
     {
-        $allPlans = \App\Models\Plan::all();
+        // Get all plans ordered by most recently updated to keep relevant versions
+        $allPlans = \App\Models\Plan::orderBy('updated_at', 'desc')->get();
         
-        // Group by base name or slug (extremely flexible grouping)
+        // Group and deduplicate to prevent "month vs monthly" issues
         $plans = $allPlans->groupBy(function($item) {
-             // Remove all common billing suffixes to find the base slug
              return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
+        })->map(function($group) {
+             // For each group, only keep the latest version of each period type
+             $deduplicated = collect();
+             
+             $monthly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['month', 'monthly']))->first();
+             if ($monthly) $deduplicated->push($monthly);
+             
+             $yearly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['year', 'yearly']))->first();
+             if ($yearly) $deduplicated->push($yearly);
+             
+             // If no monthly/yearly found, keep whatever was in there
+             return $deduplicated->isNotEmpty() ? $deduplicated : $group;
         });
 
         return view('content.apps.subscription.plans', compact('plans'));
