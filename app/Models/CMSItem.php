@@ -15,6 +15,7 @@ class CMSItem extends Model
         'icon',
         'image',
         'link',
+        'date',
         'order',
         'status',
     ];

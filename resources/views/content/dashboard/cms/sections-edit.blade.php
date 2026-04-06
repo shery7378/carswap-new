@@ -220,6 +220,10 @@
                         <input type="text" name="title" class="form-control" placeholder="e.g. Easy Exchange" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Date (Optional)</label>
+                        <input type="date" name="date" class="form-control">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Description</label>
                         <textarea name="description" class="form-control" rows="3" required></textarea>
                     </div>
@@ -262,6 +266,10 @@
                         <input type="text" id="edit-item-title" name="title" class="form-control" required>
                     </div>
                     <div class="mb-3">
+                        <label class="form-label">Date (Optional)</label>
+                        <input type="date" id="edit-item-date" name="date" class="form-control">
+                    </div>
+                    <div class="mb-3">
                         <label class="form-label">Description</label>
                         <textarea id="edit-item-description" name="description" class="form-control" rows="3"
                             required></textarea>
@@ -293,34 +301,36 @@
 @endsection
 
 @section('page-script')
-    <script src="https://cdn.tiny.cloud/1/{{ $tinymce_api_key ?? 'no-api-key' }}/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <!-- Summernote Rich Text Editor -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Shared TinyMCE Init for both modal areas
-            function initTinyMCE(selector) {
-                tinymce.init({
-                    selector: selector,
-                    plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-                    toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
-                    menubar: false,
+            // Shared Summernote Init
+            function initSummernote(selector) {
+                $(selector).summernote({
+                    placeholder: 'Write your content here...',
+                    tabsize: 2,
                     height: 350,
-                    skin: 'oxide',
-                    setup: function (editor) {
-                        editor.on('change', function () {
-                            editor.save();
-                        });
-                    }
+                    toolbar: [
+                        ['style', ['style']],
+                        ['font', ['bold', 'underline', 'clear']],
+                        ['color', ['color']],
+                        ['para', ['ul', 'ol', 'paragraph']],
+                        ['table', ['table']],
+                        ['insert', ['link', 'image']],
+                        ['view', ['fullscreen', 'codeview', 'help']]
+                    ]
                 });
             }
 
             // Apply only if the sections were specifically intended as legal/long document sections
             @if(in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice', 'home-hero']))
-                // Apply TinyMCE to the Main Item Description
-                initTinyMCE('#edit-item-description');
-                initTinyMCE('#document-editor');
-                initTinyMCE('textarea[name="description"]'); // For the add item modal
+                // Apply Summernote
+                initSummernote('#edit-item-description');
+                initSummernote('#document-editor');
+                initSummernote('textarea[name="description"]'); // For the add item modal
             @endif
 
             document.querySelectorAll('.edit-item').forEach(button => {
@@ -330,12 +340,14 @@
                     form.action = `/app/cms/items/${item.id}`;
 
                     document.querySelector('#edit-item-title').value = item.title;
-                    const descField = document.querySelector('#edit-item-description');
-
-                    if (tinymce.get('edit-item-description')) {
-                        tinymce.get('edit-item-description').setContent(item.description || '');
+                    if (document.querySelector('#edit-item-date')) {
+                        document.querySelector('#edit-item-date').value = item.date ? item.date.split('T')[0] : '';
+                    }
+                    const descField = $('#edit-item-description');
+                    if (descField.length) {
+                        descField.summernote('code', item.description || '');
                     } else {
-                        descField.value = item.description;
+                        document.querySelector('#edit-item-description').value = item.description;
                     }
 
                     document.querySelector('#edit-item-icon').value = item.icon || '';

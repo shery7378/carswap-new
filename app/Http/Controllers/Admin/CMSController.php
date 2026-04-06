@@ -111,6 +111,7 @@ class CMSController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
+            'date' => 'nullable|date',
             'order' => 'integer',
         ]);
 
@@ -172,6 +173,7 @@ class CMSController extends Controller
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
             'icon' => 'nullable|string',
+            'date' => 'nullable|date',
             'order' => 'integer',
         ]);
 

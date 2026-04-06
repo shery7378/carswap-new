@@ -168,12 +168,16 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
     }
 
-    /* TinyMCE Container */
+    /* Summernote Container */
     .editor-wrapper {
         border-radius: 16px;
         overflow: hidden;
         border: 2px solid #ebedf2;
         transition: border-color 0.3s ease;
+    }
+    
+    .note-editor.note-frame {
+        border: none !important;
     }
     
     .editor-wrapper:focus-within {
@@ -325,19 +329,7 @@
                 </div>
             </div>
 
-            <!-- API Key Dev Settings -->
-            <div class="dev-settings-box">
-                <form action="{{ route('admin.email-templates.settings.update') }}" method="POST">
-                    @csrf
-                    <label class="d-flex align-items-center text-muted fw-semibold mb-2" style="font-size: 12px;">
-                        <i class="bx bxs-key me-2 text-warning"></i> TinyMCE API Key
-                    </label>
-                    <div class="input-group input-group-sm">
-                        <input type="text" name="tinymce_api_key" class="form-control" value="{{ $tinymce_api_key ?? '' }}" placeholder="Enter Key">
-                        <button type="submit" class="btn btn-outline-primary">Update</button>
-                    </div>
-                </form>
-            </div>
+
 
         </div>
 
@@ -420,38 +412,43 @@
 @endsection
 
 @section('page-script')
-<script src="https://cdn.tiny.cloud/1/{{ $tinymce_api_key ?? 'no-api-key' }}/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const visualBtn = document.getElementById('visual-btn');
         const codeBtn = document.getElementById('code-btn');
-        const bodyTextarea = document.getElementById('email-body');
+        const bodyTextarea = $('#email-body');
 
-        if (bodyTextarea) {
-            tinymce.init({
-                selector: '#email-body',
-                plugins: 'advlist autolink lists link image charmap preview anchor searchreplace visualblocks code fullscreen insertdatetime media table help wordcount',
-                toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | removeformat | code',
-                menubar: false,
+        if (bodyTextarea.length) {
+            bodyTextarea.summernote({
+                placeholder: 'Type your email content...',
                 height: 500,
-                skin: 'oxide',
-                border_radius: 16,
-                setup: function (editor) {
-                    editor.on('change', function () {
-                        editor.save();
-                    });
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'image']],
+                    ['view', ['fullscreen', 'codeview', 'help']]
+                ],
+                callbacks: {
+                    onChange: function(contents) {
+                        bodyTextarea.val(contents);
+                    }
                 }
             });
 
             visualBtn.addEventListener('click', function() {
-                tinymce.execCommand('mceAddEditor', true, 'email-body');
+                bodyTextarea.summernote('codeview.deactivate');
                 visualBtn.classList.add('active');
                 codeBtn.classList.remove('active');
             });
 
             codeBtn.addEventListener('click', function() {
-                tinymce.execCommand('mceRemoveEditor', true, 'email-body');
+                bodyTextarea.summernote('codeview.activate');
                 codeBtn.classList.add('active');
                 visualBtn.classList.remove('active');
             });

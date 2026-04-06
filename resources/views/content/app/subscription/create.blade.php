@@ -134,9 +134,12 @@
 
                     <div class="col-md-6">
                         <label class="form-label fw-semibold">Billing Cycle</label>
-                        <select name="billing_period" class="form-select">
-                            <option value="monthly" {{ (isset($plan) && $plan->billing_period == 'yearly') ? '' : 'selected' }}>Monthly</option>
-                            <option value="yearly" {{ (isset($plan) && $plan->billing_period == 'yearly') ? 'selected' : '' }}>Yearly</option>
+                        <select name="billing_period" id="billing_period" class="form-select">
+                            <option value="monthly" {{ (isset($plan) && $plan->billing_period == 'monthly') ? 'selected' : '' }}>Monthly Only</option>
+                            <option value="yearly" {{ (isset($plan) && $plan->billing_period == 'yearly') ? 'selected' : '' }}>Yearly Only</option>
+                            @if(!isset($plan))
+                                <option value="both">Both (Create Two Separate Packages)</option>
+                            @endif
                         </select>
                     </div>
 
@@ -177,81 +180,134 @@
         </div>
 
         {{-- ═══════════════════════════════════════════ --}}
-        {{-- SECTION 2: Package Services                 --}}
+        {{-- SECTION 2: Package Services & Features      --}}
         {{-- ═══════════════════════════════════════════ --}}
-        <div class="card section-card mb-4">
-            <div class="card-header d-flex align-items-center gap-3">
-                <div class="section-icon bg-label-success">
-                    <i class="bx bx-package"></i>
+        <div class="card section-card mb-4" id="package-config-card">
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="section-icon bg-label-success">
+                        <i class="bx bx-package"></i>
+                    </div>
+                    <h6 class="mb-0">Package Configurations</h6>
                 </div>
-                <h6 class="mb-0">Package Services</h6>
+                <div id="mode-badge">
+                    <span class="badge bg-label-primary">Single Package Mode</span>
+                </div>
             </div>
             <div class="card-body pt-4">
-
-                {{-- Service Limits --}}
-                <label class="form-label fw-semibold mb-3">Service Limits</label>
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <div class="service-toggle-card text-center">
-                            <i class="bx bx-list-plus text-primary fs-3 mb-2"></i>
-                            <label class="form-label fw-semibold d-block">Active Ads Limit</label>
-                            <input type="number" name="active_ads_limit" class="form-control text-center"
-                                   value="{{ isset($plan) ? $plan->active_ads_limit : old('active_ads_limit', 5) }}"
-                                   placeholder="-1 = unlimited">
-                            <small class="text-muted">-1 for unlimited</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="service-toggle-card text-center">
-                            <i class="bx bx-car text-success fs-3 mb-2"></i>
-                            <label class="form-label fw-semibold d-block">Garage Ads Limit</label>
-                            <input type="number" name="garage_ads_limit" class="form-control text-center"
-                                   value="{{ isset($plan) ? $plan->garage_ads_limit : old('garage_ads_limit', 10) }}"
-                                   placeholder="-1 = unlimited">
-                            <small class="text-muted">-1 for unlimited</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="service-toggle-card text-center">
-                            <i class="bx bx-expand text-warning fs-3 mb-2"></i>
-                            <label class="form-label fw-semibold d-block">Expandable Slots</label>
-                            <input type="number" name="expandable_slots" class="form-control text-center"
-                                   value="{{ isset($plan) ? $plan->expandable_slots : old('expandable_slots', 0) }}">
-                        </div>
+                
+                {{-- Comparison Table for Limits --}}
+                <div class="mb-5">
+                    <h5 class="fw-bold mb-3"><i class="bx bx-list-check me-1"></i> Service Limits</h5>
+                    <div class="table-responsive">
+                        <table class="table table-bordered align-middle">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th style="width: 40%">Limit Description</th>
+                                    <th id="th-monthly" class="text-center">Monthly Package</th>
+                                    <th id="th-yearly" class="text-center text-info" style="display: none;">Yearly Package</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-list-plus me-2 text-primary fs-4"></i>
+                                            <div>
+                                                <span class="d-block fw-semibold">Active Ads Limit</span>
+                                                <small class="text-muted text-nowrap">-1 for unlimited</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="active_ads_limit" class="form-control text-center" value="{{ isset($plan) ? $plan->active_ads_limit : old('active_ads_limit', 5) }}">
+                                    </td>
+                                    <td class="yearly-only-col" style="display: none;">
+                                        <input type="number" name="yearly_active_ads_limit" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_active_ads_limit', 10) }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-car me-2 text-success fs-4"></i>
+                                            <div>
+                                                <span class="d-block fw-semibold">Garage Ads Limit</span>
+                                                <small class="text-muted text-nowrap">-1 for unlimited</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="garage_ads_limit" class="form-control text-center" value="{{ isset($plan) ? $plan->garage_ads_limit : old('garage_ads_limit', 10) }}">
+                                    </td>
+                                    <td class="yearly-only-col" style="display: none;">
+                                        <input type="number" name="yearly_garage_ads_limit" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_garage_ads_limit', 20) }}">
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <i class="bx bx-expand me-2 text-warning fs-4"></i>
+                                            <span class="fw-semibold">Expandable Slots</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="expandable_slots" class="form-control text-center" value="{{ isset($plan) ? $plan->expandable_slots : old('expandable_slots', 0) }}">
+                                    </td>
+                                    <td class="yearly-only-col" style="display: none;">
+                                        <input type="number" name="yearly_expandable_slots" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_expandable_slots', 0) }}">
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
-
-
-                {{-- Plan Features (text list) --}}
-                <label class="form-label fw-semibold mb-2">
-                    <i class="bx bx-check-double text-success me-1"></i> Plan Features (Display List)
-                </label>
-                <p class="text-muted small mb-3">These features will be displayed as bullet points on the pricing card.</p>
-
-                <div id="features-wrapper">
-                    @if(isset($plan) && is_array($plan->features))
-                        @foreach($plan->features as $feature)
-                        <div class="feature-item d-flex gap-2 mb-2">
-                            <input type="text" name="features[]" class="form-control" value="{{ $feature }}">
-                            <button type="button" class="btn btn-outline-danger btn-sm remove-feature">
-                                <i class="bx bx-trash"></i>
+                {{-- Side-by-Side Features --}}
+                <div class="row g-4">
+                    <div id="monthly-features-col" class="col-md-12">
+                        <div class="p-3 border rounded">
+                            <h6 class="fw-bold mb-3 d-flex align-items-center">
+                                <i class="bx bx-check-double text-success me-2"></i> Monthly Features
+                            </h6>
+                            <div id="monthly-features-wrapper">
+                                @php
+                                    $mFeatures = (isset($plan) && is_array($plan->features)) ? $plan->features : (old('features', ['24/7 Customer Support']));
+                                @endphp
+                                @foreach($mFeatures as $feature)
+                                    <div class="feature-item d-flex gap-2 mb-2">
+                                        <input type="text" name="features[]" class="form-control" value="{{ $feature }}" placeholder="e.g. Standard Support">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-feature"><i class="bx bx-trash"></i></button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" class="btn btn-outline-primary btn-sm mt-2 add-feature-btn" data-target="monthly-features-wrapper" data-prefix="">
+                                <i class="bx bx-plus me-1"></i> Add Feature
                             </button>
                         </div>
-                        @endforeach
-                    @else
-                        <div class="feature-item d-flex gap-2 mb-2">
-                            <input type="text" name="features[]" class="form-control" placeholder="e.g. 24/7 Customer Support">
-                            <button type="button" class="btn btn-outline-danger btn-sm remove-feature">
-                                <i class="bx bx-trash"></i>
+                    </div>
+
+                    <div id="yearly-features-col" class="col-md-6" style="display: none;">
+                        <div class="p-3 border border-info rounded bg-label-info bg-opacity-10">
+                            <h6 class="fw-bold mb-3 d-flex align-items-center text-info">
+                                <i class="bx bx-star me-2"></i> Yearly Features (Premium Add-ons)
+                            </h6>
+                            <div id="yearly-features-wrapper">
+                                @php
+                                    $yFeatures = old('yearly_features', ['Everything in Monthly', 'VIP Priority Support']);
+                                @endphp
+                                @foreach($yFeatures as $feature)
+                                    <div class="feature-item d-flex gap-2 mb-2">
+                                        <input type="text" name="yearly_features[]" class="form-control border-info" value="{{ $feature }}" placeholder="e.g. Premium Support">
+                                        <button type="button" class="btn btn-outline-danger btn-sm remove-feature"><i class="bx bx-trash"></i></button>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <button type="button" class="btn btn-outline-info btn-sm mt-2 add-feature-btn" data-target="yearly-features-wrapper" data-prefix="yearly_">
+                                <i class="bx bx-plus me-1"></i> Add Yearly Feature
                             </button>
                         </div>
-                    @endif
+                    </div>
                 </div>
-
-                <button type="button" class="btn btn-outline-primary btn-sm mt-2" id="add-feature">
-                    <i class="bx bx-plus me-1"></i> Add Feature
-                </button>
 
             </div>
         </div>
@@ -326,28 +382,108 @@
 
 
 @section('page-script')
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
 
-    const addBtn = document.getElementById('add-feature');
-    const wrapper = document.getElementById('features-wrapper');
+    const billingPeriod = document.getElementById('billing_period');
+    const yearlyCols = document.querySelectorAll('.yearly-only-col');
+    const thYearly = document.getElementById('th-yearly');
+    const thMonthly = document.getElementById('th-monthly');
+    const monthlyFeaturesCol = document.getElementById('monthly-features-col');
+    const yearlyFeaturesCol = document.getElementById('yearly-features-col');
+    const modeBadge = document.getElementById('mode-badge');
 
-    addBtn.addEventListener('click', function () {
+    function updateVisibility() {
+        const val = billingPeriod.value;
+        
+        if (val === 'both') {
+            // BOTH MODE
+            yearlyCols.forEach(col => col.style.display = 'table-cell');
+            thYearly.style.display = 'table-cell';
+            thMonthly.innerText = 'Monthly Package';
+            monthlyFeaturesCol.classList.replace('col-md-12', 'col-md-6');
+            yearlyFeaturesCol.style.display = 'block';
+            modeBadge.innerHTML = '<span class="badge bg-label-success animated pulse infinite">Dual Creation Mode</span>';
+        } else if (val === 'monthly') {
+            // MONTHLY ONLY
+            yearlyCols.forEach(col => col.style.display = 'none');
+            thYearly.style.display = 'none';
+            thMonthly.innerText = 'Service Value';
+            monthlyFeaturesCol.classList.replace('col-md-6', 'col-md-12');
+            yearlyFeaturesCol.style.display = 'none';
+            modeBadge.innerHTML = '<span class="badge bg-label-primary">Single Package (Monthly)</span>';
+        } else if (val === 'yearly') {
+            // YEARLY ONLY
+            yearlyCols.forEach(col => col.style.display = 'none');
+            thYearly.style.display = 'none';
+            thMonthly.innerText = 'Service Value (Yearly)';
+            monthlyFeaturesCol.classList.replace('col-md-6', 'col-md-12');
+            yearlyFeaturesCol.style.display = 'none';
+            modeBadge.innerHTML = '<span class="badge bg-label-info">Single Package (Yearly)</span>';
+        }
+    }
 
-        const div = document.createElement('div');
-        div.className = "feature-item d-flex gap-2 mb-2";
+    if (billingPeriod) {
+        billingPeriod.addEventListener('change', updateVisibility);
+        
+        // Also listen for library-specific events (like Select2)
+        if (typeof jQuery !== 'undefined') {
+            $(billingPeriod).on('change', updateVisibility);
+            $(billingPeriod).on('select2:select', updateVisibility);
+        }
+        
+        // Initial check
+        updateVisibility();
+        
+        // Extra safety: check every 500ms for the first 2 seconds in case of async init
+        let checks = 0;
+        const interval = setInterval(() => {
+            updateVisibility();
+            if (++checks > 4) clearInterval(interval);
+        }, 500);
+    }
 
-        div.innerHTML = `
-            <input type="text" name="features[]" class="form-control" placeholder="e.g. Priority Support">
-            <button type="button" class="btn btn-outline-danger btn-sm remove-feature">
-                <i class="bx bx-trash"></i>
-            </button>
-        `;
-
-        wrapper.appendChild(div);
+    // Initialize Summernote for description
+    $('textarea[name="description"]').summernote({
+        placeholder: 'Enter plan description...',
+        tabsize: 2,
+        height: 120,
+        toolbar: [
+            ['style', ['style']],
+            ['font', ['bold', 'underline', 'clear']],
+            ['color', ['color']],
+            ['para', ['ul', 'ol', 'paragraph']],
+            ['insert', ['link']],
+            ['view', ['codeview']]
+        ]
     });
 
-    wrapper.addEventListener('click', function(e) {
+    // Feature management
+    document.addEventListener('click', function(e) {
+        // Add Feature
+        if (e.target.closest('.add-feature-btn')) {
+            const btn = e.target.closest('.add-feature-btn');
+            const targetId = btn.getAttribute('data-target');
+            const prefix = btn.getAttribute('data-prefix') || '';
+            const wrapper = document.getElementById(targetId);
+
+            const div = document.createElement('div');
+            div.className = "feature-item d-flex gap-2 mb-2";
+
+            div.innerHTML = `
+                <input type="text" name="${prefix}features[]" class="form-control" placeholder="e.g. Priority Support">
+                <button type="button" class="btn btn-outline-danger btn-sm remove-feature">
+                    <i class="bx bx-trash"></i>
+                </button>
+            `;
+
+            wrapper.appendChild(div);
+        }
+
+        // Remove Feature
         if (e.target.closest('.remove-feature')) {
             e.target.closest('.feature-item').remove();
         }
