@@ -117,7 +117,7 @@ class SubscriptionController extends Controller
                 'id'              => $subscription->id,
                 'status'          => $subscription->status,
                 'amount'          => $subscription->amount,
-                'duration'        => $subscription->duration,
+                'duration'        => $subscription->duration ?: (in_array(strtolower($plan->billing_period), ['year', 'yearly']) ? 'Yearly' : 'Monthly'),
                 'starts_at'       => $subscription->starts_at?->toDateTimeString(),
                 'ends_at'         => $subscription->ends_at?->toDateTimeString(),
                 'next_billing_at' => $subscription->next_billing_at?->toDateTimeString(),
