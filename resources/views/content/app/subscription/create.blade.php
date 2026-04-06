@@ -418,50 +418,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const monthlyFeaturesCol = document.getElementById('monthly-features-col');
     const yearlyFeaturesCol = document.getElementById('yearly-features-col');
     const dualModeAlert = document.getElementById('dual-mode-alert');
+    const modeBadge = document.getElementById('mode-badge');
 
     function updateVisibility() {
+        if (!billingPeriod) return;
         const val = billingPeriod.value;
         const isBoth = (val === 'both');
         
         // Handle Alerts/Badges
-        dualModeAlert.style.setProperty('display', isBoth ? 'flex' : 'none', isBoth ? '' : 'important');
+        if (dualModeAlert) {
+            dualModeAlert.style.setProperty('display', isBoth ? 'flex' : 'none', 'important');
+        }
         
         if (isBoth) {
             // BOTH MODE
             yearlyCols.forEach(col => col.style.display = 'table-cell');
-            thYearly.style.display = 'table-cell';
-            thMonthly.innerText = 'Monthly Package';
+            if (thYearly) thYearly.style.display = 'table-cell';
+            if (thMonthly) thMonthly.innerText = 'Monthly Package';
             
             // Features Grid
-            monthlyFeaturesCol.classList.remove('col-md-12');
-            monthlyFeaturesCol.classList.add('col-md-6');
-            yearlyFeaturesCol.style.display = 'block';
+            if (monthlyFeaturesCol) {
+                monthlyFeaturesCol.classList.remove('col-md-12');
+                monthlyFeaturesCol.classList.add('col-md-6');
+            }
+            if (yearlyFeaturesCol) yearlyFeaturesCol.style.display = 'block';
             
-            modeBadge.innerHTML = '<span class="badge bg-label-success animated pulse infinite">Dual Creation Mode</span>';
-        } else if (val === 'monthly') {
-            // MONTHLY ONLY
+            if (modeBadge) modeBadge.innerHTML = '<span class="badge bg-label-success animated pulse infinite">Dual Creation Mode</span>';
+        } else {
+            // SINGLE MODE
             yearlyCols.forEach(col => col.style.display = 'none');
-            thYearly.style.display = 'none';
-            thMonthly.innerText = 'Service Value';
+            if (thYearly) thYearly.style.display = 'none';
+            if (yearlyFeaturesCol) yearlyFeaturesCol.style.display = 'none';
             
-            // Features Grid
-            monthlyFeaturesCol.classList.remove('col-md-6');
-            monthlyFeaturesCol.classList.add('col-md-12');
-            yearlyFeaturesCol.style.display = 'none';
-            
-            modeBadge.innerHTML = '<span class="badge bg-label-primary">Single Package (Monthly)</span>';
-        } else if (val === 'yearly') {
-            // YEARLY ONLY
-            yearlyCols.forEach(col => col.style.display = 'none');
-            thYearly.style.display = 'none';
-            thMonthly.innerText = 'Service Value (Yearly)';
-            
-            // Features Grid
-            monthlyFeaturesCol.classList.remove('col-md-6');
-            monthlyFeaturesCol.classList.add('col-md-12');
-            yearlyFeaturesCol.style.display = 'none';
-            
-            modeBadge.innerHTML = '<span class="badge bg-label-info">Single Package (Yearly)</span>';
+            if (monthlyFeaturesCol) {
+                monthlyFeaturesCol.classList.remove('col-md-6');
+                monthlyFeaturesCol.classList.add('col-md-12');
+            }
+
+            if (val === 'monthly') {
+                if (thMonthly) thMonthly.innerText = 'Service Value';
+                if (modeBadge) modeBadge.innerHTML = '<span class="badge bg-label-primary">Single Package (Monthly)</span>';
+            } else if (val === 'yearly') {
+                if (thMonthly) thMonthly.innerText = 'Service Value (Yearly)';
+                if (modeBadge) modeBadge.innerHTML = '<span class="badge bg-label-info">Single Package (Yearly)</span>';
+            }
         }
     }
 
