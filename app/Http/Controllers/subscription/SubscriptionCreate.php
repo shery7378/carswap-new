@@ -75,6 +75,12 @@ class SubscriptionCreate extends Controller
             'expandable_slots' => $request->input($prefix . 'expandable_slots') ?? 0,
             'highlight_ads' => $request->has('highlight_ads') ? 1 : 0,
             'hd_images' => $request->input($prefix . 'hd_images') ?? 0,
+            
+            // Special HD Logic
+            'hd_images_count' => $request->input($prefix . 'hd_images_count') ?? 6,
+            'hd_images_normal_count' => $request->input($prefix . 'hd_images_normal_count') ?? 6,
+            'hd_images_ad_count' => $request->input($prefix . 'hd_images_ad_count') ?? 1,
+
             'is_popular' => $request->has('is_popular'),
             'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map('trim', $request->input($prefix . 'features')))) : [],
             'billing_period' => $period,

@@ -269,7 +269,7 @@
                                             <i class="bx bx-camera me-2 text-danger fs-4"></i>
                                             <div>
                                                 <span class="d-block fw-semibold">HD Images</span>
-                                                <small class="text-muted text-nowrap">-1 for unlimited</small>
+                                                <small class="text-muted">Direct Image Limit</small>
                                             </div>
                                         </div>
                                     </td>
@@ -278,6 +278,42 @@
                                     </td>
                                     <td class="yearly-only-col" style="display: none;">
                                         <input type="number" name="yearly_hd_images" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_hd_images', 0) }}">
+                                    </td>
+                                </tr>
+
+                                {{-- COMPACT HD LOGIC SECTION --}}
+                                <tr class="bg-light">
+                                    <td colspan="3" class="py-2 text-center small text-muted text-uppercase fw-bold ls-1">
+                                        <i class="bx bx-star me-1"></i> Special HD Logic (Dynamic Marketing String)
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="ms-3">
+                                            <span class="d-block fw-semibold text-danger">HD Marketing Value</span>
+                                            <small class="text-muted">e.g. 12 instead of 6 — usable for 2 ads</small>
+                                        </div>
+                                    </td>
+                                    <td colspan="2">
+                                        <div class="input-group">
+                                            <input type="number" name="hd_images_count" class="form-control" placeholder="12" value="{{ isset($plan) ? $plan->hd_images_count : old('hd_images_count', 0) }}">
+                                            <span class="input-group-text">Instead of</span>
+                                            <input type="number" name="hd_images_normal_count" class="form-control" placeholder="6" value="{{ isset($plan) ? $plan->hd_images_normal_count : old('hd_images_normal_count', 0) }}">
+                                            <span class="input-group-text">For</span>
+                                            <input type="number" name="hd_images_ad_count" class="form-control" placeholder="2" value="{{ isset($plan) ? $plan->hd_images_ad_count : old('hd_images_ad_count', 0) }}">
+                                            <span class="input-group-text">Ads</span>
+                                        </div>
+                                        <div class="yearly-only-col mt-2 d-flex gap-2" style="display: none;">
+                                            <span class="badge bg-label-info">Yearly Yearly Logic:</span>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" name="yearly_hd_images_count" class="form-control border-info" placeholder="24" value="{{ old('yearly_hd_images_count', 0) }}">
+                                                <span class="input-group-text border-info">Instead of</span>
+                                                <input type="number" name="yearly_hd_images_normal_count" class="form-control border-info" placeholder="12" value="{{ old('yearly_hd_images_normal_count', 0) }}">
+                                                <span class="input-group-text border-info">For</span>
+                                                <input type="number" name="yearly_hd_images_ad_count" class="form-control border-info" placeholder="5" value="{{ old('yearly_hd_images_ad_count', 0) }}">
+                                                <span class="input-group-text border-info">Ads</span>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
