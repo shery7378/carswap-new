@@ -137,9 +137,7 @@
                         <select name="billing_period" id="billing_period" class="form-select">
                             <option value="monthly" {{ (isset($plan) && $plan->billing_period == 'monthly') ? 'selected' : '' }}>Monthly Only</option>
                             <option value="yearly" {{ (isset($plan) && $plan->billing_period == 'yearly') ? 'selected' : '' }}>Yearly Only</option>
-                            @if(!isset($plan))
-                                <option value="both">Both (Create Two Separate Packages)</option>
-                            @endif
+                            <option value="both" {{ (isset($plan) && $plan->billing_period == 'both') ? 'selected' : '' }}>Both (Create Two Separate Packages)</option>
                         </select>
                     </div>
 
@@ -195,7 +193,15 @@
                 </div>
             </div>
             <div class="card-body pt-4">
-                
+                {{-- Dual Mode Info Alert --}}
+                <div id="dual-mode-alert" class="alert alert-label-info d-flex align-items-center mb-4" style="display: none !important;">
+                    <i class="bx bx-info-circle me-2 fs-4"></i>
+                    <div>
+                        <strong class="d-block">Dual Creation Mode Active</strong>
+                        You are configuring <span class="text-primary fw-bold">Monthly</span> and <span class="text-info fw-bold">Yearly</span> packages at once. You can set different limits and bullet points for each below.
+                    </div>
+                </div>
+
                 {{-- Comparison Table for Limits --}}
                 <div class="mb-5">
                     <h5 class="fw-bold mb-3"><i class="bx bx-list-check me-1"></i> Service Limits</h5>
@@ -411,34 +417,50 @@ document.addEventListener('DOMContentLoaded', function () {
     const thMonthly = document.getElementById('th-monthly');
     const monthlyFeaturesCol = document.getElementById('monthly-features-col');
     const yearlyFeaturesCol = document.getElementById('yearly-features-col');
-    const modeBadge = document.getElementById('mode-badge');
+    const dualModeAlert = document.getElementById('dual-mode-alert');
 
     function updateVisibility() {
         const val = billingPeriod.value;
+        const isBoth = (val === 'both');
         
-        if (val === 'both') {
+        // Handle Alerts/Badges
+        dualModeAlert.style.setProperty('display', isBoth ? 'flex' : 'none', isBoth ? '' : 'important');
+        
+        if (isBoth) {
             // BOTH MODE
             yearlyCols.forEach(col => col.style.display = 'table-cell');
             thYearly.style.display = 'table-cell';
             thMonthly.innerText = 'Monthly Package';
-            monthlyFeaturesCol.classList.replace('col-md-12', 'col-md-6');
+            
+            // Features Grid
+            monthlyFeaturesCol.classList.remove('col-md-12');
+            monthlyFeaturesCol.classList.add('col-md-6');
             yearlyFeaturesCol.style.display = 'block';
+            
             modeBadge.innerHTML = '<span class="badge bg-label-success animated pulse infinite">Dual Creation Mode</span>';
         } else if (val === 'monthly') {
             // MONTHLY ONLY
             yearlyCols.forEach(col => col.style.display = 'none');
             thYearly.style.display = 'none';
             thMonthly.innerText = 'Service Value';
-            monthlyFeaturesCol.classList.replace('col-md-6', 'col-md-12');
+            
+            // Features Grid
+            monthlyFeaturesCol.classList.remove('col-md-6');
+            monthlyFeaturesCol.classList.add('col-md-12');
             yearlyFeaturesCol.style.display = 'none';
+            
             modeBadge.innerHTML = '<span class="badge bg-label-primary">Single Package (Monthly)</span>';
         } else if (val === 'yearly') {
             // YEARLY ONLY
             yearlyCols.forEach(col => col.style.display = 'none');
             thYearly.style.display = 'none';
             thMonthly.innerText = 'Service Value (Yearly)';
-            monthlyFeaturesCol.classList.replace('col-md-6', 'col-md-12');
+            
+            // Features Grid
+            monthlyFeaturesCol.classList.remove('col-md-6');
+            monthlyFeaturesCol.classList.add('col-md-12');
             yearlyFeaturesCol.style.display = 'none';
+            
             modeBadge.innerHTML = '<span class="badge bg-label-info">Single Package (Yearly)</span>';
         }
     }
