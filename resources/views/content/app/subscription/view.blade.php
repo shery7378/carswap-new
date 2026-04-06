@@ -257,15 +257,26 @@
                             <input type="text" name="billing_city" class="form-control" value="{{ $subscription->billing_city }}">
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">Status</label>
-                        <select name="status" class="form-select">
-                            <option value="active" {{ $subscription->status == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="paused" {{ $subscription->status == 'paused' ? 'selected' : '' }}>Paused</option>
-                            <option value="cancelled" {{ $subscription->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                            <option value="expired" {{ $subscription->status == 'expired' ? 'selected' : '' }}>Expired</option>
-                            <option value="trial" {{ $subscription->status == 'trial' ? 'selected' : '' }}>Trial</option>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Duration/Term</label>
+                            <select name="duration" class="form-select">
+                                <option value="Monthly" {{ $subscription->duration == 'Monthly' ? 'selected' : '' }}>Monthly</option>
+                                <option value="Yearly" {{ $subscription->duration == 'Yearly' ? 'selected' : '' }}>Yearly</option>
+                                <option value="Lifetime (Free)" {{ $subscription->duration == 'Lifetime (Free)' ? 'selected' : '' }}>Lifetime (Free)</option>
+                                <option value="Trial" {{ $subscription->duration == 'Trial' ? 'selected' : '' }}>Trial</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Status</label>
+                            <select name="status" class="form-select">
+                                <option value="active" {{ $subscription->status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="paused" {{ $subscription->status == 'paused' ? 'selected' : '' }}>Paused</option>
+                                <option value="cancelled" {{ $subscription->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+                                <option value="expired" {{ $subscription->status == 'expired' ? 'selected' : '' }}>Expired</option>
+                                <option value="trial" {{ $subscription->status == 'trial' ? 'selected' : '' }}>Trial</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -319,8 +330,10 @@
                     const period = (plan.billing_period || '').toLowerCase();
                     if (period === 'monthly' || period === 'month') {
                         date.setMonth(date.getMonth() + 1);
+                        $('select[name="duration"]').val('Monthly');
                     } else if (period === 'yearly' || period === 'year') {
                         date.setFullYear(date.getFullYear() + 1);
+                        $('select[name="duration"]').val('Yearly');
                     }
                     
                     const format = (d) => {
