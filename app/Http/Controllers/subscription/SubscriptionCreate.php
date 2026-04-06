@@ -29,18 +29,23 @@ class SubscriptionCreate extends Controller
             'billing_period' => 'required|string|in:monthly,yearly,both',
         ]);
 
-        if ($request->billing_period == 'both') {
-            // Create Monthly Plan
-            $this->createPlan($request, 'monthly');
-            // Create Yearly Plan
-            $this->createPlan($request, 'yearly');
-            
-            return redirect()->route('app-subscription-plans')->with('success', 'Monthly and Yearly plans created successfully');
+        \Illuminate\Support\Facades\DB::beginTransaction();
+        try {
+            if ($request->billing_period == 'both') {
+                // Create Monthly Plan
+                $this->createPlan($request, 'monthly');
+                // Create Yearly Plan
+                $this->createPlan($request, 'yearly');
+            } else {
+                $this->createPlan($request, $request->billing_period);
+            }
+            \Illuminate\Support\Facades\DB::commit();
+            return redirect()->route('app-subscription-plans')->with('success', 'Plan(s) created successfully');
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Subscription creation failed: ' . $e->getMessage());
+            return redirect()->back()->withInput()->with('error', 'Failed to create plans: ' . $e->getMessage());
         }
-
-        $this->createPlan($request, $request->billing_period);
-
-        return redirect()->route('app-subscription-plans')->with('success', 'Plan created successfully');
     }
 
     private function createPlan(Request $request, $period)

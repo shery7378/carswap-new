@@ -104,103 +104,95 @@
           <h4 class="fw-bold mb-0">{{ $main->name }}</h4>
           <p class="text-muted small mt-1 mb-0">{{ $main->description }}</p>
           
-          {{-- Dual Pricing Display --}}
+          {{-- Pricing Display --}}
           <div class="d-flex justify-content-center gap-4 mt-3">
-             @if($monthly)
-             <div class="text-center">
-                <div class="price-box mb-0">
-                  <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($monthly->price, 0) }}</span>
+             @if($monthly || $yearly)
+                @if($monthly)
+                <div class="text-center">
+                    <div class="price-box mb-0">
+                      <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($monthly->price, 0) }}</span>
+                    </div>
+                    <small class="text-muted">HUF / Monthly</small>
                 </div>
-                <small class="text-muted">HUF / Monthly</small>
-             </div>
-             @endif
-             
-             @if($yearly)
-             <div class="text-center border-start ps-4">
-                <div class="price-box mb-0">
-                   <span class="h3 fw-extrabold text-info mb-0">{{ number_format($yearly->price, 0) }}</span>
+                @endif
+                
+                @if($yearly)
+                <div class="text-center border-start ps-4">
+                    <div class="price-box mb-0">
+                      <span class="h3 fw-extrabold text-info mb-0">{{ number_format($yearly->price, 0) }}</span>
+                    </div>
+                    <small class="text-muted">HUF / Yearly</small>
                 </div>
-                <small class="text-muted">HUF / Yearly</small>
-             </div>
+                @endif
+             @else
+                {{-- Fallback for legacy "both" or other periods --}}
+                <div class="text-center">
+                    <div class="price-box mb-0">
+                      <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($main->price, 0) }}</span>
+                    </div>
+                    <small class="text-muted">HUF / {{ ucfirst($main->billing_period) }}</small>
+                </div>
              @endif
           </div>
         </div>
         
         <div class="card-body p-0">
-          <div class="feature-list px-4 mt-3">
-            {{-- Service Limits from Main Plan --}}
-            @if($main->active_ads_limit != 0)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
-                <span>{{ $main->active_ads_limit == -1 ? 'Unlimited' : $main->active_ads_limit }} Active Ads</span>
-              </div>
-            @endif
+          {{-- Feature Tabs --}}
+          @if($monthly && $yearly)
+          <ul class="nav nav-tabs nav-fill" role="tablist">
+            <li class="nav-item">
+              <button type="button" class="nav-link active py-2" data-bs-toggle="tab" data-bs-target="#monthly-features-{{ $slug }}">
+                Monthly Profile
+              </button>
+            </li>
+            <li class="nav-item">
+              <button type="button" class="nav-link py-2" data-bs-toggle="tab" data-bs-target="#yearly-features-{{ $slug }}">
+                Yearly Profile
+              </button>
+            </li>
+          </ul>
+          @endif
 
-            @if($main->garage_ads_limit != 0)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
-                <span>{{ $main->garage_ads_limit == -1 ? 'Unlimited' : $main->garage_ads_limit }} Garage Spaces</span>
+          <div class="tab-content border-0 p-0">
+            {{-- Monthly Tab Content --}}
+            <div class="tab-pane fade show active" id="monthly-features-{{ $slug }}" role="tabpanel">
+              <div class="feature-list px-4 mt-3" style="max-height: 250px; overflow-y: auto;">
+                 @include('content.apps.subscription._feature_items', ['plan' => $monthly ?? $main])
               </div>
-            @endif
+            </div>
 
-            @if($main->hd_images != 0)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
-                <span>{{ $main->hd_images == -1 ? 'Unlimited' : $main->hd_images }} HD Images</span>
+            {{-- Yearly Tab Content (if available) --}}
+            @if($yearly)
+            <div class="tab-pane fade" id="yearly-features-{{ $slug }}" role="tabpanel">
+               <div class="feature-list px-4 mt-3" style="max-height: 250px; overflow-y: auto;">
+                 @include('content.apps.subscription._feature_items', ['plan' => $yearly])
               </div>
-            @endif
-
-            {{-- Manual Features Loop --}}
-            @php
-              $features = is_string($main->features) ? json_decode($main->features, true) : $main->features;
-            @endphp
-            @if(is_array($features))
-              @foreach($features as $feature)
-              <div class="feature-item">
-                <i class="bx bx-check-circle text-{{ $main->color }}"></i>
-                <span>{{ $feature }}</span>
-              </div>
-              @endforeach
+            </div>
             @endif
           </div>
         </div>
 
-        <div class="plan-actions px-4 pb-4 mt-auto">
-          @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-subscriptions', 'admin-guard'))
+        <div class="plan-actions px-4 pb-4 mt-auto border-top pt-3 bg-light">
           <div class="d-grid gap-2">
-            @if($monthly)
-            <div class="d-flex gap-2 align-items-center">
-              <span class="badge bg-label-{{ $monthly->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
-                 {{ $monthly->is_active ? 'LIVE' : 'OFF' }}
+            {{-- Loop through all plans in this group to ensure everything has an Edit button --}}
+            @foreach($group as $plan)
+            <div class="d-flex gap-2 align-items-center mb-2">
+              <span class="badge bg-label-{{ $plan->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
+                 {{ $plan->is_active ? 'LIVE' : 'OFF' }}
               </span>
-              <a href="{{ route('app-subscription-plan-edit', $monthly->id) }}" class="btn btn-sm btn-outline-primary flex-grow-1">
-                Edit Monthly
+              <a href="{{ route('app-subscription-plan-edit', $plan->id) }}" class="btn btn-outline-{{ $plan->billing_period == 'yearly' ? 'info' : 'primary' }} flex-grow-1">
+                Edit {{ ucfirst($plan->billing_period) }}
               </a>
-              <button class="btn btn-sm btn-label-{{ $monthly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $monthly->id }}" title="{{ $monthly->is_active ? 'Deactivate' : 'Activate' }}">
+              <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
               </button>
             </div>
-            @endif
+            @endforeach
 
-            @if($yearly)
-            <div class="d-flex gap-2 align-items-center">
-              <span class="badge bg-label-{{ $yearly->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
-                 {{ $yearly->is_active ? 'LIVE' : 'OFF' }}
-              </span>
-              <a href="{{ route('app-subscription-plan-edit', $yearly->id) }}" class="btn btn-sm btn-outline-info flex-grow-1">
-                Edit Yearly
-              </a>
-              <button class="btn btn-sm btn-label-{{ $yearly->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $yearly->id }}" title="{{ $yearly->is_active ? 'Deactivate' : 'Activate' }}">
-                <i class="bx bx-power-off"></i>
-              </button>
-            </div>
-            @endif
-
-            <button class="btn btn-sm btn-label-danger w-100 mt-1 delete-plan" data-id="{{ $main->id }}">
-               <i class="bx bx-trash me-1"></i> Delete Package Card
+            <button class="btn btn-label-danger w-100 mt-2 delete-plan" data-id="{{ $main->id }}">
+               <i class="bx bx-trash me-1"></i> Delete Entire Card
             </button>
           </div>
-          @endif
           
           <div class="mt-3 text-center border-top pt-2">
             <small class="text-muted d-block" style="font-size: 0.65rem;">

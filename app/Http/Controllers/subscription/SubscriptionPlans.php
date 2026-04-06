@@ -9,11 +9,12 @@ class SubscriptionPlans extends Controller
 {
     public function index()
     {
-        $allPlans = \App\Models\Plan::orderBy('price', 'asc')->get();
+        $allPlans = \App\Models\Plan::all();
         
-        // Group by base name or prefix
+        // Group by base name or slug (extremely flexible grouping)
         $plans = $allPlans->groupBy(function($item) {
-             return preg_replace('/-(monthly|yearly)$/', '', $item->slug);
+             // Remove all common billing suffixes to find the base slug
+             return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
         });
 
         return view('content.apps.subscription.plans', compact('plans'));
