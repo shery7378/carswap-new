@@ -149,7 +149,12 @@ class UserAdController extends Controller
         $validated['user_id'] = $user->id;
 
         // Check subscription limits
-        $limitCheck = $this->canPostMoreActiveAds($user);
+        $limitCheck = $this->checkSubscriptionLimits(
+            $user, 
+            ($validated['ad_status'] ?? 'pending') === 'draft', 
+            false, 
+            count($validated['gallery_images'] ?? [])
+        );
         if ($limitCheck !== true) {
             return $limitCheck;
         }
@@ -270,12 +275,25 @@ class UserAdController extends Controller
         unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
 
         // Reset status to pending for approval if updated, unless saving as draft
-        if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
-            $validated['ad_status'] = 'draft';
-        } else {
-            $validated['ad_status'] = 'pending';
+        $newStatus = (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') ? 'draft' : 'pending';
+
+        // Check active limit if moving from inactive (draft/rejected) to active
+        // Also check HD image quota if the image count exceeds 6
+        $newGalleryCount = $request->hasFile('gallery_images') ? count($request->file('gallery_images')) : count($vehicle->gallery_images ?? []);
+        
+        $limitCheck = $this->checkSubscriptionLimits(
+            $request->user(), 
+            $newStatus === 'draft', 
+            true, 
+            $newGalleryCount,
+            $vehicle->id
+        );
+        
+        if ($limitCheck !== true) {
+            return $limitCheck;
         }
 
+        $validated['ad_status'] = $newStatus;
         $vehicle->update($validated);
 
         // Sync properties if provided
@@ -421,7 +439,7 @@ class UserAdController extends Controller
             // But let's keep the logic for now or force it to pending.
             $newStatus = 'pending';
 
-            $limitCheck = $this->canPostMoreActiveAds($request->user());
+            $limitCheck = $this->checkSubscriptionLimits($request->user(), false, true, count($vehicle->gallery_images ?? []), $vehicle->id);
             if ($limitCheck !== true) {
                 return $limitCheck;
             }
@@ -453,9 +471,14 @@ class UserAdController extends Controller
         return implode(' ', $parts) ?: 'Vehicle Ad';
     }
 
-    private function canPostMoreActiveAds($user)
+    /**
+     * Check if the user has reached their subscription limits (Active ads, Garage space, HD images)
+     */
+    private function checkSubscriptionLimits($user, bool $isDraft = false, bool $isUpdate = false, int $galleryImageCount = 0, $vehicleId = null)
     {
+        $user->loadMissing('activeSubscription.plan');
         $subscription = $user->activeSubscription;
+
         if (!$subscription || !$subscription->plan) {
             return response()->json([
                 'success' => false,
@@ -465,18 +488,78 @@ class UserAdController extends Controller
 
         $plan = $subscription->plan;
 
-        // Only check limits if the plan has a numeric limit (0 or negative means unlimited)
-        // According to our seeder and business rules:
-        // FREE = 2, SEVERAL CARS = 5, DEALER = 0 (Unlimited)
-        if ($plan->active_ads_limit > 0) {
-            $activeAdsCount = Vehicle::where('user_id', $user->id)
-                ->whereIn('ad_status', ['published', 'pending'])
-                ->count();
+        // 1. Check Garage (Total) Limit
+        if (!$isUpdate) {
+            $garageAdsLimit = (int) $plan->garage_ads_limit;
+            if ($garageAdsLimit > 0) {
+                $totalCount = Vehicle::where('user_id', $user->id)
+                    ->whereIn('ad_status', ['published', 'pending', 'draft', 'rejected'])
+                    ->count();
 
-            if ($activeAdsCount >= $plan->active_ads_limit) {
+                if ($totalCount >= $garageAdsLimit) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "Your garage limit of {$garageAdsLimit} ads has been reached. Please upgrade your plan.",
+                    ], 403);
+                }
+            }
+        }
+
+        // 2. Check Active Ads Limit (only if not saving as draft)
+        if (!$isDraft) {
+            // If it's an update, only check if we are moving from inactive to active
+            $shouldCheckActive = true;
+            if ($isUpdate && $vehicleId) {
+                $v = Vehicle::find($vehicleId);
+                if ($v && in_array($v->ad_status, ['published', 'pending'])) {
+                    $shouldCheckActive = false;
+                }
+            }
+
+            if ($shouldCheckActive) {
+                $activeAdsLimit = (int) $plan->active_ads_limit;
+                if ($activeAdsLimit > 0) {
+                    $activeCount = Vehicle::where('user_id', $user->id)
+                        ->whereIn('ad_status', ['published', 'pending'])
+                        ->count();
+
+                    if ($activeCount >= $activeAdsLimit) {
+                        return response()->json([
+                            'success' => false,
+                            'message' => "Your active ads limit of {$activeAdsLimit} has been reached. You can save this as a draft, or upgrade your plan to publish it.",
+                        ], 403);
+                    }
+                }
+            }
+        }
+
+        // 3. Check HD Images Quota (Base limit is 6 images)
+        if ($galleryImageCount > 6) {
+            $hdQuota = (int) $plan->hd_images;
+            
+            // If quota is 0 (like Free plan), they can't have more than 6 images
+            if ($hdQuota <= 0) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Your subscription plan limit is completed. Please upgrade your plan to post more ads.',
+                    'message' => "Your plan only allows up to 6 gallery images per ad. Please upgrade for HD ads.",
+                ], 403);
+            }
+
+            // Count how many HD ads they currently have
+            // and exclude the current one if it's an update and was already HD
+            $hdAdsQuery = Vehicle::where('user_id', $user->id)
+                ->whereRaw("JSON_LENGTH(gallery_images) > 6");
+            
+            if ($vehicleId) {
+                $hdAdsQuery->where('id', '!=', $vehicleId);
+            }
+
+            $currentHdCount = $hdAdsQuery->count();
+
+            if ($currentHdCount >= $hdQuota) {
+                return response()->json([
+                    'success' => false,
+                    'message' => "You have reached your limit of {$hdQuota} HD ads. Please remove images from other ads or upgrade your plan.",
                 ], 403);
             }
         }

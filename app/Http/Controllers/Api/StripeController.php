@@ -104,6 +104,7 @@ class StripeController extends Controller
                 'status'            => 'pending',
                 'starts_at'         => now(),
                 'next_billing_at'   => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
+                'ends_at'           => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
                 'duration'          => $request->billing === 'yearly' ? 'Yearly' : 'Monthly',
                 'stripe_session_id' => $session->id,
 
@@ -182,9 +183,11 @@ class StripeController extends Controller
 
                 $subscription = Subscription::where('stripe_subscription_id', $stripeSubId)->first();
                 if ($subscription) {
+                    $isYearly = $subscription->duration === 'Yearly';
                     $subscription->update([
                         'status'          => 'active',
-                        'next_billing_at' => now()->addMonth(),
+                        'next_billing_at' => $isYearly ? now()->addYear() : now()->addMonth(),
+                        'ends_at'         => $isYearly ? now()->addYear() : now()->addMonth(),
                     ]);
                 }
                 break;

@@ -50,7 +50,7 @@ class UpdateAdRequest extends FormRequest
             'properties'           => 'nullable|array',
             'properties.*'         => 'integer|exists:properties,id',
             'main_image'           => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
-            'gallery_images'       => 'nullable|array|max:8',
+            'gallery_images'       => 'nullable|array|max:12',
             'gallery_images.*'     => 'image|mimes:jpg,jpeg,png,webp|max:10240',
             'video_url'            => 'nullable|url|max:500',
             'documents'            => 'nullable|array|max:5',
@@ -76,7 +76,7 @@ class UpdateAdRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'gallery_images.max'         => 'You can upload a maximum of 8 pictures.',
+            'gallery_images.max'         => 'You can upload a maximum of 12 pictures.',
             'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
             'gallery_images.*.mimes'     => 'Supported image types: jpg, jpeg, png, webp.',
             'main_image.mimes'           => 'Supported image types: jpg, jpeg, png, webp.',
