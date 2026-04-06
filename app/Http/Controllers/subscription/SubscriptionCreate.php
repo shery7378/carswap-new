@@ -53,7 +53,7 @@ class SubscriptionCreate extends Controller
         $prefix = ($request->billing_period == 'both' && $period == 'yearly') ? 'yearly_' : '';
         $name = $request->title;
         $slug = Str::slug($name);
-        
+
         if ($request->billing_period == 'both') {
             $slug .= '-' . $period;
         }
@@ -61,9 +61,10 @@ class SubscriptionCreate extends Controller
         // Determine price column - the list view uses 'price' as the primary display price
         $monthly_val = $request->monthly_price ?? 0;
         $yearly_val = $request->yearly_price ?? 0;
-        
+
         // If it's a yearly plan, the display price (price column) should be the yearly value
         $display_price = ($period == 'yearly') ? $yearly_val : $monthly_val;
+
 
         Plan::create([
             'name' => $name,
@@ -76,7 +77,7 @@ class SubscriptionCreate extends Controller
             'highlight_ads' => $request->has($prefix . 'highlight_ads') ? 1 : 0,
             'highlight_ad_count' => $request->input($prefix . 'highlight_ad_count') ?? 0,
             'hd_images' => $request->input($prefix . 'hd_images') ?? 0,
-            
+
             // Special HD Logic
             'hd_images_count' => $request->input($prefix . 'hd_images_count') ?? 6,
             'hd_images_normal_count' => $request->input($prefix . 'hd_images_normal_count') ?? 6,
@@ -102,12 +103,12 @@ class SubscriptionCreate extends Controller
         ]);
 
         $plan = Plan::findOrFail($id);
-        
+
         if ($request->billing_period == 'both') {
             // Find or create the other one
             // We update the current one, and either find its sibling or create a new one
             $this->handleBothUpdate($request, $plan);
-            
+
             return redirect()->route('app-subscription-plans')->with('success', 'Plans updated successfully');
         }
 
@@ -126,9 +127,9 @@ class SubscriptionCreate extends Controller
         // 2. Find or Create the Counterpart
         $counterPartPeriod = ($currentPeriod == 'monthly') ? 'yearly' : 'monthly';
         $counterPartSlug = Str::slug($request->title) . '-' . $counterPartPeriod;
-        
+
         $counterPart = Plan::where('slug', $counterPartSlug)->first();
-        
+
         if ($counterPart) {
             $this->updatePlan($request, $counterPart, $counterPartPeriod);
         } else {
@@ -143,7 +144,7 @@ class SubscriptionCreate extends Controller
         $monthly_val = $request->monthly_price ?? 0;
         $yearly_val = $request->yearly_price ?? 0;
         $display_price = ($period == 'yearly') ? $yearly_val : $monthly_val;
-        
+
         $slug = Str::slug($request->title);
         if (!Str::endsWith($slug, '-' . $period)) {
             $slug .= '-' . $period;
