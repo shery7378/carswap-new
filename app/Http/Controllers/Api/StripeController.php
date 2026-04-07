@@ -10,6 +10,8 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
 use Stripe\Stripe;
 use Stripe\Checkout\Session as StripeSession;
+use Stripe\PaymentIntent;
+use Stripe\PaymentMethod;
 use Stripe\Webhook;
 
 class StripeController extends Controller
@@ -31,15 +33,15 @@ class StripeController extends Controller
             'billing' => 'required|in:monthly,yearly',
 
             // New Billing Fields from Form
-            'full_name'    => 'required|string|max:191',
+            'full_name' => 'required|string|max:191',
             'company_name' => 'nullable|string|max:191',
-            'my_name'      => 'required|string|max:191',
-            'city'         => 'required|string|max:191',
-            'address'      => 'required|string|max:255',
+            'my_name' => 'required|string|max:191',
+            'city' => 'required|string|max:191',
+            'address' => 'required|string|max:255',
 
             // Checkbox Enforcements
-            'accepted_terms'     => 'accepted',
-            'accepted_privacy'   => 'accepted',
+            'accepted_terms' => 'accepted',
+            'accepted_privacy' => 'accepted',
             'accepted_recurring' => 'accepted',
         ]);
 
@@ -55,75 +57,70 @@ class StripeController extends Controller
             ], 422);
         }
 
-        // Determine which Stripe Price ID to use
-        $stripePriceId = $request->billing === 'yearly'
-            ? $plan->stripe_price_id_yearly
-            : $plan->stripe_price_id_monthly;
-
-        if (!$stripePriceId) {
-            return response()->json([
-                'success' => false,
-                'message' => 'This plan is not configured for online payment yet. Please contact support.',
-            ], 422);
-        }
-
         $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3000')), '/');
+        $amount = $request->billing === 'yearly' ? $plan->yearly_price : $plan->price;
 
         try {
             $session = StripeSession::create([
-                'mode'                 => 'subscription',
-                'customer_email'       => $user->email,
-                'line_items'           => [[
-                    'price'    => $stripePriceId,
-                    'quantity' => 1,
-                ]],
-                'metadata'             => [
-                    'user_id'         => $user->id,
-                    'plan_id'         => $plan->id,
-                    'billing_period'  => $request->billing,
-                    'full_name'       => $request->full_name,
-                    'company'         => $request->company_name,
-                    'city'            => $request->city,
-                    'address'         => $request->address,
+                'mode' => 'payment',
+                'customer_email' => $user->email,
+                'payment_intent_data' => [
+                    'setup_future_usage' => 'off_session',
                 ],
-                'success_url'          => $frontendUrl . '/account/billing?status=success&session_id={CHECKOUT_SESSION_ID}',
-                'cancel_url'           => $frontendUrl . '/account/billing?status=cancelled',
-                'subscription_data'    => [
-                    'metadata' => [
-                        'user_id' => $user->id,
-                        'plan_id' => $plan->id,
-                    ],
+                'line_items' => [
+                    [
+                        'price_data' => [
+                            'currency' => 'huf',
+                            'product_data' => [
+                                'name' => $plan->name . ($request->billing === 'yearly' ? ' (Yearly)' : ' (Monthly)'),
+                                'description' => 'Subscription for ' . $plan->name,
+                            ],
+                            'unit_amount' => (int)($amount * 100),
+                        ],
+                        'quantity' => 1,
+                    ]
                 ],
+                'metadata' => [
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'billing_period' => $request->billing,
+                    'full_name' => $request->full_name,
+                    'company' => $request->company_name,
+                    'city' => $request->city,
+                    'address' => $request->address,
+                ],
+                'success_url' => $frontendUrl . '/account/billing?status=success&session_id={CHECKOUT_SESSION_ID}',
+                'cancel_url' => $frontendUrl . '/account/billing?status=cancelled',
             ]);
 
             // Create a pending subscription record with ALL info
             Subscription::create([
-                'user_id'           => $user->id,
-                'plan_id'           => $plan->id,
-                'amount'            => $request->billing === 'yearly' ? $plan->yearly_price : $plan->price,
-                'status'            => 'pending',
-                'starts_at'         => now(),
-                'next_billing_at'   => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
-                'ends_at'           => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
-                'duration'          => $request->billing === 'yearly' ? 'Yearly' : 'Monthly',
+                'user_id' => $user->id,
+                'plan_id' => $plan->id,
+                'amount' => $amount,
+                'status' => 'pending',
+                'starts_at' => now(),
+                'next_billing_at' => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
+                'ends_at' => $request->billing === 'yearly' ? now()->addYear() : now()->addMonth(),
+                'duration' => $request->billing === 'yearly' ? 'Yearly' : 'Monthly',
                 'stripe_session_id' => $session->id,
 
                 // Saving Billing Info
-                'billing_full_name'    => $request->full_name,
+                'billing_full_name' => $request->full_name,
                 'billing_company_name' => $request->company_name,
-                'billing_my_name'      => $request->my_name,
-                'billing_city'         => $request->city,
-                'billing_address'      => $request->address,
-                'accepted_terms'       => $request->boolean('accepted_terms'),
-                'accepted_privacy'     => $request->boolean('accepted_privacy'),
-                'accepted_recurring'   => $request->boolean('accepted_recurring'),
+                'billing_my_name' => $request->my_name,
+                'billing_city' => $request->city,
+                'billing_address' => $request->address,
+                'accepted_terms' => $request->boolean('accepted_terms'),
+                'accepted_privacy' => $request->boolean('accepted_privacy'),
+                'accepted_recurring' => $request->boolean('accepted_recurring'),
             ]);
 
             return response()->json([
-                'success'      => true,
-                'message'      => 'Checkout session created.',
+                'success' => true,
+                'message' => 'Checkout session created.',
                 'checkout_url' => $session->url,
-                'session_id'   => $session->id,
+                'session_id' => $session->id,
             ]);
         } catch (\Exception $e) {
             Log::error('Stripe checkout error: ' . $e->getMessage());
@@ -140,9 +137,9 @@ class StripeController extends Controller
     // =========================================================================
     public function handleWebhook(Request $request)
     {
-        $payload   = $request->getContent();
+        $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
-        $secret    = config('services.stripe.webhook_secret');
+        $secret = config('services.stripe.webhook_secret');
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
@@ -153,20 +150,37 @@ class StripeController extends Controller
 
         switch ($event->type) {
 
-            // ── Payment succeeded → activate subscription ─────────────────
+            // ── Payment succeeded → activate subscription & save card ─────
             case 'checkout.session.completed':
-                $session    = $event->data->object;
-                $sessionId  = $session->id;
-                $metadata   = $session->metadata;
+                $session = $event->data->object;
+                $sessionId = $session->id;
 
                 $subscription = Subscription::where('stripe_session_id', $sessionId)->first();
 
                 if ($subscription) {
-                    $subscription->update([
-                        'status'                  => 'active',
-                        'stripe_customer_id'      => $session->customer,
-                        'stripe_subscription_id'  => $session->subscription,
-                    ]);
+                    $updateData = [
+                        'status' => 'active',
+                        'stripe_customer_id' => $session->customer,
+                    ];
+
+                    // Capture Payment Method for off-session billing
+                    if ($session->payment_intent) {
+                        try {
+                            $intent = PaymentIntent::retrieve($session->payment_intent);
+                            if ($intent->payment_method) {
+                                $pm = PaymentMethod::retrieve($intent->payment_method);
+                                $updateData['stripe_payment_method_id'] = $pm->id;
+                                $updateData['card_brand'] = $pm->card->brand;
+                                $updateData['card_last_four'] = $pm->card->last4;
+                                $updateData['card_exp_month'] = $pm->card->exp_month;
+                                $updateData['card_exp_year'] = $pm->card->exp_year;
+                            }
+                        } catch (\Exception $e) {
+                            Log::error("CarSwap: Failed to retrieve payment method from session {$sessionId}: " . $e->getMessage());
+                        }
+                    }
+
+                    $subscription->update($updateData);
 
                     // Deactivate any previous active subscription for this user
                     Subscription::where('user_id', $subscription->user_id)
@@ -176,25 +190,9 @@ class StripeController extends Controller
                 }
                 break;
 
-            // ── Subscription renewed ──────────────────────────────────────
-            case 'invoice.payment_succeeded':
-                $invoice        = $event->data->object;
-                $stripeSubId    = $invoice->subscription;
-
-                $subscription = Subscription::where('stripe_subscription_id', $stripeSubId)->first();
-                if ($subscription) {
-                    $isYearly = $subscription->duration === 'Yearly';
-                    $subscription->update([
-                        'status'          => 'active',
-                        'next_billing_at' => $isYearly ? now()->addYear() : now()->addMonth(),
-                        'ends_at'         => $isYearly ? now()->addYear() : now()->addMonth(),
-                    ]);
-                }
-                break;
-
             // ── Subscription cancelled / expired ──────────────────────────
             case 'customer.subscription.deleted':
-                $stripeSub   = $event->data->object;
+                $stripeSub = $event->data->object;
                 $stripeSubId = $stripeSub->id;
 
                 Subscription::where('stripe_subscription_id', $stripeSubId)

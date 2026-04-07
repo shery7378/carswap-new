@@ -18,6 +18,7 @@ class Subscription extends Model
         'stripe_session_id',
         'stripe_subscription_id',
         'stripe_customer_id',
+        'stripe_payment_method_id',
 
         // Billing Information
         'billing_full_name',
@@ -25,6 +26,12 @@ class Subscription extends Model
         'billing_my_name',
         'billing_city',
         'billing_address',
+
+        // Card Details
+        'card_brand',
+        'card_last_four',
+        'card_exp_month',
+        'card_exp_year',
 
         // Toggles / Selections
         'accepted_terms',
