@@ -45,7 +45,11 @@ class CMSController extends Controller
             $data['image'] = $request->file('image')->store('cms', 'public');
         }
 
-        CMSSection::create($data);
+        $section = CMSSection::create($data);
+
+        // Clear CMS cache
+        \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
         return redirect()->route('admin.cms.index')->with('success', 'Section created successfully.');
     }
@@ -85,6 +89,10 @@ class CMSController extends Controller
 
         $section->update($data);
 
+        // Clear CMS cache
+        \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
+
         return redirect()->route('admin.cms.index')->with('success', 'Section updated successfully.');
     }
 
@@ -98,6 +106,10 @@ class CMSController extends Controller
             Storage::disk('public')->delete($section->image);
         }
         $section->delete();
+
+        // Clear CMS cache
+        \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
         return redirect()->route('admin.cms.index')->with('success', 'Section deleted successfully.');
     }
@@ -122,7 +134,15 @@ class CMSController extends Controller
             $data['image'] = $request->file('image')->store('cms/items', 'public');
         }
 
-        CMSItem::create($data);
+        $item = CMSItem::create($data);
+
+        // Clear CMS cache for this section and blog posts
+        $section = CMSSection::find($sectionId);
+        if ($section) {
+            \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+        }
+        \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
         return redirect()->back()->with('success', 'Item added successfully.');
     }
@@ -162,6 +182,16 @@ class CMSController extends Controller
             CMSItem::create($itemData);
         }
 
+        // Clear CMS cache
+        $section = CMSSection::find($request->section_id);
+        if ($section) {
+             \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+        }
+        if ($request->filled('item_id')) {
+             \Illuminate\Support\Facades\Cache::forget("cms_item_{$request->item_id}");
+        }
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
+
         return redirect()->back()->with('success', 'Document content saved successfully.');
     }
 
@@ -188,6 +218,13 @@ class CMSController extends Controller
 
         $item->update($data);
 
+        // Clear CMS cache
+        if ($item->section) {
+            \Illuminate\Support\Facades\Cache::forget("cms_section_{$item->section->slug}");
+        }
+        \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
+
         return redirect()->back()->with('success', 'Item updated successfully.');
     }
 
@@ -201,6 +238,13 @@ class CMSController extends Controller
             Storage::disk('public')->delete($item->image);
         }
         $item->delete();
+
+        // Clear CMS cache
+        if ($item->section) {
+            \Illuminate\Support\Facades\Cache::forget("cms_section_{$item->section->slug}");
+        }
+        \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
+        \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
         return redirect()->back()->with('success', 'Item deleted successfully.');
     }

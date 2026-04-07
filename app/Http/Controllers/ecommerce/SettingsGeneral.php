@@ -42,7 +42,7 @@ class SettingsGeneral extends Controller
         }
 
         // Clear the cache so new settings are immediately applied
-        \Illuminate\Support\Facades\Cache::forget('site_settings');
+        \Illuminate\Support\Facades\Cache::forget('carswap_settings_public');
 
         return redirect()->back()->with('success', 'General settings updated successfully.');
     }

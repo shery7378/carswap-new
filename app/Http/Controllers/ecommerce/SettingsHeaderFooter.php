@@ -120,6 +120,9 @@ class SettingsHeaderFooter extends Controller
             );
         }
 
+        // Clear public settings cache
+        \Illuminate\Support\Facades\Cache::forget('carswap_settings_public');
+
         return back()->with('success', 'Header and Footer settings updated successfully!');
     }
 }

@@ -39,6 +39,9 @@ class SubscriptionPlans extends Controller
             $plan->is_active = !$plan->is_active;
             $plan->save();
 
+            // Clear plans cache
+            \Illuminate\Support\Facades\Cache::forget('carswap_subscription_plans');
+
             return response()->json([
                 'success' => true,
                 'message' => 'Plan status updated successfully',
@@ -86,6 +89,9 @@ class SubscriptionPlans extends Controller
 
         $plan->update($data);
 
+        // Clear plans cache for the API
+        \Illuminate\Support\Facades\Cache::forget('carswap_subscription_plans');
+
         return redirect()->back()->with('success', 'Plan updated successfully!');
     }
     public function destroy($id)
@@ -93,6 +99,10 @@ class SubscriptionPlans extends Controller
         try {
             $plan = \App\Models\Plan::findOrFail($id);
             $plan->delete();
+
+            // Clear plans cache
+            \Illuminate\Support\Facades\Cache::forget('carswap_subscription_plans');
+
             return response()->json(['success' => true, 'message' => 'Plan deleted successfully.']);
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => 'Failed to delete plan.'], 500);

@@ -57,8 +57,8 @@ class RegisterController extends Controller
                 'has_viber' => $validated['has_viber'] ?? false,
             ]);
 
-            // Assign FREE package to user
-            $freePlan = Plan::where('slug', 'free')->first();
+            // Assign FREE package to user (Fallback to ID 8 if slug lookup fails)
+            $freePlan = Plan::where('slug', 'free')->first() ?? Plan::find(8);
             if ($freePlan) {
                 Subscription::create([
                     'user_id' => $user->id,
@@ -66,7 +66,8 @@ class RegisterController extends Controller
                     'amount' => 0,
                     'status' => 'active',
                     'starts_at' => now(),
-                    'next_billing_at' => now()->addYears(10), // Basically lifetime for free
+                    'next_billing_at' => now()->addYears(10),
+                    'ends_at' => now()->addYears(10),
                     'duration' => 'Lifetime (Free)'
                 ]);
             }

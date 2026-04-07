@@ -5,14 +5,38 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Cache;
+
 class SubscriptionController extends Controller
 {
     public function index(Request $request)
     {
-        // Get only active plans, ordered by price (monthly)
-        $allPlans = \App\Models\Plan::where('is_active', true)
-            ->orderBy('price', 'asc')
-            ->get();
+        // Cache the base plan structure for 24 hours
+        $baseGroupedPlans = Cache::remember('carswap_subscription_plans', 86400, function () {
+            // Get only active plans, ordered by price (monthly)
+            $allPlans = \App\Models\Plan::where('is_active', true)
+                ->orderBy('price', 'asc')
+                ->get();
+
+            // Group and structure for frontend "Dual Pricing" cards (without user-specific data)
+            return $allPlans->groupBy(function ($item) {
+                return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
+            })->map(function ($group) {
+                $monthly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['month', 'monthly']))->first();
+                $yearly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['year', 'yearly']))->first();
+                $main = $monthly ?? ($yearly ?? $group->first());
+
+                return [
+                    'slug_base' => preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($main->slug)),
+                    'name' => $main->name,
+                    'description' => $main->description,
+                    'color' => $main->color,
+                    'is_popular' => (bool) $main->is_popular,
+                    'monthly_raw' => $monthly, // Keep raw for processing
+                    'yearly_raw' => $yearly,   // Keep raw for processing
+                ];
+            })->values();
+        });
 
         $user = $request->user('sanctum');
         $activePlanId = null;
@@ -21,29 +45,22 @@ class SubscriptionController extends Controller
             $activePlanId = $user->activeSubscription?->plan_id;
         }
 
-        // Group and structure for frontend "Dual Pricing" cards
-        $groupedPlans = $allPlans->groupBy(function ($item) {
-            return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
-        })->map(function ($group) use ($activePlanId) {
-            $monthly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['month', 'monthly']))->first();
-            $yearly = $group->filter(fn($p) => in_array(strtolower($p->billing_period), ['year', 'yearly']))->first();
-            $main = $monthly ?? ($yearly ?? $group->first());
-
-            return [
-                'slug_base' => preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($main->slug)),
-                'name' => $main->name,
-                'description' => $main->description,
-                'color' => $main->color,
-                'is_popular' => (bool) $main->is_popular,
-                'monthly' => $monthly ? $this->formatPlanData($monthly, $activePlanId) : null,
-                'yearly' => $yearly ? $this->formatPlanData($yearly, $activePlanId) : null,
-            ];
-        })->values();
+        // Apply user-specific "is_current" logic on top of cached base plans
+        $finalPlans = $baseGroupedPlans->map(function ($plan) use ($activePlanId) {
+            $formatted = $plan;
+            $formatted['monthly'] = $plan['monthly_raw'] ? $this->formatPlanData($plan['monthly_raw'], $activePlanId) : null;
+            $formatted['yearly'] = $plan['yearly_raw'] ? $this->formatPlanData($plan['yearly_raw'], $activePlanId) : null;
+            
+            unset($formatted['monthly_raw']);
+            unset($formatted['yearly_raw']);
+            
+            return $formatted;
+        });
 
         return response()->json([
             'success' => true,
             'message' => 'Subscription plans retrieved successfully.',
-            'data' => $groupedPlans,
+            'data' => $finalPlans,
         ]);
     }
 

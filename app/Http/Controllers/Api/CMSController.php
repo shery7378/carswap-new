@@ -13,12 +13,28 @@ class CMSController extends Controller
      */
     public function show($slug)
     {
-        $section = CMSSection::where('slug', $slug)
-            ->where('status', true)
-            ->with(['items' => function($query) {
-                $query->where('status', true)->orderBy('order');
-            }])
-            ->first();
+        $section = \Illuminate\Support\Facades\Cache::remember("cms_section_{$slug}", 86400, function () use ($slug) {
+            $data = CMSSection::where('slug', $slug)
+                ->where('status', true)
+                ->with(['items' => function($query) {
+                    $query->where('status', true)->orderBy('order');
+                }])
+                ->first();
+
+            if ($data) {
+                // Format image URLs if they exist
+                if ($data->image) {
+                    $data->image_url = asset('storage/' . $data->image);
+                }
+
+                $data->items->each(function($item) {
+                    if ($item->image) {
+                        $item->image_url = asset('storage/' . $item->image);
+                    }
+                });
+            }
+            return $data;
+        });
 
         if (!$section) {
             return response()->json([
@@ -26,17 +42,6 @@ class CMSController extends Controller
                 'message' => 'CMS section not found or inactive.'
             ], 404);
         }
-
-        // Format image URLs if they exist
-        if ($section->image) {
-            $section->image_url = asset('storage/' . $section->image);
-        }
-
-        $section->items->each(function($item) {
-            if ($item->image) {
-                $item->image_url = asset('storage/' . $item->image);
-            }
-        });
 
         return response()->json([
             'success' => true,
@@ -49,17 +54,20 @@ class CMSController extends Controller
      */
     public function showItem($id)
     {
-        $item = \App\Models\CMSItem::with('section')->where('id', $id)->where('status', true)->first();
+        $item = \Illuminate\Support\Facades\Cache::remember("cms_item_{$id}", 86400, function () use ($id) {
+            $data = \App\Models\CMSItem::with('section')->where('id', $id)->where('status', true)->first();
+            
+            if ($data && $data->image) {
+                $data->image_url = asset('storage/' . $data->image);
+            }
+            return $data;
+        });
 
         if (!$item) {
             return response()->json([
                 'success' => false, 
                 'message' => 'CMS item not found or inactive.'
             ], 404);
-        }
-
-        if ($item->image) {
-            $item->image_url = asset('storage/' . $item->image);
         }
 
         return response()->json([
@@ -73,24 +81,24 @@ class CMSController extends Controller
      */
     public function getBlogPosts()
     {
-        $section = CMSSection::where('slug', 'blog-posts')->first();
+        $posts = \Illuminate\Support\Facades\Cache::remember("cms_blog_posts", 86400, function () {
+            $section = CMSSection::where('slug', 'blog-posts')->first();
 
-        if (!$section) {
-            return response()->json([
-                'success' => true,
-                'data' => []
-            ]);
-        }
-
-        $posts = \App\Models\CMSItem::where('section_id', $section->id)
-            ->where('status', true)
-            ->orderBy('order')
-            ->get();
-
-        $posts->each(function($item) {
-            if ($item->image) {
-                $item->image_url = asset('storage/' . $item->image);
+            if (!$section) {
+                return [];
             }
+
+            $data = \App\Models\CMSItem::where('section_id', $section->id)
+                ->where('status', true)
+                ->orderBy('order')
+                ->get();
+
+            $data->each(function($item) {
+                if ($item->image) {
+                    $item->image_url = asset('storage/' . $item->image);
+                }
+            });
+            return $data;
         });
 
         return response()->json([
