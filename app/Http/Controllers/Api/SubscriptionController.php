@@ -4,11 +4,62 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Cache;
+use App\Models\Plan;
+use App\Models\Subscription;
+use Illuminate\Http\JsonResponse;
 
 class SubscriptionController extends Controller
 {
+    // NEW Cancel Method
+    public function cancel(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $user->load('activeSubscription.plan');
+        $currentSub = $user->activeSubscription;
+
+        if (!$currentSub) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active subscription found.',
+            ], 404);
+        }
+
+        $currentPlan = $currentSub->plan;
+
+        // If user is already on free plan, don't allow "cancellation" back to free plan
+        if ($currentPlan && strtolower($currentPlan->slug) === 'free') {
+            return response()->json([
+                'success' => false,
+                'message' => 'You are already on the Free plan.',
+            ], 422);
+        }
+
+        // Cancel the current subscription record
+        $currentSub->update(['status' => 'cancelled']);
+
+        // Assign FREE package to user (Look for slug 'free' or ID 8)
+        $freePlan = Plan::where('slug', 'free')->first() ?? Plan::find(8);
+        
+        if ($freePlan) {
+            Subscription::create([
+                'user_id' => $user->id,
+                'plan_id' => $freePlan->id,
+                'amount' => 0,
+                'status' => 'active',
+                'starts_at' => now(),
+                'next_billing_at' => now()->addYears(10),
+                'ends_at' => now()->addYears(10),
+                'duration' => 'Lifetime (Free)'
+            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your subscription has been cancelled and you have been switched to the Free plan.',
+        ]);
+    }
+
     public function index(Request $request)
     {
         // Cache the base plan structure for 24 hours

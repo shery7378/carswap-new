@@ -124,6 +124,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Subscriptions
     Route::get('/subscriptions/my', [SubscriptionController::class, 'mySubscription']);
     Route::post('/subscriptions/checkout', [StripeController::class, 'createCheckout']);
+    Route::post('/subscriptions/cancel', [SubscriptionController::class, 'cancel']);
 });
 
 // Stripe Webhook — must be public & exclude CSRF

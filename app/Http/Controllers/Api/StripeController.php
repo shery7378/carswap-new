@@ -77,7 +77,7 @@ class StripeController extends Controller
                                 'name' => $plan->name . ($request->billing === 'yearly' ? ' (Yearly)' : ' (Monthly)'),
                                 'description' => 'Subscription for ' . $plan->name,
                             ],
-                            'unit_amount' => (int)($amount * 100),
+                            'unit_amount' => (int) ($amount * 100),
                         ],
                         'quantity' => 1,
                     ]
@@ -122,14 +122,14 @@ class StripeController extends Controller
             $session->metadata['subscription_id'] = $subscription->id;
             // Note: Update to already created session isn't directly possible like this, 
             // but we can pass it during creation. Let's fix the creation part.
-            
+
             // Re-creating the logic to include subscription_id in metadata from start
             // Actually, we can't get ID before create, but we can update the session metadata if needed.
             // However, Stripe Sessions are immutable. So let's just make sure we capture it in handleWebhook.
-            
+
             // OPTIMIZATION: We already have stripe_session_id in our DB. So that is enough.
             // But we can also add it to the payment intent metadata for redundancy.
-            
+
             return response()->json([
                 'success' => true,
                 'message' => 'Checkout session created.',
@@ -177,7 +177,7 @@ class StripeController extends Controller
                 Log::info("CarSwap Webhook: PaymentIntent succeeded: " . $intent->id);
                 // Try to find subscription by session if available, or other metadata
                 // Usually PaymentIntent has the session ID in metadata if created via Checkout
-                $sessionId = $intent->metadata->stripesessionid ?? null; 
+                $sessionId = $intent->metadata->stripesessionid ?? null;
                 if ($sessionId) {
                     $this->activateSubscription($sessionId, $intent->customer, $intent->id);
                 }
