@@ -224,8 +224,14 @@
                                 <label class="form-label">Subscription Plan</label>
                                 <select name="plan_id" class="form-select">
                                     @foreach($plans as $plan)
+                                        @php
+                                            $period = strtolower($plan->billing_period);
+                                            $label = 'Other';
+                                            if (str_contains($period, 'month')) $label = 'Monthly';
+                                            if (str_contains($period, 'year')) $label = 'Yearly';
+                                        @endphp
                                         <option value="{{ $plan->id }}" {{ $subscription->plan_id == $plan->id ? 'selected' : '' }}>
-                                            {{ $plan->name }} - {{ ucfirst($plan->billing_period) }} (HUF {{ number_format((float) $plan->price, 0, '.', '') }})
+                                            {{ $plan->name }} - {{ $label }} (HUF {{ number_format((float) $plan->price, 0, '.', '') }})
                                         </option>
                                     @endforeach
                                 </select>

@@ -24,7 +24,10 @@ class SubscriptionList extends Controller
             ->latest()
             ->get();
         $plans = Plan::where('is_active', true)->get()->unique(function ($item) {
-            return $item->name . $item->price . $item->billing_period;
+            $period = strtolower($item->billing_period);
+            if (str_contains($period, 'month')) $period = 'monthly';
+            if (str_contains($period, 'year')) $period = 'yearly';
+            return $item->name . $item->price . $period;
         });
 
         if (request()->ajax()) {
