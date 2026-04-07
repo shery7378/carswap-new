@@ -17,7 +17,7 @@ class PermissionSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Create permissions categories
-        $modules = ['vehicles', 'users', 'roles', 'subscriptions', 'orders', 'partners', 'inquiries', 'email_templates', 'settings', 'car_settings', 'products', 'customers'];
+        $modules = ['vehicles', 'users', 'roles', 'subscriptions', 'orders', 'partners', 'inquiries', 'email_templates', 'settings', 'car_settings', 'products', 'customers', 'cms', 'trade_offers', 'newsletter', 'contacts'];
         $actions = ['view', 'create', 'edit', 'delete'];
 
         $allPermissions = [

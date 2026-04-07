@@ -240,42 +240,50 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update')->middleware('permission:edit-email_templates,admin-guard');
     });
     // CONTACTS Module
-    Route::group(['prefix' => 'app/contacts'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contacts.index');
-        Route::get('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('admin.contacts.show');
-        Route::patch('/{id}/status', [\App\Http\Controllers\Admin\ContactController::class, 'updateStatus'])->name('admin.contacts.update-status');
-        Route::post('/{id}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('admin.contacts.reply');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contacts.destroy');
+    Route::middleware(['permission:view-contacts,admin-guard'])->group(function () {
+        Route::group(['prefix' => 'app/contacts'], function () {
+            Route::get('/', [\App\Http\Controllers\Admin\ContactController::class, 'index'])->name('admin.contacts.index');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'show'])->name('admin.contacts.show');
+            Route::patch('/{id}/status', [\App\Http\Controllers\Admin\ContactController::class, 'updateStatus'])->name('admin.contacts.update-status');
+            Route::post('/{id}/reply', [\App\Http\Controllers\Admin\ContactController::class, 'sendReply'])->name('admin.contacts.reply');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\ContactController::class, 'destroy'])->name('admin.contacts.destroy');
+        });
     });
 
     // CMS Module
-    Route::group(['prefix' => 'app/cms'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\CMSController::class, 'index'])->name('admin.cms.index');
-        Route::get('/create', [\App\Http\Controllers\Admin\CMSController::class, 'create'])->name('admin.cms.create');
-        Route::post('/', [\App\Http\Controllers\Admin\CMSController::class, 'store'])->name('admin.cms.store');
-        Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CMSController::class, 'edit'])->name('admin.cms.edit');
-        Route::put('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'update'])->name('admin.cms.update');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'destroy'])->name('admin.cms.destroy');
+    Route::middleware(['permission:view-cms,admin-guard'])->group(function () {
+        Route::group(['prefix' => 'app/cms'], function () {
+            Route::get('/', [\App\Http\Controllers\Admin\CMSController::class, 'index'])->name('admin.cms.index');
+            Route::get('/create', [\App\Http\Controllers\Admin\CMSController::class, 'create'])->name('admin.cms.create')->middleware('permission:create-cms,admin-guard');
+            Route::post('/', [\App\Http\Controllers\Admin\CMSController::class, 'store'])->name('admin.cms.store')->middleware('permission:create-cms,admin-guard');
+            Route::get('/{id}/edit', [\App\Http\Controllers\Admin\CMSController::class, 'edit'])->name('admin.cms.edit')->middleware('permission:edit-cms,admin-guard');
+            Route::put('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'update'])->name('admin.cms.update')->middleware('permission:edit-cms,admin-guard');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\CMSController::class, 'destroy'])->name('admin.cms.destroy')->middleware('permission:delete-cms,admin-guard');
 
-        // CMS Items Management (within a section)
-        Route::post('/{sectionId}/items', [\App\Http\Controllers\Admin\CMSController::class, 'storeItem'])->name('admin.cms.items.store');
-        Route::post('/items/update-direct', [\App\Http\Controllers\Admin\CMSController::class, 'updateItemDirect'])->name('admin.cms.items.update-direct');
-        Route::put('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'updateItem'])->name('admin.cms.items.update');
-        Route::delete('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyItem'])->name('admin.cms.items.destroy');
+            // CMS Items Management (within a section)
+            Route::post('/{sectionId}/items', [\App\Http\Controllers\Admin\CMSController::class, 'storeItem'])->name('admin.cms.items.store')->middleware('permission:create-cms,admin-guard');
+            Route::post('/items/update-direct', [\App\Http\Controllers\Admin\CMSController::class, 'updateItemDirect'])->name('admin.cms.items.update-direct')->middleware('permission:edit-cms,admin-guard');
+            Route::put('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'updateItem'])->name('admin.cms.items.update')->middleware('permission:edit-cms,admin-guard');
+            Route::delete('/items/{itemId}', [\App\Http\Controllers\Admin\CMSController::class, 'destroyItem'])->name('admin.cms.items.destroy')->middleware('permission:delete-cms,admin-guard');
+        });
     });
 
     // TRADE OFFERS Module
-    Route::group(['prefix' => 'app/trade-offers'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\TradeOfferController::class, 'index'])->name('admin.trade-offers.index');
-        Route::get('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'show'])->name('admin.trade-offers.show');
-        Route::patch('/{id}/status', [\App\Http\Controllers\Admin\TradeOfferController::class, 'updateStatus'])->name('admin.trade-offers.update-status');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'destroy'])->name('admin.trade-offers.destroy');
+    Route::middleware(['permission:view-trade_offers,admin-guard'])->group(function () {
+        Route::group(['prefix' => 'app/trade-offers'], function () {
+            Route::get('/', [\App\Http\Controllers\Admin\TradeOfferController::class, 'index'])->name('admin.trade-offers.index');
+            Route::get('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'show'])->name('admin.trade-offers.show');
+            Route::patch('/{id}/status', [\App\Http\Controllers\Admin\TradeOfferController::class, 'updateStatus'])->name('admin.trade-offers.update-status');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\TradeOfferController::class, 'destroy'])->name('admin.trade-offers.destroy')->middleware('permission:delete-trade_offers,admin-guard');
+        });
     });
 
     // NEWSLETTER Module
-    Route::group(['prefix' => 'app/newsletter'], function () {
-        Route::get('/', [\App\Http\Controllers\Admin\NewsletterController::class, 'index'])->name('admin.newsletter.index');
-        Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy');
+    Route::middleware(['permission:view-newsletter,admin-guard'])->group(function () {
+        Route::group(['prefix' => 'app/newsletter'], function () {
+            Route::get('/', [\App\Http\Controllers\Admin\NewsletterController::class, 'index'])->name('admin.newsletter.index');
+            Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy')->middleware('permission:delete-newsletter,admin-guard');
+        });
     });
 
 });
