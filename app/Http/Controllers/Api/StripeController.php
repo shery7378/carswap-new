@@ -62,10 +62,16 @@ class StripeController extends Controller
         $frontendUrl = rtrim(config('app.frontend_url', env('FRONTEND_URL', 'http://localhost:3000')), '/');
         $amount = $request->billing === 'yearly' ? $plan->yearly_price : $plan->price;
 
+        // --- CUSTOMER PERSISTENCE LOGIC ---
+        // Try to find if this user already has a Stripe Customer ID in our records
+        $lastSub = Subscription::where('user_id', $user->id)
+            ->whereNotNull('stripe_customer_id')
+            ->latest()
+            ->first();
+
         try {
-            $session = StripeSession::create([
+            $sessionParams = [
                 'mode' => 'payment',
-                'customer_email' => $user->email,
                 'payment_intent_data' => [
                     'setup_future_usage' => 'off_session',
                 ],
@@ -93,7 +99,18 @@ class StripeController extends Controller
                 ],
                 'success_url' => $frontendUrl . '/account/billing?status=success&session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => $frontendUrl . '/account/billing?status=cancelled',
-            ]);
+            ];
+
+            if ($lastSub) {
+                // Reuse existing customer
+                $sessionParams['customer'] = $lastSub->stripe_customer_id;
+            } else {
+                // Create a new customer and link to email
+                $sessionParams['customer_email'] = $user->email;
+                $sessionParams['customer_creation'] = 'always';
+            }
+
+            $session = StripeSession::create($sessionParams);
 
             // Create a pending subscription record with ALL info
             $subscription = Subscription::create([
