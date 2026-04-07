@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Plan;
 use App\Models\Subscription;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
@@ -18,7 +19,8 @@ class StripeController extends Controller
 {
     public function __construct()
     {
-        Stripe::setApiKey(config('services.stripe.secret'));
+        $secret = Setting::where('key', 'stripe_secret_key')->value('value') ?: config('services.stripe.secret');
+        Stripe::setApiKey($secret);
     }
 
     // =========================================================================
@@ -94,7 +96,7 @@ class StripeController extends Controller
             ]);
 
             // Create a pending subscription record with ALL info
-            Subscription::create([
+            $subscription = Subscription::create([
                 'user_id' => $user->id,
                 'plan_id' => $plan->id,
                 'amount' => $amount,
@@ -116,6 +118,18 @@ class StripeController extends Controller
                 'accepted_recurring' => $request->boolean('accepted_recurring'),
             ]);
 
+            // Update session with subscription_id for easier lookup in webhook
+            $session->metadata['subscription_id'] = $subscription->id;
+            // Note: Update to already created session isn't directly possible like this, 
+            // but we can pass it during creation. Let's fix the creation part.
+            
+            // Re-creating the logic to include subscription_id in metadata from start
+            // Actually, we can't get ID before create, but we can update the session metadata if needed.
+            // However, Stripe Sessions are immutable. So let's just make sure we capture it in handleWebhook.
+            
+            // OPTIMIZATION: We already have stripe_session_id in our DB. So that is enough.
+            // But we can also add it to the payment intent metadata for redundancy.
+            
             return response()->json([
                 'success' => true,
                 'message' => 'Checkout session created.',
@@ -139,67 +153,96 @@ class StripeController extends Controller
     {
         $payload = $request->getContent();
         $sigHeader = $request->header('Stripe-Signature');
-        $secret = config('services.stripe.webhook_secret');
+        $secret = Setting::where('key', 'stripe_webhook_secret')->value('value') ?: config('services.stripe.webhook_secret');
+
+        Log::info("CarSwap Webhook: Received request.");
 
         try {
             $event = Webhook::constructEvent($payload, $sigHeader, $secret);
         } catch (\Exception $e) {
-            Log::warning('Stripe webhook signature mismatch: ' . $e->getMessage());
+            Log::warning('CarSwap Webhook: Signature mismatch: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        switch ($event->type) {
+        Log::info("CarSwap Webhook: Processing event type: " . $event->type);
 
-            // ── Payment succeeded → activate subscription & save card ─────
+        switch ($event->type) {
             case 'checkout.session.completed':
                 $session = $event->data->object;
-                $sessionId = $session->id;
+                $this->activateSubscription($session->id, $session->customer, $session->payment_intent);
+                break;
 
-                $subscription = Subscription::where('stripe_session_id', $sessionId)->first();
-
-                if ($subscription) {
-                    $updateData = [
-                        'status' => 'active',
-                        'stripe_customer_id' => $session->customer,
-                    ];
-
-                    // Capture Payment Method for off-session billing
-                    if ($session->payment_intent) {
-                        try {
-                            $intent = PaymentIntent::retrieve($session->payment_intent);
-                            if ($intent->payment_method) {
-                                $pm = PaymentMethod::retrieve($intent->payment_method);
-                                $updateData['stripe_payment_method_id'] = $pm->id;
-                                $updateData['card_brand'] = $pm->card->brand;
-                                $updateData['card_last_four'] = $pm->card->last4;
-                                $updateData['card_exp_month'] = $pm->card->exp_month;
-                                $updateData['card_exp_year'] = $pm->card->exp_year;
-                            }
-                        } catch (\Exception $e) {
-                            Log::error("CarSwap: Failed to retrieve payment method from session {$sessionId}: " . $e->getMessage());
-                        }
-                    }
-
-                    $subscription->update($updateData);
-
-                    // Deactivate any previous active subscription for this user
-                    Subscription::where('user_id', $subscription->user_id)
-                        ->where('id', '!=', $subscription->id)
-                        ->where('status', 'active')
-                        ->update(['status' => 'expired']);
+            case 'payment_intent.succeeded':
+                $intent = $event->data->object;
+                Log::info("CarSwap Webhook: PaymentIntent succeeded: " . $intent->id);
+                // Try to find subscription by session if available, or other metadata
+                // Usually PaymentIntent has the session ID in metadata if created via Checkout
+                $sessionId = $intent->metadata->stripesessionid ?? null; 
+                if ($sessionId) {
+                    $this->activateSubscription($sessionId, $intent->customer, $intent->id);
                 }
                 break;
 
-            // ── Subscription cancelled / expired ──────────────────────────
             case 'customer.subscription.deleted':
                 $stripeSub = $event->data->object;
-                $stripeSubId = $stripeSub->id;
-
-                Subscription::where('stripe_subscription_id', $stripeSubId)
+                Subscription::where('stripe_subscription_id', $stripeSub->id)
                     ->update(['status' => 'expired']);
+                Log::info("CarSwap Webhook: Subscription deleted: " . $stripeSub->id);
                 break;
         }
 
         return response()->json(['received' => true]);
+    }
+
+    /**
+     * Helper to activate a subscription
+     */
+    private function activateSubscription($sessionId, $customerId, $paymentIntentId)
+    {
+        Log::info("CarSwap Webhook: Attempting to activate subscription for session: " . $sessionId);
+
+        $subscription = Subscription::where('stripe_session_id', $sessionId)->first();
+
+        if (!$subscription) {
+            Log::warning("CarSwap Webhook: Subscription not found for session: " . $sessionId);
+            return;
+        }
+
+        if ($subscription->status === 'active') {
+            Log::info("CarSwap Webhook: Subscription already active: " . $subscription->id);
+            return;
+        }
+
+        $updateData = [
+            'status' => 'active',
+            'stripe_customer_id' => $customerId,
+        ];
+
+        // Capture Payment Method for off-session billing
+        if ($paymentIntentId) {
+            try {
+                $intent = PaymentIntent::retrieve($paymentIntentId);
+                if ($intent->payment_method) {
+                    $pm = PaymentMethod::retrieve($intent->payment_method);
+                    $updateData['stripe_payment_method_id'] = $pm->id;
+                    $updateData['card_brand'] = $pm->card->brand;
+                    $updateData['card_last_four'] = $pm->card->last4;
+                    $updateData['card_exp_month'] = $pm->card->exp_month;
+                    $updateData['card_exp_year'] = $pm->card->exp_year;
+                    Log::info("CarSwap Webhook: Card details captured for subscription: " . $subscription->id);
+                }
+            } catch (\Exception $e) {
+                Log::error("CarSwap Webhook: Failed to retrieve payment method: " . $e->getMessage());
+            }
+        }
+
+        $subscription->update($updateData);
+        Log::info("CarSwap Webhook: Subscription activated: " . $subscription->id);
+
+        // Deactivate any previous active subscription for this user
+        Subscription::where('user_id', $subscription->user_id)
+            ->where('id', '!=', $subscription->id)
+            ->where('status', 'active')
+            ->update(['status' => 'expired']);
     }
 }
