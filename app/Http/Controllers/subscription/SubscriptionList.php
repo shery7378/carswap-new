@@ -23,7 +23,9 @@ class SubscriptionList extends Controller
         $payments = Payment::where('user_id', $subscription->user_id)
             ->latest()
             ->get();
-        $plans = Plan::where('is_active', true)->get();
+        $plans = Plan::where('is_active', true)->get()->unique(function ($item) {
+            return $item->name . $item->price . $item->billing_period;
+        });
 
         if (request()->ajax()) {
             return view('content.app.subscription.invoice-modal-content', compact('subscription', 'payments', 'plans'));

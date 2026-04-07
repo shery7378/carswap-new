@@ -224,7 +224,8 @@
                                 <label class="form-label">Subscription Plan</label>
                                 <select name="plan_id" class="form-select">
                                     @foreach($plans as $plan)
-                                        <option value="{{ $plan->id }}" {{ $subscription->plan_id == $plan->id ? 'selected' : '' }}>{{ $plan->name }} (HUF {{ number_format((float) $plan->price, 0, '.', '') }})
+                                        <option value="{{ $plan->id }}" {{ $subscription->plan_id == $plan->id ? 'selected' : '' }}>
+                                            {{ $plan->name }} - {{ ucfirst($plan->billing_period) }} (HUF {{ number_format((float) $plan->price, 0, '.', '') }})
                                         </option>
                                     @endforeach
                                 </select>
