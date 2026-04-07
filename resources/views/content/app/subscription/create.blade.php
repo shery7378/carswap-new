@@ -155,25 +155,6 @@
                     </div>
                 </div>
 
-                <hr class="my-3">
-
-                {{-- Stripe Integration --}}
-                <label class="form-label fw-semibold text-muted small">
-                    <i class="bx bxl-stripe me-1"></i> Stripe Integration (Optional)
-                </label>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <input type="text" name="stripe_price_id_monthly" class="form-control form-control-sm"
-                               placeholder="Stripe Monthly Price ID"
-                               value="{{ isset($plan) ? $plan->stripe_price_id_monthly : old('stripe_price_id_monthly') }}">
-                    </div>
-                    <div class="col-md-6">
-                        <input type="text" name="stripe_price_id_yearly" class="form-control form-control-sm"
-                               placeholder="Stripe Yearly Price ID"
-                               value="{{ isset($plan) ? $plan->stripe_price_id_yearly : old('stripe_price_id_yearly') }}">
-                    </div>
-                </div>
-
             </div>
         </div>
 
