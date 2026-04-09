@@ -28,7 +28,7 @@ class AdminVehicleController extends Controller
             $query->where('ad_status', $request->status);
         }
 
-        $vehicles = $query->orderBy('id', 'desc')->paginate(500);
+        $vehicles = $query->orderBy('created_at', 'desc')->paginate(500);
         return view('content.dashboard.vehicles.index', compact('vehicles'));
     }
 
@@ -342,6 +342,22 @@ class AdminVehicleController extends Controller
         $vehicle->update(['ad_status' => $request->ad_status]);
 
         return redirect()->back()->with('success', 'Vehicle status updated to ' . $request->ad_status);
+    }
+
+    public function bulkUpdateStatus(Request $request)
+    {
+        $request->validate([
+            'ids' => 'required|array',
+            'ids.*' => 'exists:vehicles,id',
+            'ad_status' => 'required|in:published,rejected,pending,draft'
+        ]);
+
+        Vehicle::whereIn('id', $request->ids)->update(['ad_status' => $request->ad_status]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Status updated for ' . count($request->ids) . ' vehicles.'
+        ]);
     }
 
     public function toggleFeatured($id)

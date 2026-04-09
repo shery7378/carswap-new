@@ -12,6 +12,18 @@
                     <h5 class="mb-0">{{ __('Vehicles List') }}</h5>
 
                     <div class="d-flex align-items-center gap-2 flex-wrap">
+                        <!-- Bulk Actions -->
+                        <div id="bulk-actions" class="d-none me-3">
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-label-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bx bx-check-double me-1"></i> Bulk Actions
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="published">Mark as Published</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="rejected">Reject All</a></li>
+                                </ul>
+                            </div>
+                        </div>
 
                         <!-- Status Filter -->
                         <form action="{{ route('admin.vehicles.index') }}" method="GET">
@@ -53,6 +65,11 @@
                         <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
+                                    <th width="10">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="check-all">
+                                        </div>
+                                    </th>
                                     <th>{{ __('Thumbnail') }}</th>
                                     <th>{{ __('Vehicle') }}</th>
                                     <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
@@ -68,6 +85,11 @@
                             <tbody>
                                 @forelse($vehicles as $vehicle)
                                     <tr data-id="{{ $vehicle->id }}">
+                                        <td>
+                                            <div class="form-check">
+                                                <input class="form-check-input vehicle-checkbox" type="checkbox" value="{{ $vehicle->id }}">
+                                            </div>
+                                        </td>
                                         <td>
                                             @if($vehicle->main_image)
                                                 <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
@@ -151,6 +173,12 @@
                                                     </form>
                                                 </ul>
                                             </div>
+                                            @if($vehicle->ad_status !== 'published')
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1" 
+                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="Quick Approve">
+                                                    <i class="bx bx-check"></i>
+                                                </button>
+                                            @endif
                                         </td>
 
                                         <td class="text-end pe-4">
@@ -484,6 +512,86 @@
                 });
             });
 
+            // ── Bulk Status Update ───────────────────────────────────────────────
+            const bulkActions = $('#bulk-actions');
+            const checkAll = $('#check-all');
+            const checkboxes = $('.vehicle-checkbox');
+
+            checkAll.on('change', function() {
+                checkboxes.prop('checked', this.checked);
+                toggleBulkActions();
+            });
+
+            checkboxes.on('change', function() {
+                toggleBulkActions();
+            });
+
+            function toggleBulkActions() {
+                const checkedCount = $('.vehicle-checkbox:checked').length;
+                if (checkedCount > 0) {
+                    bulkActions.removeClass('d-none');
+                } else {
+                    bulkActions.addClass('d-none');
+                }
+            }
+
+            $('.bulk-status-btn').on('click', function() {
+                const status = $(this).data('status');
+                const selectedIds = $('.vehicle-checkbox:checked').map(function() { return $(this).val(); }).get();
+
+                if (selectedIds.length === 0) return;
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Update status to ${status} for ${selectedIds.length} vehicles?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, update all!',
+                    customClass: {
+                        confirmButton: 'btn btn-primary me-3',
+                        cancelButton: 'btn btn-label-secondary'
+                    },
+                    buttonsStyling: false
+                }).then(function (result) {
+                    if (result.value) {
+                        $.ajax({
+                            url: '{{ route("admin.vehicles.bulk-status") }}',
+                            type: 'POST',
+                            data: {
+                                _token: '{{ csrf_token() }}',
+                                ids: selectedIds,
+                                ad_status: status
+                            },
+                            success: function(res) {
+                                if (res.success) {
+                                    toastr.success(res.message);
+                                    setTimeout(() => window.location.reload(), 1000);
+                                }
+                            }
+                        });
+                    }
+                });
+            });
+
+            // ── Quick Approve ────────────────────────────────────────────────────
+            $(document).on('click', '.quick-approve-btn', function() {
+                const id = $(this).data('id');
+                const btn = $(this);
+
+                $.ajax({
+                    url: `{{ url('/app/vehicles') }}/${id}/status`,
+                    type: 'PATCH',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        ad_status: 'published'
+                    },
+                    success: function(res) {
+                        toastr.success('Vehicle approved successfully!');
+                        setTimeout(() => window.location.reload(), 500);
+                    }
+                });
+            });
+
             // ── Init tooltips ────────────────────────────────────────────────────
             $('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -584,6 +692,20 @@
         /* ── Actions: never wrap ────────────────────────────── */
         .d-flex.flex-nowrap {
             flex-wrap: nowrap !important;
+        }
+        /* Ensure all columns are visible on screens 1440px and wider without horizontal scrollbar */
+        @media (min-width: 1440px) {
+            .table-responsive {
+                overflow-x: visible !important;
+            }
+            #vehicles-table {
+                width: 100% !important;
+                table-layout: auto;
+            }
+            #vehicles-table th, #vehicles-table td {
+                padding-left: 0.5rem !important;
+                padding-right: 0.5rem !important;
+            }
         }
     </style>
 @endsection

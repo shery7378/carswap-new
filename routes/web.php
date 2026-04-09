@@ -210,6 +210,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::put('/app/vehicles/{id}', [AdminVehicleController::class, 'update'])->name('admin.vehicles.update')->middleware('permission:edit-vehicles,admin-guard');
         Route::delete('/app/vehicles/{id}', [AdminVehicleController::class, 'destroy'])->name('admin.vehicles.destroy')->middleware('permission:delete-vehicles,admin-guard');
         Route::patch('/app/vehicles/{id}/status', [AdminVehicleController::class, 'updateStatus'])->name('admin.vehicles.update-status')->middleware('permission:edit-vehicles,admin-guard');
+        Route::post('/app/vehicles/bulk-status', [AdminVehicleController::class, 'bulkUpdateStatus'])->name('admin.vehicles.bulk-status')->middleware('permission:edit-vehicles,admin-guard');
     });
 
     // PARTNERS Module
