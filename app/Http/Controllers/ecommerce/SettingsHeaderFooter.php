@@ -11,10 +11,14 @@ class SettingsHeaderFooter extends Controller
 {
     public function index()
     {
-        $settings = Setting::whereIn('key', [
-            'footer_name',
-            'footer_description'
-        ])->pluck('value', 'key')->toArray();
+        $defaults = [
+            'footer_mailing_list_title' => 'Csatlakozz a levelezőlistánkhoz!',
+            'footer_mailing_list_subtitle' => 'Join our mailing list! Stay updated with our latest offers.',
+            'footer_mailing_list_note' => 'Hetente néhány levél, semmi felesleges.'
+        ];
+
+        $dbSettings = Setting::whereIn('key', array_keys($defaults))->pluck('value', 'key')->toArray();
+        $settings = array_merge($defaults, $dbSettings);
 
         return view('content.apps.ecommerce.ecommerce-settings-header-footer', compact('settings'));
     }
@@ -22,8 +26,9 @@ class SettingsHeaderFooter extends Controller
     public function store(Request $request)
     {
         $fields = [
-            'footer_name',
-            'footer_description'
+            'footer_mailing_list_title',
+            'footer_mailing_list_subtitle',
+            'footer_mailing_list_note'
         ];
 
         foreach ($fields as $field) {

@@ -17,6 +17,7 @@ use App\Models\Color;
 use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Services\EmailService;
 
 class AdminVehicleController extends Controller
 {
@@ -339,7 +340,17 @@ class AdminVehicleController extends Controller
         ]);
 
         $vehicle = Vehicle::findOrFail($id);
+        $oldStatus = $vehicle->ad_status;
         $vehicle->update(['ad_status' => $request->ad_status]);
+
+        // Send Email if newly published
+        if ($request->ad_status === 'published' && $oldStatus !== 'published' && $vehicle->user) {
+            EmailService::send($vehicle->user->email, 'vehicle-approved', [
+                'first_name' => $vehicle->user->first_name,
+                'vehicle_name' => $vehicle->title,
+                'vehicle_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Vehicle status updated to ' . $request->ad_status);
     }
@@ -352,7 +363,21 @@ class AdminVehicleController extends Controller
             'ad_status' => 'required|in:published,rejected,pending,draft'
         ]);
 
-        Vehicle::whereIn('id', $request->ids)->update(['ad_status' => $request->ad_status]);
+        $vehicles = Vehicle::whereIn('id', $request->ids)->get();
+
+        foreach ($vehicles as $vehicle) {
+            $oldStatus = $vehicle->ad_status;
+            $vehicle->update(['ad_status' => $request->ad_status]);
+
+            // Send Email if newly published
+            if ($request->ad_status === 'published' && $oldStatus !== 'published' && $vehicle->user) {
+                EmailService::send($vehicle->user->email, 'vehicle-approved', [
+                    'first_name' => $vehicle->user->first_name,
+                    'vehicle_name' => $vehicle->title,
+                    'vehicle_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id
+                ]);
+            }
+        }
 
         return response()->json([
             'success' => true,

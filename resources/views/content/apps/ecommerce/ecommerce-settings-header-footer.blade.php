@@ -23,24 +23,31 @@
                         enctype="multipart/form-data">
                         @csrf
                         
-                        <!-- Footer Section -->
-                        <div class="mb-5">
-                            <h6 class="fw-bold mb-3 text-primary"><i class="bx bx-dock-bottom me-1"></i> Footer Content
+
+                        <!-- Mailing List Section -->
+                        <div class="mb-5" id="mailing-list">
+                            <h6 class="fw-bold mb-3 text-primary"><i class="bx bx-envelope me-1"></i> Mailing List Content
                             </h6>
                             <hr>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label" for="footer_name">Brand Name</label>
+                                <label class="col-sm-2 col-form-label" for="footer_mailing_list_title">Main Heading</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control shadow-sm" name="footer_name"
-                                        value="{{ $settings['footer_name'] ?? '' }}" placeholder="CarSwap" />
+                                    <input type="text" class="form-control shadow-sm" name="footer_mailing_list_title"
+                                        value="{{ $settings['footer_mailing_list_title'] ?? '' }}" placeholder="Csatlakozz a levelezőlistánkhoz!" />
                                 </div>
                             </div>
                             <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label"
-                                    for="footer_description">About/Description</label>
+                                <label class="col-sm-2 col-form-label" for="footer_mailing_list_subtitle">Subheading</label>
                                 <div class="col-sm-10">
-                                    <textarea class="form-control shadow-sm" name="footer_description"
-                                        rows="3" placeholder="Describe your brand here...">{{ $settings['footer_description'] ?? '' }}</textarea>
+                                    <input type="text" class="form-control shadow-sm" name="footer_mailing_list_subtitle"
+                                        value="{{ $settings['footer_mailing_list_subtitle'] ?? '' }}" placeholder="Join our mailing list! Stay updated with our latest offers." />
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-2 col-form-label" for="footer_mailing_list_note">Bottom Note</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control shadow-sm" name="footer_mailing_list_note"
+                                        value="{{ $settings['footer_mailing_list_note'] ?? '' }}" placeholder="Hetente néhány levél, semmi felesleges." />
                                 </div>
                             </div>
                         </div>

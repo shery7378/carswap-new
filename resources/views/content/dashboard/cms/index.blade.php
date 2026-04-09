@@ -155,26 +155,26 @@
         </div>
     @endforelse
 
-    <!-- Added Header & Footer Settings for Discoverability -->
+    <!-- Mailing List Settings -->
     <div class="col-md-6 col-lg-4">
-        <div class="card h-100 cms-card shadow-none border-primary border-dashed" style="border-style: dashed !important;">
+        <div class="card h-100 cms-card shadow-none">
             <div class="cms-card-header">
-                <div class="cms-card-icon bg-label-primary">
-                    <i class="bx bx-dock-bottom fs-4"></i>
+                <div class="cms-card-icon bg-label-warning">
+                    <i class="bx bx-envelope fs-4"></i>
                 </div>
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="fw-bold mb-0 text-dark">Footer</h6>
+                    <h6 class="fw-bold mb-0 text-dark">Mailing List</h6>
                     <span class="badge bg-label-info">Global Settings</span>
                 </div>
-                <small class="cms-item-count">Logos, Colors, & Links</small>
+                <small class="cms-item-count">Hero & Call to Action</small>
             </div>
             <div class="card-body p-4 pt-3">
                 <p class="text-muted small mb-4">
-                    Manage your platform's global footer content, including brand name and description.
+                    Edit the headings and promotional text for your footer's mailing list subscription section.
                 </p>
                 <div class="d-flex gap-2">
-                    <a href="{{ route('app-ecommerce-settings-header-footer') }}" class="btn btn-primary flex-grow-1">
-                        Configure Footer
+                    <a href="{{ route('app-ecommerce-settings-header-footer') }}#mailing-list" class="btn cms-btn-secondary flex-grow-1">
+                        Modify Content
                     </a>
                 </div>
             </div>
