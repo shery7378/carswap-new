@@ -149,6 +149,12 @@
           "name": "Notifications",
           "slug": "app-ecommerce-settings-notifications",
           "permission": "view-settings"
+        },
+        {
+          "url": "app/ecommerce/settings/header-footer",
+          "name": "Footer",
+          "slug": "app-ecommerce-settings-header-footer",
+          "permission": "view-settings"
         }
       ]
     },

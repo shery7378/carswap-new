@@ -471,7 +471,7 @@
 
             // ── Desktop row click → modal ────────────────────────────────────────
             $(document).on('click', '#vehicles-table tbody tr', function (e) {
-                if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button').length) return;
+                if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button, .form-check').length) return;
                 openVehicleModal($(this).data('id'));
             });
 
