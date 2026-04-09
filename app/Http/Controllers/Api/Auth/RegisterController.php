@@ -85,9 +85,21 @@ class RegisterController extends Controller
                 }
             }
 
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            $user->load('activeSubscription.plan');
+            $userData = $user->toArray();
+            if ($user->profile_picture) {
+                $userData['profile_picture_url'] = asset($user->profile_picture);
+            }
+
             return response()->json([
                 'success' => true,
-                'message' => 'User registered successfully'
+                'message' => 'User registered successfully',
+                'token' => $token,
+                'token_type' => 'Bearer',
+                'data' => $userData,
+                'redirect_to' => '/profile'
             ], 201);
         } catch (ValidationException $e) {
 
