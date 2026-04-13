@@ -108,7 +108,7 @@ class AdminVehicleController extends Controller
                 break;
             case 'newest':
             default:
-                $query->orderBy('created_at', 'desc');
+                $query->orderBy('id', 'desc');
                 break;
         }
 

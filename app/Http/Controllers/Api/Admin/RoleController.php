@@ -15,7 +15,9 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->get();
+        $roles = Role::with('permissions')
+            ->orderBy('id', 'desc')
+            ->get();
         return response()->json([
             'success' => true,
             'data' => $roles

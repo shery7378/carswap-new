@@ -16,7 +16,7 @@ class CMSController extends Controller
      */
     public function index()
     {
-        $sections = CMSSection::withCount('items')->get();
+        $sections = CMSSection::withCount('items')->orderBy('id', 'desc')->get();
         return view('content.dashboard.cms.index', compact('sections'));
     }
 

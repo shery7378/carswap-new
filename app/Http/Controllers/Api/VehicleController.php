@@ -149,7 +149,7 @@ class VehicleController extends Controller
                 break;
             case 'newest':
             default:
-                $query->orderBy('created_at', 'desc');
+                $query->orderBy('id', 'desc');
                 break;
         }
 
@@ -199,7 +199,7 @@ class VehicleController extends Controller
         ->where('ad_status', 'published')
         ->where('user_id', $vehicle->user_id) // Same user
         ->where('id', '!=', $vehicle->id) // Exclude the current vehicle
-        ->orderBy('created_at', 'desc')
+        ->orderBy('id', 'desc')
         ->limit(3)
         ->get();
 

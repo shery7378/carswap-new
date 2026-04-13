@@ -16,7 +16,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('roles', 'activeSubscription.plan')->get();
+        $users = User::with('roles', 'activeSubscription.plan')
+            ->orderBy('id', 'desc')
+            ->get();
         return response()->json([
             'success' => true,
             'data' => $users

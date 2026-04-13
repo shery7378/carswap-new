@@ -94,8 +94,8 @@ class UserAdController extends Controller
         match ($request->input('sort', 'newest')) {
             'price_low' => $query->orderBy('price', 'asc'),
             'price_high' => $query->orderBy('price', 'desc'),
-            'oldest' => $query->orderBy('created_at', 'asc'),
-            default => $query->orderBy('created_at', 'desc'),
+            'oldest' => $query->orderBy('id', 'asc'),
+            default => $query->orderBy('id', 'desc'),
         };
 
         $ads = $query->paginate($request->input('limit', 12));
@@ -220,7 +220,7 @@ class UserAdController extends Controller
         $ads = Vehicle::with($this->relations)
             ->where('user_id', $request->user()->id)
             ->whereIn('ad_status', ['published', 'pending', 'draft'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->paginate($request->input('limit', 12));
 
         return response()->json([
@@ -244,7 +244,7 @@ class UserAdController extends Controller
             $query->where('ad_status', $request->input('status'));
         }
 
-        $ads = $query->orderBy('created_at', 'desc')
+        $ads = $query->orderBy('id', 'desc')
             ->paginate($request->input('limit', 12));
 
         return response()->json([
