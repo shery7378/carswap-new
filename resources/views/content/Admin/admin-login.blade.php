@@ -162,7 +162,10 @@
         </div>
 
         <div class="mb-4 form-password-toggle">
-          <label class="form-label" for="password">Password</label>
+          <div class="d-flex justify-content-between align-items-center">
+            <label class="form-label" for="password">Password</label>
+            <a href="{{ route('admin.password.request') }}" class="small text-primary fw-semibold">Forgot Password?</a>
+          </div>
           <div class="input-group input-group-merge">
             <input
               type="password"

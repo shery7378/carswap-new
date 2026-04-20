@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             PermissionSeeder::class,
             AdminUserSeeder::class,
+            ComprehensiveVehicleSeeder::class,
         ]);
         // User::factory()->create([
         //     'name' => 'Test User',

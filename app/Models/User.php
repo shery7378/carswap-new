@@ -30,6 +30,7 @@ class User extends Authenticatable
         'youtube',
         'is_trader',
         'role',
+        'status',
         'email_verified_at',
     ];
 
@@ -66,5 +67,16 @@ class User extends Authenticatable
     public function activeSubscription()
     {
         return $this->hasOne(Subscription::class)->where('status', 'active')->latestOfMany();
+    }
+
+    /**
+     * Get the avatar URL: uploaded photo or UI Avatars default.
+     */
+    public function getAvatarUrl(): string
+    {
+        if ($this->profile_picture) {
+            return asset('storage/' . $this->profile_picture);
+        }
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
     }
 }

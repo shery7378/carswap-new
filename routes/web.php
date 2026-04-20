@@ -67,6 +67,12 @@ use App\Http\Controllers\Admin\ProfileController as AdminProfileController;
 Route::get('/', [AuthController::class, 'index'])->name('login');
 Route::post('/login', [AuthController::class, 'store'])->name('admin-login-store');
 
+// Forgot Password Routes
+Route::get('/forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('admin.password.request');
+Route::post('/forgot-password', [AuthController::class, 'sendResetLinkEmail'])->name('admin.password.email');
+Route::get('/reset-password/{token}', [AuthController::class, 'showResetPasswordForm'])->name('admin.password.reset');
+Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('admin.password.update');
+
 // Protected Routes Section
 Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-guard'])->group(function () {
 
@@ -180,20 +186,29 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy')->middleware('permission:delete-roles,admin-guard');
     });
 
+    Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit');
+
     // Access Control: ADMIN USERS
     Route::middleware(['permission:view-users,admin-guard'])->group(function () {
         Route::get('/app/access-control/users', [AdminUserController::class, 'index'])->name('admin.users.index');
         Route::get('/app/access-control/users/create', [AdminUserController::class, 'create'])->name('admin.users.create')->middleware('permission:create-users,admin-guard');
         Route::post('/app/access-control/users', [AdminUserController::class, 'store'])->name('admin.users.store')->middleware('permission:create-users,admin-guard');
-        Route::get('/app/access-control/users/{id}/edit', [AdminUserController::class, 'edit'])->name('admin.users.edit')->middleware('permission:edit-users,admin-guard');
         Route::put('/app/access-control/users/{id}', [AdminUserController::class, 'update'])->name('admin.users.update')->middleware('permission:edit-users,admin-guard');
         Route::delete('/app/access-control/users/{id}', [AdminUserController::class, 'destroy'])->name('admin.users.destroy')->middleware('permission:delete-users,admin-guard');
     });
 
-    // Access Control: WEB USERS
+    // Access Control: WEB USERS (Regular Customers)
     Route::middleware(['permission:view-users,admin-guard'])->group(function () {
         Route::get('/app/users', [User_Controller::class, 'index'])->name('admin.web-users.index');
+        Route::get('/app/users/create', [User_Controller::class, 'create'])->name('admin.web-users.create');
+        Route::post('/app/users', [User_Controller::class, 'store'])->name('admin.web-users.store');
         Route::get('/app/users/{id}', [User_Controller::class, 'view'])->name('admin.web-users.view');
+        Route::get('/app/users/{id}/edit', [User_Controller::class, 'edit'])->name('admin.web-users.edit');
+        Route::put('/app/users/{id}', [User_Controller::class, 'update'])->name('admin.web-users.update');
+        Route::delete('/app/users/{id}', [User_Controller::class, 'destroy'])->name('admin.web-users.destroy');
+        Route::patch('/app/users/{id}/status', [User_Controller::class, 'updateStatus'])->name('admin.web-users.update-status');
+        Route::post('/app/users/reset-password', [User_Controller::class, 'sendResetLink'])->name('admin.web-users.reset-password');
+        Route::post('/app/users/{id}/change-password', [User_Controller::class, 'changePassword'])->name('admin.web-users.change-password');
     });
 
     // Main VEHICLES Module
@@ -286,5 +301,4 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
             Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy')->middleware('permission:delete-newsletter,admin-guard');
         });
     });
-
 });
