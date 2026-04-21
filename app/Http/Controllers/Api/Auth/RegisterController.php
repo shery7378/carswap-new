@@ -39,12 +39,13 @@ class RegisterController extends Controller
                     'confirmed',
                     'min:6',
                     'regex:/^[A-Z]/',
-                    'regex:/[@$!%*#?&]/'
+                    'regex:/[!@#$%^&*(),.?":{}|<>]/',
                 ],
                 'has_whatsapp' => 'nullable|boolean',
                 'has_viber' => 'nullable|boolean',
             ], [
-                'password.regex' => 'Password must start with a capital letter and include a special character.',
+                'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+                'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
             ]);
 
             $user = User::create([
@@ -184,12 +185,21 @@ class RegisterController extends Controller
             'last_name' => 'sometimes|required|string|max:191',
             'phone' => 'sometimes|required|string|max:191|unique:users,phone,' . $user->id,
             'email' => 'sometimes|required|email|max:191|unique:users,email,' . $user->id,
-            'new_password' => ['sometimes', 'confirmed', 'min:6'],
+            'new_password' => [
+                'sometimes',
+                'confirmed',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'current_password' => 'required_with:new_password|current_password',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'has_whatsapp' => 'nullable|boolean',
             'has_viber' => 'nullable|boolean',
             'is_email_visible' => 'nullable|boolean',
+        ], [
+            'new_password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'new_password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         /*

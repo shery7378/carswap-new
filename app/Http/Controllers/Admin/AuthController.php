@@ -108,7 +108,16 @@ class AuthController extends Controller
         $request->validate([
             'token' => 'required',
             'email' => 'required|email|exists:admins,email',
-            'password' => 'required|confirmed|min:8',
+            'password' => [
+                'required',
+                'confirmed',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         $reset = DB::table('password_resets')

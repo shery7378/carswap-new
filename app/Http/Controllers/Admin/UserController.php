@@ -35,9 +35,17 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email',
-            'password' => 'required|min:8',
+            'password' => [
+                'required',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'roles' => 'array',
             'permissions' => 'array'
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         // Security check: Ensure 'super-admin' isn't being manually passed in
@@ -102,9 +110,17 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:admins,email,' . $id,
-            'password' => 'nullable|min:8',
+            'password' => [
+                'nullable',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'roles' => 'array',
             'permissions' => 'array'
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         $admin->first_name = $request->first_name;

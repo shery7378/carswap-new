@@ -52,7 +52,16 @@ class ProfileController extends Controller
     {
         $request->validate([
             'current_password' => ['required', 'current_password:admin-guard'],
-            'password' => ['required', 'confirmed', Password::defaults()],
+            'password' => [
+                'required',
+                'confirmed',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         $user = auth('admin-guard')->user();

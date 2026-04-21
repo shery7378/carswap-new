@@ -43,8 +43,16 @@ class User_Controller extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'nullable|string',
-            'password' => 'required|min:8',
+            'password' => [
+                'required',
+                'min:6',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
             'status' => 'required|in:active,inactive,banned',
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         User::create([
@@ -133,7 +141,17 @@ class User_Controller extends Controller
     public function changePassword(Request $request, $id)
     {
         $request->validate([
-            'password' => 'required|string|min:8|confirmed',
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'confirmed',
+                'regex:/^[A-Z]/',
+                'regex:/[!@#$%^&*(),.?":{}|<>]/',
+            ],
+        ], [
+            'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
         ]);
 
         $user = User::findOrFail($id);
