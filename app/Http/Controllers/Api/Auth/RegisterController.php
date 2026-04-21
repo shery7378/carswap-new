@@ -46,6 +46,7 @@ class RegisterController extends Controller
                 ],
                 'has_whatsapp' => 'nullable|boolean',
                 'has_viber' => 'nullable|boolean',
+                'is_trader' => 'nullable|boolean',
             ], [
                 'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
                 'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
@@ -60,6 +61,7 @@ class RegisterController extends Controller
                 'has_whatsapp' => $validated['has_whatsapp'] ?? false,
                 'has_viber' => $validated['has_viber'] ?? false,
                 'status' => 'inactive',
+                'is_trader' => $validated['is_trader'] ?? false,
             ]);
 
             // Assign FREE package to user
