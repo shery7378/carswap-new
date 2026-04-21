@@ -47,7 +47,7 @@ Route::get('/cms/{slug}', [\App\Http\Controllers\Api\CMSController::class, 'show
 
 // Public API route for registration
 Route::post('/register', [RegisterController::class, 'register']);
-Route::post('/verify-otp', [RegisterController::class, 'verifyOtp']);
+Route::get('/verify-email', [RegisterController::class, 'verifyEmail'])->name('api.verify-email');
 Route::post('/login', [RegisterController::class, 'login']);
 
 Route::middleware('auth:sanctum')->get('/profile', function (Request $request) {

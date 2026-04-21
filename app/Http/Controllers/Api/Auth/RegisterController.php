@@ -12,8 +12,9 @@ use App\Models\User;
 use App\Models\Plan;
 use App\Models\Subscription;
 use App\Mail\WelcomeMail;
-use App\Mail\VerifyEmailOtp;
+use App\Mail\VerifyEmailLink;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
 
 class RegisterController extends Controller
 {
@@ -50,79 +51,15 @@ class RegisterController extends Controller
                 'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
             ]);
 
-            // Generate 6-digit OTP
-            $otp = rand(100000, 999999);
-
-            // Store validated data and OTP in cache for 15 minutes
-            Cache::put('registration_data_' . $validated['email'], $validated, 900);
-            Cache::put('registration_otp_' . $validated['email'], $otp, 900);
-
-            // Send OTP email
-            try {
-                Mail::to($validated['email'])->send(new VerifyEmailOtp($otp));
-            } catch (\Exception $mailError) {
-                Log::error('OTP email failed for ' . $validated['email'] . ': ' . $mailError->getMessage());
-                // For local debugging, we might want to see the OTP in logs
-                if (env('APP_DEBUG')) {
-                    Log::info('OTP for ' . $validated['email'] . ': ' . $otp);
-                }
-            }
-
-            return response()->json([
-                'success' => true,
-                'message' => 'Verification code sent to your email address.',
-            ], 200);
-
-        } catch (ValidationException $e) {
-
-            return response()->json([
-                'success' => false,
-                'errors' => $e->errors()
-            ], 422);
-        } catch (\Exception $e) {
-            \Log::error('Registration error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
-
-            return response()->json([
-                'success' => false,
-                'message' => env('APP_DEBUG') ? $e->getMessage() : 'Server error'
-            ], 500);
-        }
-    }
-
-    public function verifyOtp(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'email' => 'required|email',
-                'otp' => 'required|numeric',
-            ]);
-
-            $cachedOtp = Cache::get('registration_otp_' . $validated['email']);
-            $userData = Cache::get('registration_data_' . $validated['email']);
-
-            if (!$cachedOtp || $cachedOtp != $validated['otp']) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Invalid or expired verification code.',
-                ], 422);
-            }
-
-            if (!$userData) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Registration data not found. Please register again.',
-                ], 422);
-            }
-
-            // Create user
             $user = User::create([
-                'first_name' => $userData['first_name'],
-                'last_name' => $userData['last_name'],
-                'phone' => $userData['phone'],
-                'email' => $userData['email'],
-                'password' => Hash::make($userData['password']),
-                'has_whatsapp' => $userData['has_whatsapp'] ?? false,
-                'has_viber' => $userData['has_viber'] ?? false,
+                'first_name' => $validated['first_name'],
+                'last_name' => $validated['last_name'],
+                'phone' => $validated['phone'],
+                'email' => $validated['email'],
+                'password' => Hash::make($validated['password']),
+                'has_whatsapp' => $validated['has_whatsapp'] ?? false,
+                'has_viber' => $validated['has_viber'] ?? false,
+                'status' => 'inactive',
             ]);
 
             // Assign FREE package to user
@@ -143,46 +80,69 @@ class RegisterController extends Controller
             // Assign basic user role
             $user->assignRole('user');
 
-            // Send welcome email
+            // Generate verification token
+            $token = Str::random(64);
+            Cache::put('email_verification_' . $token, $user->id, 86400); // 24 hours
+
+            // Send verification email
             try {
-                Mail::to($user->email)->send(new WelcomeMail($user));
+                Mail::to($user->email)->send(new VerifyEmailLink($user, $token));
             } catch (\Exception $mailError) {
-                Log::error('Welcome email failed for user ' . $user->email . ': ' . $mailError->getMessage());
-            }
-
-            // Clear cache
-            Cache::forget('registration_otp_' . $validated['email']);
-            Cache::forget('registration_data_' . $validated['email']);
-
-            $token = $user->createToken('auth_token')->plainTextToken;
-
-            $user->load('activeSubscription.plan');
-            $responseUserData = $user->toArray();
-            if ($user->profile_picture) {
-                $responseUserData['profile_picture_url'] = asset($user->profile_picture);
+                Log::error('Verification email failed for ' . $user->email . ': ' . $mailError->getMessage());
             }
 
             return response()->json([
                 'success' => true,
-                'message' => 'Enail verified and account created successfully',
-                'token' => $token,
-                'token_type' => 'Bearer',
-                'data' => $responseUserData,
-                'redirect_to' => '/profile'
+                'message' => 'Registration successful. Please check your email to verify your account.',
             ], 201);
 
         } catch (ValidationException $e) {
+
             return response()->json([
                 'success' => false,
                 'errors' => $e->errors()
             ], 422);
         } catch (\Exception $e) {
-            Log::error('Verification error: ' . $e->getMessage());
+            \Log::error('Registration error: ' . $e->getMessage() . ' | Trace: ' . $e->getTraceAsString());
+
             return response()->json([
                 'success' => false,
-                'message' => 'Server error'
+                'message' => env('APP_DEBUG') ? $e->getMessage() : 'Server error'
             ], 500);
         }
+    }
+
+    public function verifyEmail(Request $request)
+    {
+        $token = $request->query('token');
+        if (!$token) {
+            return response()->json(['success' => false, 'message' => 'Invalid verification link.'], 400);
+        }
+
+        $userId = Cache::get('email_verification_' . $token);
+        if (!$userId) {
+            return response()->json(['success' => false, 'message' => 'Verification link expired or invalid.'], 400);
+        }
+
+        $user = User::find($userId);
+        if (!$user) {
+            return response()->json(['success' => false, 'message' => 'User not found.'], 404);
+        }
+
+        if ($user->status === 'active') {
+             return response()->json(['success' => true, 'message' => 'Email already verified.'], 200);
+        }
+
+        $user->update([
+            'status' => 'active',
+            'email_verified_at' => now(),
+        ]);
+
+        Cache::forget('email_verification_' . $token);
+
+        // Redirect to frontend or return success
+        $frontendUrl = env('FRONTEND_URL', 'http://localhost:3000') . '/login?verified=true';
+        return redirect()->away($frontendUrl);
     }
 
     public function login(Request $request)
@@ -199,6 +159,13 @@ class RegisterController extends Controller
                 'success' => false,
                 'message' => 'Invalid credentials'
             ], 401);
+        }
+
+        if ($user->status !== 'active') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Please verify your email address before logging in.'
+            ], 403);
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
