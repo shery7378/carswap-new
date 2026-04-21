@@ -35,7 +35,7 @@ class RegisterController extends Controller
             $validated = $request->validate([
                 'first_name' => 'required|string|max:191',
                 'last_name' => 'required|string|max:191',
-                'phone' => 'required|string|max:191',
+                'phone' => 'required|string|max:191|unique:users,phone',
                 'email' => 'required|string|email|max:191|unique:users,email',
                 'password' => [
                     'required',
@@ -132,7 +132,7 @@ class RegisterController extends Controller
         }
 
         if ($user->status === 'active') {
-             return response()->json(['success' => true, 'message' => 'Email already verified.'], 200);
+            return response()->json(['success' => true, 'message' => 'Email already verified.'], 200);
         }
 
         $user->update([
@@ -194,7 +194,7 @@ class RegisterController extends Controller
         if ($user->profile_picture) {
             $userData['profile_picture_url'] = asset($user->profile_picture);
         }
-        
+
         return response()->json([
             'success' => true,
             'data' => $userData
@@ -212,111 +212,111 @@ class RegisterController extends Controller
     }
 
     public function updateProfile(Request $request)
-{
-    try {
-        $user = $request->user();
+    {
+        try {
+            $user = $request->user();
 
-        $validated = $request->validate([
-            'first_name' => 'sometimes|required|string|max:191',
-            'last_name' => 'sometimes|required|string|max:191',
-            'phone' => 'sometimes|required|string|max:191|unique:users,phone,' . $user->id,
-            'email' => 'sometimes|required|email|max:191|unique:users,email,' . $user->id,
-            'new_password' => [
-                'sometimes',
-                'confirmed',
-                'min:6',
-                'regex:/^[A-Z]/',
-                'regex:/[!@#$%^&*(),.?":{}|<>]/',
-            ],
-            'current_password' => 'required_with:new_password|current_password',
-            'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'has_whatsapp' => 'nullable|boolean',
-            'has_viber' => 'nullable|boolean',
-            'is_email_visible' => 'nullable|boolean',
-        ], [
-            'new_password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
-            'new_password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
-        ]);
+            $validated = $request->validate([
+                'first_name' => 'sometimes|required|string|max:191',
+                'last_name' => 'sometimes|required|string|max:191',
+                'phone' => 'sometimes|required|string|max:191|unique:users,phone,' . $user->id,
+                'email' => 'sometimes|required|email|max:191|unique:users,email,' . $user->id,
+                'new_password' => [
+                    'sometimes',
+                    'confirmed',
+                    'min:6',
+                    'regex:/^[A-Z]/',
+                    'regex:/[!@#$%^&*(),.?":{}|<>]/',
+                ],
+                'current_password' => 'required_with:new_password|current_password',
+                'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+                'has_whatsapp' => 'nullable|boolean',
+                'has_viber' => 'nullable|boolean',
+                'is_email_visible' => 'nullable|boolean',
+            ], [
+                'new_password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+                'new_password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            ]);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Upload Profile Picture DIRECTLY to public/profiles and save immediately
-        |--------------------------------------------------------------------------
-        */
-        if ($request->hasFile('profile_picture')) {
-            $file = $request->file('profile_picture');
-            if ($file->isValid()) {
-                $destinationPath = public_path('profiles');
-                if (!file_exists($destinationPath)) {
-                    mkdir($destinationPath, 0755, true);
+            /*
+            |--------------------------------------------------------------------------
+            | Upload Profile Picture DIRECTLY to public/profiles and save immediately
+            |--------------------------------------------------------------------------
+            */
+            if ($request->hasFile('profile_picture')) {
+                $file = $request->file('profile_picture');
+                if ($file->isValid()) {
+                    $destinationPath = public_path('profiles');
+                    if (!file_exists($destinationPath)) {
+                        mkdir($destinationPath, 0755, true);
+                    }
+
+                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                    $file->move($destinationPath, $filename);
+
+                    // Directly save to user model and DB
+                    $user->profile_picture = 'profiles/' . $filename;
+                    $user->save();
                 }
-
-                $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                $file->move($destinationPath, $filename);
-
-                // Directly save to user model and DB
-                $user->profile_picture = 'profiles/' . $filename;
-                $user->save();
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Password Update
+            |--------------------------------------------------------------------------
+            */
+            if (!empty($validated['new_password'])) {
+                $validated['password'] = Hash::make($validated['new_password']);
+            }
+
+            unset($validated['new_password']);
+            unset($validated['new_password_confirmation']);
+            unset($validated['current_password']);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Boolean Fields
+            |--------------------------------------------------------------------------
+            */
+            $validated['has_whatsapp'] = isset($validated['has_whatsapp']) ? (bool) $validated['has_whatsapp'] : $user->has_whatsapp;
+            $validated['has_viber'] = isset($validated['has_viber']) ? (bool) $validated['has_viber'] : $user->has_viber;
+            $validated['is_email_visible'] = isset($validated['is_email_visible']) ? (bool) $validated['is_email_visible'] : $user->is_email_visible;
+
+            /*
+            |--------------------------------------------------------------------------
+            | Update User Other Fields
+            |--------------------------------------------------------------------------
+            */
+            $user->update($validated);
+            $user->refresh();
+            $user->load('activeSubscription.plan');
+
+            /*
+            |--------------------------------------------------------------------------
+            | Response
+            |--------------------------------------------------------------------------
+            */
+            $userData = $user->toArray();
+            if ($user->profile_picture) {
+                $userData['profile_picture_url'] = asset($user->profile_picture);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Profile updated successfully',
+                'user' => $userData
+            ], 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'success' => false,
+                'errors' => $e->errors()
+            ], 422);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating profile: ' . $e->getMessage()
+            ], 500);
         }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Password Update
-        |--------------------------------------------------------------------------
-        */
-        if (!empty($validated['new_password'])) {
-            $validated['password'] = Hash::make($validated['new_password']);
-        }
-
-        unset($validated['new_password']);
-        unset($validated['new_password_confirmation']);
-        unset($validated['current_password']);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Boolean Fields
-        |--------------------------------------------------------------------------
-        */
-        $validated['has_whatsapp'] = isset($validated['has_whatsapp']) ? (bool)$validated['has_whatsapp'] : $user->has_whatsapp;
-        $validated['has_viber'] = isset($validated['has_viber']) ? (bool)$validated['has_viber'] : $user->has_viber;
-        $validated['is_email_visible'] = isset($validated['is_email_visible']) ? (bool)$validated['is_email_visible'] : $user->is_email_visible;
-
-        /*
-        |--------------------------------------------------------------------------
-        | Update User Other Fields
-        |--------------------------------------------------------------------------
-        */
-        $user->update($validated);
-        $user->refresh();
-        $user->load('activeSubscription.plan');
-
-        /*
-        |--------------------------------------------------------------------------
-        | Response
-        |--------------------------------------------------------------------------
-        */
-        $userData = $user->toArray();
-        if ($user->profile_picture) {
-            $userData['profile_picture_url'] = asset($user->profile_picture);
-        }
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile updated successfully',
-            'user' => $userData
-        ], 200);
-
-    } catch (\Illuminate\Validation\ValidationException $e) {
-        return response()->json([
-            'success' => false,
-            'errors' => $e->errors()
-        ], 422);
-    } catch (\Exception $e) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Error updating profile: ' . $e->getMessage()
-        ], 500);
     }
-}
 }
