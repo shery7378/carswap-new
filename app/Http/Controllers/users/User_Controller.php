@@ -42,7 +42,7 @@ class User_Controller extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string',
+            'phone' => 'nullable|string|unique:users,phone',
             'password' => [
                 'required',
                 'min:6',
@@ -53,6 +53,7 @@ class User_Controller extends Controller
         ], [
             'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
             'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+            'phone.unique' => 'Ez a telefonszám már regisztrálva van valaki máshoz!',
         ]);
 
         User::create([
@@ -82,8 +83,10 @@ class User_Controller extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
-            'phone' => 'nullable|string',
+            'phone' => 'nullable|string|unique:users,phone,' . $id,
             'status' => 'required|in:active,inactive,banned',
+        ], [
+            'phone.unique' => 'Ez a telefonszám már regisztrálva van valaki máshoz!',
         ]);
 
         $user->update($request->only(['first_name', 'last_name', 'email', 'phone', 'status']));

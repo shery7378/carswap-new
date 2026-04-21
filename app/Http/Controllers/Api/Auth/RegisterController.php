@@ -50,6 +50,7 @@ class RegisterController extends Controller
             ], [
                 'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
                 'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
+                'phone.unique' => 'Ez a telefonszám már regisztrálva van valaki máshoz!',
             ]);
 
             $user = User::create([
