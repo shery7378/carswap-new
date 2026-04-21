@@ -62,6 +62,7 @@ class User_Controller extends Controller
             'phone' => $request->phone,
             'password' => \Illuminate\Support\Facades\Hash::make($request->password),
             'status' => $request->status,
+            'is_trader' => $request->is_trader ? true : false,
         ]);
 
         return redirect()->route('admin.web-users.index')->with('success', 'User created successfully');
@@ -86,6 +87,8 @@ class User_Controller extends Controller
         ]);
 
         $user->update($request->only(['first_name', 'last_name', 'email', 'phone', 'status']));
+        $user->is_trader = $request->is_trader ? true : false;
+        $user->save();
 
         if ($request->filled('password')) {
             $user->password = \Illuminate\Support\Facades\Hash::make($request->password);

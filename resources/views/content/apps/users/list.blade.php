@@ -52,6 +52,7 @@
                                     <th>{{ __('User Info') }}</th>
                                     <th class="d-none d-lg-table-cell">{{ __('Phone') }}</th>
                                     <th class="d-none d-md-table-cell">{{ __('Role') }}</th>
+                                    <th class="text-center">{{ __('Trader') }}</th>
                                     <th class="text-center">{{ __('Status') }}</th>
                                     <th class="text-center">{{ __('Joined') }}</th>
                                     <th class="text-end pe-4">{{ __('Actions') }}</th>
@@ -76,6 +77,13 @@
                                         </td>
                                         <td class="d-none d-md-table-cell">
                                             <span class="badge bg-label-secondary small text-capitalize">{{ $user->role ?? 'Web User' }}</span>
+                                        </td>
+                                        <td class="text-center">
+                                            @if($user->is_trader)
+                                                <span class="badge bg-label-info pb-1"><i class="bx bx-check me-1 small"></i>{{ __('Yes') }}</span>
+                                            @else
+                                                <span class="badge bg-label-secondary pb-1">{{ __('No') }}</span>
+                                            @endif
                                         </td>
                                         <td class="text-center">
                                             @php
@@ -161,6 +169,11 @@
                                                 <div>
                                                     <strong class="d-block text-truncate">{{ $user->first_name }} {{ $user->last_name }}</strong>
                                                     <small class="text-muted d-block text-truncate">{{ $user->email }}</small>
+                                                    <div class="mt-1">
+                                                        @if($user->is_trader)
+                                                            <span class="badge bg-label-info small me-1">Trader</span>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                                 <div class="dropdown status-dropdown">
                                                     <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
