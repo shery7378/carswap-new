@@ -89,8 +89,6 @@ class SubscriptionCreate extends Controller
             'billing_period' => $period,
             'color' => $request->color ?? 'primary',
             'description' => $request->description,
-            'stripe_price_id_monthly' => $request->stripe_price_id_monthly,
-            'stripe_price_id_yearly' => $request->stripe_price_id_yearly,
         ]);
     }
 
@@ -190,8 +188,6 @@ class SubscriptionCreate extends Controller
             'billing_period' => $period,
             'color' => $request->color ?? 'primary',
             'description' => $request->description,
-            'stripe_price_id_monthly' => $request->stripe_price_id_monthly,
-            'stripe_price_id_yearly' => $request->stripe_price_id_yearly,
         ]);
     }
 }
