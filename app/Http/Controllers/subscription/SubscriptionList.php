@@ -48,29 +48,38 @@ class SubscriptionList extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'plan_id' => 'required|exists:plans,id',
+            'amount' => 'required|numeric',
+            'starts_at' => 'required',
+            'ends_at' => 'required',
+            'status' => 'required|string',
+        ]);
+
         $subscription = Subscription::findOrFail($id);
         $plan = Plan::find($request->plan_id);
+        
+        // Parse dates safely
+        $startsAt = \Carbon\Carbon::parse($request->starts_at);
+        $endsAt = \Carbon\Carbon::parse($request->ends_at);
+        
         $duration = $request->input('duration', $subscription->duration);
         
         if (!$request->duration && $plan) {
             $duration = (in_array(strtolower($plan->billing_period), ['year', 'yearly'])) ? 'Yearly' : 'Monthly';
             
             // Smarter fallback: if the dates span a year, it's Yearly
-            if ($request->starts_at && $request->ends_at) {
-                $start = \Carbon\Carbon::parse($request->starts_at);
-                $end = \Carbon\Carbon::parse($request->ends_at);
-                if ($start->diffInMonths($end) >= 11) {
-                    $duration = 'Yearly';
-                }
+            if ($startsAt->diffInMonths($endsAt) >= 11) {
+                $duration = 'Yearly';
             }
         }
 
         $subscription->update([
             'plan_id' => $request->plan_id,
             'amount' => $request->amount,
-            'starts_at' => $request->starts_at,
-            'ends_at' => $request->ends_at,
-            'next_billing_at' => $request->ends_at,
+            'starts_at' => $startsAt,
+            'ends_at' => $endsAt,
+            'next_billing_at' => $endsAt,
             'duration' => $duration,
             'status' => $request->status,
             'billing_full_name' => $request->billing_full_name,

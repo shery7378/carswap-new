@@ -121,6 +121,10 @@ class SubscriptionCreate extends Controller
             }
 
             \Illuminate\Support\Facades\DB::commit();
+
+            // Clear plans cache for the API/Frontend
+            \Illuminate\Support\Facades\Cache::forget('carswap_subscription_plans');
+
             return redirect()->route('app-subscription-plans')->with('success', 'Plans updated successfully');
             
         } catch (\Exception $e) {
@@ -175,14 +179,14 @@ class SubscriptionCreate extends Controller
             'active_ads_limit' => $request->input($prefix . 'active_ads_limit') ?? 0,
             'garage_ads_limit' => $request->input($prefix . 'garage_ads_limit') ?? 0,
             'expandable_slots' => $request->has($prefix . 'expandable_slots') ? 1 : 0,
-            'highlight_ads' => $request->has('highlight_ads') ? 1 : $plan->highlight_ads,
+            'highlight_ads' => $request->has($prefix . 'highlight_ads') ? 1 : ($request->has('highlight_ads') ? 1 : 0),
             'highlight_ad_count' => $request->input($prefix . 'highlight_ad_count') ?? 0,
             'hd_images' => $request->input($prefix . 'hd_images') ?? 0,
             'hd_images_count' => $request->input($prefix . 'hd_images_count') ?? 0,
             'hd_images_normal_count' => $request->input($prefix . 'hd_images_normal_count') ?? 0,
             'hd_images_ad_count' => $request->input($prefix . 'hd_images_ad_count') ?? 0,
             'is_popular' => $request->has('is_popular'),
-            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map('trim', $request->input($prefix . 'features')))) : $plan->features,
+            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map('trim', $request->input($prefix . 'features')))) : [],
             'billing_period' => $period,
             'color' => $request->color ?? 'primary',
             'description' => $request->description,

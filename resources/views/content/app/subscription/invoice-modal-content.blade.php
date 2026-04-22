@@ -129,11 +129,11 @@
 <div class="modal-footer border-top-0 d-flex justify-content-between px-4 pb-4">
     <div>
         @if($subscription->status === 'active')
-            <button class="btn btn-outline-warning status-toggle-btn btn-sm px-3" data-id="{{ $subscription->id }}" data-status="paused">
+            <button class="btn btn-outline-warning status-toggle btn-sm px-3" data-id="{{ $subscription->id }}" data-status="paused">
                 <i class="bx bx-pause-circle me-1"></i> Suspend
             </button>
         @else
-            <button class="btn btn-outline-success status-toggle-btn btn-sm px-3" data-id="{{ $subscription->id }}" data-status="active">
+            <button class="btn btn-outline-success status-toggle btn-sm px-3" data-id="{{ $subscription->id }}" data-status="active">
                 <i class="bx bx-play-circle me-1"></i> Reactivate
             </button>
         @endif
