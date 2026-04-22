@@ -1,16 +1,16 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Roles List')
+@section('title', __('Roles List'))
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card">
             <div class="card-header border-bottom">
-                <h5 class="card-title mb-0">Roles List</h5>
+                <h5 class="card-title mb-0">{{ __('Roles List') }}</h5>
                 <div class="d-flex gap-2 mt-3">
                     <button type="button" class="btn btn-primary waves-effect waves-light">
-                        <i class="bx bx-plus me-1"></i> Add Role
+                        <i class="bx bx-plus me-1"></i> {{ __('Add Role') }}
                     </button>
                 </div>
             </div>
@@ -18,12 +18,12 @@
                 <table class="dt-row table">
                     <thead>
                         <tr>
-                            <th>Role Name</th>
-                            <th>Description</th>
-                            <th>Users Count</th>
-                            <th>Created Date</th>
-                            <th>Status</th>
-                            <th>Actions</th>
+                            <th>{{ __('Role Name') }}</th>
+                            <th>{{ __('Description') }}</th>
+                            <th>{{ __('Users Count') }}</th>
+                            <th>{{ __('Created Date') }}</th>
+                            <th>{{ __('Status') }}</th>
+                            <th>{{ __('Actions') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -36,11 +36,11 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="fw-medium">Super Admin</span>
+                                        <span class="fw-medium">{{ __('Super Admin') }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>Full system access with all permissions</td>
+                            <td>{{ __('Full system access with all permissions') }}</td>
                             <td><span class="badge bg-label-primary">2</span></td>
                             <td>Jan 15, 2024</td>
                             <td><span class="badge bg-label-success">Active</span></td>
@@ -66,11 +66,11 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="fw-medium">Admin</span>
+                                        <span class="fw-medium">{{ __('Admin') }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>Administrative access with limited permissions</td>
+                            <td>{{ __('Administrative access with limited permissions') }}</td>
                             <td><span class="badge bg-label-info">5</span></td>
                             <td>Jan 20, 2024</td>
                             <td><span class="badge bg-label-success">Active</span></td>
@@ -96,11 +96,11 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="fw-medium">Editor</span>
+                                        <span class="fw-medium">{{ __('Editor') }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>Content editing and publishing permissions</td>
+                            <td>{{ __('Content editing and publishing permissions') }}</td>
                             <td><span class="badge bg-label-warning">8</span></td>
                             <td>Feb 1, 2024</td>
                             <td><span class="badge bg-label-success">Active</span></td>
@@ -126,11 +126,11 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <span class="fw-medium">Viewer</span>
+                                        <span class="fw-medium">{{ __('Viewer') }}</span>
                                     </div>
                                 </div>
                             </td>
-                            <td>Read-only access to view content</td>
+                            <td>{{ __('Read-only access to view content') }}</td>
                             <td><span class="badge bg-label-secondary">15</span></td>
                             <td>Feb 5, 2024</td>
                             <td><span class="badge bg-label-success">Active</span></td>

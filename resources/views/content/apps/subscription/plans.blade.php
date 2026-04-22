@@ -66,8 +66,8 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
-      <h3 class="fw-bold mb-1">Subscription Tiers</h3>
-      <p class="text-muted mb-0">Manage your business packages and customer value levels</p>
+      <h3 class="fw-bold mb-1">{{ __('Subscription Tiers') }}</h3>
+      <p class="text-muted mb-0">{{ __('Manage your business packages and customer value levels') }}</p>
     </div>
     
     @if(session('success'))
@@ -78,7 +78,7 @@
     @endif
     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-subscriptions', 'admin-guard'))
     <a href="{{ route('app-subscription-create') }}" class="btn btn-primary d-flex align-items-center">
-      <i class="bx bx-plus me-1"></i> New Package
+      <i class="bx bx-plus me-1"></i> {{ __('New Package') }}
     </a>
     @endif
   </div>
@@ -94,7 +94,7 @@
       <div class="card pricing-card h-100 border-{{ $main->color }}">
         <div class="pricing-header text-center">
           @if($main->is_popular)
-          <span class="badge bg-{{ $main->color }} popular-badge rounded-pill shadow-sm">Popular Choice</span>
+          <span class="badge bg-{{ $main->color }} popular-badge rounded-pill shadow-sm">{{ __('Popular Choice') }}</span>
           @endif
           <div class="avatar avatar-md mx-auto mb-3">
              <span class="avatar-initial rounded-circle bg-label-{{ $main->color }}">
@@ -112,7 +112,7 @@
                     <div class="price-box mb-0">
                       <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($monthly->price, 0) }}</span>
                     </div>
-                    <small class="text-muted">HUF / Monthly</small>
+                    <small class="text-muted">{{ __('HUF / Monthly') }}</small>
                 </div>
                 @endif
                 
@@ -121,7 +121,7 @@
                     <div class="price-box mb-0">
                       <span class="h3 fw-extrabold text-info mb-0">{{ number_format($yearly->price, 0) }}</span>
                     </div>
-                    <small class="text-muted">HUF / Yearly</small>
+                    <small class="text-muted">{{ __('HUF / Yearly') }}</small>
                 </div>
                 @endif
              @else
@@ -142,12 +142,12 @@
           <ul class="nav nav-tabs nav-fill" role="tablist">
             <li class="nav-item">
               <button type="button" class="nav-link active py-2" data-bs-toggle="tab" data-bs-target="#monthly-features-{{ $slug }}">
-                Monthly Profile
+                {{ __('Monthly Profile') }}
               </button>
             </li>
             <li class="nav-item">
               <button type="button" class="nav-link py-2" data-bs-toggle="tab" data-bs-target="#yearly-features-{{ $slug }}">
-                Yearly Profile
+                {{ __('Yearly Profile') }}
               </button>
             </li>
           </ul>
@@ -178,10 +178,10 @@
             @foreach($group as $plan)
             <div class="d-flex gap-2 align-items-center mb-2">
               <span class="badge bg-label-{{ $plan->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
-                 {{ $plan->is_active ? 'LIVE' : 'OFF' }}
+                 {{ $plan->is_active ? __('LIVE') : __('OFF') }}
               </span>
               <a href="{{ route('app-subscription-plan-edit', $plan->id) }}" class="btn btn-outline-{{ $plan->billing_period == 'yearly' ? 'info' : 'primary' }} flex-grow-1">
-                Edit {{ ucfirst($plan->billing_period) }}
+                {{ __('Edit') }} {{ __(ucfirst($plan->billing_period)) }}
               </a>
               <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
@@ -190,7 +190,7 @@
             @endforeach
 
             <button class="btn btn-label-danger w-100 mt-2 delete-plan" data-id="{{ $main->id }}">
-               <i class="bx bx-trash me-1"></i> Delete Entire Card
+               <i class="bx bx-trash me-1"></i> {{ __('Delete Entire Card') }}
             </button>
           </div>
           

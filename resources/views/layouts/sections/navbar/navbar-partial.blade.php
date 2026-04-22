@@ -68,7 +68,7 @@ use Illuminate\Support\Facades\Route;
                 </li>
                 <li>
                     <a class="dropdown-item" href="{{ route('admin.profile.index') }}">
-                        <i class="icon-base bx bx-user icon-md me-3"></i><span>Profile Settings</span>
+                        <i class="icon-base bx bx-user icon-md me-3"></i><span>{{ __('Profile Settings') }}</span>
                     </a>
                 </li>
                 <li>
@@ -76,7 +76,7 @@ use Illuminate\Support\Facades\Route;
                 </li>
                 <li>
                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                        <i class="icon-base bx bx-power-off icon-md me-3"></i><span>Log Out</span>
+                        <i class="icon-base bx bx-power-off icon-md me-3"></i><span>{{ __('Log Out') }}</span>
                     </a>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                         @csrf

@@ -32,9 +32,9 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-4">
                             <img src="{{ Auth::user()->getAvatarUrl() }}" alt="user-avatar" class="rounded-circle me-3" height="48" width="48" style="object-fit: cover; border: 2px solid #e9ecef;" />
-                            <h5 class="card-title text-primary mb-0">Welcome back, {{ Auth::user()->first_name ?? 'Admin' }}! 👋</h5>
+                            <h5 class="card-title text-primary mb-0">{{ __('Welcome back, :name! 👋', ['name' => Auth::user()->first_name ?? 'Admin']) }}</h5>
                         </div>
-                        <p class="mb-4">You are logged in as <span class="badge bg-label-primary text-capitalize">{{ Auth::user()->roles->pluck('name')->first() ?? 'Staff' }}</span></p>
+                        <p class="mb-4">{{ __('You are logged in as :role', ['role' => Auth::user()->roles->pluck('name')->first() ?? 'Staff']) }}</p>
 
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">{{ __('Manage Vehicles') }}</a>
                     </div>
@@ -97,10 +97,10 @@
                     <table class="table table-borderless">
                         <thead>
                             <tr>
-                                <th>Vehicle</th>
-                                <th>Price</th>
-                                <th>Listing Date</th>
-                                <th>Status</th>
+                                <th>{{ __('Vehicle') }}</th>
+                                <th>{{ __('Price') }}</th>
+                                <th>{{ __('Listing Date') }}</th>
+                                <th>{{ __('Status') }}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -127,7 +127,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="4" class="text-center">No recent vehicles</td>
+                                <td colspan="4" class="text-center">{{ __('No recent vehicles') }}</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -144,8 +144,8 @@
     <div class="col-12 col-md-8 col-lg-12 col-xxl-4 order-3 order-md-2">
         <div class="card h-100">
             <div class="card-header d-flex align-items-center justify-content-between">
-                <h5 class="m-0 me-2">Global Partners</h5>
-                <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-primary">View All</a>
+                <h5 class="m-0 me-2">{{ __('Global Partners') }}</h5>
+                <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-primary">{{ __('View All') }}</a>
             </div>
             <div class="card-body">
                 <ul class="p-0 m-0">
@@ -169,7 +169,7 @@
                         </div>
                     </li>
                     @empty
-                    <li class="text-center p-4">No partners found</li>
+                    <li class="text-center p-4">{{ __('No partners found') }}</li>
                     @endforelse
                 </ul>
             </div>
@@ -643,7 +643,7 @@
             <div class="modal-content shadow-lg border-0" id="vehicle-modal-content">
                 <div class="modal-body text-center py-5">
                     <div class="spinner-grow text-primary" role="status"></div>
-                    <p class="mt-3 text-muted fw-semibold">Loading vehicle details...</p>
+                    <p class="mt-3 text-muted fw-semibold">{{ __('Loading vehicle details...') }}</p>
                 </div>
             </div>
         </div>
@@ -655,7 +655,7 @@
             <div class="modal-content shadow-lg border-0" id="partner-modal-content">
                 <div class="modal-body text-center py-5">
                     <div class="spinner-border text-primary" role="status"></div>
-                    <p class="mt-2 text-muted">Loading partner information...</p>
+                    <p class="mt-2 text-muted">{{ __('Loading partner information...') }}</p>
                 </div>
             </div>
         </div>
@@ -674,7 +674,7 @@ $(document).ready(function() {
         container.innerHTML = `
             <div class="modal-body text-center py-5">
                 <div class="spinner-grow text-primary" role="status"></div>
-                <p class="mt-3 text-muted fw-semibold">Fetching vehicle data...</p>
+                <p class="mt-3 text-muted fw-semibold">{{ __('Fetching vehicle data...') }}</p>
             </div>
         `;
         modal.show();

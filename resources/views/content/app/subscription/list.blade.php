@@ -19,12 +19,12 @@
                     <table class="table table-hover align-middle border-top" id="subscriptions-table">
                         <thead class="bg-light bg-opacity-50">
                             <tr>
-                                <th>Customer / Email</th>
-                                <th>Plan Type</th>
-                                <th>Billing Cycle</th>
-                                <th>Current Status</th>
-                                <th>Next Payment</th>
-                                <th>Action</th>
+                                <th>{{ __('Customer / Email') }}</th>
+                                <th>{{ __('Plan Type') }}</th>
+                                <th>{{ __('Billing Cycle') }}</th>
+                                <th>{{ __('Current Status') }}</th>
+                                <th>{{ __('Next Payment') }}</th>
+                                <th>{{ __('Action') }}</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -57,7 +57,7 @@
                                 <td>
                                     <div class="d-flex flex-column">
                                         <span class="fw-bold fs-6">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
-                                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">Every {{ $subscription->plan->billing_period ?? 'Month' }}</small>
+                                        <small class="text-muted text-uppercase" style="font-size: 0.7rem;">{{ __('Every') }} {{ __($subscription->plan->billing_period ?? 'Month') }}</small>
                                     </div>
                                 </td>
                                 <td>
@@ -71,7 +71,7 @@
                                         ][$subscription->status] ?? 'bg-label-primary';
                                     @endphp
                                     <span class="badge {{ $statusClass }} px-2 py-1">
-                                        <i class="bx bx-circle me-1 small"></i> {{ ucfirst($subscription->status) }}
+                                        <i class="bx bx-circle me-1 small"></i> {{ __(ucfirst($subscription->status)) }}
                                     </span>
                                 </td>
                                 <td>
@@ -86,15 +86,15 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> View Details</a>
-                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> Adjust Plan</a>
+                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> {{ __('View Details') }}</a>
+                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> {{ __('Adjust Plan') }}</a>
                                             <div class="dropdown-divider"></div>
                                             @if($subscription->status === 'active')
-                                                <a class="dropdown-item text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> Suspend</a>
+                                                <a class="dropdown-item text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> {{ __('Suspend') }}</a>
                                             @else
-                                                <a class="dropdown-item text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> Reactivate</a>
+                                                <a class="dropdown-item text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> {{ __('Reactivate') }}</a>
                                             @endif
-                                            <a class="dropdown-item text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> Cancel Flow</a>
+                                            <a class="dropdown-item text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> {{ __('Cancel Flow') }}</a>
                                         </div>
                                     </div>
                                 </td>
@@ -116,7 +116,7 @@
             "pageLength": 10,
             "language": {
                 "search": "",
-                "searchPlaceholder": "Search by customer or plan...",
+                "searchPlaceholder": "{{ __('Search by customer or plan...') }}",
                 "paginate": {
                     "next": '<i class="bx bx-chevron-right fs-5"></i>',
                     "previous": '<i class="bx bx-chevron-left fs-5"></i>'
@@ -134,7 +134,7 @@
                 // Plan Filter (Column 1)
                 this.api().columns(1).every(function () {
                     var column = this;
-                    var select = $('<select class="form-select text-capitalize"><option value=""> Filter by Plan </option></select>')
+                    var select = $('<select class="form-select text-capitalize"><option value=""> {{ __('Filter by Plan') }} </option></select>')
                         .appendTo('.plan_filter')
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -150,7 +150,7 @@
                 // Status Filter (Column 3)
                 this.api().columns(3).every(function () {
                     var column = this;
-                    var select = $('<select class="form-select text-capitalize"><option value=""> Filter by Status </option></select>')
+                    var select = $('<select class="form-select text-capitalize"><option value=""> {{ __('Filter by Status') }} </option></select>')
                         .appendTo('.status_filter')
                         .on('change', function () {
                             var val = $.fn.dataTable.util.escapeRegex($(this).val());
@@ -182,7 +182,7 @@
                     $('#invoiceModalContent').html(response);
                 },
                 error: function() {
-                    $('#invoiceModalContent').html('<div class="p-5 text-center text-danger">Failed to load invoice details.</div>');
+                    $('#invoiceModalContent').html('<div class="p-5 text-center text-danger">{{ __('Failed to load invoice details.') }}</div>');
                 }
             });
         });
@@ -194,7 +194,8 @@
             var status = $(this).data('status');
             var url = '{{ route("app-subscription-status", ":id") }}'.replace(':id', id);
 
-            if(confirm('Are you sure you want to ' + (status == 'active' ? 'reactivate' : 'suspend') + ' this subscription?')) {
+            var confirmMsg = status == 'active' ? "{{ __('Are you sure you want to reactivate this subscription?') }}" : "{{ __('Are you sure you want to suspend this subscription?') }}";
+            if(confirm(confirmMsg)) {
                 $.ajax({
                     url: url,
                     method: 'PATCH',
@@ -208,7 +209,7 @@
                         }
                     },
                     error: function() {
-                        alert('Something went wrong!');
+                        alert("{{ __('Something went wrong!') }}");
                     }
                 });
             }

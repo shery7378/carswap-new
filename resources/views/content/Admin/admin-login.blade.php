@@ -141,13 +141,13 @@
     </div>
 
     <div class="card-body">
-      <h4>Admin Sign In</h4>
-      <p class="sub-text">Access your carswap dashboard</p>
+      <h4>{{ __('Admin Sign In') }}</h4>
+      <p class="sub-text">{{ __('Access your carswap dashboard') }}</p>
 
       <form id="adminLoginForm" action="{{ route('admin-login-store') }}" method="POST">
         @csrf
         <div class="mb-4">
-          <label for="email" class="form-label">Email Address</label>
+          <label for="email" class="form-label">{{ __('Email Address') }}</label>
           <input
             type="email"
             class="form-control @error('email') is-invalid @enderror"
@@ -163,8 +163,8 @@
 
         <div class="mb-4 form-password-toggle">
           <div class="d-flex justify-content-between align-items-center">
-            <label class="form-label" for="password">Password</label>
-            <a href="{{ route('admin.password.request') }}" class="small text-primary fw-semibold">Forgot Password?</a>
+            <label class="form-label" for="password">{{ __('Password') }}</label>
+            <a href="{{ route('admin.password.request') }}" class="small text-primary fw-semibold">{{ __('Forgot Password?') }}</a>
           </div>
           <div class="input-group input-group-merge">
             <input
@@ -182,7 +182,7 @@
         </div>
 
         <div class="pt-2">
-          <button class="btn btn-primary" type="submit">Login to Dashboard</button>
+          <button class="btn btn-primary" type="submit">{{ __('Login to Dashboard') }}</button>
         </div>
       </form>
     </div>

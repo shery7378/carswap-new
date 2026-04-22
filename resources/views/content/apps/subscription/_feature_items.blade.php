@@ -2,7 +2,7 @@
 @if($plan->active_ads_limit != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>{{ $plan->active_ads_limit == -1 ? 'Unlimited' : $plan->active_ads_limit }} Active Ads</span>
+    <span>{{ $plan->active_ads_limit == -1 ? __('Unlimited') : $plan->active_ads_limit }} {{ __('Active Ads') }}</span>
     </div>
 @endif
 
@@ -10,7 +10,7 @@
 @if($plan->garage_ads_limit != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>{{ $plan->garage_ads_limit == -1 ? 'Unlimited' : $plan->garage_ads_limit }} garage slots</span>
+    <span>{{ $plan->garage_ads_limit == -1 ? __('Unlimited') : $plan->garage_ads_limit }} {{ __('garage slots') }}</span>
     </div>
 @endif
 
@@ -18,7 +18,7 @@
 @if($plan->expandable_slots > 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>Expandable active ad slots</span>
+    <span>{{ __('Expandable active ad slots') }}</span>
     </div>
 @endif
 
@@ -26,12 +26,12 @@
 @if($plan->hd_images_count > 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>HD images, {{ $plan->hd_images_count }} instead of {{ $plan->hd_images_normal_count }} — usable for {{ $plan->hd_images_ad_count }} {{ Str::plural('ad', $plan->hd_images_ad_count) }} per month</span>
+    <span>{{ __('HD images, :count instead of :normal — usable for :adcount :ad per month', ['count' => $plan->hd_images_count, 'normal' => $plan->hd_images_normal_count, 'adcount' => $plan->hd_images_ad_count, 'ad' => __($plan->hd_images_ad_count > 1 ? 'ads' : 'ad')]) }}</span>
     </div>
 @elseif($plan->hd_images != 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>{{ $plan->hd_images == -1 ? 'Unlimited' : $plan->hd_images }} HD Images</span>
+    <span>{{ $plan->hd_images == -1 ? __('Unlimited') : $plan->hd_images }} {{ __('HD Images') }}</span>
     </div>
 @endif
 
@@ -39,7 +39,7 @@
 @if($plan->highlight_ad_count > 0)
     <div class="feature-item">
     <i class="bx bx-check-circle text-{{ $plan->color }}"></i>
-    <span>Highlighting — usable for {{ $plan->highlight_ad_count }} {{ Str::plural('ad', $plan->highlight_ad_count) }} per month</span>
+    <span>{{ __('Highlighting — usable for :adcount :ad per month', ['adcount' => $plan->highlight_ad_count, 'ad' => __($plan->highlight_ad_count > 1 ? 'ads' : 'ad')]) }}</span>
     </div>
 @endif
 
