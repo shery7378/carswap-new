@@ -14,7 +14,7 @@ class SubscriptionPlans extends Controller
         
         // Group and deduplicate to prevent "month vs monthly" issues
         $plans = $allPlans->groupBy(function($item) {
-             return preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($item->slug));
+             return preg_replace('/-(month|monthly|year|yearly|both)(-\d+)?$/i', '', strtolower($item->slug));
         })->map(function($group) {
              // For each group, only keep the latest version of each period type
              $deduplicated = collect();
@@ -76,10 +76,14 @@ class SubscriptionPlans extends Controller
         $data = $request->except('features');
         
         if ($request->has('features') && is_array($request->features)) {
-            $featuresArray = array_values(array_filter(array_map('trim', $request->features)));
+            $featuresArray = array_values(array_filter(array_map(function($f) { return strip_tags(trim($f)); }, $request->features)));
             $data['features'] = empty($featuresArray) ? [] : $featuresArray;
         } else {
             $data['features'] = [];
+        }
+
+        if ($request->has('description')) {
+            $data['description'] = strip_tags($request->description);
         }
 
         // Handle checkboxes (since they don't send anything if unchecked)

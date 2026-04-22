@@ -68,7 +68,7 @@ class SubscriptionCreate extends Controller
         $display_price = ($period == 'yearly') ? $yearly_val : $monthly_val;
 
         Plan::create([
-            'name' => $name,
+            'name' => strip_tags($name),
             'slug' => $slug,
             'price' => $display_price,
             'yearly_price' => $yearly_val,
@@ -85,10 +85,10 @@ class SubscriptionCreate extends Controller
             'hd_images_ad_count' => $request->input($prefix . 'hd_images_ad_count') ?? 1,
 
             'is_popular' => $request->has('is_popular'),
-            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map('trim', $request->input($prefix . 'features')))) : [],
+            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map(function($f) { return strip_tags(trim($f)); }, $request->input($prefix . 'features')))) : [],
             'billing_period' => $period,
             'color' => $request->color ?? 'primary',
-            'description' => $request->description,
+            'description' => strip_tags($request->description),
         ]);
     }
 
@@ -107,12 +107,19 @@ class SubscriptionCreate extends Controller
             \Illuminate\Support\Facades\DB::beginTransaction();
 
             // 1. Identify the base package name to find all siblings (Monthly/Yearly)
-            $baseSlug = preg_replace('/-(month|monthly|year|yearly|both)$/i', '', strtolower($plan->slug));
+            // Improved regex to handle various suffixes and collision numbers
+            $baseSlug = preg_replace('/-(month|monthly|year|yearly|both)(-\d+)?$/i', '', strtolower($plan->slug));
             
             if ($request->billing_period == 'both') {
-                // Handle Dual Packages: Update current and find/create counterpart
-                $this->updateOrCreatePackage($request, $baseSlug, 'monthly');
-                $this->updateOrCreatePackage($request, $baseSlug, 'yearly');
+                // Determine current plan's normalized period
+                $currentPeriod = (in_array(strtolower($plan->billing_period), ['month', 'monthly'])) ? 'monthly' : 'yearly';
+                $otherPeriod = ($currentPeriod == 'monthly') ? 'yearly' : 'monthly';
+
+                // Update the current plan first (the one the user is actually editing)
+                $this->updatePlan($request, $plan, $currentPeriod);
+
+                // Handle the sibling (Monthly/Yearly counterpart)
+                $this->updateOrCreateSibling($request, $plan, $baseSlug, $otherPeriod);
             } else {
                 // Handle Single Package (Monthly or Yearly Only)
                 $this->updatePlan($request, $plan, $request->billing_period);
@@ -135,14 +142,24 @@ class SubscriptionCreate extends Controller
     /**
      * Specialized helper to find and update, or create a package sibling
      */
-    private function updateOrCreatePackage(Request $request, $baseSlug, $period)
+    private function updateOrCreateSibling(Request $request, Plan $currentPlan, $baseSlug, $period)
     {
-        $targetSlug = $baseSlug . '-' . $period;
-        $existing = Plan::where('slug', $targetSlug)->first();
+        // 1. Try standard slugs
+        $targetSlugs = [
+            $baseSlug . '-' . $period,
+            $baseSlug . '-' . ($period == 'monthly' ? 'month' : 'year')
+        ];
+        
+        $existing = Plan::whereIn('slug', $targetSlugs)
+            ->where('id', '!=', $currentPlan->id)
+            ->first();
 
-        // Fallback search: if slug changed, search by name + period
+        // 2. Fallback search: if slug didn't match, search by original name + period
         if (!$existing) {
-            $existing = Plan::where('name', $request->title)->where('billing_period', $period)->first();
+            $existing = Plan::where('name', $currentPlan->getOriginal('name'))
+                ->whereIn('billing_period', [$period, ($period == 'monthly' ? 'month' : 'year')])
+                ->where('id', '!=', $currentPlan->id)
+                ->first();
         }
 
         if ($existing) {
@@ -170,7 +187,7 @@ class SubscriptionCreate extends Controller
         $slugToSave = $isTaken ? $plan->slug : $newSlug;
 
         $plan->update([
-            'name' => $request->title,
+            'name' => strip_tags($request->title),
             'slug' => $slugToSave,
             'price' => $display_price,
             'yearly_price' => $yearly_val,
@@ -184,10 +201,10 @@ class SubscriptionCreate extends Controller
             'hd_images_normal_count' => $request->input($prefix . 'hd_images_normal_count') ?? 0,
             'hd_images_ad_count' => $request->input($prefix . 'hd_images_ad_count') ?? 0,
             'is_popular' => $request->has('is_popular'),
-            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map('trim', $request->input($prefix . 'features')))) : [],
+            'features' => $request->input($prefix . 'features') ? array_values(array_filter(array_map(function($f) { return strip_tags(trim($f)); }, $request->input($prefix . 'features')))) : [],
             'billing_period' => $period,
             'color' => $request->color ?? 'primary',
-            'description' => $request->description,
+            'description' => strip_tags($request->description),
         ]);
     }
 }
