@@ -63,11 +63,27 @@ class Admin extends Authenticatable
      */
     public function getAvatarUrl(): string
     {
-        if ($this->profile_picture) {
-            return asset('storage/' . $this->profile_picture);
+        if ($this->getAttribute('profile_picture')) {
+            $path = $this->getAttribute('profile_picture');
+            if (!str_starts_with($path, 'http') && !str_starts_with($path, 'storage/')) {
+                return asset('storage/' . $path);
+            }
+            return asset($path);
         }
         // Male: 1.png  |  Female: 3.png
         $avatar = ($this->gender === 'female') ? '3.png' : '1.png';
         return asset('assets/img/avatars/' . $avatar);
+    }
+
+    /**
+     * Accessor for profile_picture to ensure it returns a usable path/URL
+     */
+    public function getProfilePictureAttribute($value)
+    {
+        if (!$value) return null;
+        if (str_starts_with($value, 'http') || str_starts_with($value, 'storage/')) {
+            return $value;
+        }
+        return 'storage/' . $value;
     }
 }

@@ -74,10 +74,27 @@ class User extends Authenticatable
      */
     public function getAvatarUrl(): string
     {
-        if ($this->profile_picture) {
-            return asset('storage/' . $this->profile_picture);
+        if ($this->getAttribute('profile_picture')) {
+            // Ensure the path starts with storage/ for public access if not already present
+            $path = $this->getAttribute('profile_picture');
+            if (!str_starts_with($path, 'http') && !str_starts_with($path, 'storage/')) {
+                return asset('storage/' . $path);
+            }
+            return asset($path);
         }
         $name = ($this->first_name || $this->last_name) ? $this->first_name . ' ' . $this->last_name : 'User';
         return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
+    }
+
+    /**
+     * Accessor for profile_picture to ensure it returns a usable path/URL
+     */
+    public function getProfilePictureAttribute($value)
+    {
+        if (!$value) return null;
+        if (str_starts_with($value, 'http') || str_starts_with($value, 'storage/')) {
+            return $value;
+        }
+        return 'storage/' . $value;
     }
 }

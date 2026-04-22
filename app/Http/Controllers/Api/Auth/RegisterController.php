@@ -248,8 +248,8 @@ class RegisterController extends Controller
                 $file = $request->file('profile_picture');
                 if ($file->isValid()) {
                     // Delete old picture if exists
-                    if ($user->profile_picture) {
-                        \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_picture);
+                    if ($user->getRawOriginal('profile_picture')) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($user->getRawOriginal('profile_picture'));
                     }
 
                     // Use Laravel Storage for consistency (stored in storage/app/public/profiles)
