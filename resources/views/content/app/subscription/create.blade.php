@@ -241,14 +241,10 @@
                                         </div>
                                     </td>
                                     <td>
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input type="checkbox" name="expandable_slots" class="form-check-input scale-150" value="1" {{ (isset($plan) && $plan->expandable_slots == 1) ? 'checked' : '' }}>
-                                        </div>
+                                        <input type="number" name="expandable_slots" class="form-control text-center" value="{{ isset($plan) ? $plan->expandable_slots : old('expandable_slots', 0) }}">
                                     </td>
                                     <td class="yearly-only-col" style="display: none;">
-                                        <div class="form-check form-switch d-flex justify-content-center">
-                                            <input type="checkbox" name="yearly_expandable_slots" class="form-check-input scale-150 border-info" value="1">
-                                        </div>
+                                        <input type="number" name="yearly_expandable_slots" class="form-control text-center bg-label-info border-info" value="{{ old('yearly_expandable_slots', 0) }}">
                                     </td>
                                 </tr>
 

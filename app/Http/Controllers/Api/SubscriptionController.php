@@ -202,7 +202,7 @@ class SubscriptionController extends Controller
                     'features' => $plan->features,
                     'highlight_ads' => (bool) $plan->highlight_ads,
                     'hd_images' => (bool) $plan->hd_images,
-                    'expandable_slots' => (bool) $plan->expandable_slots,
+                    'expandable_slots' => $plan->expandable_slots,
                 ],
 
                 // Usage breakdown
