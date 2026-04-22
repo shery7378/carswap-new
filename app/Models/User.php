@@ -77,6 +77,7 @@ class User extends Authenticatable
         if ($this->profile_picture) {
             return asset('storage/' . $this->profile_picture);
         }
-        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name) . '&color=7F9CF5&background=EBF4FF';
+        $name = ($this->first_name || $this->last_name) ? $this->first_name . ' ' . $this->last_name : 'User';
+        return 'https://ui-avatars.com/api/?name=' . urlencode($name) . '&color=7F9CF5&background=EBF4FF';
     }
 }

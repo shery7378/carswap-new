@@ -176,7 +176,7 @@ class RegisterController extends Controller
         $user->load('activeSubscription.plan');
         $userData = $user->toArray();
         if ($user->profile_picture) {
-            $userData['profile_picture_url'] = asset($user->profile_picture);
+            $userData['profile_picture_url'] = $user->getAvatarUrl();
         }
 
         return response()->json([
@@ -193,7 +193,7 @@ class RegisterController extends Controller
         $user->load('activeSubscription.plan');
         $userData = $user->toArray();
         if ($user->profile_picture) {
-            $userData['profile_picture_url'] = asset($user->profile_picture);
+            $userData['profile_picture_url'] = $user->getAvatarUrl();
         }
 
         return response()->json([
@@ -247,19 +247,22 @@ class RegisterController extends Controller
             if ($request->hasFile('profile_picture')) {
                 $file = $request->file('profile_picture');
                 if ($file->isValid()) {
-                    $destinationPath = public_path('profiles');
-                    if (!file_exists($destinationPath)) {
-                        mkdir($destinationPath, 0755, true);
+                    // Delete old picture if exists
+                    if ($user->profile_picture) {
+                        \Illuminate\Support\Facades\Storage::disk('public')->delete($user->profile_picture);
                     }
 
-                    $filename = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-                    $file->move($destinationPath, $filename);
+                    // Use Laravel Storage for consistency (stored in storage/app/public/profiles)
+                    $path = $file->store('profiles', 'public');
 
                     // Directly save to user model and DB
-                    $user->profile_picture = 'profiles/' . $filename;
+                    $user->profile_picture = $path;
                     $user->save();
                 }
             }
+
+            // Remove profile_picture from validated to prevent overwriting with UploadedFile object in update()
+            unset($validated['profile_picture']);
 
             /*
             |--------------------------------------------------------------------------
@@ -299,7 +302,7 @@ class RegisterController extends Controller
             */
             $userData = $user->toArray();
             if ($user->profile_picture) {
-                $userData['profile_picture_url'] = asset($user->profile_picture);
+                $userData['profile_picture_url'] = $user->getAvatarUrl();
             }
 
             return response()->json([
