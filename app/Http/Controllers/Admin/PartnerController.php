@@ -38,7 +38,7 @@ class PartnerController extends Controller
      */
     public function create()
     {
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        $days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
         return view('content.dashboard.partners.create', compact('days'));
     }
 
@@ -118,7 +118,7 @@ class PartnerController extends Controller
     public function edit(string $id)
     {
         $partner = Partner::with(['services', 'openingHours'])->findOrFail($id);
-        $days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        $days = ['Hétfő', 'Kedd', 'Szerda', 'Csütörtök', 'Péntek', 'Szombat', 'Vasárnap'];
         return view('content.dashboard.partners.edit', compact('partner', 'days'));
     }
 

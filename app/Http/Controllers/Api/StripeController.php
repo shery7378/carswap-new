@@ -39,7 +39,7 @@ class StripeController extends Controller
             'full_name' => 'required|string|max:191',
             'company_name' => 'required_if:billing_type,company|nullable|string|max:191',
             'tax_id' => 'required_if:billing_type,company|nullable|string|max:191',
-            'my_name' => 'required|string|max:191',
+            'my_name' => 'nullable|string|max:191',
             'postal_code' => 'required|string|max:20',
             'city' => 'required|string|max:191',
             'address' => 'required|string|max:255',

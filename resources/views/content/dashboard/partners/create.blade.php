@@ -1,14 +1,14 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add Partner')
+@section('title', 'Partner hozzáadása')
 
 @section('content')
 <div class="row">
     <div class="col-xl-9 col-lg-8">
         <div class="card mb-4">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">Partner Details</h5>
-                <small class="text-muted float-end">Enter partner data as requested</small>
+                <h5 class="mb-0">Partner adatai</h5>
+                <small class="text-muted float-end">Adja meg a partner adatait a kérésnek megfelelően</small>
             </div>
             <div class="card-body">
                 <form action="{{ route('admin.partners.store') }}" method="POST" enctype="multipart/form-data" id="partnerForm">
@@ -16,16 +16,16 @@
 
                     <!-- Company Info Section>
                     <div class="mb-4">
-                        <h6 class="fw-bold mb-3 border-bottom pb-2">Basic Information</h6>
+                        <h6 class="fw-bold mb-3 border-bottom pb-2">Alapvető információk</h6>
                         <div class="row">
                             <div class="col-12 mb-3">
-                                <label class="form-label" for="name">Company Name *</label>
-                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Enter Company Name" required />
+                                <label class="form-label" for="name">Cégnév *</label>
+                                <input type="text" class="form-control @error('name') is-invalid @enderror" id="name" name="name" value="{{ old('name') }}" placeholder="Adja meg a cégnevet" required />
                                 @error('name')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-12 mb-3">
-                                <label class="form-label" for="description">Introduction *</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" placeholder="Write a short introduction..." required>{{ old('description') }}</textarea>
+                                <label class="form-label" for="description">Bemutatkozás *</label>
+                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="3" placeholder="Írjon egy rövid bemutatkozást..." required>{{ old('description') }}</textarea>
                                 @error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
@@ -33,22 +33,22 @@
 
                     <!-- Services Section -->
                     <div class="mb-4">
-                        <h6 class="fw-bold mb-3 border-bottom pb-2">Services</h6>
+                        <h6 class="fw-bold mb-3 border-bottom pb-2">Szolgáltatások</h6>
                         <div id="services-container">
                             <!-- Dynamic services added here -->
                         </div>
                         <button type="button" class="btn btn-sm btn-outline-primary" id="add-service">
-                            <i class="bx bx-plus me-1"></i>Add Service
+                            <i class="bx bx-plus me-1"></i>Szolgáltatás hozzáadása
                         </button>
                     </div>
 
                     <!-- Opening Hours Section -->
                     <div class="mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
-                            <h6 class="fw-bold mb-0">Opening Hours</h6>
+                            <h6 class="fw-bold mb-0">Nyitvatartási idő</h6>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="show_opening_hours" name="show_opening_hours" value="1" checked>
-                                <label class="form-check-label" for="show_opening_hours">Opening hours WILL BE DISPLAYED</label>
+                                <label class="form-check-label" for="show_opening_hours">A nyitvatartási idő MEGJELENIK</label>
                             </div>
                         </div>
                         
@@ -67,7 +67,7 @@
                                 <div class="col-md-2">
                                     <div class="form-check pt-1">
                                         <input class="form-check-input" type="checkbox" name="opening_hours[{{ $day }}][is_closed]" id="closed_{{ $day }}">
-                                        <label class="form-check-label" for="closed_{{ $day }}">Closed</label>
+                                        <label class="form-check-label" for="closed_{{ $day }}">Zárva</label>
                                     </div>
                                 </div>
                             </div>
@@ -77,15 +77,15 @@
 
                     <!-- Contact & Address Section -->
                     <div class="mb-4">
-                        <h6 class="fw-bold mb-3 border-bottom pb-2">Contact & Location</h6>
+                        <h6 class="fw-bold mb-3 border-bottom pb-2">Kapcsolat és Helyszín</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" for="phone">Phone Number *</label>
+                                <label class="form-label" for="phone">Telefonszám *</label>
                                 <input type="text" class="form-control @error('phone') is-invalid @enderror" id="phone" name="phone" value="{{ old('phone') }}" placeholder="+1 234 567 890" required />
                                 @error('phone')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label" for="email">Email *</label>
+                                <label class="form-label" for="email">E-mail *</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" value="{{ old('email') }}" placeholder="info@company.com" required />
                                 @error('email')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
@@ -93,22 +93,22 @@
                                 <label class="form-label" for="address">Featured address / Cím *</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
-                                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" placeholder="Search for address or enter manually..." required />
+                                    <input type="text" class="form-control" id="address" name="address" value="{{ old('address') }}" placeholder="Keressen rá a címre, vagy adja meg manuálisan..." required />
                                 </div>
                                 <input type="hidden" id="latitude" name="latitude" value="{{ old('latitude') }}">
                                 <input type="hidden" id="longitude" name="longitude" value="{{ old('longitude') }}">
                                 <div id="map" class="mt-2 rounded border" style="width: 100%; height: 300px; display: none;"></div>
-                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Search an address to set the exact location on the map.</small>
+                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Keressen rá egy címre, hogy beállítsa a pontos helyszínt a térképen.</small>
                             </div>
                         </div>
                     </div>
 
                     <!-- Media Section -->
                     <div class="mb-4">
-                        <h6 class="fw-bold mb-3 border-bottom pb-2">Media (Logo & Gallery)</h6>
+                        <h6 class="fw-bold mb-3 border-bottom pb-2">Média (Logó és Galéria)</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Featured Image *</label>
+                                <label class="form-label">Kiemelt kép *</label>
                                 <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" onchange="previewLogo(this)" required />
                                 <div id="logo-preview" class="mt-2 d-none">
                                     <img id="logo-img" src="" alt="Logo Preview" class="rounded border" style="width: 150px; height: 150px; object-fit: cover;">
@@ -118,12 +118,12 @@
                         </div>
                         
                         <div class="mb-3">
-                            <label class="form-label">Images Gallery</label>
+                            <label class="form-label">Képgaléria</label>
                             <div id="gallery-container" class="row g-3 mb-3">
                                 <!-- Gallery slots will be added here -->
                             </div>
                             <button type="button" class="btn btn-outline-primary btn-sm" id="btn-add-gallery">
-                                <i class="bx bx-image-add me-1"></i> Add More Photos
+                                <i class="bx bx-image-add me-1"></i> További fotók hozzáadása
                             </button>
                         </div>
                     </div>
@@ -131,9 +131,9 @@
                     <div class="mt-4 pt-3 border-top d-flex justify-content-between">
                         <div class="form-check form-switch pt-1">
                             <input class="form-check-input" type="checkbox" id="is_active" name="is_active" value="1" checked>
-                            <label class="form-check-label" for="is_active">Partner is Active</label>
+                            <label class="form-check-label" for="is_active">A Partner aktív</label>
                         </div>
-                        <button type="submit" class="btn btn-primary px-5">Publish Partner</button>
+                        <button type="submit" class="btn btn-primary px-5">Partner közzététele</button>
                     </div>
                 </form>
             </div>
@@ -144,7 +144,7 @@
     <div class="col-xl-3 col-lg-4">
         <div class="card mb-4 bg-light border-0 shadow-none">
             <div class="card-body">
-                <h6 class="fw-bold mb-3">Form Guidance</h6>
+                <h6 class="fw-bold mb-3">Űrlap útmutató</h6>
                 <p class="small text-muted mb-3">
                     Fields marked with <span class="text-danger">*</span> are required for the partner to be published.
                 </p>
@@ -157,7 +157,7 @@
         
         <div class="card mb-4">
             <div class="card-body">
-                <h6 class="fw-bold mb-3">SEO Preview</h6>
+                <h6 class="fw-bold mb-3">SEO előnézet</h6>
                 <div class="bg-white p-2 rounded border small">
                     <div class="text-primary fw-bold" id="seo-title-preview">Partner Name | CARSWAP</div>
                     <div class="text-success" style="font-size: 0.75rem;">https://carswap-backend.hexafume.com/...</div>
@@ -250,19 +250,19 @@ document.addEventListener('DOMContentLoaded', function() {
             <div class="service-item border p-3 mb-3 rounded bg-light">
                 <div class="row">
                     <div class="col-md-9 mb-2">
-                        <label class="form-label">Service Title</label>
-                        <input type="text" name="services[${serviceIndex}][name]" class="form-control bg-white" placeholder="e.g. Car Rental, Engine Repair" required>
+                        <label class="form-label">Szolgáltatás megnevezése</label>
+                        <input type="text" name="services[${serviceIndex}][name]" class="form-control bg-white" placeholder="pl. Autóbérlés, Motorjavítás" required>
                     </div>
                     <div class="col-md-3 mb-2 d-flex align-items-end justify-content-between">
                         <div class="form-check mb-2">
                             <input class="form-check-input" type="checkbox" name="services[${serviceIndex}][is_active]" id="service_active_${serviceIndex}" checked>
-                            <label class="form-check-label" for="service_active_${serviceIndex}">Published</label>
+                            <label class="form-check-label" for="service_active_${serviceIndex}">Közzétéve</label>
                         </div>
                         <button type="button" class="btn btn-icon btn-sm btn-outline-danger remove-service mb-2"><i class="bx bx-trash"></i></button>
                     </div>
                 </div>
                 <div class="mb-0">
-                    <textarea name="services[${serviceIndex}][description]" class="form-control bg-white" rows="2" placeholder="Brief service description..."></textarea>
+                    <textarea name="services[${serviceIndex}][description]" class="form-control bg-white" rows="2" placeholder="Rövid szolgáltatásleírás..."></textarea>
                 </div>
             </div>
         `;
