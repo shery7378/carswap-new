@@ -324,11 +324,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const seoDesc = document.getElementById('seo-desc-preview');
 
     nameInput.addEventListener('input', function() {
-        seoTitle.textContent = (this.value || 'Partner Name') + ' | CARSWAP';
+        seoTitle.textContent = (this.value || "{{ __('Partner Name') }}") + ' | CARSWAP';
     });
 
     descInput.addEventListener('input', function() {
-        seoDesc.textContent = this.value.substring(0, 160) || 'Write an introduction...';
+        seoDesc.textContent = this.value.substring(0, 160) || "{{ __('Write an introduction...') }}";
     });
 
     // Form Submission Geocoding Fallback

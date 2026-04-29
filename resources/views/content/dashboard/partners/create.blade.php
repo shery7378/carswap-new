@@ -146,7 +146,7 @@
             <div class="card-body">
                 <h6 class="fw-bold mb-3">Űrlap útmutató</h6>
                 <p class="small text-muted mb-3">
-                    Fields marked with <span class="text-danger">*</span> are required for the partner to be published.
+                    {!! str_replace('*', '<span class="text-danger">*</span>', __('Fields marked with * are required for the partner to be published.')) !!}
                 </p>
                 <div class="alert alert-info py-2 px-3 small border-0 mb-0">
                     <i class="bx bx-bulb me-2"></i>
@@ -159,9 +159,9 @@
             <div class="card-body">
                 <h6 class="fw-bold mb-3">SEO előnézet</h6>
                 <div class="bg-white p-2 rounded border small">
-                    <div class="text-primary fw-bold" id="seo-title-preview">Partner Name | CARSWAP</div>
+                    <div class="text-primary fw-bold" id="seo-title-preview">{{ __('Partner Name | CARSWAP') }}</div>
                     <div class="text-success" style="font-size: 0.75rem;">https://carswap-backend.hexafume.com/...</div>
-                    <div class="text-muted" id="seo-desc-preview" style="font-size: 0.75rem;">Write an introduction to see SEO description preview...</div>
+                    <div class="text-muted" id="seo-desc-preview" style="font-size: 0.75rem;">{{ __('Write an introduction to see SEO description preview...') }}</div>
                 </div>
             </div>
         </div>
@@ -290,11 +290,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const seoDesc = document.getElementById('seo-desc-preview');
 
     nameInput.addEventListener('input', function() {
-        seoTitle.textContent = (this.value || 'Partner Name') + ' | CARSWAP';
+        seoTitle.textContent = (this.value || "{{ __('Partner Name') }}") + ' | CARSWAP';
     });
 
     descInput.addEventListener('input', function() {
-        seoDesc.textContent = this.value.substring(0, 160) || 'Write an introduction to see SEO description preview...';
+        seoDesc.textContent = this.value.substring(0, 160) || "{{ __('Write an introduction to see SEO description preview...') }}";
     });
 
     // Form Submission Geocoding Fallback

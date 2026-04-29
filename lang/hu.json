@@ -333,5 +333,9 @@
     "e.g. Hero Section, Features List": "pl. Hero szekció, Funkciók listája",
     "e.g. home-features": "pl. home-features",
     "Section heading displayed on site": "Az oldalon megjelenő szekció fejléc",
-    "No components found.": "Nem található összetevő."
+    "No components found.": "Nem található összetevő.",
+    "Partner Name | CARSWAP": "Partner neve | CARSWAP",
+    "Write an introduction to see SEO description preview...": "Írjon bemutatkozást az SEO leírás előnézetének megtekintéséhez...",
+    "Fields marked with * are required for the partner to be published.": "A *-gal jelölt mezők kitöltése kötelező a partner közzétételéhez.",
+    "Write an introduction...": "Írjon bemutatkozást..."
 }
