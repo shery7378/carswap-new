@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Partner Details: ' . $partner->name)
+@section('title', __('Partner Details') . ': ' . $partner->name)
 
 @section('content')
 <div class="row">
@@ -19,16 +19,16 @@
                     </div>
                     <div>
                         <h5 class="mb-0 fw-bold">{{ $partner->name }}</h5>
-                        <small class="text-muted"><i class="bx bx-map-pin me-1"></i> {{ $partner->address ?: 'No address specified' }}</small>
+                        <small class="text-muted"><i class="bx bx-map-pin me-1"></i> {{ $partner->address ?: __('No address specified') }}</small>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('admin.partners.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bx bx-arrow-back me-1"></i> Back to List
+                        <i class="bx bx-arrow-back me-1"></i> {{ __('Back to List') }}
                     </a>
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
                         <a href="{{ route('admin.partners.edit', $partner->id) }}" class="btn btn-primary btn-sm shadow-sm px-3">
-                            <i class="bx bx-edit-alt me-1"></i> Edit Partner
+                            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit Partner') }}
                         </a>
                     @endif
                 </div>
@@ -51,7 +51,7 @@
 
                         <!-- Gallery Preview -->
                         @if($partner->gallery && count($partner->gallery) > 0)
-                            <h6 class="fw-bold mb-3 small text-uppercase">Partner Gallery ({{ count($partner->gallery) }})</h6>
+                            <h6 class="fw-bold mb-3 small text-uppercase">{{ __('Partner Gallery') }} ({{ count($partner->gallery) }})</h6>
                             <div class="gallery-wrapper row g-2 mb-4" style="max-height: 200px; overflow-y: auto; padding: 2px;">
                                 @foreach($partner->gallery as $photo)
                                     <div class="col-4">
@@ -65,33 +65,33 @@
                         @endif
 
                         <div class="contact-info-card p-4 bg-white rounded border shadow-xs mt-3">
-                            <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2">Business Contact</h6>
+                            <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2">{{ __('Business Contact') }}</h6>
                             <ul class="list-unstyled mb-0">
                                 <li class="mb-3 d-flex align-items-start">
                                     <i class="bx bx-envelope text-primary me-3 mt-1 fs-4"></i>
                                     <div>
-                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Email Address</small>
+                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">{{ __('Email Address') }}</small>
                                         <span class="fw-bold text-dark">{{ $partner->email ?: 'N/A' }}</span>
                                     </div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-start">
                                     <i class="bx bx-phone text-success me-3 mt-1 fs-4"></i>
                                     <div>
-                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Official Phone</small>
+                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">{{ __('Official Phone') }}</small>
                                         <span class="fw-bold text-dark">{{ $partner->phone ?: 'N/A' }}</span>
                                     </div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-start">
                                     <i class="bx bx-map text-warning me-3 mt-1 fs-4"></i>
                                     <div>
-                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Location Address</small>
+                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">{{ __('Location Address') }}</small>
                                         <span class="fw-bold text-dark">{{ $partner->address ?: 'N/A' }}</span>
                                     </div>
                                 </li>
                                 <li class="mb-3 d-flex align-items-start">
                                     <i class="bx bx-globe text-info me-3 mt-1 fs-4"></i>
                                     <div>
-                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">Website</small>
+                                        <small class="text-muted d-block uppercase fw-semibold" style="font-size: 0.65rem;">{{ __('Website') }}</small>
                                         @if($partner->website)
                                             <a href="{{ $partner->website }}" target="_blank" class="fw-bold text-primary">{{ str_replace(['http://', 'https://'], '', $partner->website) }}</a>
                                         @else
@@ -109,22 +109,22 @@
                             <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
                                 <li class="nav-item">
                                     <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#nav-intro">
-                                        <i class="bx bx-info-circle fs-5 me-1"></i> Introduction
+                                        <i class="bx bx-info-circle fs-5 me-1"></i> {{ __('Introduction') }}
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-hours">
-                                        <i class="bx bx-time fs-5 me-1"></i> Opening Hours
+                                        <i class="bx bx-time fs-5 me-1"></i> {{ __('Opening Hours') }}
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-services">
-                                        <i class="bx bx-briefcase fs-5 me-1"></i> Services ({{ $partner->services->count() }})
+                                        <i class="bx bx-briefcase fs-5 me-1"></i> {{ __('Services') }} ({{ $partner->services->count() }})
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-location">
-                                        <i class="bx bx-map fs-5 me-1"></i> Exact Location
+                                        <i class="bx bx-map fs-5 me-1"></i> {{ __('Exact Location') }}
                                     </button>
                                 </li>
                             </ul>
@@ -133,10 +133,10 @@
                                 <div class="tab-pane fade show active" id="nav-intro" role="tabpanel">
                                     <div class="p-4 border rounded shadow-xs bg-light bg-opacity-10 h-100" style="min-height: 400px;">
                                         <h5 class="fw-bold mb-3 d-flex align-items-center">
-                                            <span class="badge bg-primary me-2">&nbsp;</span> Company Profile
+                                            <span class="badge bg-primary me-2">&nbsp;</span> {{ __('Company Profile') }}
                                         </h5>
                                         <div class="lh-lg text-dark fs-6">
-                                            {!! $partner->description ? nl2br(e($partner->description)) : '<em class="text-muted font-italic">No introduction provided for this partner.</em>' !!}
+                                            {!! $partner->description ? nl2br(e($partner->description)) : '<em class="text-muted font-italic">' . __('No introduction provided for this partner.') . '</em>' !!}
                                         </div>
                                     </div>
                                 </div>
@@ -145,9 +145,9 @@
                                 <div class="tab-pane fade" id="nav-hours" role="tabpanel">
                                     <div class="p-4 border rounded shadow-xs bg-light bg-opacity-10 h-100" style="min-height: 400px;">
                                         <div class="d-flex justify-content-between align-items-center mb-4">
-                                            <h5 class="fw-bold mb-0">Weekly Schedule</h5>
+                                            <h5 class="fw-bold mb-0">{{ __('Weekly Schedule') }}</h5>
                                             <span class="badge {{ $partner->show_opening_hours ? 'bg-label-success' : 'bg-label-secondary' }}">
-                                                {{ $partner->show_opening_hours ? 'Visible to Public' : 'Hidden from Public' }}
+                                                {{ $partner->show_opening_hours ? __('Visible to Public') : __('Hidden from Public') }}
                                             </span>
                                         </div>
                                         <div class="row g-3">
@@ -155,14 +155,14 @@
                                                 @php $hour = $partner->openingHours->firstWhere('day', $day); @endphp
                                                 <div class="col-md-6 mb-2">
                                                     <div class="d-flex justify-content-between align-items-center p-3 border-bottom bg-white rounded shadow-xs border-start border-4 {{ ($hour && !$hour->is_closed) ? 'border-primary' : 'border-danger' }}">
-                                                        <span class="fw-bold fs-6">{{ $day }}</span>
+                                                        <span class="fw-bold fs-6">{{ __($day) }}</span>
                                                         @if($hour && !$hour->is_closed)
                                                             <div class="text-end">
                                                                 <span class="fw-bold text-dark fs-6">{{ \Carbon\Carbon::parse($hour->open_time)->format('H:i') }} - {{ \Carbon\Carbon::parse($hour->close_time)->format('H:i') }}</span>
-                                                                <br><small class="text-success fw-semibold">Open</small>
+                                                                <br><small class="text-success fw-semibold">{{ __('Open') }}</small>
                                                             </div>
                                                         @else
-                                                            <span class="badge bg-label-danger py-2 px-3">Closed / Nem üzemel</span>
+                                                            <span class="badge bg-label-danger py-2 px-3">{{ __('Closed / Nem üzemel') }}</span>
                                                         @endif
                                                     </div>
                                                 </div>
@@ -174,7 +174,7 @@
                                 <!-- Services Tab -->
                                 <div class="tab-pane fade" id="nav-services" role="tabpanel">
                                     <div class="p-4 border rounded shadow-xs bg-light bg-opacity-10 h-100" style="min-height: 400px;">
-                                        <h5 class="fw-bold mb-4">List of Services Provided</h5>
+                                        <h5 class="fw-bold mb-4">{{ __('List of Services Provided') }}</h5>
                                         <div class="row g-4">
                                             @forelse($partner->services as $service)
                                                 <div class="col-md-6 mb-3">
@@ -183,17 +183,17 @@
                                                             <div class="d-flex justify-content-between align-items-start mb-2">
                                                                 <h6 class="fw-bold mb-0 text-primary">{{ $service->name }}</h6>
                                                                 <span class="badge {{ $service->is_active ? 'bg-label-success' : 'bg-label-secondary' }} scale-75">
-                                                                    {{ $service->is_active ? 'Active' : 'Private' }}
+                                                                    {{ $service->is_active ? __('Active') : __('Private') }}
                                                                 </span>
                                                             </div>
-                                                            <p class="small text-muted mb-0 lh-sm">{{ $service->description ?: 'No specific details provided for this service.' }}</p>
+                                                            <p class="small text-muted mb-0 lh-sm">{{ $service->description ?: __('No specific details provided for this service.') }}</p>
                                                         </div>
                                                     </div>
                                                 </div>
                                             @empty
                                                 <div class="col-12 text-center py-5">
                                                     <i class="bx bx-briefcase-alt text-muted display-4 opacity-50"></i>
-                                                    <p class="text-muted mt-3">This partner hasn't listed any specific services yet.</p>
+                                                    <p class="text-muted mt-3">{{ __('This partner hasn\'t listed any specific services yet.') }}</p>
                                                 </div>
                                             @endforelse
                                         </div>
@@ -206,14 +206,14 @@
                                         @if($partner->address)
                                             <p class="mb-2 fw-bold text-dark"><i class="bx bx-map-pin me-1 text-primary"></i> {{ $partner->address }}</p>
                                         @endif
-                                        <p class="text-muted small mb-3"><i class="bx bx-info-circle me-1"></i> Exact GPS Coordinates: <span class="badge bg-label-secondary mx-1">{{ $partner->latitude ?: 'Not Set' }}</span> , <span class="badge bg-label-secondary mx-1">{{ $partner->longitude ?: 'Not Set' }}</span></p>
+                                        <p class="text-muted small mb-3"><i class="bx bx-info-circle me-1"></i> {{ __('Exact GPS Coordinates:') }} <span class="badge bg-label-secondary mx-1">{{ $partner->latitude ?: __('Not Set') }}</span> , <span class="badge bg-label-secondary mx-1">{{ $partner->longitude ?: __('Not Set') }}</span></p>
                                         @if($partner->latitude && $partner->longitude)
                                             <div id="partner-map" class="rounded border shadow-sm" style="height: 350px; width: 100%;"></div>
                                         @else
                                             <div class="bg-white rounded border d-flex align-items-center justify-content-center" style="height: 350px;">
                                                 <div class="text-center">
                                                     <i class="bx bx-map-alt text-muted display-3"></i>
-                                                    <p class="text-muted mt-2">No coordinates set for this partner.</p>
+                                                    <p class="text-muted mt-2">{{ __('No coordinates set for this partner.') }}</p>
                                                 </div>
                                             </div>
                                         @endif
@@ -226,10 +226,10 @@
             </div>
             
             <div class="card-footer bg-light border-top text-end p-4">
-                <a href="{{ route('admin.partners.index') }}" class="btn btn-outline-secondary me-2">Back to Dashboard</a>
+                <a href="{{ route('admin.partners.index') }}" class="btn btn-outline-secondary me-2">{{ __('Back to Dashboard') }}</a>
                 @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
                     <a href="{{ route('admin.partners.edit', $partner->id) }}" class="btn btn-primary px-4 shadow">
-                        <i class="bx bx-edit me-1"></i> Edit Partner Profile
+                        <i class="bx bx-edit me-1"></i> {{ __('Edit Partner Profile') }}
                     </a>
                 @endif
             </div>

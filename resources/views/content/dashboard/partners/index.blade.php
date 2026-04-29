@@ -146,7 +146,7 @@
                                     <tr>
                                         <td colspan="5" class="text-center py-5">
                                             <i class="bx bx-folder-open display-4 text-muted"></i>
-                                            <p class="mt-2 mb-0">No partners found.</p>
+                                            <p class="mt-2 mb-0">{{ __('No partners found.') }}</p>
                                         </td>
                                     </tr>
                                 @endforelse
@@ -165,9 +165,9 @@
             <div class="modal-content shadow-lg border-0" id="modal-loader-content">
                 <div class="modal-body text-center py-5">
                     <div class="spinner-border text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
+                        <span class="visually-hidden">{{ __('Loading...') }}</span>
                     </div>
-                    <p class="mt-2 text-muted">Fetching partner details...</p>
+                    <p class="mt-2 text-muted">{{ __('Fetching partner details...') }}</p>
                 </div>
             </div>
         </div>
@@ -190,7 +190,9 @@
 
                 language: {
                     search: "",
-                    searchPlaceholder: "Search partners...",
+                    searchPlaceholder: "{{ __('Search partners...') }}",
+                    lengthMenu: "{{ __('Show _MENU_ entries') }}",
+                    info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
                     paginate: {
                         next: '<i class="bx bx-chevron-right"></i>',
                         previous: '<i class="bx bx-chevron-left"></i>'
@@ -216,7 +218,7 @@
             container.innerHTML = `
                     <div class="modal-body text-center py-5">
                         <div class="spinner-border text-primary" role="status"></div>
-                        <p class="mt-2 text-muted small">Loading partner information...</p>
+                        <p class="mt-2 text-muted small">{{ __('Loading partner information...') }}</p>
                     </div>
                 `;
 
