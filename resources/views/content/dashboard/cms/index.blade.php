@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'CMS Management')
+@section('title', __('CMS Management'))
 
 @section('page-style')
 <style>
@@ -85,11 +85,11 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
-        <h4 class="mb-1 fw-bold text-dark">Website Sections</h4>
-        <p class="text-muted small mb-0">Control the dynamic content and legal notices across your platform.</p>
+        <h4 class="mb-1 fw-bold text-dark">@lang('Website Sections')</h4>
+        <p class="text-muted small mb-0">@lang('Control the dynamic content and legal notices across your platform.')</p>
     </div>
     <a href="{{ route('admin.cms.create') }}" class="btn cms-btn-primary d-flex align-items-center gap-2">
-        <i class="bx bx-plus"></i> New Section
+        <i class="bx bx-plus"></i> @lang('New Section')
     </a>
 </div>
 
@@ -116,19 +116,19 @@
                         <h6 class="fw-bold mb-0 text-dark">{{ $section->name }}</h6>
                         <div class="d-flex align-items-center">
                             <span class="cms-status-indicator {{ $section->status ? 'status-active' : 'status-inactive' }}"></span>
-                            <span class="text-muted" style="font-size: 0.75rem;">{{ $section->status ? 'Active' : 'Inactive' }}</span>
+                            <span class="text-muted" style="font-size: 0.75rem;">{{ $section->status ? __('Active') : __('Inactive') }}</span>
                         </div>
                     </div>
-                    <small class="cms-item-count">{{ $section->items_count }} components included</small>
+                    <small class="cms-item-count">{{ $section->items_count }} @lang('components included')</small>
                 </div>
                 <div class="card-body p-4 pt-3">
                     <p class="text-muted small mb-4" style="line-height: 1.6; height: 3.2rem; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">
-                        {{ $section->description ?: 'No description provided.' }}
+                        {{ $section->description ?: __('No description provided.') }}
                     </p>
                     
                     <div class="d-flex gap-2">
                         <a href="{{ route('admin.cms.edit', $section->id) }}" class="btn cms-btn-secondary flex-grow-1">
-                            Modify Content
+                            @lang('Modify Content')
                         </a>
                         <div class="dropdown">
                             <button type="button" class="btn btn-outline-light text-muted p-2 border-0 shadow-none" data-bs-toggle="dropdown">
@@ -136,10 +136,10 @@
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg">
                                 <li>
-                                    <form action="{{ route('admin.cms.destroy', $section->id) }}" method="POST" onsubmit="return confirm('Remove section?')">
+                                    <form action="{{ route('admin.cms.destroy', $section->id) }}" method="POST" onsubmit="return confirm('{{ __('Remove section?') }}')">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="dropdown-item text-danger py-2">
-                                            <i class="bx bx-trash me-2"></i> Delete Section
+                                            <i class="bx bx-trash me-2"></i> @lang('Delete Section')
                                         </button>
                                     </form>
                                 </li>
@@ -151,7 +151,7 @@
         </div>
     @empty
         <div class="col-12 text-center py-5">
-            <p class="text-muted">No sections found.</p>
+            <p class="text-muted">@lang('No sections found.')</p>
         </div>
     @endforelse
 
@@ -163,18 +163,18 @@
                     <i class="bx bx-envelope fs-4"></i>
                 </div>
                 <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="fw-bold mb-0 text-dark">Mailing List</h6>
-                    <span class="badge bg-label-info">Global Settings</span>
+                    <h6 class="fw-bold mb-0 text-dark">@lang('Mailing List')</h6>
+                    <span class="badge bg-label-info">@lang('Global Settings')</span>
                 </div>
-                <small class="cms-item-count">Hero & Call to Action</small>
+                <small class="cms-item-count">@lang('Hero & Call to Action')</small>
             </div>
             <div class="card-body p-4 pt-3">
                 <p class="text-muted small mb-4">
-                    Edit the headings and promotional text for your footer's mailing list subscription section.
+                    @lang("Edit the headings and promotional text for your footer's mailing list subscription section.")
                 </p>
                 <div class="d-flex gap-2">
                     <a href="{{ route('app-ecommerce-settings-header-footer') }}#mailing-list" class="btn cms-btn-secondary flex-grow-1">
-                        Modify Content
+                        @lang('Modify Content')
                     </a>
                 </div>
             </div>

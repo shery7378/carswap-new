@@ -1,64 +1,64 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Create CMS Section')
+@section('title', __('Create CMS Section'))
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">CMS /</span> Create Section</h4>
+<h4 class="py-3 mb-4"><span class="text-muted fw-light">@lang('CMS') /</span> @lang('Create Section')</h4>
 
 <div class="row">
   <div class="col-md-8">
     <div class="card mb-4">
-      <h5 class="card-header">Section Details</h5>
+      <h5 class="card-header">@lang('Section Details')</h5>
       <div class="card-body">
         <form action="{{ route('admin.cms.store') }}" method="POST" enctype="multipart/form-data">
           @csrf
           <div class="row mb-3">
             <div class="col-md-6">
-              <label class="form-label" for="name">Internal Name</label>
+              <label class="form-label" for="name">@lang('Internal Name')</label>
               <input type="text" class="form-control" id="name" name="name" 
-                     placeholder="e.g. Hero Section, Features List" required />
+                     placeholder="{{ __('e.g. Hero Section, Features List') }}" required />
             </div>
             <div class="col-md-6">
-              <label class="form-label" for="slug">Slug (Unique Key)</label>
+              <label class="form-label" for="slug">@lang('Slug (Unique Key)')</label>
               <input type="text" class="form-control" id="slug" name="slug" 
-                     placeholder="e.g. home-features" required />
+                     placeholder="{{ __('e.g. home-features') }}" required />
             </div>
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="title">Public Title</label>
+            <label class="form-label" for="title">@lang('Public Title')</label>
             <input type="text" class="form-control" id="title" name="title" 
-                   placeholder="Section heading displayed on site" />
+                   placeholder="{{ __('Section heading displayed on site') }}" />
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="subtitle">Subtitle / Caption</label>
+            <label class="form-label" for="subtitle">@lang('Subtitle / Caption')</label>
             <input type="text" class="form-control" id="subtitle" name="subtitle" />
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="description">Main Description / Content</label>
+            <label class="form-label" for="description">@lang('Main Description / Content')</label>
             <textarea class="form-control" id="description" name="description" rows="3"></textarea>
           </div>
 
           <div class="mb-3">
-            <label class="form-label" for="image">Image Header (Optional)</label>
+            <label class="form-label" for="image">@lang('Image Header (Optional)')</label>
             <input type="file" class="form-control" id="image" name="image" />
           </div>
 
           <div class="row mb-3">
             <div class="col-md-6">
-                <label class="form-label">Status</label>
+                <label class="form-label">@lang('Status')</label>
                 <select name="status" class="form-select">
-                    <option value="1">Active</option>
-                    <option value="0">Inactive</option>
+                    <option value="1">@lang('Active')</option>
+                    <option value="0">@lang('Inactive')</option>
                 </select>
             </div>
           </div>
 
           <div class="mt-4">
-            <button type="submit" class="btn btn-primary me-2">Create Section</button>
-            <a href="{{ route('admin.cms.index') }}" class="btn btn-outline-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary me-2">@lang('Create Section')</button>
+            <a href="{{ route('admin.cms.index') }}" class="btn btn-outline-secondary">@lang('Cancel')</a>
           </div>
         </form>
       </div>

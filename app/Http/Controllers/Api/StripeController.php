@@ -35,11 +35,15 @@ class StripeController extends Controller
             'billing' => 'required|in:monthly,yearly',
 
             // New Billing Fields from Form
+            'billing_type' => 'required|in:private,company',
             'full_name' => 'required|string|max:191',
-            'company_name' => 'nullable|string|max:191',
+            'company_name' => 'required_if:billing_type,company|nullable|string|max:191',
+            'tax_id' => 'required_if:billing_type,company|nullable|string|max:191',
             'my_name' => 'required|string|max:191',
+            'postal_code' => 'required|string|max:20',
             'city' => 'required|string|max:191',
             'address' => 'required|string|max:255',
+            'email' => 'required|email|max:191',
 
             // Checkbox Enforcements
             'accepted_terms' => 'accepted',
@@ -92,10 +96,14 @@ class StripeController extends Controller
                     'user_id' => $user->id,
                     'plan_id' => $plan->id,
                     'billing_period' => $request->billing,
+                    'billing_type' => $request->billing_type,
                     'full_name' => $request->full_name,
                     'company' => $request->company_name,
+                    'tax_id' => $request->tax_id,
+                    'postal_code' => $request->postal_code,
                     'city' => $request->city,
                     'address' => $request->address,
+                    'email' => $request->email,
                 ],
                 'success_url' => $frontendUrl . '/account/billing?status=success&session_id={CHECKOUT_SESSION_ID}',
                 'cancel_url' => $frontendUrl . '/account/billing?status=cancelled',
@@ -125,11 +133,15 @@ class StripeController extends Controller
                 'stripe_session_id' => $session->id,
 
                 // Saving Billing Info
+                'billing_type' => $request->billing_type,
                 'billing_full_name' => $request->full_name,
                 'billing_company_name' => $request->company_name,
+                'billing_tax_id' => $request->tax_id,
                 'billing_my_name' => $request->my_name,
+                'billing_postal_code' => $request->postal_code,
                 'billing_city' => $request->city,
                 'billing_address' => $request->address,
+                'billing_email' => $request->email,
                 'accepted_terms' => $request->boolean('accepted_terms'),
                 'accepted_privacy' => $request->boolean('accepted_privacy'),
                 'accepted_recurring' => $request->boolean('accepted_recurring'),

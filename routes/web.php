@@ -231,8 +231,8 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     // PARTNERS Module
     Route::middleware(['permission:view-partners,admin-guard'])->group(function () {
         Route::get('/app/partners', [AdminPartnerController::class, 'index'])->name('admin.partners.index');
-        Route::get('/app/partners/{partner}', [AdminPartnerController::class, 'show'])->name('admin.partners.show');
         Route::get('/app/partners/create', [AdminPartnerController::class, 'create'])->name('admin.partners.create')->middleware('permission:create-partners,admin-guard');
+        Route::get('/app/partners/{partner}', [AdminPartnerController::class, 'show'])->name('admin.partners.show');
         Route::post('/app/partners', [AdminPartnerController::class, 'store'])->name('admin.partners.store')->middleware('permission:create-partners,admin-guard');
         Route::get('/app/partners/{partner}/edit', [AdminPartnerController::class, 'edit'])->name('admin.partners.edit')->middleware('permission:edit-partners,admin-guard');
         Route::put('/app/partners/{partner}', [AdminPartnerController::class, 'update'])->name('admin.partners.update')->middleware('permission:edit-partners,admin-guard');

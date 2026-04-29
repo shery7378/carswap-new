@@ -51,7 +51,7 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->route('admin.cms.index')->with('success', 'Section created successfully.');
+        return redirect()->route('admin.cms.index')->with('success', __('Section created successfully.'));
     }
 
     /**
@@ -93,7 +93,7 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->route('admin.cms.index')->with('success', 'Section updated successfully.');
+        return redirect()->route('admin.cms.index')->with('success', __('Section updated successfully.'));
     }
 
     /**
@@ -111,7 +111,7 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->route('admin.cms.index')->with('success', 'Section deleted successfully.');
+        return redirect()->route('admin.cms.index')->with('success', __('Section deleted successfully.'));
     }
 
     /**
@@ -144,7 +144,7 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->back()->with('success', 'Item added successfully.');
+        return redirect()->back()->with('success', __('Item added successfully.'));
     }
 
     /**
@@ -192,7 +192,7 @@ class CMSController extends Controller
         }
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->back()->with('success', 'Document content saved successfully.');
+        return redirect()->back()->with('success', __('Document content saved successfully.'));
     }
 
     public function updateItem(Request $request, $itemId)
@@ -225,7 +225,7 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->back()->with('success', 'Item updated successfully.');
+        return redirect()->back()->with('success', __('Item updated successfully.'));
     }
 
     /**
@@ -246,6 +246,6 @@ class CMSController extends Controller
         \Illuminate\Support\Facades\Cache::forget("cms_item_{$item->id}");
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
-        return redirect()->back()->with('success', 'Item deleted successfully.');
+        return redirect()->back()->with('success', __('Item deleted successfully.'));
     }
 }

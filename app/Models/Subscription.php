@@ -21,11 +21,15 @@ class Subscription extends Model
         'stripe_payment_method_id',
 
         // Billing Information
+        'billing_type',
         'billing_full_name',
         'billing_company_name',
+        'billing_tax_id',
         'billing_my_name',
+        'billing_postal_code',
         'billing_city',
         'billing_address',
+        'billing_email',
 
         // Card Details
         'card_brand',
