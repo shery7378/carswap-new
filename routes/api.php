@@ -104,6 +104,7 @@ Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
 Route::get('/vehicles/{id}/related', [VehicleController::class, 'similarVehiclesByUser']);
 Route::get('/vehicles/classified', [VehicleController::class, 'getClassifiedVehicles']);
 
+
 // Authenticated Ad Routes (user must be logged in)
 // IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel
 // from matching the literal string 'my' as an {id} parameter.
