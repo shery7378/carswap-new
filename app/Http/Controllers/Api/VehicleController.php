@@ -218,21 +218,23 @@ class VehicleController extends Controller
         // Define the limit for each category (default 8)
         $limit = $request->get('limit', 8);
 
-        // Fetch New (Novel) vehicles
+        // Fetch New (Novel/Újszerű) vehicles
         $newCars = Vehicle::with($this->getRelations())
             ->where('ad_status', 'published')
             ->whereHas('vehicleStatus', function ($q) {
-                $q->where('name', 'Novel');
+                $q->whereIn('name', ['Novel', 'Újszerű'])
+                  ->orWhere('id', 1);
             })
             ->orderBy('id', 'desc')
             ->limit($limit)
             ->get();
 
-        // Fetch Used vehicles
+        // Fetch Used (Used/Használt) vehicles
         $usedCars = Vehicle::with($this->getRelations())
             ->where('ad_status', 'published')
             ->whereHas('vehicleStatus', function ($q) {
-                $q->where('name', 'Used');
+                $q->whereIn('name', ['Used', 'Használt'])
+                  ->orWhere('id', 2);
             })
             ->orderBy('id', 'desc')
             ->limit($limit)
