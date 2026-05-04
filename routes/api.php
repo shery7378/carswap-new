@@ -100,9 +100,9 @@ Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class, 'stor
 
 // Legacy vehicle routes (kept for backwards compatibility)
 Route::get('/vehicles', [VehicleController::class, 'index']);
+Route::get('/vehicles/classified', [VehicleController::class, 'getClassifiedVehicles']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
 Route::get('/vehicles/{id}/related', [VehicleController::class, 'similarVehiclesByUser']);
-Route::get('/vehicles/classified', [VehicleController::class, 'getClassifiedVehicles']);
 
 
 // Authenticated Ad Routes (user must be logged in)
