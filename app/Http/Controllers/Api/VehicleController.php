@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 class VehicleController extends Controller
 {
+
     /**
      * Display a listing of the vehicles with filtering.
      */
@@ -196,12 +197,12 @@ class VehicleController extends Controller
             'transmission',
             'user'
         ])
-        ->where('ad_status', 'published')
-        ->where('user_id', $vehicle->user_id) // Same user
-        ->where('id', '!=', $vehicle->id) // Exclude the current vehicle
-        ->orderBy('id', 'desc')
-        ->limit(3)
-        ->get();
+            ->where('ad_status', 'published')
+            ->where('user_id', $vehicle->user_id) // Same user
+            ->where('id', '!=', $vehicle->id) // Exclude the current vehicle
+            ->orderBy('id', 'desc')
+            ->limit(3)
+            ->get();
 
         return response()->json([
             'success' => true,
