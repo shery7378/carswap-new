@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add New Vehicle')
+@section('title', __('Add New Vehicle'))
 
 @section('page-style')
     <style>
@@ -43,38 +43,38 @@
 @section('content')
     <div class="card listing-manager">
         <div class="card-header bg-white border-bottom">
-            <h5 class="mb-0">Listing Manager</h5>
+            <h5 class="mb-0">{{ __('Listing Manager') }}</h5>
         </div>
         <div class="row g-0">
             <div class="col-md-3 border-end">
                 <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist">
                     <button class="nav-link active" id="tab-options" data-bs-toggle="pill" data-bs-target="#content-options"
-                        type="button"><i class="bx bx-car"></i> Options</button>
+                        type="button"><i class="bx bx-car"></i> {{ __('Options') }}</button>
                     <button class="nav-link" id="tab-price" data-bs-toggle="pill" data-bs-target="#content-price"
-                        type="button"><i class="bx bx-dollar"></i> Price</button>
+                        type="button"><i class="bx bx-dollar"></i> {{ __('Price') }}</button>
                     <button class="nav-link" id="tab-features" data-bs-toggle="pill" data-bs-target="#content-features"
-                        type="button"><i class="bx bx-check-square"></i> Extra Features</button>
+                        type="button"><i class="bx bx-check-square"></i> {{ __('Extra Features') }}</button>
                     <button class="nav-link" id="tab-images" data-bs-toggle="pill" data-bs-target="#content-images"
-                        type="button"><i class="bx bx-image"></i> Images & Videos</button>
+                        type="button"><i class="bx bx-image"></i> {{ __('Images & Videos') }}</button>
                     <button class="nav-link" id="tab-location" data-bs-toggle="pill" data-bs-target="#content-location"
-                        type="button"><i class="bx bx-map"></i> Location</button>
+                        type="button"><i class="bx bx-map"></i> {{ __('Location') }}</button>
                     <button class="nav-link" id="tab-details" data-bs-toggle="pill" data-bs-target="#content-details"
-                        type="button"><i class="bx bx-list-ul"></i> Other Details</button>
+                        type="button"><i class="bx bx-list-ul"></i> {{ __('Other Details') }}</button>
                     <button class="nav-link d-none" id="tab-exchange" data-bs-toggle="pill" data-bs-target="#content-exchange"
-                        type="button"><i class="bx bx-refresh"></i> Exchange Preferences</button>
+                        type="button"><i class="bx bx-refresh"></i> {{ __('Exchange Preferences') }}</button>
                 </div>
             </div>
             <div class="col-md-9">
                 @if (session('error'))
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error:</strong> {{ session('error') }}
+                        <strong>{{ __('Error!') }}</strong> {{ session('error') }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     </div>
                 @endif
 
                 @if ($errors->any())
                     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <h5 class="alert-heading">Validation Errors:</h5>
+                        <h5 class="alert-heading">{{ __('Validation Errors:') }}</h5>
                         <ul class="mb-0">
                             @foreach ($errors->all() as $error)
                                 <li>{{ $error }}</li>
@@ -89,85 +89,85 @@
                     <div class="tab-content">
                         <!-- Options Section -->
                         <div class="tab-pane fade show active" id="content-options">
-                            <h4 class="mb-4">Options</h4>
+                            <h4 class="mb-4">{{ __('Options') }}</h4>
                             <div class="row">
                                 <div class="col-md-12 mb-3">
-                                    <label class="form-label">Title</label>
+                                    <label class="form-label">{{ __('Title') }}</label>
                                     <input type="text" class="form-control" name="title" required
                                         placeholder="AIXAM CROSSLINE">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sales Method</label>
+                                    <label class="form-label">{{ __('Sales Method') }}</label>
                                     <select class="form-select" name="sales_method_id" id="sales_method_select">
-                                        <option value="">Select Sales Method</option>
+                                        <option value="">{{ __('Select Sales Method') }}</option>
                                         @foreach($salesMethods as $method)
                                             <option value="{{ $method->id }}">{{ $method->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Brand</label>
+                                    <label class="form-label">{{ __('Brand') }}</label>
                                     <select class="form-select" name="brand_id" id="brand_select">
-                                        <option value="">Select Brand</option>
+                                        <option value="">{{ __('Select Brand') }}</option>
                                         @foreach($brands as $brand)
                                             <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Model</label>
+                                    <label class="form-label">{{ __('Model') }}</label>
                                     <select class="form-select" name="model_id" id="model_select">
-                                        <option value="">Select Model</option>
+                                        <option value="">{{ __('Select Model') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Body Type (Design)</label>
+                                    <label class="form-label">{{ __('Body Type') }}</label>
                                     <select class="form-select" name="body_type_id">
-                                        <option value="">Select Body Type</option>
+                                        <option value="">{{ __('Select Body Type') }}</option>
                                         @foreach($bodyTypes as $body)
                                             <option value="{{ $body->id }}">{{ $body->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Vehicle Status</label>
+                                    <label class="form-label">{{ __('Vehicle Status') }}</label>
                                     <select class="form-select" name="vehicle_status_id">
-                                        <option value="">Select Status</option>
+                                        <option value="">{{ __('Select Status') }}</option>
                                         @foreach($vehicleStatuses as $status)
                                             <option value="{{ $status->id }}">{{ $status->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Year</label>
+                                    <label class="form-label">{{ __('Year') }}</label>
                                     <input type="number" class="form-control" name="year" placeholder="2023">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Mileage (km)</label>
+                                    <label class="form-label">{{ __('Mileage') }} (km)</label>
                                     <input type="number" class="form-control" name="mileage" placeholder="12000">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Fuel Type</label>
+                                    <label class="form-label">{{ __('Fuel Type') }}</label>
                                     <select class="form-select" name="fuel_type_id">
-                                        <option value="">Select Fuel Type</option>
+                                        <option value="">{{ __('Select Fuel Type') }}</option>
                                         @foreach($fuelTypes as $fuel)
                                             <option value="{{ $fuel->id }}">{{ $fuel->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Transmission</label>
+                                    <label class="form-label">{{ __('Transmission') }}</label>
                                     <select class="form-select" name="transmission_id">
-                                        <option value="">Select Transmission</option>
+                                        <option value="">{{ __('Select Transmission') }}</option>
                                         @foreach($transmissions as $trans)
                                             <option value="{{ $trans->id }}">{{ $trans->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Drive Type</label>
+                                    <label class="form-label">{{ __('Drive Type') }}</label>
                                     <select class="form-select" name="drive_type_id">
-                                        <option value="">Select Drive Type</option>
+                                        <option value="">{{ __('Select Drive Type') }}</option>
                                         @foreach($driveTypes as $drive)
                                             <option value="{{ $drive->id }}">{{ $drive->name }}</option>
                                         @endforeach
@@ -178,23 +178,23 @@
 
                         <!-- Price Section -->
                         <div class="tab-pane fade" id="content-price">
-                            <h4 class="mb-4">Price</h4>
+                            <h4 class="mb-4">{{ __('Price') }}</h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Regular Price</label>
+                                    <label class="form-label">{{ __('Regular Price') }}</label>
                                     <input type="number" class="form-control" name="price" placeholder="5555">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Currency</label>
+                                    <label class="form-label">{{ __('Currency') }}</label>
                                     <input type="text" class="form-control" name="currency" placeholder="Ft">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Regular Price Label</label>
+                                    <label class="form-label">{{ __('Regular Price Label') }}</label>
                                     <input type="text" class="form-control" name="regular_price_label"
                                         placeholder="Enter regular price label">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Sale Price</label>
+                                    <label class="form-label">{{ __('Sale Price') }}</label>
                                     <input type="number" class="form-control" name="sale_price"
                                         placeholder="Enter sale price">
                                 </div>
@@ -203,7 +203,7 @@
 
                         <!-- Extra Features -->
                         <div class="tab-pane fade" id="content-features">
-                            <h4 class="mb-4">Extra Features</h4>
+                            <h4 class="mb-4">{{ __('Extra Features') }}</h4>
                             <div class="row">
                                 @foreach($properties as $prop)
                                     <div class="col-md-4 mb-2">
@@ -219,17 +219,17 @@
 
                         <!-- Images Section -->
                         <div class="tab-pane fade" id="content-images">
-                            <h4 class="mb-4">Images & Videos</h4>
+                            <h4 class="mb-4">{{ __('Images & Videos') }}</h4>
                             <div class="mb-3">
-                                <label class="form-label">Main Image</label>
+                                <label class="form-label">{{ __('Main Image') }}</label>
                                 <input type="file" class="form-control" name="main_image">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Gallery Images</label>
+                                <label class="form-label">{{ __('Gallery Images') }}</label>
                                 <input type="file" class="form-control" name="gallery_images[]" multiple>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Video URL</label>
+                                <label class="form-label">{{ __('Video URL') }}</label>
                                 <input type="text" class="form-control" name="video_url"
                                     placeholder="https://youtube.com/...">
                             </div>
@@ -237,66 +237,66 @@
 
                         <!-- Location Section -->
                         <div class="tab-pane fade" id="content-location">
-                            <h4 class="mb-4">Location</h4>
+                            <h4 class="mb-4">{{ __('Location') }}</h4>
                             <div class="mb-3">
-                                <label class="form-label">City/Location</label>
+                                <label class="form-label">{{ __('City/Location') }}</label>
                                 <input type="text" class="form-control" name="location" id="location" placeholder="e.g. Budapest">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Address</label>
+                                <label class="form-label">{{ __('Address') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
-                                    <input type="text" class="form-control" name="address" id="address" placeholder="Search for address..." required>
+                                    <input type="text" class="form-control" name="address" id="address" placeholder="{{ __('Search for address...') }}" required>
                                 </div>
                                 <input type="hidden" name="latitude" id="latitude">
                                 <input type="hidden" name="longitude" id="longitude">
                                 <div id="map" class="mt-2 rounded border" style="width: 100%; height: 300px; display: none;"></div>
-                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>Search an address to set the exact location on the map.</small>
+                                <small class="text-muted mt-1 d-block"><i class="bx bx-info-circle me-1"></i>{{ __('Search an address to set the exact location on the map.') }}</small>
                             </div>
                         </div>
 
                         <!-- Other Details -->
                         <div class="tab-pane fade" id="content-details">
-                            <h4 class="mb-4">Other Details</h4>
+                            <h4 class="mb-4">{{ __('Other Details') }}</h4>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Technical Expiration Date</label>
+                                    <label class="form-label">{{ __('Technical Expiration Date') }}</label>
                                     <input type="date" class="form-control" name="technical_expiration">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Vehicle History Report</label>
+                                    <label class="form-label">{{ __('Vehicle History Report') }}</label>
                                     <input type="text" class="form-control" name="history_report" placeholder="Enter history details">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Document Type</label>
                                     <select class="form-select" name="document_type_id">
-                                        <option value="">Select Document Type</option>
+                                        <option value="">{{ __('Select Document Type') }}</option>
                                         @foreach($documentTypes as $doc)
                                             <option value="{{ $doc->id }}">{{ $doc->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Chassis Number (VIN)</label>
+                                    <label class="form-label">{{ __('Chassis Number (VIN)') }}</label>
                                     <input type="text" class="form-control" name="vin_number">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Cylinder Capacity</label>
+                                    <label class="form-label">{{ __('Cylinder Capacity') }}</label>
                                     <input type="text" class="form-control" name="cylinder_capacity"
                                         placeholder="e.g. 1598 cm3">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Performance (Power)</label>
+                                    <label class="form-label">{{ __('Performance (Power)') }}</label>
                                     <input type="text" class="form-control" name="performance" placeholder="e.g. 110 kW">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Engine Number</label>
+                                    <label class="form-label">{{ __('Engine Number') }}</label>
                                     <input type="text" class="form-control" name="engine_number">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Exterior Color</label>
                                      <select class="form-select" name="exterior_color_id">
-                                         <option value="">Select Color</option>
+                                         <option value="">{{ __('Select Color') }}</option>
                                          @foreach($exteriorColors as $color)
                                              <option value="{{ $color->id }}">{{ $color->name }}</option>
                                          @endforeach
@@ -305,7 +305,7 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Interior Color</label>
                                      <select class="form-select" name="interior_color_id">
-                                         <option value="">Select Color</option>
+                                         <option value="">{{ __('Select Color') }}</option>
                                          @foreach($interiorColors as $color)
                                              <option value="{{ $color->id }}">{{ $color->name }}</option>
                                          @endforeach
@@ -314,21 +314,21 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Status</label>
                                     <select class="form-select" name="ad_status">
-                                        <option value="published">Published</option>
-                                        <option value="draft">Draft</option>
-                                        <option value="pending">Pending</option>
-                                        <option value="rejected">Rejected</option>
+                                        <option value="published">{{ __('Published') }}</option>
+                                        <option value="draft">{{ __('Draft') }}</option>
+                                        <option value="pending">{{ __('Pending') }}</option>
+                                        <option value="rejected">{{ __('Rejected') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-12 mb-3">
                                     <div class="form-check form-switch mt-2">
                                         <input class="form-check-input" type="checkbox" name="is_featured" value="1"
                                             id="isFeatured">
-                                        <label class="form-check-label" for="isFeatured">Mark as Featured</label>
+                                        <label class="form-check-label" for="isFeatured">{{ __('Mark as Featured') }}</label>
                                     </div>
                                 </div>
                                 <div class="col-12 mb-3">
-                                    <label class="form-label">Description</label>
+                                    <label class="form-label">{{ __('Description') }}</label>
                                     <textarea class="form-control" name="description" rows="4"></textarea>
                                 </div>
                             </div>
@@ -337,12 +337,12 @@
                         <!-- Exchange Preferences Section -->
                         <div class="tab-pane fade" id="content-exchange">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h4 class="mb-0">Preferred Exchange Vehicles</h4>
+                                <h4 class="mb-0">{{ __('Preferred Exchange Vehicles') }}</h4>
                                 <button type="button" class="btn btn-outline-primary btn-sm" id="add-preference">
-                                    <i class="bx bx-plus me-1"></i> Add Another Preference
+                                    <i class="bx bx-plus me-1"></i> {{ __('Add Another Preference') }}
                                 </button>
                             </div>
-                            <p class="text-muted mb-4">Specify the types of vehicles you would be interested in swapping for. This section is optional.</p>
+                            <p class="text-muted mb-4">{{ __('Specify the types of vehicles you would be interested in swapping for. This section is optional.') }}</p>
 
                             <div id="preferences-container">
                                 <!-- Preferences will be added here dynamically -->
@@ -355,7 +355,7 @@
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">Brand (Márka)</label>
                                                 <select class="form-select brand-select" name="exchange_preferences[INDEX][brand_id]">
-                                                    <option value="">Any Brand</option>
+                                                    <option value="">{{ __('Any Brand') }}</option>
                                                     @foreach($brands as $brand)
                                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                                     @endforeach
@@ -364,13 +364,13 @@
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">Model (Modell)</label>
                                                 <select class="form-select model-select" name="exchange_preferences[INDEX][model_id]">
-                                                    <option value="">Any Model</option>
+                                                    <option value="">{{ __('Any Model') }}</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-3 mb-2">
                                                 <label class="form-label">Body Type (Kivitel)</label>
                                                 <select class="form-select" name="exchange_preferences[INDEX][body_type_id]">
-                                                    <option value="">Any Body Type</option>
+                                                    <option value="">{{ __('Any Body Type') }}</option>
                                                     @foreach($bodyTypes as $body)
                                                         <option value="{{ $body->id }}">{{ $body->name }}</option>
                                                     @endforeach
@@ -428,8 +428,8 @@
                     </div>
 
                     <div class="card-footer bg-white border-top text-end p-3">
-                        <button type="submit" class="btn btn-primary">Save Vehicle</button>
-                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary">{{ __('Save Vehicle') }}</button>
+                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
                     </div>
                 </form>
             </div>
@@ -450,16 +450,16 @@
                 const brandId = this.value;
 
                 if (!brandId) {
-                    modelSelect.innerHTML = '<option value="">Select Model</option>';
+                    modelSelect.innerHTML = '<option value="">{{ __('Select Model') }}</option>';
                     return;
                 }
 
-                modelSelect.innerHTML = '<option value="">Loading...</option>';
+                modelSelect.innerHTML = '<option value="">{{ __('Loading...') }}</option>';
 
                 fetch(`/api/brands/${brandId}/models`)
                     .then(response => response.json())
                     .then(data => {
-                        modelSelect.innerHTML = '<option value="">Select Model</option>';
+                        modelSelect.innerHTML = '<option value="">{{ __('Select Model') }}</option>';
                         if (data && Array.isArray(data) && data.length > 0) {
                             data.forEach(model => {
                                 const option = document.createElement('option');
@@ -468,7 +468,7 @@
                                 modelSelect.appendChild(option);
                             });
                         } else {
-                            modelSelect.innerHTML = '<option value="">No models found</option>';
+                            modelSelect.innerHTML = '<option value="">{{ __('No models found') }}</option>';
                         }
                         $(modelSelect).trigger('change'); // Notify Select2 of new options
                     })
@@ -580,7 +580,7 @@
             const template = document.getElementById('preference-template');
 
             // I'll define map names to keep it flexible
-            const exchangeMethods = ['Exchange Only', 'For Sale / Exchange', 'Interchangeable'];
+            const exchangeMethods = ['{{ __('Exchange Only') }}', '{{ __('For Sale / Exchange') }}', '{{ __('Interchangeable') }}'];
 
             function toggleExchangeTab() {
                 const selectedText = salesMethodSelect.options[salesMethodSelect.selectedIndex]?.text.trim();
@@ -619,14 +619,14 @@
                 brandSelect.addEventListener('change', function () {
                     const brandId = this.value;
                     if (!brandId) {
-                        modelSelect.innerHTML = '<option value="">Any Model</option>';
+                        modelSelect.innerHTML = '<option value="">{{ __('Any Model') }}</option>';
                         return;
                     }
-                    modelSelect.innerHTML = '<option value="">Loading...</option>';
+                    modelSelect.innerHTML = '<option value="">{{ __('Loading...') }}</option>';
                     fetch(`/api/brands/${brandId}/models`)
                         .then(response => response.json())
                         .then(data => {
-                            modelSelect.innerHTML = '<option value="">Any Model</option>';
+                            modelSelect.innerHTML = '<option value="">{{ __('Any Model') }}</option>';
                             data.forEach(model => {
                                 const option = document.createElement('option');
                                 option.value = model.id;
@@ -642,7 +642,7 @@
                 const valueLabel = item.querySelector('.capacity-value');
                 slider.addEventListener('input', function() {
                     if (this.value == 0) {
-                        valueLabel.textContent = 'Any';
+                        valueLabel.textContent = '{{ __('Any') }}';
                     } else {
                         valueLabel.textContent = this.value + ' cm³';
                     }

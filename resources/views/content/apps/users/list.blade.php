@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Web Users')
+@section('title', __('Web Users'))
 
 @section('content')
     <div class="row">
@@ -76,7 +76,7 @@
                                             <span class="text-muted small">{{ $user->phone ?? 'N/A' }}</span>
                                         </td>
                                         <td class="d-none d-md-table-cell">
-                                            <span class="badge bg-label-secondary small text-capitalize">{{ $user->role ?? 'Web User' }}</span>
+                                            <span class="badge bg-label-secondary small text-capitalize">{{ __($user->role ?? 'Web User') }}</span>
                                         </td>
                                         <td class="text-center">
                                             @if($user->is_trader)
@@ -97,14 +97,14 @@
                                             @endphp
                                             <div class="dropdown status-dropdown">
                                                 <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
-                                                    <span class="badge bg-{{ $statusClass }}">{{ ucfirst($status) }}</span>
+                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
                                                     @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
                                                         <li>
                                                             <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
                                                                 <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                {{ ucfirst($val) }}
+                                                                {{ __(ucfirst($val)) }}
                                                             </button>
                                                         </li>
                                                     @endforeach
@@ -112,22 +112,22 @@
                                             </div>
                                         </td>
                                         <td class="text-center text-muted small">
-                                            {{ $user->created_at->format('M d, Y') }}
+                                            {{ $user->created_at->translatedFormat('M d, Y') }}
                                         </td>
                                         <td class="text-end pe-4">
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="View Details">
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}">
                                                     <i class="bx bx-show"></i>
                                                 </button>
-                                                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0 shadow-none" data-bs-toggle="tooltip" title="Edit Profile">
+                                                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0 shadow-none" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}">
                                                     <i class="bx bx-edit-alt"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 shadow-none change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="Change Password">
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 shadow-none change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}">
                                                     <i class="bx bx-key"></i>
                                                 </button>
                                                 <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
                                                     @csrf @method('DELETE')
-                                                    <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation" data-bs-toggle="tooltip" title="Delete User">
+                                                    <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}">
                                                         <i class="bx bx-trash"></i>
                                                     </button>
                                                 </form>
@@ -136,7 +136,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">No web users found.</td>
+                                        <td colspan="7" class="text-center py-4 text-muted">{{ __('No web users found.') }}</td>
                                     </tr>
                                 @endforelse
                             </tbody>
@@ -146,7 +146,7 @@
                     <!-- ─── MOBILE CARD LIST ─── -->
                     <div class="d-md-none" id="users-mobile-list">
                         <div class="mb-3">
-                            <input type="text" id="mobile-search" class="form-control form-control-sm" placeholder="Quick search users…">
+                            <input type="text" id="mobile-search" class="form-control form-control-sm" placeholder="{{ __('Quick search users…') }}">
                         </div>
                         @forelse($users as $user)
                             @php
@@ -171,19 +171,19 @@
                                                     <small class="text-muted d-block text-truncate">{{ $user->email }}</small>
                                                     <div class="mt-1">
                                                         @if($user->is_trader)
-                                                            <span class="badge bg-label-info small me-1">Trader</span>
+                                                            <span class="badge bg-label-info small me-1">{{ __('Trader') }}</span>
                                                         @endif
                                                     </div>
                                                 </div>
                                                 <div class="dropdown status-dropdown">
                                                     <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
-                                                        <span class="badge bg-{{ $statusClass }}">{{ ucfirst($status) }}</span>
+                                                        <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                                         @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
                                                             <li>
                                                                 <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
-                                                                    <span class="badge badge-dot bg-{{ $cls }} me-2"></span>{{ ucfirst($val) }}
+                                                                    <span class="badge badge-dot bg-{{ $cls }} me-2"></span>{{ __(ucfirst($val)) }}
                                                                 </button>
                                                             </li>
                                                         @endforeach
@@ -193,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                                        <small class="text-muted">Joined {{ $user->created_at->format('M d, Y') }}</small>
+                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->translatedFormat('M d, Y') }}</small>
                                         <div class="d-flex gap-1">
                                             <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}"><i class="bx bx-show"></i></button>
                                             <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0"><i class="bx bx-edit-alt"></i></a>
@@ -207,7 +207,7 @@
                                 </div>
                             </div>
                         @empty
-                            <div class="text-center py-5 text-muted">No web users found.</div>
+                            <div class="text-center py-5 text-muted">{{ __('No web users found.') }}</div>
                         @endforelse
                     </div>
                 </div>
@@ -222,9 +222,9 @@
                 <div id="modal-content-area">
                     <div class="text-center p-5 my-5">
                         <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-                            <span class="visually-hidden">Loading...</span>
+                            <span class="visually-hidden">{{ __('Loading...') }}</span>
                         </div>
-                        <p class="mt-3 text-muted outfit-font">Loading User Profile...</p>
+                        <p class="mt-3 text-muted outfit-font">{{ __('Loading User Profile...') }}</p>
                     </div>
                 </div>
             </div>
@@ -236,35 +236,35 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header border-bottom p-4">
-                    <h5 class="modal-title fw-bold outfit-font"><i class="bx bx-key me-2 text-warning"></i> Change User Password</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold outfit-font"><i class="bx bx-key me-2 text-warning"></i> {{ __('Change User Password') }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('Close') }}"></button>
                 </div>
                 <form id="changePasswordForm">
                     @csrf
                     <input type="hidden" id="cp_user_id" name="user_id">
                     <div class="modal-body p-4">
                         <div class="mb-3 text-center bg-label-info p-3 rounded border border-light border-opacity-50">
-                            <small class="text-dark d-block">Updating password for:</small>
+                            <small class="text-dark d-block">{{ __('Updating password for:') }}</small>
                             <span class="fw-bold fs-5" id="cp_user_name">User Name</span>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">New Password</label>
+                            <label class="form-label fw-semibold">{{ __('New Password') }}</label>
                             <div class="input-group input-group-merge">
-                                <input type="password" name="password" id="new_password" class="form-control" placeholder="Enter at least 8 characters" required>
+                                <input type="password" name="password" id="new_password" class="form-control" placeholder="{{ __('Enter at least 8 characters') }}" required>
                                 <span class="input-group-text cursor-pointer" onclick="togglePassword('new_password')"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label fw-semibold">Confirm New Password</label>
+                            <label class="form-label fw-semibold">{{ __('Confirm New Password') }}</label>
                             <div class="input-group input-group-merge">
-                                <input type="password" name="password_confirmation" id="new_password_confirmation" class="form-control" placeholder="Confirm the password" required>
+                                <input type="password" name="password_confirmation" id="new_password_confirmation" class="form-control" placeholder="{{ __('Confirm the password') }}" required>
                                 <span class="input-group-text cursor-pointer" onclick="togglePassword('new_password_confirmation')"><i class="bx bx-hide"></i></span>
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer border-top p-4 d-flex justify-content-between">
-                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm">Save New Password</button>
+                        <button type="button" class="btn btn-outline-secondary rounded-pill px-4" data-bs-dismiss="modal">{{ __('Cancel') }}</button>
+                        <button type="submit" class="btn btn-warning rounded-pill px-4 fw-bold shadow-sm">{{ __('Save New Password') }}</button>
                     </div>
                 </form>
             </div>
@@ -295,7 +295,7 @@ $(document).ready(function () {
             dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>t<'row mt-3'<'col-sm-6'i><'col-sm-6'p>>",
             language: { 
                 search: '', 
-                searchPlaceholder: 'Quick Search Users…',
+                searchPlaceholder: '{{ __('Quick Search Users…') }}',
                 paginate: {
                     previous: '<i class="bx bx-chevron-left"></i>',
                     next: '<i class="bx bx-chevron-right"></i>'
@@ -315,7 +315,7 @@ $(document).ready(function () {
             data: { _token: '{{ csrf_token() }}', status: status },
             success: function(res) {
                 if(res.success) {
-                    toastr.success('User status updated successfully');
+                    toastr.success('{{ __('User status updated successfully') }}');
                     setTimeout(() => location.reload(), 500);
                 }
             }
@@ -364,7 +364,7 @@ $(document).ready(function () {
         if(!id) return;
 
         $('#userDetailsModal').modal('show');
-        $('#modal-content-area').html('<div class="text-center py-5 my-5"><div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;"></div><p class="mt-4 text-muted outfit-font fs-5">Fetching profile data...</p></div>');
+        $('#modal-content-area').html('<div class="text-center py-5 my-5"><div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;"></div><p class="mt-4 text-muted outfit-font fs-5">{{ __('Fetching profile data...') }}</p></div>');
         
         $.ajax({
             url: `{{ url('/app/users') }}/${id}`,
@@ -373,7 +373,7 @@ $(document).ready(function () {
                 $('#modal-content-area').html(html);
             },
             error: function() {
-                $('#modal-content-area').html('<div class="alert alert-danger m-5 d-flex align-items-center"><i class="bx bx-error-circle me-3 fs-3"></i> Failed to pull user details.</div>');
+                $('#modal-content-area').html('<div class="alert alert-danger m-5 d-flex align-items-center"><i class="bx bx-error-circle me-3 fs-3"></i> {{ __('Failed to pull user details.') }}</div>');
             }
         });
     });
@@ -382,11 +382,11 @@ $(document).ready(function () {
     $(document).on('click', '.delete-confirmation', function(e) {
         e.stopPropagation();
         Swal.fire({
-            title: 'Permanent Delete?',
-            text: "This user and all their listings will be removed!",
+            title: '{{ __('Permanent Delete?') }}',
+            text: "{{ __('This user and all their listings will be removed!') }}",
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, Delete!',
+            confirmButtonText: '{{ __('Yes, Delete!') }}',
             customClass: { confirmButton: 'btn btn-danger me-3', cancelButton: 'btn btn-label-secondary' },
             buttonsStyling: false
         }).then((result) => { if (result.value) $(this).closest('form').submit(); });

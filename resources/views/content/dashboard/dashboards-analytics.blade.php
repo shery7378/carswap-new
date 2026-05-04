@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Dashboard - Analytics')
+@section('title', __('Dashboard') . ' - ' . __('Analytics'))
 
 @section('vendor-style')
 @endsection
@@ -122,8 +122,8 @@
                                     </div>
                                 </td>
                                 <td>{{ number_format($vehicle->price) }} {{ $vehicle->currency }}</td>
-                                <td>{{ $vehicle->created_at->format('M d, Y') }}</td>
-                                <td><span class="badge bg-label-{{ $vehicle->ad_status === 'active' ? 'success' : 'warning' }}">{{ ucfirst($vehicle->ad_status ?? 'draft') }}</span></td>
+                                <td>{{ $vehicle->created_at->translatedFormat('M d, Y') }}</td>
+                                <td><span class="badge bg-label-{{ $vehicle->ad_status === 'active' ? 'success' : 'warning' }}">{{ __(ucfirst($vehicle->ad_status ?? 'draft')) }}</span></td>
                             </tr>
                             @empty
                             <tr>
@@ -682,7 +682,7 @@ $(document).ready(function() {
         fetch(`{{ url('/app/vehicles') }}/${id}?modal=1`)
             .then(res => res.text())
             .then(html => { container.innerHTML = html; })
-            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">Error loading vehicle data.</div>'; });
+            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">{{ __('Error loading vehicle data.') }}</div>'; });
     });
 
     // Partner Modal Trigger
@@ -694,7 +694,7 @@ $(document).ready(function() {
         container.innerHTML = `
             <div class="modal-body text-center py-5">
                 <div class="spinner-border text-primary" role="status"></div>
-                <p class="mt-2 text-muted">Loading partner information...</p>
+                <p class="mt-2 text-muted">{{ __('Loading partner information...') }}</p>
             </div>
         `;
         modal.show();
@@ -702,7 +702,7 @@ $(document).ready(function() {
         fetch(`{{ url('/app/partners') }}/${id}?modal=1`)
             .then(res => res.text())
             .then(html => { container.innerHTML = html; })
-            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">Error loading partner data.</div>'; });
+            .catch(() => { container.innerHTML = '<div class="modal-body text-center py-5 text-danger">{{ __('Error loading partner data.') }}</div>'; });
     });
 });
 </script>

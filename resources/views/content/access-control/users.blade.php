@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Admin Management')
+@section('title', __('Admin Management'))
 
 @section('content')
 
@@ -185,7 +185,7 @@
 
             <td>
               <div class="d-flex gap-2">
-                <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info" data-bs-toggle="tooltip" title="Edit Admin User">
+                <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info" data-bs-toggle="tooltip" title="{{ __('Edit Admin User') }}">
                   <i class="bx bx-edit"></i>
                 </a>
 
@@ -193,7 +193,7 @@
                   @csrf
                   @method('DELETE')
                   <button type="button" class="action-btn bg-label-danger text-danger border-0 delete-confirmation"
-                    data-confirm-text="Delete this admin user permanently?" data-bs-toggle="tooltip" title="Delete Admin User">
+                    data-confirm-text="{{ __('Delete this admin user permanently?') }}" data-bs-toggle="tooltip" title="{{ __('Delete Admin User') }}">
                     <i class="bx bx-trash"></i>
                   </button>
                 </form>
@@ -228,7 +228,7 @@
 
       language: {
         search: "",
-        searchPlaceholder: "Search Admin Users..."
+        searchPlaceholder: "{{ __('Search Admin Users...') }}"
       }
     });
 

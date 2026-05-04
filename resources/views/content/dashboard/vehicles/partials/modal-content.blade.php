@@ -37,13 +37,13 @@
             </div>
 
             <div class="seller-info small p-3 bg-white rounded border">
-                <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">Seller</h6>
+                <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">{{ __('Seller') }}</h6>
                 <div class="d-flex align-items-center">
                     <div class="avatar avatar-sm me-2">
                         <span class="avatar-initial rounded-circle bg-label-info">{{ substr($vehicle->user?->first_name ?? 'U', 0, 1) }}</span>
                     </div>
                     <div class="text-truncate">
-                        <p class="mb-0 fw-bold">{{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : 'N/A' }}</p>
+                        <p class="mb-0 fw-bold">{{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : __('N/A') }}</p>
                         <p class="mb-0 text-muted smaller text-truncate">{{ $vehicle->user->email ?? '' }}</p>
                     </div>
                 </div>
@@ -56,17 +56,17 @@
                 <ul class="nav nav-tabs nav-fill rounded-0" role="tablist">
                     <li class="nav-item">
                         <button type="button" class="nav-link active py-3" role="tab" data-bs-toggle="tab" data-bs-target="#v-modal-overview">
-                            Overview
+                            {{ __('Overview') }}
                         </button>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="nav-link py-3" role="tab" data-bs-toggle="tab" data-bs-target="#v-modal-tech">
-                            Specs
+                            {{ __('Specs') }}
                         </button>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="nav-link py-3" role="tab" data-bs-toggle="tab" data-bs-target="#v-modal-props">
-                            Features
+                            {{ __('Features') }}
                         </button>
                     </li>
                 </ul>
@@ -76,32 +76,32 @@
                         <div class="row g-3 mb-4">
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
-                                    <small class="text-muted d-block small">Mileage</small>
+                                    <small class="text-muted d-block small">{{ __('Mileage') }}</small>
                                     <span class="fw-bold">{{ number_format($vehicle->mileage ?? 0, 0, ',', ' ') }} km</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
-                                    <small class="text-muted d-block small">Fuel</small>
-                                    <span class="fw-bold">{{ optional($vehicle->fuelType)->name ?? 'N/A' }}</span>
+                                    <small class="text-muted d-block small">{{ __('Fuel') }}</small>
+                                    <span class="fw-bold">{{ optional($vehicle->fuelType)->name ?? __('N/A') }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
-                                    <small class="text-muted d-block small">Trans.</small>
-                                    <span class="fw-bold">{{ optional($vehicle->transmission)->name ?? 'N/A' }}</span>
+                                    <small class="text-muted d-block small">{{ __('Trans.') }}</small>
+                                    <span class="fw-bold">{{ optional($vehicle->transmission)->name ?? __('N/A') }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
-                                    <small class="text-muted d-block small">Power</small>
+                                    <small class="text-muted d-block small">{{ __('Power') }}</small>
                                     <span class="fw-bold">{{ $vehicle->performance ?? '0' }} HP</span>
                                 </div>
                             </div>
                         </div>
-                        <h6 class="fw-bold text-uppercase small text-muted mb-2">Description</h6>
+                        <h6 class="fw-bold text-uppercase small text-muted mb-2">{{ __('Description') }}</h6>
                         <div class="lh-base small text-dark">
-                            {!! $vehicle->description ? Str::limit(e($vehicle->description), 300) : '<em>No description.</em>' !!}
+                            {!! $vehicle->description ? Str::limit(e($vehicle->description), 300) : '<em>' . __('No description.') . '</em>' !!}
                         </div>
                     </div>
 
@@ -109,12 +109,12 @@
                     <div class="tab-pane fade" id="v-modal-tech" role="tabpanel">
                         <table class="table table-sm table-striped small">
                             <tbody>
-                                <tr><td class="text-muted border-0">VIN</td><td class="fw-bold border-0">{{ $vehicle->vin_number ?: 'N/A' }}</td></tr>
-                                <tr><td class="text-muted">Drive</td><td class="fw-bold">{{ optional($vehicle->driveType)->name ?: 'N/A' }}</td></tr>
-                                <tr><td class="text-muted">Body</td><td class="fw-bold">{{ optional($vehicle->bodyType)->name ?: 'N/A' }}</td></tr>
-                                <tr><td class="text-muted">Capacity</td><td class="fw-bold">{{ $vehicle->cylinder_capacity ?: 'N/A' }}</td></tr>
-                                <tr><td class="text-muted">Ext. Color</td><td class="fw-bold">{{ optional($vehicle->exteriorColor)->name ?: 'N/A' }}</td></tr>
-                                <tr><td class="text-muted">Expiration</td><td class="fw-bold">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : 'N/A' }}</td></tr>
+                                <tr><td class="text-muted border-0">{{ __('VIN') }}</td><td class="fw-bold border-0">{{ $vehicle->vin_number ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Drive') }}</td><td class="fw-bold">{{ optional($vehicle->driveType)->name ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Body') }}</td><td class="fw-bold">{{ optional($vehicle->bodyType)->name ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Capacity') }}</td><td class="fw-bold">{{ $vehicle->cylinder_capacity ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Ext. Color') }}</td><td class="fw-bold">{{ optional($vehicle->exteriorColor)->name ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Expiration') }}</td><td class="fw-bold">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : __('N/A') }}</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -129,7 +129,7 @@
                                     </div>
                                 </div>
                             @empty
-                                <div class="col-12 text-center py-4 text-muted small">No properties listed.</div>
+                                <div class="col-12 text-center py-4 text-muted small">{{ __('No properties listed.') }}</div>
                             @endforelse
                         </div>
                     </div>
@@ -141,12 +141,12 @@
 
 <div class="modal-footer border-top">
     <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" class="btn btn-outline-primary btn-sm me-auto">
-        <i class="bx bx-expand-alt me-1"></i> Full View
+        <i class="bx bx-expand-alt me-1"></i> {{ __('Full View') }}
     </a>
-    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
     @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm px-3">
-            <i class="bx bx-edit-alt me-1"></i> Edit
+            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit') }}
         </a>
     @endif
 </div>

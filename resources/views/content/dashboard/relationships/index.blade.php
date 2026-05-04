@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Manage ' . $title)
+@section('title', __('Manage') . ' ' . __($title))
 
 
 @section('content')
@@ -34,7 +34,7 @@
             </span>
         </div>
         <div>
-            <h4 class="mb-0 fw-bold">{{ $title }}</h4>
+            <h4 class="mb-0 fw-bold">{{ __($title) }}</h4>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb breadcrumb-style1 mb-0">
                     <li class="breadcrumb-item"><a href="javascript:void(0);">{{ __('Car Settings') }}</a></li>
@@ -91,7 +91,7 @@
                         <div class="input-group input-group-merge shadow-none border-0">
                             <span class="input-group-text bg-light border-0"><i class="bx bx-rename"></i></span>
                             <input type="text" class="form-control bg-light border-0 px-3 py-2" name="name" id="add_name" required 
-                                placeholder="e.g. {{ $type === 'brands' ? 'BMW' : ($type === 'fuel-types' ? 'Hybrid' : 'New Item') }}">
+                                placeholder="e.g. {{ $type === 'brands' ? __('BMW') : ($type === 'fuel-types' ? __('Hybrid') : __('New Item')) }}">
                         </div>
                     </div>
 
@@ -102,7 +102,7 @@
                                 <span class="input-group-text bg-light border-0"><i class="bx bx-image-alt"></i></span>
                                 <input type="file" class="form-control bg-light border-0 px-3 py-2" name="image" id="add_image" accept="image/*">
                             </div>
-                            <small class="text-muted mt-1 d-block">Recommended: SVG or PNG with transparency</small>
+                            <small class="text-muted mt-1 d-block">{{ __('Recommended: SVG or PNG with transparency') }}</small>
                         </div>
                     @endif
 
@@ -112,7 +112,7 @@
                             <div class="input-group input-group-merge shadow-none border-0">
                                 <span class="input-group-text bg-light border-0"><i class="bx bx-purchase-tag"></i></span>
                                 <select class="form-select bg-light border-0 px-3 py-2" name="brand_id" id="add_brand_id" required>
-                                    <option value="">Choose a brand...</option>
+                                    <option value="">{{ __('Choose a brand...') }}</option>
                                     @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                     @endforeach
@@ -124,13 +124,13 @@
                     <div class="mb-2 mt-4 pt-2">
                         <button type="submit" class="btn btn-primary d-flex align-items-center w-100 justify-content-center shadow-primary py-2 fw-bold" id="addBtn">
                             <span class="btn-loader d-none spinner-border spinner-border-sm me-2"></span>
-                            <i class="bx bx-check-circle me-2 btn-icon"></i> Register New Item
+                            <i class="bx bx-check-circle me-2 btn-icon"></i> {{ __('Register New Item') }}
                         </button>
                     </div>
                 </form>
             </div>
             <div class="card-footer bg-light border-0 py-3 text-center">
-                <small class="text-muted">Changes take effect immediately across all active vehicle listings.</small>
+                <small class="text-muted">{{ __('Changes take effect immediately across all active vehicle listings.') }}</small>
             </div>
         </div>
     </div>
@@ -142,7 +142,7 @@
                 <div class="d-flex justify-content-between align-items-center">
                     <h5 class="mb-0 fw-bold d-flex align-items-center">
                         <i class="bx bx-list-ul me-2 text-primary"></i> 
-                        Registered {{ $title }}
+                        {{ __('Registered') }} {{ __($title) }}
                     </h5>
                     <div id="table-search-placeholder"></div>
                 </div>
@@ -152,16 +152,16 @@
                     <table class="table table-hover align-middle mb-0" id="relationships-table">
                         <thead>
                             <tr class="bg-light">
-                                <th class="ps-4">ID</th>
+                                <th class="ps-4">{{ __('ID') }}</th>
                                 @if($showImageField)
-                                    <th style="width: 50px;">Icon</th>
+                                    <th style="width: 50px;">{{ __('Icon') }}</th>
                                 @endif
-                                <th>Name / Label</th>
+                                <th>{{ __('Name / Label') }}</th>
                                 @if($type === 'models')
-                                    <th>Parent Brand</th>
+                                    <th>{{ __('Parent Brand') }}</th>
                                 @endif
-                                <th class="text-center">Status</th>
-                                <th class="text-center pe-4">Actions</th>
+                                <th class="text-center">{{ __('Status') }}</th>
+                                <th class="text-center pe-4">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
                         <tbody class="table-border-bottom-0">
@@ -193,7 +193,7 @@
                                                     <i class="bx bx-award me-1 small"></i> {{ $brand->name }}
                                                 </span>
                                             @else
-                                                <span class="text-muted italic small">Orphaned Brand</span>
+                                                <span class="text-muted italic small">{{ __('Orphaned Brand') }}</span>
                                             @endif
                                         </td>
                                     @endif
@@ -212,7 +212,7 @@
                                                 data-name="{{ $item->name }}"
                                                 @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                 @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="Edit Item">
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Edit Item') }}">
                                                 <i class="bx bx-edit-alt"></i>
                                             </button>
 
@@ -221,7 +221,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-trigger"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="Delete Item">
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Delete Item') }}">
                                                     <i class="bx bx-trash"></i>
                                                 </button>
                                             </form>
@@ -232,7 +232,7 @@
                                 <tr>
                                     <td colspan="{{ $type === 'models' ? 5 : 4 }}" class="text-center py-5">
                                         <div class="opacity-25 mb-2"><i class="bx bx-layers display-4 text-muted"></i></div>
-                                        <h6 class="text-muted fw-normal">No {{ Str::lower($title) }} records matching your search.</h6>
+                                        <h6 class="text-muted fw-normal">{{ __('No :title records matching your search.', ['title' => Str::lower(__($title))]) }}</h6>
                                     </td>
                                 </tr>
                             @endforelse
@@ -249,7 +249,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content overflow-hidden border-0">
             <div class="modal-header bg-info py-3">
-                <h5 class="modal-title fw-bold text-white"><i class="bx bx-edit-alt me-2"></i>Edit {{ Str::singular($title) }}</h5>
+                <h5 class="modal-title fw-bold text-white"><i class="bx bx-edit-alt me-2"></i>{{ __('Edit') }} {{ Str::singular(__($title)) }}</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editForm" method="POST" enctype="multipart/form-data">
@@ -257,13 +257,13 @@
                 @method('PUT')
                 <div class="modal-body p-4">
                     <div class="mb-3">
-                        <label class="form-label fw-bold text-muted small text-uppercase">Identification Label / Name</label>
+                        <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Identification Label / Name') }}</label>
                         <input type="text" class="form-control border-light shadow-none bg-light" name="name" id="edit_name" required>
                     </div>
 
                     @if($showImageField)
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Icon / Image</label>
+                            <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Icon / Image') }}</label>
                             <div class="d-flex align-items-center mb-2" id="edit_image_preview_container">
                                 <img src="" id="edit_image_preview" class="rounded me-3 d-none shadow-xs" style="width: 48px; height: 48px; object-fit: contain; background: #f8f9fa;">
                                 <div id="edit_image_placeholder" class="avatar avatar-md me-3">
@@ -271,7 +271,7 @@
                                 </div>
                                 <div class="flex-grow-1">
                                     <input type="file" class="form-control border-light shadow-none bg-light" name="image" id="edit_image" accept="image/*">
-                                    <small class="text-muted mt-1 d-block">Leave empty to keep current image</small>
+                                    <small class="text-muted mt-1 d-block">{{ __('Leave empty to keep current image') }}</small>
                                 </div>
                             </div>
                         </div>
@@ -279,9 +279,9 @@
 
                     @if($type === 'models')
                         <div class="mb-3">
-                            <label class="form-label fw-bold text-muted small text-uppercase">Link to Parent Brand</label>
+                            <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Link to Parent Brand') }}</label>
                             <select class="form-select border-light shadow-none bg-light" name="brand_id" id="edit_brand_id" required>
-                                <option value="">Select Brand</option>
+                                <option value="">{{ __('Select Brand') }}</option>
                                 @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
                                     <option value="{{ $brand->id }}">{{ $brand->name }}</option>
                                 @endforeach
@@ -290,8 +290,8 @@
                     @endif
                 </div>
                 <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
-                    <button type="button" class="btn btn-label-secondary px-4" data-bs-dismiss="modal">Discard</button>
-                    <button type="submit" class="btn btn-info px-4 shadow-info fw-bold">Update Item</button>
+                    <button type="button" class="btn btn-label-secondary px-4" data-bs-dismiss="modal">{{ __('Discard') }}</button>
+                    <button type="submit" class="btn btn-info px-4 shadow-info fw-bold">{{ __('Update Item') }}</button>
                 </div>
             </form>
         </div>
@@ -306,7 +306,7 @@
             "pageLength": 10,
             "language": {
                 "search": "",
-                "searchPlaceholder": "Filter items...",
+                "searchPlaceholder": "{{ __('Filter items...') }}",
                 "paginate": {
                     "next": '<i class="bx bx-chevron-right"></i>',
                     "previous": '<i class="bx bx-chevron-left"></i>'
@@ -418,7 +418,7 @@
                         $(rowNode).addClass('transition-all hover-bg-light');
                         
                         form[0].reset();
-                        toastr.success('Item added successfully');
+                        toastr.success('{{ __('Item added successfully') }}');
                         updateStats();
                     }
                 },
@@ -495,7 +495,7 @@
                         if (item.brand_id) editBtn.data('brand', item.brand_id);
 
                         bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
-                        toastr.success('Item updated successfully');
+                        toastr.success('{{ __('Item updated successfully') }}');
                     }
                 },
                 error: function(xhr) {
@@ -519,7 +519,7 @@
                 success: function(response) {
                     if (response.success) {
                         row.find('.indicator').toggleClass('bg-success', response.is_active).toggleClass('bg-secondary', !response.is_active);
-                        toastr.success(`Status ${response.is_active ? 'Activated' : 'Deactivated'}`, 'Success');
+                        toastr.success(`{{ __('Status') }} ${response.is_active ? '{{ __('Activated') }}' : '{{ __('Deactivated') }}'}`, '{{ __('Success') }}');
                         updateStats();
                     }
                 },
@@ -537,13 +537,13 @@
             const row = btn.closest('tr');
             
             Swal.fire({
-                title: 'Are you sure?',
-                text: "Deleting this item may affect existing vehicle listings!",
+                title: '{{ __('Are you sure?') }}',
+                text: "{{ __('Deleting this item may affect existing vehicle listings!') }}",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#ff3e1d',
                 cancelButtonColor: '#8592a3',
-                confirmButtonText: 'Yes, delete it!'
+                confirmButtonText: '{{ __('Yes, delete it!') }}'
             }).then((result) => {
                 if (result.isConfirmed) {
                     $.ajax({

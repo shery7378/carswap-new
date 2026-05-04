@@ -1,10 +1,10 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Csereajánlatok')
+@section('title', __('Trade Offers'))
 
 @section('content')
 <h4 class="py-3 mb-4">
-    <span class="text-muted fw-light">Ügyfélszolgálat /</span> Csereajánlatok
+    <span class="text-muted fw-light">{{ __('Customer Support') }} /</span> {{ __('Trade Offers') }}
 </h4>
 
 @if(session('success'))
@@ -15,17 +15,17 @@
 @endif
 
 <div class="card">
-    <h5 class="card-header">Beérkezett csereajánlatok</h5>
+    <h5 class="card-header">{{ __('Beérkezett csereajánlatok') }}</h5>
     <div class="table-responsive text-nowrap">
         <table class="table">
             <thead>
                 <tr>
-                    <th>Dátum</th>
-                    <th>Cél Jármű</th>
-                    <th>Feladó</th>
-                    <th>Ajánlott Autó</th>
-                    <th>Státusz</th>
-                    <th>Műveletek</th>
+                    <th>{{ __('Date') }}</th>
+                    <th>{{ __('Cél Jármű') }}</th>
+                    <th>{{ __('Feladó') }}</th>
+                    <th>{{ __('Ajánlott Autó') }}</th>
+                    <th>{{ __('Status') }}</th>
+                    <th>{{ __('Actions') }}</th>
                 </tr>
             </thead>
             <tbody class="table-border-bottom-0">
@@ -38,7 +38,7 @@
                                     {{ $offer->vehicle->title }}
                                 </a>
                             @else
-                                <span class="text-danger">Törölt jármű</span>
+                                <span class="text-danger">{{ __('Deleted vehicle') }}</span>
                             @endif
                         </td>
                         <td>
@@ -55,14 +55,14 @@
                                     'rejected' => 'bg-label-danger',
                                 ][$offer->status] ?? 'bg-label-secondary';
                             @endphp
-                            <span class="badge {{ $badgeClass }}">{{ ucfirst($offer->status) }}</span>
+                            <span class="badge {{ $badgeClass }}">{{ __(ucfirst($offer->status)) }}</span>
                         </td>
                         <td>
                             <div class="d-flex">
                                 <a href="{{ route('admin.trade-offers.show', $offer->id) }}" class="btn btn-sm btn-icon btn-outline-primary me-2">
                                     <i class="bx bx-show"></i>
                                 </a>
-                                <form action="{{ route('admin.trade-offers.destroy', $offer->id) }}" method="POST" onsubmit="return confirm('Biztosan törölni szeretné?')">
+                                <form action="{{ route('admin.trade-offers.destroy', $offer->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this?') }}')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-icon btn-outline-danger shadow-none">
@@ -74,7 +74,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center">Nincsenek beérkezett csereajánlatok.</td>
+                        <td colspan="6" class="text-center">{{ __('Nincsenek beérkezett csereajánlatok.') }}</td>
                     </tr>
                 @endforelse
             </tbody>

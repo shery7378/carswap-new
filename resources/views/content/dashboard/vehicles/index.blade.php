@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Vehicles')
+@section('title', __('Vehicles'))
 
 @section('content')
     <div class="row">
@@ -16,11 +16,11 @@
                         <div id="bulk-actions" class="d-none me-3">
                             <div class="btn-group">
                                 <button type="button" class="btn btn-label-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bx bx-check-double me-1"></i> Bulk Actions
+                                    <i class="bx bx-check-double me-1"></i> {{ __('Bulk Actions') }}
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="published">Mark as Published</a></li>
-                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="rejected">Reject All</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="published">{{ __('Mark as Published') }}</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="rejected">{{ __('Reject All') }}</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                             <button type="button"
                                                 class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn"
                                                 data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip"
-                                                title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
+                                                title="{{ $vehicle->is_featured ? __('Remove from Featured') : __('Mark as Featured') }}">
                                                 <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
                                             </button>
                                         </td>
@@ -175,7 +175,7 @@
                                             </div>
                                             @if($vehicle->ad_status !== 'published')
                                                 <button type="button" class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1" 
-                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="Quick Approve">
+                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('Quick Approve') }}">
                                                     <i class="bx bx-check"></i>
                                                 </button>
                                             @endif
@@ -185,14 +185,14 @@
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
                                                 <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
                                                     class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                    data-bs-toggle="tooltip" title="View Details">
+                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}">
                                                     <i class="bx bx-show"></i>
                                                 </a>
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
                                                         class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                        data-bs-toggle="tooltip" title="Edit Vehicle">
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}">
                                                         <i class="bx bx-edit-alt"></i>
                                                     </a>
                                                 @endif
@@ -203,7 +203,7 @@
                                                         @csrf @method('DELETE')
                                                         <button type="button"
                                                             class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="Delete Vehicle">
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}">
                                                             <i class="bx bx-trash"></i>
                                                         </button>
                                                     </form>
@@ -215,7 +215,7 @@
                                     <tr>
                                         <td colspan="9" class="text-center py-4 text-muted">
                                             <i class="bx bx-car fs-2 d-block mb-2"></i>
-                                            No vehicles found.
+                                            {{ __('No vehicles found.') }}
                                         </td>
                                     </tr>
                                 @endforelse
@@ -229,7 +229,7 @@
                         <!-- Mobile search bar -->
                         <div class="mb-3">
                             <input type="text" id="mobile-search" class="form-control form-control-sm"
-                                placeholder="Quick search vehicles…">
+                                placeholder="{{ __('Quick search vehicles…') }}">
                         </div>
 
                         @forelse($vehicles as $vehicle)
@@ -336,7 +336,7 @@
                                             class="btn btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn"
                                             data-id="{{ $vehicle->id }}">
                                             <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }} me-1"></i>
-                                            {{ $vehicle->is_featured ? 'Featured' : 'Feature' }}
+                                            {{ $vehicle->is_featured ? __('Featured') : __('Feature') }}
                                         </button>
 
                                         <div class="d-flex gap-1">
@@ -371,7 +371,7 @@
                         @empty
                             <div class="text-center py-5 text-muted">
                                 <i class="bx bx-car fs-1 d-block mb-2"></i>
-                                No vehicles found.
+                                {{ __('No vehicles found.') }}
                             </div>
                         @endforelse
 
@@ -390,7 +390,7 @@
                     <div class="spinner-grow text-primary" role="status">
                         <span class="visually-hidden">Loading...</span>
                     </div>
-                    <p class="mt-3 text-muted fw-semibold">Acquiring vehicle specifications…</p>
+                    <p class="mt-3 text-muted fw-semibold">{{ __('Acquiring vehicle specifications…') }}</p>
                 </div>
             </div>
         </div>
@@ -419,7 +419,7 @@
                         ">",
                     language: {
                         search: '',
-                        searchPlaceholder: 'Quick Search Vehicles…',
+                        searchPlaceholder: '{{ __('Quick Search Vehicles…') }}',
                         paginate: {
                             next: '<i class="bx bx-chevron-right"></i>',
                             previous: '<i class="bx bx-chevron-left"></i>'
@@ -451,20 +451,20 @@
                                 if (res.is_featured) {
                                     t.removeClass('btn-label-secondary').addClass('btn-label-warning');
                                     icon.removeClass('bx-star').addClass('bxs-star');
-                                    if (isMobileCard) t.html('<i class="bx bxs-star me-1"></i>Featured');
-                                    t.attr('data-bs-original-title', 'Remove from Featured');
+                                    if (isMobileCard) t.html('<i class="bx bxs-star me-1"></i>{{ __('Featured') }}');
+                                    t.attr('data-bs-original-title', '{{ __('Remove from Featured') }}');
                                 } else {
                                     t.removeClass('btn-label-warning').addClass('btn-label-secondary');
                                     icon.removeClass('bxs-star').addClass('bx-star');
-                                    if (isMobileCard) t.html('<i class="bx bx-star me-1"></i>Feature');
-                                    t.attr('data-bs-original-title', 'Mark as Featured');
+                                    if (isMobileCard) t.html('<i class="bx bx-star me-1"></i>{{ __('Feature') }}');
+                                    t.attr('data-bs-original-title', '{{ __('Mark as Featured') }}');
                                 }
                             });
                             toastr.success(res.message, 'Updated');
                         }
                     },
                     error: function () {
-                        toastr.error('Could not update featured status.', 'Error');
+                        toastr.error('{{ __('Could not update featured status.') }}', '{{ __('Error') }}');
                     }
                 });
             });
@@ -489,7 +489,7 @@
                 container.innerHTML = `
                                         <div class="modal-body text-center py-5">
                                             <div class="spinner-grow text-primary" role="status"></div>
-                                            <p class="mt-3 text-muted fw-semibold small">Fetching vehicle data…</p>
+                                            <p class="mt-3 text-muted fw-semibold small">{{ __('Fetching vehicle data…') }}</p>
                                         </div>`;
 
                 modal.show();
@@ -499,7 +499,7 @@
                     .then(html => { container.innerHTML = html; })
                     .catch(() => {
                         container.innerHTML = `<div class="modal-body text-center py-5 text-danger fw-bold">
-                                                Error loading vehicle details. Please try again.</div>`;
+                                                {{ __('Error loading vehicle details. Please try again.') }}</div>`;
                     });
             }
 
@@ -542,11 +542,11 @@
                 if (selectedIds.length === 0) return;
 
                 Swal.fire({
-                    title: 'Are you sure?',
-                    text: `Update status to ${status} for ${selectedIds.length} vehicles?`,
+                    title: '{{ __('Are you sure?') }}',
+                    text: `{{ __('Update status to :status for :count vehicles?', ['status' => '${status}', 'count' => '${selectedIds.length}']) }}`,
                     icon: 'warning',
                     showCancelButton: true,
-                    confirmButtonText: 'Yes, update all!',
+                    confirmButtonText: '{{ __('Yes, update all!') }}',
                     customClass: {
                         confirmButton: 'btn btn-primary me-3',
                         cancelButton: 'btn btn-label-secondary'
@@ -586,7 +586,7 @@
                         ad_status: 'published'
                     },
                     success: function(res) {
-                        toastr.success('Vehicle approved successfully!');
+                        toastr.success('{{ __('Vehicle approved successfully!') }}');
                         setTimeout(() => window.location.reload(), 500);
                     }
                 });

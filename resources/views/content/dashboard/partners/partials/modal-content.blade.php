@@ -11,7 +11,7 @@
         </div>
         <div>
             <h5 class="modal-title fw-bold mb-0 text-dark">{{ $partner->name }}</h5>
-            <small class="text-muted small d-block"><i class="bx bx-map-pin me-1 text-primary"></i> {{ $partner->address ?: 'No address specified' }}</small>
+            <small class="text-muted small d-block"><i class="bx bx-map-pin me-1 text-primary"></i> {{ $partner->address ?: __('No address specified') }}</small>
         </div>
     </div>
     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -27,19 +27,19 @@
                 @endif
                 
                 <div class="contact-info small text-start">
-                    <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">Quick Contact</h6>
-                    <p class="mb-1"><i class="bx bx-envelope text-primary me-2"></i> {{ $partner->email ?: 'N/A' }}</p>
-                    <p class="mb-1"><i class="bx bx-phone text-success me-2"></i> {{ $partner->phone ?: 'N/A' }}</p>
-                    <p class="mb-1"><i class="bx bx-map-pin text-warning me-2"></i> {{ $partner->address ?: 'No address' }}</p>
+                    <h6 class="fw-bold mb-2 small text-uppercase text-muted border-bottom pb-1">{{ __('Quick Contact') }}</h6>
+                    <p class="mb-1"><i class="bx bx-envelope text-primary me-2"></i> {{ $partner->email ?: __('N/A') }}</p>
+                    <p class="mb-1"><i class="bx bx-phone text-success me-2"></i> {{ $partner->phone ?: __('N/A') }}</p>
+                    <p class="mb-1"><i class="bx bx-map-pin text-warning me-2"></i> {{ $partner->address ?: __('No address') }}</p>
                     @if($partner->website)
-                        <p class="mb-0"><i class="bx bx-globe text-info me-2"></i> <a href="{{ $partner->website }}" target="_blank">Website</a></p>
+                        <p class="mb-0"><i class="bx bx-globe text-info me-2"></i> <a href="{{ $partner->website }}" target="_blank">{{ __('Website') }}</a></p>
                     @endif
                 </div>
             </div>
 
             <!-- Services count stat -->
             <div class="badge bg-label-primary w-100 py-2 mt-2">
-                <i class="bx bx-briefcase me-1"></i> {{ $partner->services->count() }} Services Offered
+                <i class="bx bx-briefcase me-1"></i> {{ $partner->services->count() }} {{ __('Services Offered') }}
             </div>
         </div>
 
@@ -49,26 +49,26 @@
                 <ul class="nav nav-tabs nav-fill rounded-0" role="tablist">
                     <li class="nav-item">
                         <button type="button" class="nav-link active py-3" role="tab" data-bs-toggle="tab" data-bs-target="#modal-nav-intro">
-                            Intro
+                            {{ __('Intro') }}
                         </button>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="nav-link py-3" role="tab" data-bs-toggle="tab" data-bs-target="#modal-nav-hours">
-                            Hours
+                            {{ __('Hours') }}
                         </button>
                     </li>
                     <li class="nav-item">
                         <button type="button" class="nav-link py-3" role="tab" data-bs-toggle="tab" data-bs-target="#modal-nav-location">
-                            Map
+                            {{ __('Map') }}
                         </button>
                     </li>
                 </ul>
                 <div class="tab-content border-0 shadow-none bg-transparent p-4">
                     <!-- Intro -->
                     <div class="tab-pane fade show active" id="modal-nav-intro" role="tabpanel">
-                        <h6 class="fw-bold text-uppercase small text-muted mb-3">About Company</h6>
+                        <h6 class="fw-bold text-uppercase small text-muted mb-3">{{ __('About Company') }}</h6>
                         <div class="lh-base text-dark small" style="max-height: 300px; overflow-y: auto;">
-                            {!! $partner->description ? nl2br(e($partner->description)) : '<em>No introduction provided.</em>' !!}
+                            {!! $partner->description ? nl2br(e($partner->description)) : '<em>' . __('No introduction provided.') . '</em>' !!}
                         </div>
                     </div>
 
@@ -83,7 +83,7 @@
                                         @if($hour && !$hour->is_closed)
                                             <span class="text-primary">{{ \Carbon\Carbon::parse($hour->open_time)->format('H:i') }}-{{ \Carbon\Carbon::parse($hour->close_time)->format('H:i') }}</span>
                                         @else
-                                            <span class="text-danger small">Closed</span>
+                                            <span class="text-danger small">{{ __('Closed') }}</span>
                                         @endif
                                     </div>
                                 </div>
@@ -95,7 +95,7 @@
                     <div class="tab-pane fade" id="modal-nav-location" role="tabpanel">
                         @if($partner->latitude && $partner->longitude)
                             <div id="modal-partner-map" class="rounded border mb-2" style="height: 250px; width: 100%;"></div>
-                            <small class="text-muted"><i class="bx bx-info-circle me-1"></i> Coordinates: {{ $partner->latitude }}, {{ $partner->longitude }}</small>
+                            <small class="text-muted"><i class="bx bx-info-circle me-1"></i> {{ __('Coordinates:') }} {{ $partner->latitude }}, {{ $partner->longitude }}</small>
                             <script>
                                 (function() {
                                     const position = { lat: parseFloat('{{ $partner->latitude }}'), lng: parseFloat('{{ $partner->longitude }}') };
@@ -114,7 +114,7 @@
                         @else
                             <div class="text-center py-5">
                                 <i class="bx bx-map-alt display-3 text-muted opacity-25"></i>
-                                <p class="text-muted mt-2">No coordinates set.</p>
+                                <p class="text-muted mt-2">{{ __('No coordinates set.') }}</p>
                             </div>
                         @endif
                     </div>
@@ -126,12 +126,12 @@
 
 <div class="modal-footer border-top">
     <a href="{{ route('admin.partners.show', $partner->id) }}" class="btn btn-outline-primary btn-sm me-auto">
-        <i class="bx bx-expand-alt me-1"></i> Open Full Page
+        <i class="bx bx-expand-alt me-1"></i> {{ __('Open Full Page') }}
     </a>
-    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
     @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
         <a href="{{ route('admin.partners.edit', $partner->id) }}" class="btn btn-primary btn-sm px-3">
-            <i class="bx bx-edit-alt me-1"></i> Edit
+            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit') }}
         </a>
     @endif
 </div>

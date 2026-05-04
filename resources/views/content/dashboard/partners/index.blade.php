@@ -117,14 +117,14 @@
                                             <div class="d-flex align-items-center justify-content-center gap-1">
                                                 <a href="{{ route('admin.partners.show', $partner->id) }}"
                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                   data-bs-toggle="tooltip" title="Full Page">
+                                                   data-bs-toggle="tooltip" title="{{ __('Full Page') }}">
                                                     <i class="bx bx-show"></i>
                                                 </a>
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
                                                     <a href="{{ route('admin.partners.edit', $partner->id) }}"
                                                        class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                       data-bs-toggle="tooltip" title="Edit Partner">
+                                                       data-bs-toggle="tooltip" title="{{ __('Edit Partner') }}">
                                                         <i class="bx bx-edit-alt"></i>
                                                     </a>
                                                 @endif
@@ -134,7 +134,7 @@
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="Delete Partner">
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Partner') }}">
                                                             <i class="bx bx-trash"></i>
                                                         </button>
                                                     </form>

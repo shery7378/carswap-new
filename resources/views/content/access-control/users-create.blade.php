@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add Admin User')
+@section('title', __('Add Admin User'))
 
 @section('content')
 <style>
@@ -43,8 +43,8 @@
     <i class="bx bx-chevron-left"></i>
   </a>
   <h4 class="mb-0">
-    <span class="text-muted fw-light">Access Control / Admin Users /</span>
-    <span class="fw-bold text-primary">Create Admin User</span>
+    <span class="text-muted fw-light">{{ __('Access Control') }} / {{ __('Admin Users') }} /</span>
+    <span class="fw-bold text-primary">{{ __('Create Admin User') }}</span>
   </h4>
 </div>
 
@@ -56,26 +56,26 @@
           @csrf
 
           <!-- Basic Info -->
-          <div class="section-title"><i class="bx bx-user-circle fs-5"></i> Basic Information</div>
+          <div class="section-title"><i class="bx bx-user-circle fs-5"></i> {{ __('Basic Information') }}</div>
           <div class="row mb-4">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">First Name</label>
-              <input type="text" class="form-control" name="first_name" placeholder="John" value="{{ old('first_name') }}" required />
+              <label class="form-label fw-bold">{{ __('First Name') }}</label>
+              <input type="text" class="form-control" name="first_name" placeholder="{{ __('John') }}" value="{{ old('first_name') }}" required />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Last Name</label>
-              <input type="text" class="form-control" name="last_name" placeholder="Doe" value="{{ old('last_name') }}" required />
+              <label class="form-label fw-bold">{{ __('Last Name') }}</label>
+              <input type="text" class="form-control" name="last_name" placeholder="{{ __('Doe') }}" value="{{ old('last_name') }}" required />
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Email Address</label>
+              <label class="form-label fw-bold">{{ __('Email Address') }}</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-envelope"></i></span>
-                <input type="email" class="form-control" name="email" placeholder="john@example.com" value="{{ old('email') }}" required />
+                <input type="email" class="form-control" name="email" placeholder="{{ __('john@example.com') }}" value="{{ old('email') }}" required />
               </div>
               @error('email')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Password</label>
+              <label class="form-label fw-bold">{{ __('Password') }}</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                 <input type="password" class="form-control" name="password" placeholder="············" required />
@@ -86,7 +86,7 @@
           <hr class="opacity-25">
 
           <!-- Roles -->
-          <div class="section-title mt-4"><i class="bx bx-shield-quarter fs-5"></i> Assign Role</div>
+          <div class="section-title mt-4"><i class="bx bx-shield-quarter fs-5"></i> {{ __('Assign Role') }}</div>
           <div class="bg-light rounded-3 p-3 mb-4">
             <div class="d-flex flex-wrap gap-2">
               @foreach($roles as $role)
@@ -103,40 +103,40 @@
 
           <!-- Grouped Permissions -->
           <div class="d-flex align-items-center justify-content-between mt-4 mb-1">
-            <div class="section-title mb-0"><i class="bx bx-key fs-5"></i> Extra Permissions by Module</div>
+            <div class="section-title mb-0"><i class="bx bx-key fs-5"></i> {{ __('Extra Permissions by Module') }}</div>
             <div class="d-flex gap-2">
               <button type="button" class="btn btn-sm btn-label-primary" onclick="toggleAllPerms(true)">
-                <i class="bx bx-check-double me-1"></i>Select All
+                <i class="bx bx-check-double me-1"></i>{{ __('Select All') }}
               </button>
               <button type="button" class="btn btn-sm btn-label-secondary" onclick="toggleAllPerms(false)">
-                <i class="bx bx-x me-1"></i>Clear All
+                <i class="bx bx-x me-1"></i>{{ __('Clear All') }}
               </button>
             </div>
           </div>
-          <p class="text-muted small mt-2 mb-4">Grant additional permissions on top of the assigned role, grouped by section for clarity.</p>
+          <p class="text-muted small mt-2 mb-4">{{ __('Grant additional permissions on top of the assigned role, grouped by section for clarity.') }}</p>
 
           @php
             $moduleIconsMap = [
-              'vehicles'        => ['icon'=>'bx-car',            'color'=>'primary',   'label'=>'Vehicles'],
-              'users'           => ['icon'=>'bx-user',           'color'=>'info',      'label'=>'Admin Users'],
-              'roles'           => ['icon'=>'bx-shield-quarter', 'color'=>'warning',   'label'=>'Roles'],
-              'subscriptions'   => ['icon'=>'bx-credit-card',    'color'=>'success',   'label'=>'Subscriptions'],
-              'orders'          => ['icon'=>'bx-shopping-bag',   'color'=>'danger',    'label'=>'Orders'],
-              'partners'        => ['icon'=>'bx-group',          'color'=>'secondary', 'label'=>'Partners'],
-              'inquiries'       => ['icon'=>'bx-message-dots',   'color'=>'info',      'label'=>'Inquiries'],
-              'email_templates' => ['icon'=>'bx-envelope',       'color'=>'primary',   'label'=>'Email Templates'],
-              'settings'        => ['icon'=>'bx-cog',            'color'=>'secondary', 'label'=>'Settings'],
-              'car_settings'    => ['icon'=>'bx-wrench',         'color'=>'warning',   'label'=>'Car Settings'],
-              'products'        => ['icon'=>'bx-cart',           'color'=>'success',   'label'=>'Products'],
-              'customers'       => ['icon'=>'bx-user-circle',    'color'=>'info',      'label'=>'Customers'],
-              'general'         => ['icon'=>'bx-list-check',     'color'=>'dark',      'label'=>'General'],
+              'vehicles'        => ['icon'=>'bx-car',            'color'=>'primary',   'label'=>__('Vehicles')],
+              'users'           => ['icon'=>'bx-user',           'color'=>'info',      'label'=>__('Admin Users')],
+              'roles'           => ['icon'=>'bx-shield-quarter', 'color'=>'warning',   'label'=>__('Roles')],
+              'subscriptions'   => ['icon'=>'bx-credit-card',    'color'=>'success',   'label'=>__('Subscriptions')],
+              'orders'          => ['icon'=>'bx-shopping-bag',   'color'=>'danger',    'label'=>__('Orders')],
+              'partners'        => ['icon'=>'bx-group',          'color'=>'secondary', 'label'=>__('Partners')],
+              'inquiries'       => ['icon'=>'bx-message-dots',   'color'=>'info',      'label'=>__('Inquiries')],
+              'email_templates' => ['icon'=>'bx-envelope',       'color'=>'primary',   'label'=>__('Email Templates')],
+              'settings'        => ['icon'=>'bx-cog',            'color'=>'secondary', 'label'=>__('Settings')],
+              'car_settings'    => ['icon'=>'bx-wrench',         'color'=>'warning',   'label'=>__('Car Settings')],
+              'products'        => ['icon'=>'bx-cart',           'color'=>'success',   'label'=>__('Products')],
+              'customers'       => ['icon'=>'bx-user-circle',    'color'=>'info',      'label'=>__('Customers')],
+              'general'         => ['icon'=>'bx-list-check',     'color'=>'dark',      'label'=>__('General')],
             ];
             $actionIconsMap = [
-              'view'   => ['icon'=>'bx-show',        'label'=>'View'],
-              'create' => ['icon'=>'bx-plus-circle', 'label'=>'Create'],
-              'edit'   => ['icon'=>'bx-edit',        'label'=>'Edit'],
-              'delete' => ['icon'=>'bx-trash',       'label'=>'Delete'],
-              'access' => ['icon'=>'bx-key',         'label'=>'Access'],
+              'view'   => ['icon'=>'bx-show',        'label'=>__('View')],
+              'create' => ['icon'=>'bx-plus-circle', 'label'=>__('Create')],
+              'edit'   => ['icon'=>'bx-edit',        'label'=>__('Edit')],
+              'delete' => ['icon'=>'bx-trash',       'label'=>__('Delete')],
+              'access' => ['icon'=>'bx-key',         'label'=>__('Access')],
             ];
           @endphp
 
@@ -158,9 +158,9 @@
                     <span class="badge bg-label-{{ $color }} ms-1">{{ $modulePerms->count() }}</span>
                   </div>
                   <div>
-                    <a class="select-all-link" onclick="toggleModule('{{ $moduleId }}', true)">All</a>
+                    <a class="select-all-link" onclick="toggleModule('{{ $moduleId }}', true)">{{ __('All') }}</a>
                     <span class="text-muted mx-1">/</span>
-                    <a class="select-all-link" style="color:#aaa;" onclick="toggleModule('{{ $moduleId }}', false)">None</a>
+                    <a class="select-all-link" style="color:#aaa;" onclick="toggleModule('{{ $moduleId }}', false)">{{ __('None') }}</a>
                   </div>
                 </div>
                 <div class="module-perm-body" id="{{ $moduleId }}">
@@ -183,9 +183,9 @@
 
           <div class="row mt-5">
             <div class="col-12 d-flex justify-content-end gap-3">
-              <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary px-4">Discard</a>
+              <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary px-4">{{ __('Discard') }}</a>
               <button type="submit" class="btn btn-primary px-5 shadow-sm">
-                <i class="bx bx-check-circle me-1"></i> Create Admin User
+                <i class="bx bx-check-circle me-1"></i> {{ __('Create Admin User') }}
               </button>
             </div>
           </div>

@@ -102,6 +102,7 @@ Route::post('/partners/{partnerId}/reviews', [ApiPartnerController::class, 'stor
 Route::get('/vehicles', [VehicleController::class, 'index']);
 Route::get('/vehicles/{id}', [VehicleController::class, 'show']);
 Route::get('/vehicles/{id}/related', [VehicleController::class, 'similarVehiclesByUser']);
+Route::get('/vehicles/classified', [VehicleController::class, 'getClassifiedVehicles']);
 
 // Authenticated Ad Routes (user must be logged in)
 // IMPORTANT: /ads/my MUST be declared before /ads/{id} to prevent Laravel

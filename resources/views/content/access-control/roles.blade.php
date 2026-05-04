@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Role Management')
+@section('title', __('Role Management'))
 
 @section('content')
   <style>
@@ -68,12 +68,12 @@
 
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h4 class="mb-0">
-      <span class="text-muted fw-light">Access Control /</span>
-      <span class="fw-bold text-primary">Roles</span>
+      <span class="text-muted fw-light">{{ __('Access Control') }} /</span>
+      <span class="fw-bold text-primary">{{ __('Roles') }}</span>
     </h4>
     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('create-roles', 'admin-guard'))
       <a href="{{ route('admin.roles.create') }}" class="btn btn-primary d-flex align-items-center shadow-sm">
-        <i class="bx bx-plus-circle me-1"></i> Create New Role
+        <i class="bx bx-plus-circle me-1"></i> {{ __('Create New Role') }}
       </a>
     @endif
   </div>
@@ -81,18 +81,18 @@
   <div class="card role-card overflow-hidden">
     <div class="card-header border-bottom d-flex align-items-center bg-light-soft">
       <div class="card-title mb-0">
-        <h5 class="mb-1 text-dark">Administrative Roles</h5>
-        <p class="text-muted mb-0 small">Define access levels for different guards and administrators.</p>
+        <h5 class="mb-1 text-dark">{{ __('Administrative Roles') }}</h5>
+        <p class="text-muted mb-0 small">{{ __('Define access levels for different guards and administrators.') }}</p>
       </div>
     </div>
     <div class="table-responsive text-nowrap">
       <table class="table table-hover">
         <thead>
           <tr>
-            <th>Role Name</th>
-            <th>Security Guard</th>
-            <th>Permissions Bound</th>
-            <th style="width: 120px;">Actions</th>
+            <th>{{ __('Role Name') }}</th>
+            <th>{{ __('Security Guard') }}</th>
+            <th>{{ __('Permissions Bound') }}</th>
+            <th style="width: 120px;">{{ __('Actions') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -117,29 +117,29 @@
                     <span class="badge bg-label-secondary badge-premium py-1 px-2"
                       style="font-size: 10px;">{{ $permission->name }}</span>
                   @empty
-                    <span class="text-muted small italic">No permissions assigned</span>
+                    <span class="text-muted small italic">{{ __('No permissions assigned') }}</span>
                   @endforelse
                 </div>
               </td>
               <td>
                 @if($role->name === 'super-admin')
                   <div class="d-flex align-items-center">
-                    <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> Protected</span>
+                    <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> {{ __('Protected') }}</span>
                   </div>
                 @else
                   <div class="d-flex gap-2">
                     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-roles', 'admin-guard'))
                       <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info"
-                        title="Edit Role">
+                        title="{{ __('Edit Role') }}">
                         <i class="bx bx-edit-alt"></i>
                       </a>
                     @endif
                     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-roles', 'admin-guard'))
                       <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline"
-                        onsubmit="return confirm('Are you sure you want to delete this role?')">
+                        onsubmit="return confirm('{{ __('Are you sure you want to delete this role?') }}')">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="action-btn text-danger bg-label-danger border-0" title="Delete Role">
+                        <button type="submit" class="action-btn text-danger bg-label-danger border-0" title="{{ __('Delete Role') }}">
                           <i class="bx bx-trash"></i>
                         </button>
                       </form>

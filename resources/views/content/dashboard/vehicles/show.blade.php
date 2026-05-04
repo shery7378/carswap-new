@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Vehicle Details: ' . $vehicle->title)
+@section('title', __('Vehicle Details: :title', ['title' => $vehicle->title]))
 
 @section('content')
 <div class="row">
@@ -20,13 +20,13 @@
                             <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
                             <small class="text-muted"><i class="bx bx-calendar me-1"></i> {{ $vehicle->year }}</small>
                             <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
-                            <small class="text-primary fw-bold"><i class="bx bx-user me-1 text-primary"></i> Posted by: {{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : 'System' }}</small>
+                            <small class="text-primary fw-bold"><i class="bx bx-user me-1 text-primary"></i> {{ __('Posted by:') }} {{ $vehicle->user ? $vehicle->user->first_name . ' ' . $vehicle->user->last_name : __('System') }}</small>
                         </div>
                     </div>
                 </div>
                 <div class="d-flex gap-2">
                     <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary btn-sm">
-                        <i class="bx bx-arrow-back me-1"></i> Back to List
+                        <i class="bx bx-arrow-back me-1"></i> {{ __('Back to List') }}
                     </a>
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                         <button type="button" 
@@ -37,7 +37,7 @@
                             <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
                         </button>
                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm shadow-sm">
-                            <i class="bx bx-edit-alt me-1"></i> Edit Vehicle
+                            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit Vehicle') }}
                         </a>
                     @endif
                 </div>
@@ -54,7 +54,7 @@
                                     onerror="this.src='https://placehold.co/800x600?text=No+Main+Image';">
                             @else
                                 <div class="bg-light d-flex align-items-center justify-content-center rounded border" style="height: 300px;">
-                                    <span class="text-muted">No Image Available</span>
+                                    <span class="text-muted">{{ __('No Image Available') }}</span>
                                 </div>
                             @endif
                             
@@ -68,7 +68,7 @@
                         @endphp
                         
                         @if($gallery && is_array($gallery) && count($gallery) > 0)
-                            <h6 class="fw-bold mb-3 small text-uppercase">Gallery ({{ count($gallery) }} Photos)</h6>
+                            <h6 class="fw-bold mb-3 small text-uppercase">{{ __('Gallery (:count Photos)', ['count' => count($gallery)]) }}</h6>
                             <div class="gallery-wrapper row g-2 mb-4" style="max-height: 250px; overflow-y: auto; padding: 2px;">
                                 @foreach($gallery as $imgUrl)
                                     <div class="col-3">
@@ -82,7 +82,7 @@
                         @endif
 
                         <div class="seller-card p-4 bg-white rounded border shadow-xs mt-3">
-                            <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2 font-secondary">Seller Information</h6>
+                            <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2 font-secondary">{{ __('Seller Information') }}</h6>
                             <div class="d-flex align-items-center">
                                 <div class="avatar avatar-lg me-3">
                                     <span class="avatar-initial rounded-circle bg-label-info">
@@ -97,13 +97,13 @@
                             @if($vehicle->user?->phone)
                                 <hr class="my-3">
                                 <div class="small d-flex justify-content-between align-items-center">
-                                    <span class="text-muted">Phone:</span>
+                                    <span class="text-muted">{{ __('Phone:') }}</span>
                                     <span class="fw-bold">{{ $vehicle->user->phone }}</span>
                                 </div>
                             @endif
                             <div class="mt-3">
                                 <a href="mailto:{{ $vehicle->user->email ?? '' }}" class="btn btn-sm btn-outline-primary w-100">
-                                    <i class="bx bx-envelope me-1"></i> Contact Seller
+                                    <i class="bx bx-envelope me-1"></i> {{ __('Contact Seller') }}
                                 </a>
                             </div>
                         </div>
@@ -115,28 +115,28 @@
                             <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
                                 <li class="nav-item">
                                     <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#nav-stats">
-                                        <i class="bx bx-car fs-5 me-1"></i> Overview
+                                        <i class="bx bx-car fs-5 me-1"></i> {{ __('Overview') }}
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-desc">
-                                        <i class="bx bx-text fs-5 me-1"></i> Full Description
+                                        <i class="bx bx-text fs-5 me-1"></i> {{ __('Full Description') }}
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-tech">
-                                        <i class="bx bx-wrench fs-5 me-1"></i> Technical
+                                        <i class="bx bx-wrench fs-5 me-1"></i> {{ __('Technical') }}
                                     </button>
                                 </li>
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-features">
-                                        <i class="bx bx-list-check fs-5 me-1"></i> Properties
+                                        <i class="bx bx-list-check fs-5 me-1"></i> {{ __('Properties') }}
                                     </button>
                                 </li>
                                 @if($vehicle->exchange_preferences && count($vehicle->exchange_preferences) > 0)
                                 <li class="nav-item">
                                     <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#nav-exchange">
-                                        <i class="bx bx-refresh fs-5 me-1"></i> Trade-In
+                                        <i class="bx bx-refresh fs-5 me-1"></i> {{ __('Trade-In') }}
                                     </button>
                                 </li>
                                 @endif
@@ -147,46 +147,46 @@
                                     <div class="row g-4 p-4">
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-primary border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Mileage</small>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Mileage') }}</small>
                                                 <span class="fs-4 fw-bold">{{ number_format($vehicle->mileage ?? 0, 0, ',', ' ') }} <small class="fw-normal">km</small></span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-info border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Fuel Type</small>
-                                                <span class="fs-4 fw-bold text-truncate d-block">{{ optional($vehicle->fuelType)->name ?? 'N/A' }}</span>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Fuel Type') }}</small>
+                                                <span class="fs-4 fw-bold text-truncate d-block">{{ optional($vehicle->fuelType)->name ?? __('N/A') }}</span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-success border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Transmission</small>
-                                                <span class="fs-4 fw-bold">{{ optional($vehicle->transmission)->name ?? 'N/A' }}</span>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Transmission') }}</small>
+                                                <span class="fs-4 fw-bold">{{ optional($vehicle->transmission)->name ?? __('N/A') }}</span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-warning border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Power</small>
-                                                <span class="fs-4 fw-bold">{{ $vehicle->performance ?? 'N/A' }} <small class="fw-normal">HP</small></span>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Performance') }}</small>
+                                                <span class="fs-4 fw-bold">{{ $vehicle->performance ?? __('N/A') }} <small class="fw-normal">HP</small></span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-secondary border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Status</small>
-                                                <span class="badge bg-label-{{ $vehicle->ad_status == 'published' ? 'success' : 'warning' }} fs-6 mt-1">{{ ucfirst($vehicle->ad_status) }}</span>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Status') }}</small>
+                                                <span class="badge bg-label-{{ $vehicle->ad_status == 'published' ? 'success' : 'warning' }} fs-6 mt-1">{{ __(ucfirst($vehicle->ad_status)) }}</span>
                                             </div>
                                         </div>
                                         <div class="col-4">
                                             <div class="stat-card p-3 border-start border-danger border-5 rounded bg-light shadow-xs h-100">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Location</small>
-                                                <span class="fw-bold d-block text-truncate fs-5">{{ $vehicle->location ?: 'N/A' }}</span>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Location') }}</small>
+                                                <span class="fw-bold d-block text-truncate fs-5">{{ $vehicle->location ?: __('N/A') }}</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="px-4 pb-4">
-                                        <h6 class="fw-bold mb-3 border-bottom pb-2">Quick Overview</h6>
+                                        <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Quick Overview') }}</h6>
                                         <div class="bg-light p-3 rounded border text-muted">
-                                            This {{ optional($vehicle->brand)->name }} {{ optional($vehicle->model)->name }} is a {{ $vehicle->year }} model with {{ $vehicle->mileage }} km. 
-                                            Currently listed as <strong>{{ $vehicle->ad_status }}</strong> in {{ $vehicle->location ?: 'Not specified' }}.
+                                            {{ __('This :brand :model is a :year model with :mileage km.', ['brand' => optional($vehicle->brand)->name, 'model' => optional($vehicle->model)->name, 'year' => $vehicle->year, 'mileage' => $vehicle->mileage]) }}
+                                            {{ __('Currently listed as :status in :location.', ['status' => __($vehicle->ad_status), 'location' => $vehicle->location ?: __('Not specified')]) }}
                                         </div>
                                     </div>
                                 </div>
@@ -194,9 +194,9 @@
                                 <!-- Description Tab -->
                                 <div class="tab-pane fade" id="nav-desc" role="tabpanel">
                                     <div class="p-4 bg-white border-top-0 rounded-bottom" style="min-height: 480px;">
-                                        <h6 class="fw-bold mb-3 border-bottom pb-2">Full Listing Description</h6>
+                                        <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Full Listing Description') }}</h6>
                                         <div class="lh-base" style="font-size: 1.05rem;">
-                                            {!! $vehicle->description ? nl2br(e($vehicle->description)) : '<em class="text-muted">No description provided.</em>' !!}
+                                            {!! $vehicle->description ? nl2br(e($vehicle->description)) : '<em class="text-muted">' . __('No description provided.') . '</em>' !!}
                                         </div>
                                     </div>
                                 </div>
@@ -207,8 +207,8 @@
                                         <table class="table table-hover table-striped">
                                             <thead>
                                                 <tr>
-                                                    <th class="border-0">Technical Specification</th>
-                                                    <th class="border-0">Value</th>
+                                                    <th class="border-0">{{ __('Technical Specification') }}</th>
+                                                    <th class="border-0">{{ __('Value') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -229,7 +229,7 @@
                                 <!-- Features Tab -->
                                 <div class="tab-pane fade" id="nav-features" role="tabpanel">
                                     <div class="p-4 bg-white border-top-0 rounded-bottom" style="min-height: 480px;">
-                                        <h6 class="fw-bold mb-4">Vehicle Properties & Extra Features</h6>
+                                        <h6 class="fw-bold mb-4">{{ __('Vehicle Properties & Extra Features') }}</h6>
                                         <div class="row">
                                             @forelse($vehicle->properties as $prop)
                                                 <div class="col-md-6 mb-3">
@@ -241,7 +241,7 @@
                                             @empty
                                                 <div class="col-12 text-center py-5">
                                                     <i class="bx bx-list-minus text-muted display-1"></i>
-                                                    <p class="text-muted mt-3">No specific features listed for this vehicle.</p>
+                                                    <p class="text-muted mt-3">{{ __('No specific features listed for this vehicle.') }}</p>
                                                 </div>
                                             @endforelse
                                         </div>
@@ -252,15 +252,15 @@
                                 @if($vehicle->exchange_preferences && count($vehicle->exchange_preferences) > 0)
                                 <div class="tab-pane fade" id="nav-exchange" role="tabpanel">
                                     <div class="p-4 bg-white border-top-0 rounded-bottom" style="min-height: 480px;">
-                                        <h6 class="fw-bold mb-4">Trade-In / Exchange Preferences</h6>
+                                        <h6 class="fw-bold mb-4">{{ __('Trade-In / Exchange Preferences') }}</h6>
                                         <div class="row">
                                             @foreach($vehicle->exchange_preferences as $index => $pref)
                                                 <div class="col-md-12 mb-4">
                                                     <div class="card bg-light border-0 shadow-xs border-start border-primary border-5">
                                                         <div class="card-body p-4">
                                                             <div class="d-flex justify-content-between align-items-center mb-3">
-                                                                <h5 class="fw-bold mb-0">Preference Group #{{ $index + 1 }}</h5>
-                                                                <span class="badge bg-primary">Preferred Swap</span>
+                                                                <h5 class="fw-bold mb-0">{{ __('Preference Group #:count', ['count' => $index + 1]) }}</h5>
+                                                                <span class="badge bg-primary">{{ __('Preferred Swap') }}</span>
                                                             </div>
                                                             <div class="row g-4">
                                                                 <div class="col-md-3">
@@ -296,11 +296,11 @@
             
             <div class="card-footer bg-light border-top text-end p-4">
                 <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary me-2">
-                    Back to Vehicles
+                    {{ __('Back to Vehicles') }}
                 </a>
                 @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                     <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary shadow">
-                        <i class="bx bx-edit-alt me-1"></i> Edit Vehicle Information
+                        <i class="bx bx-edit-alt me-1"></i> {{ __('Edit Vehicle Information') }}
                     </a>
                 @endif
             </div>
@@ -374,18 +374,18 @@
                         if (response.is_featured) {
                             button.removeClass('btn-label-secondary').addClass('btn-label-warning');
                             icon.removeClass('bx-star').addClass('bxs-star');
-                            button.attr('data-bs-original-title', 'Remove from Featured');
+                            button.attr('data-bs-original-title', '{{ __('Remove from Featured') }}');
                         } else {
                             button.removeClass('btn-label-warning').addClass('btn-label-secondary');
                             icon.removeClass('bxs-star').addClass('bx-star');
-                            button.attr('data-bs-original-title', 'Mark as Featured');
+                            button.attr('data-bs-original-title', '{{ __('Mark as Featured') }}');
                         }
                         
                         // Update Bootstrap tooltip
                         var tooltip = bootstrap.Tooltip.getInstance(button[0]);
                         if (tooltip) {
                             tooltip.hide();
-                            button.attr('title', response.is_featured ? 'Remove from Featured' : 'Mark as Featured');
+                            button.attr('title', response.is_featured ? '{{ __('Remove from Featured') }}' : '{{ __('Mark as Featured') }}');
                             tooltip = new bootstrap.Tooltip(button[0]);
                         }
                         
@@ -393,7 +393,7 @@
                     }
                 },
                 error: function() {
-                    toastr.error('Could not update featured status.', 'Error');
+                    toastr.error('{{ __('Could not update featured status.') }}', '{{ __('Error') }}');
                 }
             });
         });

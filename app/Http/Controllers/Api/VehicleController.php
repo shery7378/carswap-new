@@ -208,4 +208,63 @@ class VehicleController extends Controller
             'data' => $similar
         ]);
     }
+
+    /**
+     * Display a classified listing of vehicles (New vs Used).
+     */
+    public function getClassifiedVehicles(Request $request)
+    {
+        // Define the limit for each category (default 8)
+        $limit = $request->get('limit', 8);
+
+        // Fetch New (Novel) vehicles
+        $newCars = Vehicle::with($this->getRelations())
+            ->where('ad_status', 'published')
+            ->whereHas('vehicleStatus', function ($q) {
+                $q->where('name', 'Novel');
+            })
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+
+        // Fetch Used vehicles
+        $usedCars = Vehicle::with($this->getRelations())
+            ->where('ad_status', 'published')
+            ->whereHas('vehicleStatus', function ($q) {
+                $q->where('name', 'Used');
+            })
+            ->orderBy('id', 'desc')
+            ->limit($limit)
+            ->get();
+
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'new' => $newCars,
+                'used' => $usedCars
+            ]
+        ]);
+    }
+
+    /**
+     * Get consistent relations for vehicle responses.
+     */
+    private function getRelations(): array
+    {
+        return [
+            'brand',
+            'model',
+            'bodyType',
+            'fuelType',
+            'transmission',
+            'driveType',
+            'exteriorColor',
+            'interiorColor',
+            'salesMethod',
+            'documentType',
+            'vehicleStatus',
+            'properties',
+            'user'
+        ];
+    }
 }

@@ -1,9 +1,9 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Newsletter Subscribers')
+@section('title', __('Newsletter Subscribers'))
 
 @section('content')
-<h4 class="py-3 mb-4"><span class="text-muted fw-light">Newsletter /</span> Subscribers</h4>
+<h4 class="py-3 mb-4"><span class="text-muted fw-light">{{ __('Newsletter') }} /</span> {{ __('Subscribers') }}</h4>
 
 @if(session('success'))
     <div class="alert alert-success alert-dismissible shadow-xs mb-4" role="alert">
@@ -14,7 +14,7 @@
 
 <div class="card border-0 shadow-sm">
   <div class="card-header d-flex justify-content-between align-items-center py-3">
-    <h5 class="mb-0 fw-bold">Subscribers List</h5>
+    <h5 class="mb-0 fw-bold">{{ __('Subscribers List') }}</h5>
   </div>
   <div class="card-body">
     <div class="table-responsive text-nowrap">
@@ -22,24 +22,24 @@
         <thead class="bg-light bg-opacity-50">
             <tr>
             <th>ID</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Subscribed At</th>
-            <th class="text-center">Actions</th>
+            <th>{{ __('Name') }}</th>
+            <th>{{ __('Email') }}</th>
+            <th>{{ __('Subscribed At') }}</th>
+            <th class="text-center">{{ __('Actions') }}</th>
             </tr>
         </thead>
         <tbody class="table-border-bottom-0">
             @foreach($subscribers as $subscriber)
             <tr>
             <td>{{ $subscriber->id }}</td>
-            <td>{{ $subscriber->name ?? 'N/A' }}</td>
+            <td>{{ $subscriber->name ?? __('N/A') }}</td>
             <td><strong>{{ $subscriber->email }}</strong></td>
             <td>{{ $subscriber->created_at->format('Y-m-d H:i') }}</td>
             <td class="text-center">
-                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this subscriber?');">
+                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this subscriber?') }}');">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-icon btn-label-danger shadow-none" data-bs-toggle="tooltip" title="Delete">
+                    <button type="submit" class="btn btn-sm btn-icon btn-label-danger shadow-none" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
                         <i class="bx bx-trash"></i>
                     </button>
                 </form>
@@ -65,11 +65,14 @@
                 "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
             language: {
                 search: "",
-                searchPlaceholder: "Search subscribers...",
+                searchPlaceholder: "{{ __('Search subscribers...') }}",
                 paginate: {
                     next: '<i class="bx bx-chevron-right"></i>',
                     previous: '<i class="bx bx-chevron-left"></i>'
-                }
+                },
+                lengthMenu: "{{ __('Show _MENU_ entries') }}",
+                info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
+                zeroRecords: "{{ __('No matching records found') }}"
             }
         });
     });
