@@ -38,7 +38,7 @@ class UserAdController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Vehicle::with($this->relations)
-            ->where('ad_status', 'published');
+            ->where('ad_status', 'Publikált');
 
         // --- Filtering ---
         $filters = [
@@ -115,7 +115,7 @@ class UserAdController extends Controller
         $vehicle = Vehicle::with($this->relations)->findOrFail($id);
 
         // Non-published ads are only shown to the owner
-        if ($vehicle->ad_status !== 'published') {
+        if ($vehicle->ad_status !== 'Publikált') {
             $user = $request->user();
             if (!$user || $user->id !== $vehicle->user_id) {
                 return response()->json([
@@ -151,7 +151,7 @@ class UserAdController extends Controller
         // Check subscription limits
         $limitCheck = $this->checkSubscriptionLimits(
             $user, 
-            ($validated['ad_status'] ?? 'pending') === 'draft', 
+            ($validated['ad_status'] ?? 'Függőben') === 'Piszkozat', 
             false, 
             count($validated['gallery_images'] ?? [])
         );
@@ -160,10 +160,10 @@ class UserAdController extends Controller
         }
 
         // Default ad_status for users is 'pending' for approval, unless they explicitly saved it as 'draft'
-        if (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') {
-            $validated['ad_status'] = 'draft';
+        if (isset($validated['ad_status']) && $validated['ad_status'] === 'Piszkozat') {
+            $validated['ad_status'] = 'Piszkozat';
         } else {
-            $validated['ad_status'] = 'pending';
+            $validated['ad_status'] = 'Függőben';
         }
 
         // Remove file fields from mass-assignment
@@ -219,7 +219,7 @@ class UserAdController extends Controller
     {
         $ads = Vehicle::with($this->relations)
             ->where('user_id', $request->user()->id)
-            ->whereIn('ad_status', ['published', 'pending', 'draft'])
+            ->whereIn('ad_status', ['Publikált', 'Függőben', 'Piszkozat'])
             ->orderBy('id', 'desc')
             ->paginate($request->input('limit', 12));
 
@@ -275,7 +275,7 @@ class UserAdController extends Controller
         unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
 
         // Reset status to pending for approval if updated, unless saving as draft
-        $newStatus = (isset($validated['ad_status']) && $validated['ad_status'] === 'draft') ? 'draft' : 'pending';
+        $newStatus = (isset($validated['ad_status']) && $validated['ad_status'] === 'Piszkozat') ? 'Piszkozat' : 'Függőben';
 
         // Check active limit if moving from inactive (draft/rejected) to active
         // Also check HD image quota if the image count exceeds 6
@@ -283,7 +283,7 @@ class UserAdController extends Controller
         
         $limitCheck = $this->checkSubscriptionLimits(
             $request->user(), 
-            $newStatus === 'draft', 
+            $newStatus === 'Piszkozat', 
             true, 
             $newGalleryCount,
             $vehicle->id
@@ -427,17 +427,17 @@ class UserAdController extends Controller
         }
 
         $request->validate([
-            'ad_status' => 'required|in:published,rejected,pending,draft',
+            'ad_status' => 'required|in:Publikált,Elutasítva,Függőben,Piszkozat',
         ]);
 
         $newStatus = $request->input('ad_status');
 
         // Check limits if changing to published
-        if ($newStatus === 'published') {
+        if ($newStatus === 'Publikált') {
             // If a user tries to set it to published, it should actually go to pending for approval
             // Actually, if this is coming from the user, they shouldn't be able to set it to 'published' directly.
             // But let's keep the logic for now or force it to pending.
-            $newStatus = 'pending';
+            $newStatus = 'Függőben';
 
             $limitCheck = $this->checkSubscriptionLimits($request->user(), false, true, count($vehicle->gallery_images ?? []), $vehicle->id);
             if ($limitCheck !== true) {
@@ -493,7 +493,7 @@ class UserAdController extends Controller
             $garageAdsLimit = (int) $plan->garage_ads_limit;
             if ($garageAdsLimit > 0) {
                 $totalCount = Vehicle::where('user_id', $user->id)
-                    ->whereIn('ad_status', ['published', 'pending', 'draft', 'rejected'])
+                    ->whereIn('ad_status', ['Publikált', 'Függőben', 'Piszkozat', 'Elutasítva'])
                     ->count();
 
                 if ($totalCount >= $garageAdsLimit) {
@@ -511,7 +511,7 @@ class UserAdController extends Controller
             $shouldCheckActive = true;
             if ($isUpdate && $vehicleId) {
                 $v = Vehicle::find($vehicleId);
-                if ($v && in_array($v->ad_status, ['published', 'pending'])) {
+                if ($v && in_array($v->ad_status, ['Publikált', 'Függőben'])) {
                     $shouldCheckActive = false;
                 }
             }
@@ -520,7 +520,7 @@ class UserAdController extends Controller
                 $activeAdsLimit = (int) $plan->active_ads_limit;
                 if ($activeAdsLimit > 0) {
                     $activeCount = Vehicle::where('user_id', $user->id)
-                        ->whereIn('ad_status', ['published', 'pending'])
+                        ->whereIn('ad_status', ['Publikált', 'Függőben'])
                         ->count();
 
                     if ($activeCount >= $activeAdsLimit) {

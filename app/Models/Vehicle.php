@@ -74,7 +74,7 @@ class Vehicle extends Model
     
     public function getStatusAttribute(): string
     {
-        return $this->ad_status ?? 'pending';
+        return $this->ad_status ?? 'Függőben';
     }
 
     // -------------------------------------------------------------------------

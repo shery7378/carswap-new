@@ -19,26 +19,26 @@
                                     <i class="bx bx-check-double me-1"></i> {{ __('Bulk Actions') }}
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="published">{{ __('Mark as Published') }}</a></li>
-                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="rejected">{{ __('Reject All') }}</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="Publikált">{{ __('Mark as Published') }}</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="Elutasítva">{{ __('Reject All') }}</a></li>
                                 </ul>
                             </div>
                         </div>
-
+ 
                         <!-- Status Filter -->
                         <form action="{{ route('admin.vehicles.index') }}" method="GET">
                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                                 <option value="">{{ __('All Statuses') }}</option>
-                                <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>
+                                <option value="Publikált" {{ request('status') == 'Publikált' ? 'selected' : '' }}>
                                     {{ __('Published') }}
                                 </option>
-                                <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
+                                <option value="Függőben" {{ request('status') == 'Függőben' ? 'selected' : '' }}>
                                     {{ __('Pending') }}
                                 </option>
-                                <option value="rejected" {{ request('status') == 'rejected' ? 'selected' : '' }}>
+                                <option value="Elutasítva" {{ request('status') == 'Elutasítva' ? 'selected' : '' }}>
                                     {{ __('Rejected') }}
                                 </option>
-                                <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>{{ __('Draft') }}
+                                <option value="Piszkozat" {{ request('status') == 'Piszkozat' ? 'selected' : '' }}>{{ __('Draft') }}
                                 </option>
                             </select>
                         </form>
@@ -144,10 +144,10 @@
                                         <td class="td-status text-center">
                                             @php
                                                 $statusClass = match ($vehicle->ad_status) {
-                                                    'published' => 'success',
-                                                    'pending' => 'warning',
-                                                    'rejected' => 'danger',
-                                                    'draft' => 'secondary',
+                                                    'Publikált' => 'success',
+                                                    'Függőben' => 'warning',
+                                                    'Elutasítva' => 'danger',
+                                                    'Piszkozat' => 'secondary',
                                                     default => 'primary',
                                                 };
                                             @endphp
@@ -155,25 +155,25 @@
                                                 <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span
-                                                        class="badge bg-{{ $statusClass }}">{{ ucfirst($vehicle->ad_status) }}</span>
+                                                        class="badge bg-{{ $statusClass }}">{{ $vehicle->ad_status }}</span>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
                                                     <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
                                                         method="POST">
                                                         @csrf @method('PATCH')
-                                                        @foreach(['published' => 'success', 'pending' => 'warning', 'rejected' => 'danger', 'draft' => 'secondary'] as $val => $cls)
+                                                        @foreach(['Publikált' => 'success', 'Függőben' => 'warning', 'Elutasítva' => 'danger', 'Piszkozat' => 'secondary'] as $val => $cls)
                                                             <li>
                                                                 <button type="submit" name="ad_status" value="{{ $val }}"
                                                                     class="dropdown-item d-flex align-items-center py-2">
                                                                     <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                    {{ ucfirst($val) }}
+                                                                    {{ $val }}
                                                                 </button>
                                                             </li>
                                                         @endforeach
                                                     </form>
                                                 </ul>
                                             </div>
-                                            @if($vehicle->ad_status !== 'published')
+                                            @if($vehicle->ad_status !== 'Publikált')
                                                 <button type="button" class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1" 
                                                         data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('Quick Approve') }}">
                                                     <i class="bx bx-check"></i>
@@ -235,10 +235,10 @@
                         @forelse($vehicles as $vehicle)
                             @php
                                 $statusClass = match ($vehicle->ad_status) {
-                                    'published' => 'success',
-                                    'pending' => 'warning',
-                                    'rejected' => 'danger',
-                                    'draft' => 'secondary',
+                                    'Publikált' => 'success',
+                                    'Függőben' => 'warning',
+                                    'Elutasítva' => 'danger',
+                                    'Piszkozat' => 'secondary',
                                     default => 'primary',
                                 };
                             @endphp
@@ -277,18 +277,18 @@
                                                     <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
                                                         data-bs-toggle="dropdown">
                                                         <span
-                                                            class="badge bg-{{ $statusClass }}">{{ ucfirst($vehicle->ad_status) }}</span>
+                                                            class="badge bg-{{ $statusClass }}">{{ $vehicle->ad_status }}</span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                                         <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
                                                             method="POST">
                                                             @csrf @method('PATCH')
-                                                            @foreach(['published' => 'success', 'pending' => 'warning', 'rejected' => 'danger', 'draft' => 'secondary'] as $val => $cls)
+                                                            @foreach(['Publikált' => 'success', 'Függőben' => 'warning', 'Elutasítva' => 'danger', 'Piszkozat' => 'secondary'] as $val => $cls)
                                                                 <li>
                                                                     <button type="submit" name="ad_status" value="{{ $val }}"
                                                                         class="dropdown-item d-flex align-items-center py-2">
                                                                         <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                        {{ ucfirst($val) }}
+                                                                        {{ $val }}
                                                                     </button>
                                                                 </li>
                                                             @endforeach
@@ -583,7 +583,7 @@
                     type: 'PATCH',
                     data: {
                         _token: '{{ csrf_token() }}',
-                        ad_status: 'published'
+                        ad_status: 'Publikált'
                     },
                     success: function(res) {
                         toastr.success('{{ __('Vehicle approved successfully!') }}');

@@ -120,7 +120,7 @@ class AdminVehicleController extends Controller
                 'documents.*' => 'nullable|file|mimes:pdf|max:10240',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
-                'ad_status' => 'nullable|in:published,rejected,pending,draft',
+                'ad_status' => 'nullable|in:Publikált,Elutasítva,Függőben,Piszkozat',
                 'exchange_preferences' => 'nullable|array',
                 'exchange_preferences.*.brand_id' => 'nullable|exists:brands,id',
                 'exchange_preferences.*.model_id' => 'nullable|exists:vehicle_models,id',
@@ -153,7 +153,7 @@ class AdminVehicleController extends Controller
 
             $validated['is_featured'] = $request->has('is_featured');
             $validated['user_id'] = auth()->id() ?? 1;
-            $validated['ad_status'] = $request->input('ad_status', 'published');
+            $validated['ad_status'] = $request->input('ad_status', 'Publikált');
 
             $vehicle = Vehicle::create($validated);
 
@@ -246,7 +246,7 @@ class AdminVehicleController extends Controller
                 'documents.*' => 'nullable|file|mimes:pdf|max:10240',
                 'technical_expiration' => 'nullable|date',
                 'history_report' => 'nullable|string|max:500',
-                'ad_status' => 'nullable|in:published,rejected,pending,draft',
+                'ad_status' => 'nullable|in:Publikált,Elutasítva,Függőben,Piszkozat',
                 'exchange_preferences' => 'nullable|array',
                 'exchange_preferences.*.brand_id' => 'nullable|exists:brands,id',
                 'exchange_preferences.*.model_id' => 'nullable|exists:vehicle_models,id',
@@ -336,7 +336,7 @@ class AdminVehicleController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $request->validate([
-            'ad_status' => 'required|in:published,rejected,pending,draft'
+            'ad_status' => 'required|in:Publikált,Elutasítva,Függőben,Piszkozat'
         ]);
 
         $vehicle = Vehicle::findOrFail($id);
@@ -344,7 +344,7 @@ class AdminVehicleController extends Controller
         $vehicle->update(['ad_status' => $request->ad_status]);
 
         // Send Email if newly published
-        if ($request->ad_status === 'published' && $oldStatus !== 'published' && $vehicle->user) {
+        if ($request->ad_status === 'Publikált' && $oldStatus !== 'Publikált' && $vehicle->user) {
             EmailService::send($vehicle->user->email, 'vehicle-approved', [
                 'first_name' => $vehicle->user->first_name,
                 'vehicle_name' => $vehicle->title,
@@ -360,7 +360,7 @@ class AdminVehicleController extends Controller
         $request->validate([
             'ids' => 'required|array',
             'ids.*' => 'exists:vehicles,id',
-            'ad_status' => 'required|in:published,rejected,pending,draft'
+            'ad_status' => 'required|in:Publikált,Elutasítva,Függőben,Piszkozat'
         ]);
 
         $vehicles = Vehicle::whereIn('id', $request->ids)->get();
@@ -370,7 +370,7 @@ class AdminVehicleController extends Controller
             $vehicle->update(['ad_status' => $request->ad_status]);
 
             // Send Email if newly published
-            if ($request->ad_status === 'published' && $oldStatus !== 'published' && $vehicle->user) {
+            if ($request->ad_status === 'Publikált' && $oldStatus !== 'Publikált' && $vehicle->user) {
                 EmailService::send($vehicle->user->email, 'vehicle-approved', [
                     'first_name' => $vehicle->user->first_name,
                     'vehicle_name' => $vehicle->title,

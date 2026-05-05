@@ -314,10 +314,10 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Status</label>
                                     <select class="form-select" name="ad_status">
-                                        <option value="published">{{ __('Published') }}</option>
-                                        <option value="draft">{{ __('Draft') }}</option>
-                                        <option value="pending">{{ __('Pending') }}</option>
-                                        <option value="rejected">{{ __('Rejected') }}</option>
+                                        <option value="Publikált">{{ __('Published') }}</option>
+                                        <option value="Piszkozat">{{ __('Draft') }}</option>
+                                        <option value="Függőben">{{ __('Pending') }}</option>
+                                        <option value="Elutasítva">{{ __('Rejected') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-12 mb-3">

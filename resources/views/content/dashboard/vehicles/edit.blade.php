@@ -345,10 +345,10 @@
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Ad Status</label>
                                     <select class="form-select" name="ad_status">
-                                        <option value="published" {{ $vehicle->ad_status == 'published' ? 'selected' : '' }}>{{ __('Published') }}</option>
-                                        <option value="draft" {{ $vehicle->ad_status == 'draft' ? 'selected' : '' }}>{{ __('Draft') }}</option>
-                                        <option value="pending" {{ $vehicle->ad_status == 'pending' ? 'selected' : '' }}>{{ __('Pending') }}</option>
-                                        <option value="rejected" {{ $vehicle->ad_status == 'rejected' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
+                                        <option value="Publikált" {{ $vehicle->ad_status == 'Publikált' ? 'selected' : '' }}>{{ __('Published') }}</option>
+                                        <option value="Piszkozat" {{ $vehicle->ad_status == 'Piszkozat' ? 'selected' : '' }}>{{ __('Draft') }}</option>
+                                        <option value="Függőben" {{ $vehicle->ad_status == 'Függőben' ? 'selected' : '' }}>{{ __('Pending') }}</option>
+                                        <option value="Elutasítva" {{ $vehicle->ad_status == 'Elutasítva' ? 'selected' : '' }}>{{ __('Rejected') }}</option>
                                     </select>
                                 </div>
                                 <div class="col-md-12 mb-3">
