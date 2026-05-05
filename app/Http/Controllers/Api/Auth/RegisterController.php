@@ -15,6 +15,7 @@ use App\Mail\WelcomeMail;
 use App\Mail\VerifyEmailLink;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use App\Models\NewsletterSubscriber;
 
 class RegisterController extends Controller
 {
@@ -82,6 +83,16 @@ class RegisterController extends Controller
 
             // Assign basic user role
             $user->assignRole('user');
+
+            // Automatically subscribe to newsletter
+            try {
+                NewsletterSubscriber::updateOrCreate(
+                    ['email' => $user->email],
+                    ['name' => $user->first_name . ' ' . $user->last_name]
+                );
+            } catch (\Exception $e) {
+                Log::error('Newsletter subscription failed during registration for ' . $user->email . ': ' . $e->getMessage());
+            }
 
             // Generate verification token
             $token = Str::random(64);
