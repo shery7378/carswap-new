@@ -57,7 +57,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold fs-6">{{ number_format($subscription->amount, 0, '.', ' ') }} Ft</span>
+                                        <span class="fw-bold fs-6">@formatCurrency($subscription->amount)</span>
                                         <small class="text-muted text-uppercase" style="font-size: 0.7rem;">{{ __('Every') }} {{ __($subscription->plan->billing_period ?? 'Month') }}</small>
                                     </div>
                                 </td>
@@ -84,8 +84,8 @@
                                 </td>
                                 <td>
                                     <div class="dropdown">
-                                        <button type="button" class="btn btn-icon btn-sm dropdown-toggle hide-arrow shadow-none" data-bs-toggle="dropdown">
-                                            <i class="bx bx-dots-vertical-rounded"></i>
+                                        <button type="button" class="btn btn-icon btn-sm dropdown-toggle hide-arrow shadow-none" data-bs-toggle="dropdown" title="{{ __('Actions') }}" aria-label="{{ __('Actions') }}">
+                                            <i class="icon-base bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item py-2" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> {{ __('View Details') }}</a>
@@ -145,7 +145,7 @@
                                 </div>
                                 <div class="col-6 text-end">
                                     <small class="text-muted d-block smaller text-uppercase">{{ __('Amount') }}</small>
-                                    <span class="fw-bold small">{{ number_format($subscription->amount, 0, '.', ' ') }} Ft / {{ __($subscription->plan->billing_period ?? 'Month') }}</span>
+                                    <span class="fw-bold small">@formatCurrency($subscription->amount, ($subscription->plan->billing_period ?? '') == 'Month')</span>
                                 </div>
                             </div>
 

@@ -53,14 +53,14 @@
                         <td>{{ $contact->created_at->formatDateTime() }}</td>
                         <td class="text-end">
                             <div class="d-flex justify-content-end">
-                                <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-sm btn-icon btn-label-primary me-2 shadow-none" data-bs-toggle="tooltip" title="{{ __('View') }}">
-                                    <i class="bx bx-show"></i>
+                                <a href="{{ route('admin.contacts.show', $contact->id) }}" class="btn btn-sm btn-icon btn-label-primary me-2 shadow-none" data-bs-toggle="tooltip" title="{{ __('View') }}" aria-label="{{ __('View') }}">
+                                    <i class="icon-base bx bx-show"></i>
                                 </a>
                                 <form action="{{ route('admin.contacts.destroy', $contact->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="button" class="btn btn-sm btn-icon btn-label-danger shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete') }}" data-confirm-text="{{ __('Are you sure you want to delete this request?') }}">
-                                        <i class="bx bx-trash"></i>
+                                    <button type="button" class="btn btn-sm btn-icon btn-label-danger shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}" data-confirm-text="{{ __('Are you sure you want to delete this request?') }}">
+                                        <i class="icon-base bx bx-trash"></i>
                                     </button>
                                 </form>
                             </div>

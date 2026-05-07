@@ -33,8 +33,9 @@
                             class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn shadow-none" 
                             data-id="{{ $vehicle->id }}" 
                             data-bs-toggle="tooltip" 
-                            title="{{ $vehicle->is_featured ? 'Remove from Featured' : 'Mark as Featured' }}">
-                            <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+                            title="{{ $vehicle->is_featured ? __('Remove from Featured') : __('Mark as Featured') }}"
+                            aria-label="{{ $vehicle->is_featured ? __('Remove from Featured') : __('Mark as Featured') }}">
+                            <i class="icon-base bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
                         </button>
                         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm shadow-sm">
                             <i class="bx bx-edit-alt me-1"></i> {{ __('Edit Vehicle') }}
@@ -59,7 +60,7 @@
                             @endif
                             
                             <span class="position-absolute top-0 end-0 m-3 badge bg-primary shadow-sm fs-5 py-2 px-3">
-                                {{ number_format($vehicle->price ?? 0, 0, ',', ' ') }} {{ $vehicle->currency ?? 'Ft' }}
+                                @formatCurrency($vehicle->price)
                             </span>
                         </div>
                         
@@ -282,6 +283,18 @@
                                                                     <small class="text-muted text-uppercase d-block mb-2 fw-bold">Min Year</small>
                                                                     <div class="fs-6 fw-bold text-dark">{{ $pref['year_from'] ?: 'Any' }}</div>
                                                                 </div>
+                                                                @if(isset($pref['battery_capacity']) && $pref['battery_capacity'])
+                                                                <div class="col-md-3">
+                                                                    <small class="text-muted text-uppercase d-block mb-2 fw-bold">Min Battery</small>
+                                                                    <div class="fs-6 fw-bold text-dark">{{ $pref['battery_capacity'] }} kWh</div>
+                                                                </div>
+                                                                @endif
+                                                                @if(isset($pref['range']) && $pref['range'])
+                                                                <div class="col-md-3">
+                                                                    <small class="text-muted text-uppercase d-block mb-2 fw-bold">Min Range</small>
+                                                                    <div class="fs-6 fw-bold text-dark">{{ $pref['range'] }} km</div>
+                                                                </div>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>

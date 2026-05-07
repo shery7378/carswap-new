@@ -157,8 +157,8 @@
                         </div>
                     </div>
                     <div class="mt-6">
-                        <button type="submit" class="btn btn-primary me-3">Save changes</button>
-                        <button type="reset" class="btn btn-outline-secondary">Cancel</button>
+                        <button type="submit" class="btn btn-primary me-3">{{ __('Save Changes') }}</button>
+                        <button type="reset" class="btn btn-outline-secondary">{{ __('Cancel') }}</button>
                     </div>
                 </form>
             </div>

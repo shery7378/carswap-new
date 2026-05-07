@@ -134,6 +134,8 @@ class AdminVehicleController extends Controller
                 'exchange_preferences.*.drive_type_id' => 'nullable',
                 'exchange_preferences.*.year_from' => 'nullable|integer',
                 'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
+                'exchange_preferences.*.battery_capacity' => 'nullable|numeric|min:0',
+                'exchange_preferences.*.range' => 'nullable|integer|min:0',
             ], [
                 'main_image.mimes' => 'Supported image types: jpg, jpeg, png, webp.',
                 'main_image.max' => 'Main image must be less than 10 MB.',

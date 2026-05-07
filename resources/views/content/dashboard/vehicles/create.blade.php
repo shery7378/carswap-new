@@ -436,7 +436,7 @@
                     </div>
 
                     <div class="card-footer bg-white border-top text-end p-3">
-                        <button type="submit" class="btn btn-primary">{{ __('Save Vehicle') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
                     </div>
                 </form>

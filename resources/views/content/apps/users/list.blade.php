@@ -116,19 +116,19 @@
                                         </td>
                                         <td class="text-end pe-4">
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}">
-                                                    <i class="bx bx-show"></i>
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
+                                                    <i class="icon-base bx bx-show"></i>
                                                 </button>
-                                                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0 shadow-none" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}">
-                                                    <i class="bx bx-edit-alt"></i>
+                                                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0 shadow-none" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}">
+                                                    <i class="icon-base bx bx-edit-alt"></i>
                                                 </a>
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 shadow-none change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}">
-                                                    <i class="bx bx-key"></i>
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 shadow-none change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}">
+                                                    <i class="icon-base bx bx-key"></i>
                                                 </button>
                                                 <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
                                                     @csrf @method('DELETE')
-                                                    <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}">
-                                                        <i class="bx bx-trash"></i>
+                                                    <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}">
+                                                        <i class="icon-base bx bx-trash"></i>
                                                     </button>
                                                 </form>
                                             </div>
@@ -195,12 +195,12 @@
                                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
                                         <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
                                         <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}"><i class="bx bx-show"></i></button>
-                                            <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0"><i class="bx bx-edit-alt"></i></a>
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}"><i class="bx bx-key"></i></button>
+                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}"><i class="icon-base bx bx-show"></i></button>
+                                            <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}"><i class="icon-base bx bx-edit-alt"></i></a>
+                                            <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}"><i class="icon-base bx bx-key"></i></button>
                                             <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
                                                 @csrf @method('DELETE')
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation"><i class="bx bx-trash"></i></button>
+                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}"><i class="icon-base bx bx-trash"></i></button>
                                             </form>
                                         </div>
                                     </div>

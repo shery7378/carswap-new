@@ -20,7 +20,7 @@
             <div class="text-center mb-4 position-relative">
                 @if($vehicle->main_image_url)
                     <img id="modal-vehicle-main-image" src="{{ $vehicle->main_image_url }}" class="img-fluid rounded shadow-sm border p-1 bg-white mb-3" style="max-height: 250px; width: 100%; object-fit: cover;">
-                    <span class="position-absolute top-0 end-0 m-2 badge bg-primary shadow-sm">{{ number_format($vehicle->price ?? 0, 0, ',', ' ') }} {{ $vehicle->currency ?? 'Ft' }}</span>
+                    <span class="position-absolute top-0 end-0 m-2 badge bg-primary shadow-sm">@formatCurrency($vehicle->price)</span>
                 @endif
                 
                 <!-- Gallery Thumbs -->
@@ -141,7 +141,7 @@
 
 <div class="modal-footer border-top">
     <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" class="btn btn-outline-primary btn-sm me-auto">
-        <i class="bx bx-expand-alt me-1"></i> {{ __('Full View') }}
+        <i class="bx bx-expand-alt me-1"></i> {{ __('View') }}
     </a>
     <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
     @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))

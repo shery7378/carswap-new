@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Number;
+use App\Helpers\Helper;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,6 +26,15 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         Paginator::useBootstrapFive();
+
+        // Register Global Currency Formatter
+        Number::macro('formatHu', function ($amount, $perMonth = false) {
+            return Helper::formatCurrency($amount, $perMonth);
+        });
+
+        Blade::directive('formatCurrency', function ($expression) {
+            return "<?php echo \App\Helpers\Helper::formatCurrency($expression); ?>";
+        });
 
         // Register Global Date Formats
         \Illuminate\Support\Carbon::macro('formatDate', function () {

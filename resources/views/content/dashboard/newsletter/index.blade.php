@@ -41,9 +41,9 @@
                     @csrf
                     @method('DELETE')
                     <button type="button" class="btn btn-sm btn-icon btn-label-danger shadow-none delete-confirmation" 
-                            data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                            data-bs-toggle="tooltip" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}"
                             data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
-                        <i class="bx bx-trash"></i>
+                        <i class="icon-base bx bx-trash"></i>
                     </button>
                 </form>
             </td>

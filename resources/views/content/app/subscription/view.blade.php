@@ -95,7 +95,7 @@
                                     {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} -
                                     {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                                 </td>
-                                <td class="fw-bold">HUF {{ number_format($subscription->amount, 0, '.', '') }}</td>
+                                <td class="fw-bold">@formatCurrency($subscription->amount)</td>
                             </tr>
                         </tbody>
                     </table>
@@ -106,16 +106,15 @@
                         <div class="col-12 text-end">
                             <div class="d-flex justify-content-end align-items-center mb-2">
                                 <span class="me-3">Subtotal:</span>
-                                <span class="fw-bold fs-6">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
+                                <span class="fw-bold fs-6">@formatCurrency($subscription->amount)</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center mb-2">
                                 <span class="me-3">Tax:</span>
-                                <span class="fw-bold fs-6">HUF 0</span>
+                                <span class="fw-bold fs-6">@formatCurrency(0)</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center border-top pt-2">
                                 <span class="me-3 fs-5 fw-bold">Total:</span>
-                                <span class="fw-bold fs-4 text-primary">HUF
-                                    {{ number_format($subscription->amount, 0, '.', '') }}</span>
+                                <span class="fw-bold fs-4 text-primary">@formatCurrency($subscription->amount)</span>
                             </div>
                         </div>
                     </div>
@@ -148,7 +147,7 @@
                             @forelse($payments as $payment)
                                 <tr>
                                     <td>#{{ $payment->transaction_id ?? $payment->id }}</td>
-                                    <td class="fw-bold text-dark">HUF {{ number_format($payment->amount, 0, '.', '') }}</td>
+                                    <td class="fw-bold text-dark">@formatCurrency($payment->amount)</td>
                                     <td><span class="text-uppercase small">{{ $payment->payment_method ?? 'Stripe' }}</span>
                                     </td>
                                     <td><span class="badge bg-label-success">{{ ucfirst($payment->status) }}</span></td>
@@ -231,7 +230,7 @@
                                             if (str_contains($period, 'year')) $label = 'Yearly';
                                         @endphp
                                         <option value="{{ $plan->id }}" {{ $subscription->plan_id == $plan->id ? 'selected' : '' }}>
-                                            {{ $plan->name }} - {{ $label }} (HUF {{ number_format((float) $plan->price, 0, '.', '') }})
+                                            {{ $plan->name }} - {{ $label }} (@formatCurrency((float) $plan->price))
                                         </option>
                                     @endforeach
                                 </select>

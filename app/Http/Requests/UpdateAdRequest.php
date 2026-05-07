@@ -72,6 +72,8 @@ class UpdateAdRequest extends FormRequest
             'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
             'exchange_preferences.*.year_from' => 'nullable|integer',
             'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
+            'exchange_preferences.*.battery_capacity' => 'nullable|numeric|min:0',
+            'exchange_preferences.*.range' => 'nullable|integer|min:0',
         ];
     }
 

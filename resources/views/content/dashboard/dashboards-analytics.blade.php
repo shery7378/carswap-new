@@ -121,7 +121,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td>{{ number_format($vehicle->price) }} {{ $vehicle->currency }}</td>
+                                <td>@formatCurrency($vehicle->price)</td>
                                 <td>{{ $vehicle->created_at->formatDate() }}</td>
                                 <td><span class="badge bg-label-{{ $vehicle->ad_status === 'Publikált' ? 'success' : 'warning' }}">{{ __($vehicle->ad_status ?? 'Piszkozat') }}</span></td>
                             </tr>

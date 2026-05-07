@@ -59,14 +59,14 @@
                         </td>
                         <td>
                             <div class="d-flex">
-                                <a href="{{ route('admin.trade-offers.show', $offer->id) }}" class="btn btn-sm btn-icon btn-outline-primary me-2">
-                                    <i class="bx bx-show"></i>
+                                <a href="{{ route('admin.trade-offers.show', $offer->id) }}" class="btn btn-sm btn-icon btn-outline-primary me-2" data-bs-toggle="tooltip" title="{{ __('View') }}" aria-label="{{ __('View') }}">
+                                    <i class="icon-base bx bx-show"></i>
                                 </a>
                                 <form action="{{ route('admin.trade-offers.destroy', $offer->id) }}" method="POST" onsubmit="return confirm('{{ __('Are you sure you want to delete this?') }}')">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger shadow-none">
-                                        <i class="bx bx-trash"></i>
+                                    <button type="submit" class="btn btn-sm btn-icon btn-outline-danger shadow-none" data-bs-toggle="tooltip" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
+                                        <i class="icon-base bx bx-trash"></i>
                                     </button>
                                 </form>
                             </div>

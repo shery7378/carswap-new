@@ -86,7 +86,7 @@
                                 {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} - 
                                 {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                             </td>
-                            <td class="fw-bold text-end py-3">HUF {{ number_format($subscription->amount, 0, '.', '') }}</td>
+                            <td class="fw-bold text-end py-3">@formatCurrency($subscription->amount)</td>
                         </tr>
                     </tbody>
                 </table>
@@ -106,15 +106,15 @@
                     <div class="invoice-calculations w-100">
                         <div class="d-flex justify-content-between mb-2">
                             <span class="text-muted small">Subtotal:</span>
-                            <span class="fw-bold small">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
+                            <span class="fw-bold small">@formatCurrency($subscription->amount)</span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
                             <span class="text-muted small">Tax (0%):</span>
-                            <span class="fw-bold small">HUF 0</span>
+                            <span class="fw-bold small">@formatCurrency(0)</span>
                         </div>
                         <div class="d-flex justify-content-between">
                             <span class="fw-bold fs-5">Total:</span>
-                            <span class="fw-bold fs-5 text-primary">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
+                            <span class="fw-bold fs-5 text-primary">@formatCurrency($subscription->amount)</span>
                         </div>
                     </div>
                 </div>

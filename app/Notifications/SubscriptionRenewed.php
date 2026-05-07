@@ -45,7 +45,7 @@ class SubscriptionRenewed extends Notification implements ShouldQueue
             ->subject('Your subscription has been renewed!')
             ->greeting("Hello {$notifiable->first_name},")
             ->line("Good news! Your {$planName} subscription has been automatically renewed.")
-            ->line("Amount Charged: " . number_format($this->amount, 0, '.', ',') . " HUF")
+            ->line("Amount Charged: " . \App\Helpers\Helper::formatCurrency($this->amount))
             ->line("Next Renewal Date: " . $this->subscription->next_billing_at->format('Y-m-d'))
             ->line('Thank you for being a part of CarSwap!')
             ->action('View Subscription', url(config('app.frontend_url') . '/account/billing'))

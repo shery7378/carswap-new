@@ -213,9 +213,9 @@
 
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end">
-                  <button type="reset" class="btn btn-outline-secondary me-2">Cancel</button>
+                  <button type="reset" class="btn btn-outline-secondary me-2">{{ __('Cancel') }}</button>
                   <button type="submit" class="btn btn-primary">
-                    <i class="bx bx-save me-1"></i> Save Changes
+                    <i class="bx bx-save me-1"></i> {{ __('Save Changes') }}
                   </button>
                 </div>
               </form>

@@ -113,7 +113,7 @@
                 {{-- Pricing --}}
                 <div class="row g-3">
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">{{ __('Monthly Price (HUF)') }}</label>
+                        <label class="form-label fw-semibold">{{ __('Monthly Price (Ft)') }}</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bx bx-money"></i></span>
                             <input type="number" name="monthly_price" class="form-control"
@@ -123,7 +123,7 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label fw-semibold">{{ __('Yearly Price (HUF)') }}</label>
+                        <label class="form-label fw-semibold">{{ __('Yearly Price (Ft)') }}</label>
                         <div class="input-group">
                             <span class="input-group-text"><i class="bx bx-money"></i></span>
                             <input type="number" name="yearly_price" class="form-control"

@@ -120,7 +120,7 @@
                                             <span class="badge bg-label-secondary">{{ $vehicle->year }}</span>
                                         </td>
 
-                                        <td><span class="fw-bold text-primary">{{ number_format($vehicle->price) }} Ft</span>
+                                        <td><span class="fw-bold text-primary">@formatCurrency($vehicle->price)</span>
                                         </td>
 
                                         <td class="d-none d-xl-table-cell">
@@ -175,8 +175,8 @@
                                             </div>
                                             @if($vehicle->ad_status !== 'Publikált')
                                                 <button type="button" class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1" 
-                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('Quick Approve') }}">
-                                                    <i class="bx bx-check"></i>
+                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('Quick Approve') }}" aria-label="{{ __('Quick Approve') }}">
+                                                    <i class="icon-base bx bx-check"></i>
                                                 </button>
                                             @endif
                                         </td>
@@ -185,15 +185,15 @@
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
                                                 <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
                                                     class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}">
-                                                    <i class="bx bx-show"></i>
+                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
+                                                    <i class="icon-base bx bx-show"></i>
                                                 </a>
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
                                                         class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}">
-                                                        <i class="bx bx-edit-alt"></i>
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
+                                                        <i class="icon-base bx bx-edit-alt"></i>
                                                     </a>
                                                 @endif
 
@@ -203,8 +203,8 @@
                                                         @csrf @method('DELETE')
                                                         <button type="button"
                                                             class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}">
-                                                            <i class="bx bx-trash"></i>
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}" aria-label="{{ __('Delete Vehicle') }}">
+                                                            <i class="icon-base bx bx-trash"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -299,8 +299,7 @@
 
                                             <!-- Row 2: Price + Year -->
                                             <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                                                <span class="fw-bold text-primary small">{{ number_format($vehicle->price) }}
-                                                    Ft</span>
+                                                <span class="fw-bold text-primary small">@formatCurrency($vehicle->price)</span>
                                                 <span class="badge bg-label-secondary small">{{ $vehicle->year }}</span>
                                             </div>
                                         </div>
@@ -341,14 +340,16 @@
 
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                                class="btn btn-icon btn-sm btn-label-secondary border-0">
-                                                <i class="bx bx-show"></i>
+                                                class="btn btn-icon btn-sm btn-label-secondary border-0"
+                                                data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
+                                                <i class="icon-base bx bx-show"></i>
                                             </a>
 
                                             @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                 <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                                    class="btn btn-icon btn-sm btn-label-info border-0">
-                                                    <i class="bx bx-edit-alt"></i>
+                                                    class="btn btn-icon btn-sm btn-label-info border-0"
+                                                    data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
+                                                    <i class="icon-base bx bx-edit-alt"></i>
                                                 </a>
                                             @endif
 
@@ -357,8 +358,9 @@
                                                     class="d-inline delete-form">
                                                     @csrf @method('DELETE')
                                                     <button type="button"
-                                                        class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation">
-                                                        <i class="bx bx-trash"></i>
+                                                        class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation"
+                                                        data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}" aria-label="{{ __('Delete Vehicle') }}">
+                                                        <i class="icon-base bx bx-trash"></i>
                                                     </button>
                                                 </form>
                                             @endif

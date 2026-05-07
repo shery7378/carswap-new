@@ -212,8 +212,8 @@
                                                 data-name="{{ $item->name }}"
                                                 @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                 @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Edit Item') }}">
-                                                <i class="bx bx-edit-alt"></i>
+                                                data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Edit Item') }}" aria-label="{{ __('Edit Item') }}">
+                                                <i class="icon-base bx bx-edit-alt"></i>
                                             </button>
 
                                             <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
@@ -221,8 +221,8 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-trigger"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Delete Item') }}">
-                                                    <i class="bx bx-trash"></i>
+                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Delete Item') }}" aria-label="{{ __('Delete Item') }}">
+                                                    <i class="icon-base bx bx-trash"></i>
                                                 </button>
                                             </form>
                                         </div>

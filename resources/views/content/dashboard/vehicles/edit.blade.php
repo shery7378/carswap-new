@@ -459,6 +459,14 @@
                                                             @endforeach
                                                         </select>
                                                     </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Min Battery (kWh)</label>
+                                                        <input type="number" step="0.1" class="form-control" name="exchange_preferences[{{ $index }}][battery_capacity]" value="{{ $pref['battery_capacity'] ?? '' }}" placeholder="e.g. 50">
+                                                    </div>
+                                                    <div class="col-md-3 mb-2">
+                                                        <label class="form-label">Min Range (km)</label>
+                                                        <input type="number" class="form-control" name="exchange_preferences[{{ $index }}][range]" value="{{ $pref['range'] ?? '' }}" placeholder="e.g. 300">
+                                                    </div>
                                                 </div>
                                                 <div class="text-end">
                                                     <button type="button" class="btn btn-label-danger btn-sm remove-preference">
@@ -538,6 +546,14 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Min Battery (kWh)</label>
+                                                <input type="number" step="0.1" class="form-control" name="exchange_preferences[INDEX][battery_capacity]" placeholder="e.g. 50">
+                                            </div>
+                                            <div class="col-md-3 mb-2">
+                                                <label class="form-label">Min Range (km)</label>
+                                                <input type="number" class="form-control" name="exchange_preferences[INDEX][range]" placeholder="e.g. 300">
+                                            </div>
                                         </div>
                                         <div class="text-end">
                                             <button type="button" class="btn btn-label-danger btn-sm remove-preference">
@@ -551,7 +567,7 @@
                     </div>
 
                     <div class="card-footer bg-white border-top text-end p-3">
-                        <button type="submit" class="btn btn-primary">{{ __('Update Vehicle') }}</button>
+                        <button type="submit" class="btn btn-primary">{{ __('Update') }}</button>
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
                     </div>
                 </form>

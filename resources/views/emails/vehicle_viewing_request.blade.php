@@ -24,7 +24,7 @@
         
         <div class="vehicle-info">
             <strong>Vehicle:</strong> {{ $vehicle->title }}<br>
-            <strong>Price:</strong> {{ $vehicle->currency }} {{ number_format($vehicle->price) }}<br>
+            <strong>Price:</strong> @formatCurrency($vehicle->price)<br>
             <strong>ID:</strong> #{{ $vehicle->id }}
         </div>
         

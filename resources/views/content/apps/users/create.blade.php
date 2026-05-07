@@ -89,9 +89,9 @@
 
           <div class="row mt-5">
             <div class="col-12 d-flex justify-content-end gap-3">
-              <a href="{{ route('admin.web-users.index') }}" class="btn btn-outline-secondary px-4">Cancel</a>
+              <a href="{{ route('admin.web-users.index') }}" class="btn btn-outline-secondary px-4">{{ __('Cancel') }}</a>
               <button type="submit" class="btn btn-primary px-5 shadow-sm">
-                <i class="bx bx-save me-1"></i> Create Web User
+                <i class="bx bx-save me-1"></i> {{ __('Save') }}
               </button>
             </div>
           </div>

@@ -110,27 +110,27 @@
                 @if($monthly)
                 <div class="text-center">
                     <div class="price-box mb-0">
-                      <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($monthly->price, 0) }}</span>
+                      <span class="h3 fw-extrabold text-primary mb-0">@formatCurrency($monthly->price)</span>
                     </div>
-                    <small class="text-muted">{{ __('HUF / Monthly') }}</small>
+                    <small class="text-muted">/ {{ __('Month') }}</small>
                 </div>
                 @endif
                 
                 @if($yearly)
                 <div class="text-center border-start ps-4">
                     <div class="price-box mb-0">
-                      <span class="h3 fw-extrabold text-info mb-0">{{ number_format($yearly->price, 0) }}</span>
+                      <span class="h3 fw-extrabold text-info mb-0">@formatCurrency($yearly->price)</span>
                     </div>
-                    <small class="text-muted">{{ __('HUF / Yearly') }}</small>
+                    <small class="text-muted">/ {{ __('Year') }}</small>
                 </div>
                 @endif
              @else
                 {{-- Fallback for legacy "both" or other periods --}}
                 <div class="text-center">
                     <div class="price-box mb-0">
-                      <span class="h3 fw-extrabold text-primary mb-0">{{ number_format($main->price, 0) }}</span>
+                      <span class="h3 fw-extrabold text-primary mb-0">@formatCurrency($main->price)</span>
                     </div>
-                    <small class="text-muted">HUF / {{ ucfirst($main->billing_period) }}</small>
+                    <small class="text-muted">/ {{ ucfirst($main->billing_period) }}</small>
                 </div>
              @endif
           </div>

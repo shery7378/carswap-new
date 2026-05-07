@@ -177,14 +177,14 @@
                                         <div class="d-flex gap-2">
                                             <button class="btn btn-icon btn-outline-light text-muted border-1 edit-item"
                                                 data-item="{{ json_encode($item) }}" data-bs-toggle="modal"
-                                                data-bs-target="#editItemModal">
-                                                <i class="bx bx-edit-alt"></i>
+                                                data-bs-target="#editItemModal" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
+                                                <i class="icon-base bx bx-edit-alt"></i>
                                             </button>
                                             <form action="{{ route('admin.cms.items.destroy', $item->id) }}" method="POST">
                                                 @csrf @method('DELETE')
                                                 <button type="submit" class="btn btn-icon btn-outline-light text-danger border-1"
-                                                    onclick="return confirm('{{ __('Remove?') }}')">
-                                                    <i class="bx bx-trash"></i>
+                                                    onclick="return confirm('{{ __('Remove?') }}')" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
+                                                    <i class="icon-base bx bx-trash"></i>
                                                 </button>
                                             </form>
                                         </div>

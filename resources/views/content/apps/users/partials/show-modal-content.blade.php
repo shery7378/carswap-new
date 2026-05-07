@@ -172,7 +172,7 @@
                                                                 </div>
                                                             </div>
                                                         </td>
-                                                        <td><span class="fw-bold text-primary">{{ number_format($vehicle->price) }} Ft</span></td>
+                                                        <td><span class="fw-bold text-primary">@formatCurrency($vehicle->price)</span></td>
                                                         <td class="text-end pe-4">
                                                             @php $vStatus = $vehicle->ad_status ?? 'pending'; @endphp
                                                             <span class="badge bg-label-{{ $vStatus == 'published' ? 'success' : ($vStatus == 'pending' ? 'warning' : 'danger') }} text-capitalize text-xs">

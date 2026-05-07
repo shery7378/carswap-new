@@ -38,7 +38,7 @@
                     @if($vehicle->main_image_url)
                         <img id="modal-vehicle-main-image" src="{{ $vehicle->main_image_url }}" class="img-fluid rounded" style="max-height: 280px; width: 100%; object-fit: cover;" onerror="this.src='https://placehold.co/800x600?text=No+Main+Image';">
                         <span class="position-absolute top-0 end-0 m-2 badge bg-primary shadow-lg fs-6 py-2 px-3">
-                            {{ number_format($vehicle->price ?? 0, 0, ',', ' ') }} {{ $vehicle->currency ?? 'Ft' }}
+                            @formatCurrency($vehicle->price)
                         </span>
                     @else
                         <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 200px;">
@@ -223,12 +223,12 @@
 
 <div class="modal-footer border-top bg-white p-3">
     <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" class="btn btn-outline-primary btn-sm me-auto px-3">
-        <i class="bx bx-expand-alt me-1"></i> {{ __('Full Detailed Page') }}
+        <i class="bx bx-expand-alt me-1"></i> {{ __('View') }}
     </a>
     <button type="button" class="btn btn-label-secondary btn-sm" data-bs-dismiss="modal">{{ __('Close') }}</button>
     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
         <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="btn btn-primary btn-sm px-4 shadow">
-            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit Vehicle') }}
+            <i class="bx bx-edit-alt me-1"></i> {{ __('Edit') }}
         </a>
     @endif
 </div>
