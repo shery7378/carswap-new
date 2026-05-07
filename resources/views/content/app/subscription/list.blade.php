@@ -15,7 +15,8 @@
                 </div>
             </div>
             <div class="card-body p-0 pt-3">
-                <div class="table-responsive text-nowrap">
+                <!-- ─── DESKTOP TABLE ─── -->
+                <div class="table-responsive text-nowrap d-none d-md-block">
                     <table class="table table-hover align-middle border-top" id="subscriptions-table">
                         <thead class="bg-light bg-opacity-50">
                             <tr>
@@ -42,21 +43,21 @@
                                             @endif
                                         </div>
                                         <div class="d-flex flex-column">
-                                            <span class="fw-bold text-dark fs-6">{{ $subscription->user->name ?? $subscription->user->first_name . ' ' . $subscription->user->last_name ?? 'Unknown' }}</span>
-                                            <small class="text-muted"><i class="bx bx-envelope me-1 small"></i>{{ $subscription->user->email ?? 'N/A' }}</small>
+                                            <span class="fw-bold text-dark fs-6">{{ $subscription->user->name ?? $subscription->user->first_name . ' ' . $subscription->user->last_name ?? __('Unknown') }}</span>
+                                            <small class="text-muted"><i class="bx bx-envelope me-1 small"></i>{{ $subscription->user->email ?? __('N/A') }}</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <span class="badge bg-label-{{ $subscription->plan->color ?? 'primary' }} px-3 py-2 rounded-pill fw-bold">
-                                            <i class="bx bx-trophy me-1 small"></i> {{ $subscription->plan->name ?? 'Standard' }}
+                                            <i class="bx bx-trophy me-1 small"></i> {{ __($subscription->plan->name ?? 'Standard') }}
                                         </span>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold fs-6">HUF {{ number_format($subscription->amount, 0, '.', '') }}</span>
+                                        <span class="fw-bold fs-6">{{ number_format($subscription->amount, 0, '.', ' ') }} Ft</span>
                                         <small class="text-muted text-uppercase" style="font-size: 0.7rem;">{{ __('Every') }} {{ __($subscription->plan->billing_period ?? 'Month') }}</small>
                                     </div>
                                 </td>
@@ -67,34 +68,35 @@
                                             'trial' => 'bg-label-info',
                                             'expired' => 'bg-label-danger',
                                             'cancelled' => 'bg-label-secondary',
-                                            'pending' => 'bg-label-warning'
+                                            'pending' => 'bg-label-warning',
+                                            'paused' => 'bg-label-warning'
                                         ][$subscription->status] ?? 'bg-label-primary';
                                     @endphp
                                     <span class="badge {{ $statusClass }} px-2 py-1">
-                                        <i class="bx bx-circle me-1 small"></i> {{ __(ucfirst($subscription->status)) }}
+                                        <i class="bx bx-circle me-1 small"></i> {{ __($subscription->status) }}
                                     </span>
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold">{{ $subscription->next_billing_at ? $subscription->next_billing_at->format('M d, Y') : 'N/A' }}</span>
+                                        <span class="fw-bold">{{ $subscription->next_billing_at ? $subscription->next_billing_at->formatDate() : __('N/A') }}</span>
                                         <small class="text-muted">{{ $subscription->next_billing_at ? $subscription->next_billing_at->diffForHumans() : '' }}</small>
                                     </div>
                                 </td>
                                 <td>
                                     <div class="dropdown">
-                                        <button type="button" class="btn btn-icon btn-sm dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                        <button type="button" class="btn btn-icon btn-sm dropdown-toggle hide-arrow shadow-none" data-bs-toggle="dropdown">
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> {{ __('View Details') }}</a>
-                                            <a class="dropdown-item" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> {{ __('Adjust Plan') }}</a>
+                                            <a class="dropdown-item py-2" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> {{ __('View Details') }}</a>
+                                            <a class="dropdown-item py-2" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> {{ __('Adjust Plan') }}</a>
                                             <div class="dropdown-divider"></div>
                                             @if($subscription->status === 'active')
-                                                <a class="dropdown-item text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> {{ __('Suspend') }}</a>
+                                                <a class="dropdown-item py-2 text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> {{ __('Suspend') }}</a>
                                             @else
-                                                <a class="dropdown-item text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> {{ __('Reactivate') }}</a>
+                                                <a class="dropdown-item py-2 text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> {{ __('Reactivate') }}</a>
                                             @endif
-                                            <a class="dropdown-item text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> {{ __('Cancel Flow') }}</a>
+                                            <a class="dropdown-item py-2 text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> {{ __('Cancel Flow') }}</a>
                                         </div>
                                     </div>
                                 </td>
@@ -103,6 +105,69 @@
                         </tbody>
                     </table>
                 </div>
+
+                <!-- ─── MOBILE CARD LIST ─── -->
+                <div class="d-md-none p-3">
+                    @foreach($subscriptions as $subscription)
+                    <div class="card mb-3 shadow-none border rounded-3 overflow-hidden subscription-row" data-id="{{ $subscription->id }}">
+                        <div class="card-body p-3">
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar avatar-sm me-2">
+                                        <span class="avatar-initial rounded-circle bg-label-primary">
+                                            {{ strtoupper(substr($subscription->user->name ?? $subscription->user->first_name ?? 'U', 0, 1)) }}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-0 fw-bold">{{ $subscription->user->name ?? $subscription->user->first_name . ' ' . $subscription->user->last_name ?? __('Unknown') }}</h6>
+                                        <small class="text-muted small">{{ $subscription->user->email }}</small>
+                                    </div>
+                                </div>
+                                <span class="badge bg-label-{{ $subscription->plan->color ?? 'primary' }} rounded-pill">
+                                    {{ __($subscription->plan->name ?? 'Standard') }}
+                                </span>
+                            </div>
+                            
+                            <div class="row g-2 mb-3">
+                                <div class="col-6">
+                                    <small class="text-muted d-block smaller text-uppercase">{{ __('Status') }}</small>
+                                    @php
+                                        $statusClass = [
+                                            'active' => 'text-success',
+                                            'trial' => 'text-info',
+                                            'expired' => 'text-danger',
+                                            'cancelled' => 'text-secondary',
+                                            'pending' => 'text-warning',
+                                            'paused' => 'text-warning'
+                                        ][$subscription->status] ?? 'text-primary';
+                                    @endphp
+                                    <span class="{{ $statusClass }} fw-bold small"><i class="bx bx-circle me-1 small"></i>{{ __($subscription->status) }}</span>
+                                </div>
+                                <div class="col-6 text-end">
+                                    <small class="text-muted d-block smaller text-uppercase">{{ __('Amount') }}</small>
+                                    <span class="fw-bold small">{{ number_format($subscription->amount, 0, '.', ' ') }} Ft / {{ __($subscription->plan->billing_period ?? 'Month') }}</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex gap-2 border-top pt-2 mt-2">
+                                <a href="{{ route('app-subscription-view', $subscription->id) }}" class="btn btn-sm btn-label-primary flex-grow-1 shadow-none">
+                                    <i class="bx bx-show me-1"></i> {{ __('Details') }}
+                                </a>
+                                @if($subscription->status === 'active')
+                                    <button class="btn btn-sm btn-label-warning flex-grow-1 shadow-none status-toggle-btn" data-id="{{ $subscription->id }}" data-status="paused">
+                                        <i class="bx bx-pause me-1"></i> {{ __('Suspend') }}
+                                    </button>
+                                @else
+                                    <button class="btn btn-sm btn-label-success flex-grow-1 shadow-none status-toggle-btn" data-id="{{ $subscription->id }}" data-status="active">
+                                        <i class="bx bx-play me-1"></i> {{ __('Activate') }}
+                                    </button>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+
             </div>
         </div>
     </div>
@@ -116,11 +181,7 @@
             "pageLength": 10,
             "language": {
                 "search": "",
-                "searchPlaceholder": "{{ __('Search by customer or plan...') }}",
-                "paginate": {
-                    "next": '<i class="bx bx-chevron-right fs-5"></i>',
-                    "previous": '<i class="bx bx-chevron-left fs-5"></i>'
-                }
+                "searchPlaceholder": "{{ __('Quick Search Subscriptions…') }}"
             },
             "dom": '<"row mx-2"' +
                    '<"col-md-2"<"me-3 mt-3"l>>' +

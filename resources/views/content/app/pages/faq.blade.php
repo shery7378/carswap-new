@@ -1,14 +1,14 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'FAQ')
+@section('title', __('FAQ'))
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Frequently Asked Questions</h5>
-                <p class="text-muted mb-0">Find answers to common questions about our platform</p>
+                <h5 class="card-title mb-0">{{ __('Frequently Asked Questions') }}</h5>
+                <p class="text-muted mb-0">{{ __('Find answers to common questions about our platform') }}</p>
             </div>
             <div class="card-body">
                 <div class="accordion" id="faqAccordion">
@@ -16,12 +16,12 @@
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne">
                                 <i class="bx bx-help-circle me-2"></i>
-                                What is your platform and how does it work?
+                                {{ __('What is your platform and how does it work?') }}
                             </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Our platform is a comprehensive management system designed to help businesses streamline their operations. It provides tools for project management, team collaboration, customer relationship management, and more. The system works by centralizing all your business data and processes in one place, making it easier to manage and analyze your operations.
+                                {{ __('Our platform is a comprehensive management system designed to help businesses streamline their operations. It provides tools for project management, team collaboration, customer relationship management, and more. The system works by centralizing all your business data and processes in one place, making it easier to manage and analyze your operations.') }}
                             </div>
                         </div>
                     </div>
@@ -103,12 +103,12 @@
                         <h2 class="accordion-header" id="headingSix">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSix">
                                 <i class="bx bx-credit-card me-2"></i>
-                                What payment methods do you accept?
+                                {{ __('What payment methods do you accept?') }}
                             </button>
                         </h2>
                         <div id="collapseSix" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                We accept various payment methods for your convenience:
+                                {{ __('We accept various payment methods for your convenience:') }}
                                 <ul class="mt-2">
                                     <li>Credit and debit cards (Visa, MasterCard, American Express)</li>
                                     <li>PayPal and other digital wallets</li>
@@ -151,17 +151,17 @@
 
         <div class="card">
             <div class="card-header">
-                <h5 class="card-title mb-0">Still have questions?</h5>
+                <h5 class="card-title mb-0">{{ __('Still have questions?') }}</h5>
             </div>
             <div class="card-body">
-                <p class="text-muted mb-4">Can't find the answer you're looking for? Our support team is here to help!</p>
+                <p class="text-muted mb-4">{{ __("Can't find the answer you're looking for? Our support team is here to help!") }}</p>
                 <div class="row g-3">
                     <div class="col-md-4">
                         <div class="text-center">
                             <div class="avatar avatar-lg bg-label-primary mb-3">
                                 <i class="bx bx-envelope"></i>
                             </div>
-                            <h6 class="mb-2">Email Support</h6>
+                            <h6 class="mb-2">{{ __('Email Support') }}</h6>
                             <p class="text-muted small mb-3">Get help via email</p>
                             <a href="mailto:support@example.com" class="btn btn-primary btn-sm">support@example.com</a>
                         </div>
@@ -171,9 +171,9 @@
                             <div class="avatar avatar-lg bg-label-info mb-3">
                                 <i class="bx bx-message-rounded"></i>
                             </div>
-                            <h6 class="mb-2">Live Chat</h6>
+                            <h6 class="mb-2">{{ __('Live Chat') }}</h6>
                             <p class="text-muted small mb-3">Chat with our team</p>
-                            <button type="button" class="btn btn-info btn-sm">Start Chat</button>
+                            <button type="button" class="btn btn-info btn-sm">{{ __('Start Chat') }}</button>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -181,7 +181,7 @@
                             <div class="avatar avatar-lg bg-label-success mb-3">
                                 <i class="bx bx-phone"></i>
                             </div>
-                            <h6 class="mb-2">Phone Support</h6>
+                            <h6 class="mb-2">{{ __('Phone Support') }}</h6>
                             <p class="text-muted small mb-3">Call us directly</p>
                             <a href="tel:+15551234567" class="btn btn-success btn-sm">+1 (555) 123-4567</a>
                         </div>

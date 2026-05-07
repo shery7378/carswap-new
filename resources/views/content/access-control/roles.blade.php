@@ -103,7 +103,7 @@
                   <div class="role-icon">
                     <i class="bx bx-shield-quarter"></i>
                   </div>
-                  <div class="fw-bold text-dark">{{ $role->name }}</div>
+                  <div class="fw-bold text-dark">{{ __($role->name) }}</div>
                 </div>
               </td>
               <td>
@@ -115,7 +115,7 @@
                 <div class="permission-scroll d-flex flex-wrap gap-1">
                   @forelse($role->permissions as $permission)
                     <span class="badge bg-label-secondary badge-premium py-1 px-2"
-                      style="font-size: 10px;">{{ $permission->name }}</span>
+                      style="font-size: 10px;">{{ __($permission->name) }}</span>
                   @empty
                     <span class="text-muted small italic">{{ __('No permissions assigned') }}</span>
                   @endforelse
@@ -129,17 +129,17 @@
                 @else
                   <div class="d-flex gap-2">
                     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-roles', 'admin-guard'))
-                      <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info"
+                      <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info shadow-none"
                         title="{{ __('Edit Role') }}">
                         <i class="bx bx-edit-alt"></i>
                       </a>
                     @endif
                     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('delete-roles', 'admin-guard'))
-                      <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline"
-                        onsubmit="return confirm('{{ __('Are you sure you want to delete this role?') }}')">
+                      <form action="{{ route('admin.roles.destroy', $role->id) }}" method="POST" class="d-inline">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="action-btn text-danger bg-label-danger border-0" title="{{ __('Delete Role') }}">
+                        <button type="button" class="action-btn text-danger bg-label-danger border-0 delete-confirmation shadow-none" 
+                                data-confirm-text="{{ __('Are you sure you want to delete this role?') }}" title="{{ __('Delete Role') }}">
                           <i class="bx bx-trash"></i>
                         </button>
                       </form>

@@ -25,10 +25,10 @@
             </div>
             <div class="d-flex gap-2">
                 <button type="button" class="btn btn-outline-secondary btn-sm shadow-none" data-bs-dismiss="modal">
-                    <i class="bx bx-arrow-back me-1"></i> Back to List
+                    <i class="bx bx-arrow-back me-1"></i> {{ __('Back to List') }}
                 </button>
                 <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-primary btn-sm shadow-sm">
-                    <i class="bx bx-edit-alt me-1"></i> Edit User
+                    <i class="bx bx-edit-alt me-1"></i> {{ __('Edit User') }}
                 </a>
             </div>
         </div>
@@ -70,7 +70,7 @@
                             </div>
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent py-3">
                                 <span class="text-muted small"><i class="bx bx-calendar me-2"></i>Member Since</span>
-                                <span class="fw-bold">{{ $user->created_at->format('M d, Y') }}</span>
+                                <span class="fw-bold">{{ $user->created_at->formatDate() }}</span>
                             </div>
                         </div>
                     </div>
@@ -206,7 +206,7 @@
                                                 </div>
                                                 <div>
                                                     <h6 class="mb-0">Email Identity</h6>
-                                                    <small class="text-muted">{{ $user->email_verified_at ? 'Verified on ' . $user->email_verified_at->format('M d, Y') : 'Identity not verified yet' }}</small>
+                                                    <small class="text-muted">{{ $user->email_verified_at ? 'Verified on ' . $user->email_verified_at->formatDate() : 'Identity not verified yet' }}</small>
                                                 </div>
                                             </div>
                                             @if(!$user->email_verified_at)
@@ -255,8 +255,8 @@
                 <i class="bx bx-chevron-left me-1"></i> Close View
             </button>
             <div class="btn-group shadow-sm rounded-pill overflow-hidden">
-                <button type="button" class="btn btn-warning border-0 px-4 fw-bold change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">Change Password</button>
-                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-primary border-0 px-4 fw-bold">Edit User Profile</a>
+                <button type="button" class="btn btn-warning border-0 px-4 fw-bold change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">{{ __('Change Password') }}</button>
+                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-primary border-0 px-4 fw-bold">{{ __('Edit User Profile') }}</a>
             </div>
         </div>
     </div>

@@ -38,26 +38,28 @@ class StoreAdRequest extends FormRequest
             // ----------------------------------------------------------------
             // Core vehicle identification
             // ----------------------------------------------------------------
-            'brand_id'           => 'required|integer|exists:brands,id',
-            'model_id'           => 'required|integer|exists:vehicle_models,id',
-            'body_type_id'       => 'required|integer|exists:body_types,id',
-            'vehicle_status_id'  => 'required|integer|exists:vehicle_statuses,id',
+            'brand_id'           => 'required',
+            'model_id'           => 'required',
+            'body_type_id'       => 'required',
+            'vehicle_status_id'  => 'required',
             'year'               => 'required|integer|min:1900|max:' . (date('Y') + 1),
             'mileage'            => 'required|integer|min:0',
-            'fuel_type_id'       => 'required|integer|exists:fuel_types,id',
-            'cylinder_capacity'  => 'required|integer|min:1',
-            'performance'        => 'required|integer|min:1',
-            'transmission_id'    => 'required|integer|exists:transmissions,id',
-            'drive_type_id'      => 'required|integer|exists:drive_types,id',
+            'fuel_type_id'       => 'required',
+            'cylinder_capacity'  => 'nullable|integer|min:1',
+            'performance'        => 'nullable|integer|min:1',
+            'battery_capacity'   => 'nullable|numeric|min:0',
+            'range'              => 'nullable|integer|min:0',
+            'transmission_id'    => 'required',
+            'drive_type_id'      => 'required',
 
             // ----------------------------------------------------------------
             // Optional vehicle attributes
             // ----------------------------------------------------------------
-            'exterior_color_id'  => 'nullable|integer|exists:colors,id',
-            'interior_color_id'  => 'nullable|integer|exists:colors,id',
+            'exterior_color_id'  => 'nullable',
+            'interior_color_id'  => 'nullable',
             'technical_expiration' => 'nullable|date',
-            'document_type_id'   => 'nullable|integer|exists:document_types,id',
-            'sales_method_id'    => 'nullable|integer|exists:sales_methods,id',
+            'document_type_id'   => 'nullable',
+            'sales_method_id'    => 'nullable',
             'vin_number'         => 'nullable|string|max:191',   // chassis number
             'history_report'     => 'nullable|string|max:500',   // URL or text
 
@@ -143,6 +145,8 @@ class StoreAdRequest extends FormRequest
             'performance.required'       => 'Power (kW) is required.',
             'transmission_id.required'   => 'Please select a gearbox type.',
             'drive_type_id.required'     => 'Please select a drive type.',
+            'battery_capacity.numeric'   => 'Battery capacity must be a number.',
+            'range.integer'              => 'Range must be an integer.',
             'price.required'             => 'Price is required.',
             'gallery_images.max'         => 'You can upload a maximum of 12 pictures.',
             'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
@@ -165,18 +169,25 @@ class StoreAdRequest extends FormRequest
             'year', 'mileage', 'fuel_type_id', 'cylinder_capacity',
             'performance', 'transmission_id', 'drive_type_id',
             'exterior_color_id', 'interior_color_id', 'document_type_id',
-            'sales_method_id',
+            'sales_method_id', 'range',
         ];
 
         $data = [];
         foreach ($intFields as $field) {
             if ($this->has($field) && $this->input($field) !== null) {
-                $data[$field] = (int) $this->input($field);
+                // Only cast to int if it's numeric, otherwise keep it as string for syncing
+                if (is_numeric($this->input($field))) {
+                    $data[$field] = (int) $this->input($field);
+                }
             }
         }
 
         if ($this->has('price') && $this->input('price') !== null) {
             $data['price'] = (float) $this->input('price');
+        }
+
+        if ($this->has('battery_capacity') && $this->input('battery_capacity') !== null) {
+            $data['battery_capacity'] = (float) $this->input('battery_capacity');
         }
 
         $this->merge($data);

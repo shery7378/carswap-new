@@ -320,6 +320,14 @@
                                         value="{{ old('performance', $vehicle->performance) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ __('Battery Capacity') }} (kWh)</label>
+                                    <input type="number" step="0.1" class="form-control" name="battery_capacity" value="{{ old('battery_capacity', $vehicle->battery_capacity) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">{{ __('Range') }} (km)</label>
+                                    <input type="number" class="form-control" name="range" value="{{ old('range', $vehicle->range) }}">
+                                </div>
+                                <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Engine Number') }}</label>
                                     <input type="text" class="form-control" name="engine_number"
                                         value="{{ old('engine_number', $vehicle->engine_number) }}">

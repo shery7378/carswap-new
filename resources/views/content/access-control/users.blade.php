@@ -171,13 +171,13 @@
 
             <td>
               @foreach($user->roles as $role)
-              <span class="badge bg-label-primary badge-premium">{{ $role->name }}</span>
+              <span class="badge bg-label-primary badge-premium">{{ __($role->name) }}</span>
               @endforeach
             </td>
 
             <td>
               @forelse($user->permissions as $permission)
-              <span class="badge bg-label-warning badge-premium">{{ $permission->name }}</span>
+              <span class="badge bg-label-warning badge-premium">{{ __($permission->name) }}</span>
               @empty
               <span class="text-muted">{{ __('No extra permissions') }}</span>
               @endforelse
@@ -228,7 +228,7 @@
 
       language: {
         search: "",
-        searchPlaceholder: "{{ __('Search Admin Users...') }}"
+        searchPlaceholder: "{{ __('Quick Search Admins…') }}"
       }
     });
 

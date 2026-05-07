@@ -83,13 +83,13 @@
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
                                     <small class="text-muted d-block small">{{ __('Fuel') }}</small>
-                                    <span class="fw-bold">{{ optional($vehicle->fuelType)->name ?? __('N/A') }}</span>
+                                    <span class="fw-bold">{{ __(optional($vehicle->fuelType)->name) ?? __('N/A') }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
                                     <small class="text-muted d-block small">{{ __('Trans.') }}</small>
-                                    <span class="fw-bold">{{ optional($vehicle->transmission)->name ?? __('N/A') }}</span>
+                                    <span class="fw-bold">{{ __(optional($vehicle->transmission)->name) ?? __('N/A') }}</span>
                                 </div>
                             </div>
                             <div class="col-6">
@@ -110,11 +110,11 @@
                         <table class="table table-sm table-striped small">
                             <tbody>
                                 <tr><td class="text-muted border-0">{{ __('VIN') }}</td><td class="fw-bold border-0">{{ $vehicle->vin_number ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted">{{ __('Drive') }}</td><td class="fw-bold">{{ optional($vehicle->driveType)->name ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted">{{ __('Body') }}</td><td class="fw-bold">{{ optional($vehicle->bodyType)->name ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Drive') }}</td><td class="fw-bold">{{ __(optional($vehicle->driveType)->name) ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Body') }}</td><td class="fw-bold">{{ __(optional($vehicle->bodyType)->name) ?: __('N/A') }}</td></tr>
                                 <tr><td class="text-muted">{{ __('Capacity') }}</td><td class="fw-bold">{{ $vehicle->cylinder_capacity ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted">{{ __('Ext. Color') }}</td><td class="fw-bold">{{ optional($vehicle->exteriorColor)->name ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted">{{ __('Expiration') }}</td><td class="fw-bold">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Ext. Color') }}</td><td class="fw-bold">{{ __(optional($vehicle->exteriorColor)->name) ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted">{{ __('Expiration') }}</td><td class="fw-bold">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->formatDate() : __('N/A') }}</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -125,7 +125,7 @@
                             @forelse($vehicle->properties as $prop)
                                 <div class="col-6">
                                     <div class="d-flex align-items-center p-1 border rounded small">
-                                        <i class="bx bx-check text-success me-2"></i> <span>{{ $prop->name }}</span>
+                                        <i class="bx bx-check text-success me-2"></i> <span>{{ __($prop->name) }}</span>
                                     </div>
                                 </div>
                             @empty

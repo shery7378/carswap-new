@@ -25,22 +25,24 @@ class UpdateAdRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'brand_id'             => 'sometimes|integer|exists:brands,id',
-            'model_id'             => 'sometimes|integer|exists:vehicle_models,id',
-            'body_type_id'         => 'sometimes|integer|exists:body_types,id',
-            'vehicle_status_id'    => 'sometimes|integer|exists:vehicle_statuses,id',
+            'brand_id'             => 'sometimes',
+            'model_id'             => 'sometimes',
+            'body_type_id'         => 'sometimes',
+            'vehicle_status_id'    => 'sometimes',
             'year'                 => 'sometimes|integer|min:1900|max:' . (date('Y') + 1),
             'mileage'              => 'sometimes|integer|min:0',
-            'fuel_type_id'         => 'sometimes|integer|exists:fuel_types,id',
+            'fuel_type_id'         => 'sometimes',
             'cylinder_capacity'    => 'sometimes|integer|min:1',
             'performance'          => 'sometimes|integer|min:1',
-            'transmission_id'      => 'sometimes|integer|exists:transmissions,id',
-            'drive_type_id'        => 'sometimes|integer|exists:drive_types,id',
-            'exterior_color_id'    => 'nullable|integer|exists:colors,id',
-            'interior_color_id'    => 'nullable|integer|exists:colors,id',
+            'battery_capacity'     => 'nullable|numeric|min:0',
+            'range'                => 'nullable|integer|min:0',
+            'transmission_id'      => 'sometimes',
+            'drive_type_id'        => 'sometimes',
+            'exterior_color_id'    => 'nullable',
+            'interior_color_id'    => 'nullable',
             'technical_expiration' => 'nullable|date',
-            'document_type_id'     => 'nullable|integer|exists:document_types,id',
-            'sales_method_id'      => 'nullable|integer|exists:sales_methods,id',
+            'document_type_id'     => 'nullable',
+            'sales_method_id'      => 'nullable',
             'vin_number'           => 'nullable|string|max:191',
             'history_report'       => 'nullable|string|max:500',
             'location'             => 'nullable|string|max:191',
@@ -93,18 +95,24 @@ class UpdateAdRequest extends FormRequest
             'year', 'mileage', 'fuel_type_id', 'cylinder_capacity',
             'performance', 'transmission_id', 'drive_type_id',
             'exterior_color_id', 'interior_color_id', 'document_type_id',
-            'sales_method_id',
+            'sales_method_id', 'range',
         ];
 
         $data = [];
         foreach ($intFields as $field) {
             if ($this->has($field) && $this->input($field) !== null) {
-                $data[$field] = (int) $this->input($field);
+                if (is_numeric($this->input($field))) {
+                    $data[$field] = (int) $this->input($field);
+                }
             }
         }
 
         if ($this->has('price') && $this->input('price') !== null) {
             $data['price'] = (float) $this->input('price');
+        }
+
+        if ($this->has('battery_capacity') && $this->input('battery_capacity') !== null) {
+            $data['battery_capacity'] = (float) $this->input('battery_capacity');
         }
 
         $this->merge($data);

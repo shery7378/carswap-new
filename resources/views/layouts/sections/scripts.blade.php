@@ -26,7 +26,7 @@
                 theme: 'bootstrap-5',
                 dropdownParent: dropdownParent,
                 width: '100%',
-                placeholder: $(this).attr('placeholder') || 'Select an option'
+                placeholder: $(this).attr('placeholder') || '{{ __('Select an option') }}'
             });
         });
     }
@@ -37,13 +37,36 @@
         // Re-init for dynamically added content if needed 
         // (but usually better to call it explicitly on the container)
     });
+    // Global DataTable Defaults
+    if ($.fn.DataTable) {
+        $.extend(true, $.fn.dataTable.defaults, {
+            language: {
+                search: "",
+                searchPlaceholder: "{{ __('Search...') }}",
+                lengthMenu: "{{ __('Show _MENU_ entries') }}",
+                info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
+                infoEmpty: "{{ __('Showing 0 to 0 of 0 entries') }}",
+                infoFiltered: "{{ __('(filtered from _MAX_ total entries)') }}",
+                zeroRecords: "{{ __('No matching records found') }}",
+                loadingRecords: "{{ __('Loading...') }}",
+                processing: "{{ __('Loading...') }}",
+                paginate: {
+                    first: "{{ __('First') }}",
+                    last: "{{ __('Last') }}",
+                    next: "{{ __('Next') }}",
+                    previous: "{{ __('Previous') }}"
+                }
+            }
+        });
+    }
+
     // Global Delete Confirmation
     $(document).on('click', '.delete-confirmation', function(e) {
         e.preventDefault();
         const button = $(this);
         const form = button.closest('form');
-        const title = button.data('confirm-title') || 'Are you sure?';
-        const text = button.data('confirm-text') || 'This action cannot be undone!';
+        const title = button.data('confirm-title') || '{{ __('Are you sure?') }}';
+        const text = button.data('confirm-text') || '{{ __('This action cannot be undone!') }}';
         
         Swal.fire({
             title: title,
@@ -52,7 +75,8 @@
             showCancelButton: true,
             confirmButtonColor: '#ff3e1d',
             cancelButtonColor: '#8592a3',
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: '{{ __('Yes, delete it!') }}',
+            cancelButtonText: '{{ __('Cancel') }}',
             customClass: {
                 confirmButton: 'btn btn-danger me-3',
                 cancelButton: 'btn btn-label-secondary'

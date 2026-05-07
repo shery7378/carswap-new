@@ -25,7 +25,7 @@
                             <div class="mb-2">
                                 <span class="me-1">Date Issues:</span>
                                 <span
-                                    class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->format('M d, Y') : 'N/A' }}</span>
+                                    class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }}</span>
                             </div>
                             <div>
                                 <span class="me-1">Status:</span>
@@ -69,7 +69,7 @@
                                     </tr>
                                     <tr>
                                         <td class="pe-3">Valid Until:</td>
-                                        <td>{{ $subscription->ends_at ? $subscription->ends_at->format('M d, Y') : 'N/A' }}
+                                        <td>{{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                                         </td>
                                     </tr>
                                 </tbody>
@@ -92,8 +92,8 @@
                                     Subscription to {{ $subscription->plan->name ?? 'Standard' }} Plan
                                 </td>
                                 <td class="text-nowrap text-muted">
-                                    {{ $subscription->starts_at ? $subscription->starts_at->format('M d, Y') : 'N/A' }} -
-                                    {{ $subscription->ends_at ? $subscription->ends_at->format('M d, Y') : 'N/A' }}
+                                    {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} -
+                                    {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                                 </td>
                                 <td class="fw-bold">HUF {{ number_format($subscription->amount, 0, '.', '') }}</td>
                             </tr>
@@ -152,7 +152,7 @@
                                     <td><span class="text-uppercase small">{{ $payment->payment_method ?? 'Stripe' }}</span>
                                     </td>
                                     <td><span class="badge bg-label-success">{{ ucfirst($payment->status) }}</span></td>
-                                    <td>{{ $payment->created_at->format('M d, Y H:i') }}</td>
+                                    <td>{{ $payment->created_at->formatDateTime() }}</td>
                                 </tr>
                             @empty
                                 <tr>

@@ -268,7 +268,7 @@
                         <p class="text-muted">All plans come with a 14-day free trial. No credit card required to start your trial.</p>
                     </div>
                     <div class="col-md-6">
-                        <h6 class="mb-3">What payment methods do you accept?</h6>
+                        <h6 class="mb-3">{{ __('What payment methods do you accept?') }}</h6>
                         <p class="text-muted">We accept all major credit cards, PayPal, and bank transfers for Enterprise plans.</p>
                     </div>
                     <div class="col-md-6">

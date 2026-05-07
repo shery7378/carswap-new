@@ -31,7 +31,7 @@
             <tbody class="table-border-bottom-0">
                 @forelse($offers as $offer)
                     <tr>
-                        <td>{{ $offer->created_at->format('Y-m-d H:i') }}</td>
+                        <td>{{ $offer->created_at->formatDateTime() }}</td>
                         <td>
                             @if($offer->vehicle)
                                 <a href="{{ route('admin.vehicles.edit', $offer->vehicle->id) }}" target="_blank">

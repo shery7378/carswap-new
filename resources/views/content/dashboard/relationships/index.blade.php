@@ -306,11 +306,7 @@
             "pageLength": 10,
             "language": {
                 "search": "",
-                "searchPlaceholder": "{{ __('Filter items...') }}",
-                "paginate": {
-                    "next": '<i class="bx bx-chevron-right"></i>',
-                    "previous": '<i class="bx bx-chevron-left"></i>'
-                }
+                "searchPlaceholder": "{{ __('Quick Search :title…', ['title' => __($title)]) }}"
             },
             "dom": '<"row mx-0 border-bottom bg-light bg-opacity-10"' +
                    '<"col-md-4 py-3"l>' +

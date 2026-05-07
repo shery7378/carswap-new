@@ -42,7 +42,7 @@
                 </div>
             </div>
             <div class="card-footer text-muted small">
-                {{ __('Submitted on') }}: {{ $contact->created_at->format('Y-m-d H:i:s') }}
+                {{ __('Submitted on') }}: {{ $contact->created_at->formatDateTime() }}
             </div>
         </div>
     </div>

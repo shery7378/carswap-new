@@ -24,6 +24,14 @@ class AppServiceProvider extends ServiceProvider
         Schema::defaultStringLength(191);
         Paginator::useBootstrapFive();
 
+        // Register Global Date Formats
+        \Illuminate\Support\Carbon::macro('formatDate', function () {
+            return $this->format('Y.m.d.');
+        });
+        \Illuminate\Support\Carbon::macro('formatDateTime', function () {
+            return $this->format('Y.m.d. H:i');
+        });
+
         // Grant super-admin all permissions
         \Illuminate\Support\Facades\Gate::before(function ($user, $ability) {
             return $user->hasRole('super-admin', 'admin-guard') ? true : null;

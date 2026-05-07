@@ -188,8 +188,10 @@
                                 <tr><td class="text-muted px-3 py-2">VIN / Alvázszám</td><td class="fw-bold px-3 py-2">{{ $vehicle->vin_number ?: __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Engine Code') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->engine_number ?: __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Cylinder Capacity') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->cylinder_capacity ?: __('N/A') }}</td></tr>
+                                <tr><td class="text-muted px-3 py-2">{{ __('Battery Capacity') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->battery_capacity ? $vehicle->battery_capacity . ' kWh' : __('N/A') }}</td></tr>
+                                <tr><td class="text-muted px-3 py-2">{{ __('Range') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->range ? $vehicle->range . ' km' : __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Main Color') }}</td><td class="fw-bold px-3 py-2">{{ optional($vehicle->exteriorColor)->name ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted px-3 py-2">{{ __('Tech Validation') }}</td><td class="fw-bold text-danger px-3 py-2">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : __('N/A') }}</td></tr>
+                                <tr><td class="text-muted px-3 py-2">{{ __('Tech Validation') }}</td><td class="fw-bold text-danger px-3 py-2">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->formatDate() : __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Location') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->location ?: __('N/A') }}</td></tr>
                             </tbody>
                         </table>

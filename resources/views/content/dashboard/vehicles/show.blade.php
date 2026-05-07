@@ -217,9 +217,12 @@
                                                 <tr><td class="text-muted py-3">Drive Type (Hajtás)</td><td class="fw-bold py-3">{{ optional($vehicle->driveType)->name ?: 'N/A' }}</td></tr>
                                                 <tr><td class="text-muted py-3">Body Type (Design)</td><td class="fw-bold py-3">{{ optional($vehicle->bodyType)->name ?: 'N/A' }}</td></tr>
                                                 <tr><td class="text-muted py-3">Cylinder Capacity</td><td class="fw-bold py-3">{{ $vehicle->cylinder_capacity ?: 'N/A' }}</td></tr>
+                                                <tr><td class="text-muted py-3">Performance (Power)</td><td class="fw-bold py-3">{{ $vehicle->performance ?: 'N/A' }}</td></tr>
+                                                <tr><td class="text-muted py-3">Battery Capacity</td><td class="fw-bold py-3">{{ $vehicle->battery_capacity ? $vehicle->battery_capacity . ' kWh' : 'N/A' }}</td></tr>
+                                                <tr><td class="text-muted py-3">Range</td><td class="fw-bold py-3">{{ $vehicle->range ? $vehicle->range . ' km' : 'N/A' }}</td></tr>
                                                 <tr><td class="text-muted py-3">Exterior Color</td><td class="fw-bold py-3">{{ optional($vehicle->exteriorColor)->name ?: 'N/A' }}</td></tr>
                                                 <tr><td class="text-muted py-3">Interior Color</td><td class="fw-bold py-3">{{ optional($vehicle->interiorColor)->name ?: 'N/A' }}</td></tr>
-                                                <tr><td class="text-muted py-3">Technical Expiration</td><td class="fw-bold text-danger py-3">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : 'N/A' }}</td></tr>
+                                                <tr><td class="text-muted py-3">Technical Expiration</td><td class="fw-bold text-danger py-3">{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->formatDate() : 'N/A' }}</td></tr>
                                                 <tr><td class="text-muted py-3">Document Type</td><td class="fw-bold py-3">{{ optional($vehicle->documentType)->name ?: 'N/A' }}</td></tr>
                                             </tbody>
                                         </table>

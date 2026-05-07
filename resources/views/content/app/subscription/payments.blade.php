@@ -64,7 +64,7 @@
                                     <span>{{ ucwords(str_replace('_', ' ', $payment->payment_method ?? 'Not Specified')) }}</span>
                                 </div>
                             </td>
-                            <td>{{ $payment->created_at->format('M d, Y') }}</td>
+                            <td>{{ $payment->created_at->formatDate() }}</td>
                             <td>
                                 <div class="dropdown">
                                     <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">

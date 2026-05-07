@@ -36,6 +36,8 @@ class Vehicle extends Model
         'engine_number',
         'cylinder_capacity',
         'performance',
+        'battery_capacity',
+        'range',
         'location',
         'address',
         'latitude',

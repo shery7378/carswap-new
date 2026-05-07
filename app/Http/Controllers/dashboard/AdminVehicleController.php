@@ -18,9 +18,11 @@ use App\Models\DocumentType;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Services\EmailService;
+use App\Traits\CanSyncEntities;
 
 class AdminVehicleController extends Controller
 {
+    use CanSyncEntities;
     public function index(Request $request)
     {
         $query = Vehicle::with(['brand', 'model', 'fuelType', 'transmission', 'user']);
@@ -84,8 +86,8 @@ class AdminVehicleController extends Controller
         try {
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
-                'brand_id' => 'nullable|exists:brands,id',
-                'model_id' => 'nullable|exists:vehicle_models,id',
+                'brand_id' => 'nullable',
+                'model_id' => 'nullable',
                 'year' => 'nullable|integer',
                 'price' => 'nullable|numeric',
                 'regular_price_label' => 'nullable|string',
@@ -95,17 +97,19 @@ class AdminVehicleController extends Controller
                 'instant_savings_label' => 'nullable|string',
                 'currency' => 'nullable|string',
                 'mileage' => 'nullable|integer',
-                'fuel_type_id' => 'nullable|exists:fuel_types,id',
-                'transmission_id' => 'nullable|exists:transmissions,id',
-                'drive_type_id' => 'nullable|exists:drive_types,id',
-                'body_type_id' => 'nullable|exists:body_types,id',
-                'exterior_color_id' => 'nullable|exists:colors,id',
-                'interior_color_id' => 'nullable|exists:colors,id',
-                'sales_method_id' => 'nullable|exists:sales_methods,id',
-                'document_type_id' => 'nullable|exists:document_types,id',
-                'vehicle_status_id' => 'nullable|exists:vehicle_statuses,id',
+                'fuel_type_id' => 'nullable',
+                'transmission_id' => 'nullable',
+                'drive_type_id' => 'nullable',
+                'body_type_id' => 'nullable',
+                'exterior_color_id' => 'nullable',
+                'interior_color_id' => 'nullable',
+                'sales_method_id' => 'nullable',
+                'document_type_id' => 'nullable',
+                'vehicle_status_id' => 'nullable',
                 'cylinder_capacity' => 'nullable|string',
                 'performance' => 'nullable|string',
+                'battery_capacity' => 'nullable|numeric|min:0',
+                'range' => 'nullable|integer|min:0',
                 'vin_number' => 'nullable|string',
                 'engine_number' => 'nullable|string',
                 'location' => 'nullable|string',
@@ -122,12 +126,12 @@ class AdminVehicleController extends Controller
                 'history_report' => 'nullable|string|max:500',
                 'ad_status' => 'nullable|in:Publikált,Elutasítva,Függőben,Piszkozat',
                 'exchange_preferences' => 'nullable|array',
-                'exchange_preferences.*.brand_id' => 'nullable|exists:brands,id',
-                'exchange_preferences.*.model_id' => 'nullable|exists:vehicle_models,id',
-                'exchange_preferences.*.body_type_id' => 'nullable|exists:body_types,id',
-                'exchange_preferences.*.fuel_type_id' => 'nullable|exists:fuel_types,id',
-                'exchange_preferences.*.transmission_id' => 'nullable|exists:transmissions,id',
-                'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
+                'exchange_preferences.*.brand_id' => 'nullable',
+                'exchange_preferences.*.model_id' => 'nullable',
+                'exchange_preferences.*.body_type_id' => 'nullable',
+                'exchange_preferences.*.fuel_type_id' => 'nullable',
+                'exchange_preferences.*.transmission_id' => 'nullable',
+                'exchange_preferences.*.drive_type_id' => 'nullable',
                 'exchange_preferences.*.year_from' => 'nullable|integer',
                 'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
             ], [
@@ -138,6 +142,19 @@ class AdminVehicleController extends Controller
                 'documents.*.mimes' => 'Supported document types: pdf.',
                 'documents.*.max' => 'Each document must be less than 10 MB.',
             ]);
+
+            // --- Sync/Resolve Entities (Check if exists, if not add it) ---
+            $validated['brand_id']          = $this->resolveEntityId(\App\Models\Brand::class, $validated['brand_id'] ?? null);
+            $validated['model_id']          = $this->resolveEntityId(\App\Models\VehicleModel::class, $validated['model_id'] ?? null, ['brand_id' => $validated['brand_id']]);
+            $validated['body_type_id']      = $this->resolveEntityId(\App\Models\BodyType::class, $validated['body_type_id'] ?? null);
+            $validated['fuel_type_id']      = $this->resolveEntityId(\App\Models\FuelType::class, $validated['fuel_type_id'] ?? null);
+            $validated['transmission_id']   = $this->resolveEntityId(\App\Models\Transmission::class, $validated['transmission_id'] ?? null);
+            $validated['drive_type_id']     = $this->resolveEntityId(\App\Models\DriveType::class, $validated['drive_type_id'] ?? null);
+            $validated['exterior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['exterior_color_id'] ?? null);
+            $validated['interior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['interior_color_id'] ?? null);
+            $validated['document_type_id']  = $this->resolveEntityId(\App\Models\DocumentType::class, $validated['document_type_id'] ?? null);
+            $validated['sales_method_id']   = $this->resolveEntityId(\App\Models\SalesMethod::class, $validated['sales_method_id'] ?? null);
+            $validated['vehicle_status_id'] = $this->resolveEntityId(\App\Models\VehicleStatus::class, $validated['vehicle_status_id'] ?? null);
 
             if ($request->hasFile('main_image')) {
                 $validated['main_image'] = $request->file('main_image')->store('vehicles', 'public');
@@ -210,8 +227,8 @@ class AdminVehicleController extends Controller
 
             $validated = $request->validate([
                 'title' => 'required|string|max:255',
-                'brand_id' => 'nullable|exists:brands,id',
-                'model_id' => 'nullable|exists:vehicle_models,id',
+                'brand_id' => 'nullable',
+                'model_id' => 'nullable',
                 'year' => 'nullable|integer',
                 'price' => 'nullable|numeric',
                 'regular_price_label' => 'nullable|string',
@@ -221,17 +238,19 @@ class AdminVehicleController extends Controller
                 'instant_savings_label' => 'nullable|string',
                 'currency' => 'nullable|string',
                 'mileage' => 'nullable|integer',
-                'fuel_type_id' => 'nullable|exists:fuel_types,id',
-                'transmission_id' => 'nullable|exists:transmissions,id',
-                'drive_type_id' => 'nullable|exists:drive_types,id',
-                'body_type_id' => 'nullable|exists:body_types,id',
-                'exterior_color_id' => 'nullable|exists:colors,id',
-                'interior_color_id' => 'nullable|exists:colors,id',
-                'sales_method_id' => 'nullable|exists:sales_methods,id',
-                'document_type_id' => 'nullable|exists:document_types,id',
-                'vehicle_status_id' => 'nullable|exists:vehicle_statuses,id',
+                'fuel_type_id' => 'nullable',
+                'transmission_id' => 'nullable',
+                'drive_type_id' => 'nullable',
+                'body_type_id' => 'nullable',
+                'exterior_color_id' => 'nullable',
+                'interior_color_id' => 'nullable',
+                'sales_method_id' => 'nullable',
+                'document_type_id' => 'nullable',
+                'vehicle_status_id' => 'nullable',
                 'cylinder_capacity' => 'nullable|string',
                 'performance' => 'nullable|string',
+                'battery_capacity' => 'nullable|numeric|min:0',
+                'range' => 'nullable|integer|min:0',
                 'vin_number' => 'nullable|string',
                 'engine_number' => 'nullable|string',
                 'location' => 'nullable|string',
@@ -248,12 +267,12 @@ class AdminVehicleController extends Controller
                 'history_report' => 'nullable|string|max:500',
                 'ad_status' => 'nullable|in:Publikált,Elutasítva,Függőben,Piszkozat',
                 'exchange_preferences' => 'nullable|array',
-                'exchange_preferences.*.brand_id' => 'nullable|exists:brands,id',
-                'exchange_preferences.*.model_id' => 'nullable|exists:vehicle_models,id',
-                'exchange_preferences.*.body_type_id' => 'nullable|exists:body_types,id',
-                'exchange_preferences.*.fuel_type_id' => 'nullable|exists:fuel_types,id',
-                'exchange_preferences.*.transmission_id' => 'nullable|exists:transmissions,id',
-                'exchange_preferences.*.drive_type_id' => 'nullable|exists:drive_types,id',
+                'exchange_preferences.*.brand_id' => 'nullable',
+                'exchange_preferences.*.model_id' => 'nullable',
+                'exchange_preferences.*.body_type_id' => 'nullable',
+                'exchange_preferences.*.fuel_type_id' => 'nullable',
+                'exchange_preferences.*.transmission_id' => 'nullable',
+                'exchange_preferences.*.drive_type_id' => 'nullable',
                 'exchange_preferences.*.year_from' => 'nullable|integer',
                 'exchange_preferences.*.cylinder_capacity' => 'nullable|integer',
             ], [
@@ -264,6 +283,41 @@ class AdminVehicleController extends Controller
                 'documents.*.mimes' => 'Supported document types: pdf.',
                 'documents.*.max' => 'Each document must be less than 10 MB.',
             ]);
+
+            // --- Sync/Resolve Entities (Check if exists, if not add it) ---
+            if (isset($validated['brand_id'])) {
+                $validated['brand_id'] = $this->resolveEntityId(\App\Models\Brand::class, $validated['brand_id']);
+            }
+            if (isset($validated['model_id'])) {
+                $validated['model_id'] = $this->resolveEntityId(\App\Models\VehicleModel::class, $validated['model_id'], ['brand_id' => $validated['brand_id'] ?? $vehicle->brand_id]);
+            }
+            if (isset($validated['body_type_id'])) {
+                $validated['body_type_id'] = $this->resolveEntityId(\App\Models\BodyType::class, $validated['body_type_id']);
+            }
+            if (isset($validated['fuel_type_id'])) {
+                $validated['fuel_type_id'] = $this->resolveEntityId(\App\Models\FuelType::class, $validated['fuel_type_id']);
+            }
+            if (isset($validated['transmission_id'])) {
+                $validated['transmission_id'] = $this->resolveEntityId(\App\Models\Transmission::class, $validated['transmission_id']);
+            }
+            if (isset($validated['drive_type_id'])) {
+                $validated['drive_type_id'] = $this->resolveEntityId(\App\Models\DriveType::class, $validated['drive_type_id']);
+            }
+            if (isset($validated['exterior_color_id'])) {
+                $validated['exterior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['exterior_color_id']);
+            }
+            if (isset($validated['interior_color_id'])) {
+                $validated['interior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['interior_color_id']);
+            }
+            if (isset($validated['document_type_id'])) {
+                $validated['document_type_id'] = $this->resolveEntityId(\App\Models\DocumentType::class, $validated['document_type_id']);
+            }
+            if (isset($validated['sales_method_id'])) {
+                $validated['sales_method_id'] = $this->resolveEntityId(\App\Models\SalesMethod::class, $validated['sales_method_id']);
+            }
+            if (isset($validated['vehicle_status_id'])) {
+                $validated['vehicle_status_id'] = $this->resolveEntityId(\App\Models\VehicleStatus::class, $validated['vehicle_status_id']);
+            }
 
             if ($request->hasFile('main_image')) {
                 if ($vehicle->main_image)

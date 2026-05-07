@@ -18,7 +18,7 @@
                     <h4 class="fw-bold mb-2">#INVOICE-{{ $subscription->id }}</h4>
                     <div class="mb-1 small">
                         <span class="me-1">Date Issues:</span>
-                        <span class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->format('M d, Y') : 'N/A' }}</span>
+                        <span class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }}</span>
                     </div>
                     <div class="small">
                         <span class="me-1">Status:</span>
@@ -61,7 +61,7 @@
                             </tr>
                             <tr>
                                 <td class="pe-3">Valid Until:</td>
-                                <td class="text-end fw-bold text-info">{{ $subscription->ends_at ? $subscription->ends_at->format('M d, Y') : 'N/A' }}</td>
+                                <td class="text-end fw-bold text-info">{{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -83,8 +83,8 @@
                                 Subscription to {{ $subscription->plan->name ?? 'Standard' }} Plan
                             </td>
                             <td class="text-nowrap text-muted text-center small">
-                                {{ $subscription->starts_at ? $subscription->starts_at->format('m/d/y') : 'N/A' }} - 
-                                {{ $subscription->ends_at ? $subscription->ends_at->format('m/d/y') : 'N/A' }}
+                                {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} - 
+                                {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                             </td>
                             <td class="fw-bold text-end py-3">HUF {{ number_format($subscription->amount, 0, '.', '') }}</td>
                         </tr>

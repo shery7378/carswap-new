@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Partners')
+@section('title', __('Partners'))
 
 @section('content')
     <div class="row">
@@ -181,23 +181,16 @@
             $('#partners-table').DataTable({
                 order: [[1, "asc"]],
                 pageLength: 25,
-
-                // ✅ FIXED ALIGNMENT
                 dom:
                     "<'row align-items-center mb-3'<'col-md-6 d-flex align-items-center'l><'col-md-6 d-flex justify-content-end'f>>" +
                     "t" +
                     "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
-
                 language: {
-                    search: "",
-                    searchPlaceholder: "{{ __('Search partners...') }}",
-                    lengthMenu: "{{ __('Show _MENU_ entries') }}",
-                    info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-                    paginate: {
-                        next: '<i class="bx bx-chevron-right"></i>',
-                        previous: '<i class="bx bx-chevron-left"></i>'
-                    }
-                }
+                    searchPlaceholder: "{{ __('Quick Search Partners…') }}"
+                },
+                columnDefs: [
+                    { orderable: false, targets: [0, 3, 4] }
+                ]
             });
 
         });
@@ -239,7 +232,7 @@
                     });
                 })
                 .catch(err => {
-                    container.innerHTML = `<div class="modal-body text-center py-5 text-danger">Failed to load details.</div>`;
+                    container.innerHTML = `<div class="modal-body text-center py-5 text-danger">{{ __('Failed to load details.') }}</div>`;
                 });
         });
     </script>

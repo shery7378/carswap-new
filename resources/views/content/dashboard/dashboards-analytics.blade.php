@@ -32,9 +32,9 @@
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-4">
                             <img src="{{ Auth::user()->getAvatarUrl() }}" alt="user-avatar" class="rounded-circle me-3" height="48" width="48" style="object-fit: cover; border: 2px solid #e9ecef;" />
-                            <h5 class="card-title text-primary mb-0">{{ __('Welcome back, :name! 👋', ['name' => Auth::user()->first_name ?? 'Admin']) }}</h5>
+                            <h5 class="card-title text-primary mb-0">{{ __('Welcome back, :name! 👋', ['name' => Auth::user()->first_name ?? __('Admin')]) }}</h5>
                         </div>
-                        <p class="mb-4">{{ __('You are logged in as :role', ['role' => Auth::user()->roles->pluck('name')->first() ?? 'Staff']) }}</p>
+                        <p class="mb-4">{{ __('You are logged in as :role', ['role' => __(Auth::user()->roles->pluck('name')->first() ?? 'Staff')]) }}</p>
 
                         <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary">{{ __('Manage Vehicles') }}</a>
                     </div>
@@ -122,8 +122,8 @@
                                     </div>
                                 </td>
                                 <td>{{ number_format($vehicle->price) }} {{ $vehicle->currency }}</td>
-                                <td>{{ $vehicle->created_at->translatedFormat('M d, Y') }}</td>
-                                <td><span class="badge bg-label-{{ $vehicle->ad_status === 'active' ? 'success' : 'warning' }}">{{ __(ucfirst($vehicle->ad_status ?? 'draft')) }}</span></td>
+                                <td>{{ $vehicle->created_at->formatDate() }}</td>
+                                <td><span class="badge bg-label-{{ $vehicle->ad_status === 'Publikált' ? 'success' : 'warning' }}">{{ __($vehicle->ad_status ?? 'Piszkozat') }}</span></td>
                             </tr>
                             @empty
                             <tr>

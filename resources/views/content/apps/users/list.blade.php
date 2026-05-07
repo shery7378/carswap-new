@@ -112,7 +112,7 @@
                                             </div>
                                         </td>
                                         <td class="text-center text-muted small">
-                                            {{ $user->created_at->translatedFormat('M d, Y') }}
+                                            {{ $user->created_at->formatDate() }}
                                         </td>
                                         <td class="text-end pe-4">
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
@@ -193,7 +193,7 @@
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->translatedFormat('M d, Y') }}</small>
+                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
                                         <div class="d-flex gap-1">
                                             <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}"><i class="bx bx-show"></i></button>
                                             <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0"><i class="bx bx-edit-alt"></i></a>
@@ -295,11 +295,7 @@ $(document).ready(function () {
             dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>t<'row mt-3'<'col-sm-6'i><'col-sm-6'p>>",
             language: { 
                 search: '', 
-                searchPlaceholder: '{{ __('Quick Search Users…') }}',
-                paginate: {
-                    previous: '<i class="bx bx-chevron-left"></i>',
-                    next: '<i class="bx bx-chevron-right"></i>'
-                }
+                searchPlaceholder: '{{ __('Quick Search Users…') }}'
             }
         });
     }

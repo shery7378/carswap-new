@@ -17,7 +17,8 @@
     <h5 class="mb-0 fw-bold">{{ __('Subscribers List') }}</h5>
   </div>
   <div class="card-body">
-    <div class="table-responsive text-nowrap">
+    <!-- ─── DESKTOP TABLE ─── -->
+    <div class="table-responsive text-nowrap d-none d-md-block">
         <table class="table table-hover align-middle border-top" id="newsletter-table">
         <thead class="bg-light bg-opacity-50">
             <tr>
@@ -34,12 +35,14 @@
             <td>{{ $subscriber->id }}</td>
             <td>{{ $subscriber->name ?? __('N/A') }}</td>
             <td><strong>{{ $subscriber->email }}</strong></td>
-            <td>{{ $subscriber->created_at->format('Y-m-d H:i') }}</td>
+            <td>{{ $subscriber->created_at->formatDateTime() }}</td>
             <td class="text-center">
-                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline" onsubmit="return confirm('{{ __('Are you sure you want to delete this subscriber?') }}');">
+                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-sm btn-icon btn-label-danger shadow-none" data-bs-toggle="tooltip" title="{{ __('Delete') }}">
+                    <button type="button" class="btn btn-sm btn-icon btn-label-danger shadow-none delete-confirmation" 
+                            data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                            data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
                         <i class="bx bx-trash"></i>
                     </button>
                 </form>
@@ -48,6 +51,38 @@
             @endforeach
         </tbody>
         </table>
+    </div>
+
+    <!-- ─── MOBILE CARD LIST ─── -->
+    <div class="d-md-none">
+        @forelse($subscribers as $subscriber)
+            <div class="card mb-3 shadow-none border rounded-3 overflow-hidden">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h6 class="mb-0 fw-bold">{{ $subscriber->name ?? __('N/A') }}</h6>
+                        <small class="text-muted">#{{ $subscriber->id }}</small>
+                    </div>
+                    <div class="mb-3">
+                        <p class="mb-1 fw-semibold text-primary">{{ $subscriber->email }}</p>
+                        <small class="text-muted"><i class="bx bx-calendar me-1"></i>{{ $subscriber->created_at->formatDateTime() }}</small>
+                    </div>
+                    <div class="border-top pt-2 text-end">
+                        <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="button" class="btn btn-sm btn-label-danger shadow-none delete-confirmation" data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
+                                <i class="bx bx-trash me-1"></i> {{ __('Delete Subscriber') }}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @empty
+            <div class="text-center py-4 text-muted">
+                <i class="bx bx-user-plus display-4 d-block mb-2"></i>
+                {{ __('No subscribers found.') }}
+            </div>
+        @endforelse
     </div>
   </div>
 </div>
@@ -64,16 +99,11 @@
                 "t" +
                 "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
             language: {
-                search: "",
-                searchPlaceholder: "{{ __('Search subscribers...') }}",
-                paginate: {
-                    next: '<i class="bx bx-chevron-right"></i>',
-                    previous: '<i class="bx bx-chevron-left"></i>'
-                },
-                lengthMenu: "{{ __('Show _MENU_ entries') }}",
-                info: "{{ __('Showing _START_ to _END_ of _TOTAL_ entries') }}",
-                zeroRecords: "{{ __('No matching records found') }}"
-            }
+                searchPlaceholder: "{{ __('Quick Search Newsletter Subscribers…') }}"
+            },
+            columnDefs: [
+                { orderable: false, targets: [4] }
+            ]
         });
     });
 </script>

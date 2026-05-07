@@ -46,17 +46,13 @@ use Illuminate\Support\Facades\Route;
                             </div>
                             <div class="flex-grow-1">
                                 <h6 class="mb-1 fw-bold text-dark text-nowrap">
-                                  @if (Auth::check())
-                                    {{ Auth::user()->first_name }} {{ Auth::user()->last_name }}
-                                  @else
-                                    John Doe
-                                  @endif
+                                    {{ Auth::check() ? Auth::user()->first_name . ' ' . Auth::user()->last_name : __('Guest') }}
                                 </h6>
                                 <small class="text-muted d-block" style="font-size: 0.7rem; letter-spacing: 0.5px; text-transform: uppercase;">
                                    @if (Auth::check())
-                                      {{ Auth::user()->roles->pluck('name')->map(fn($r) => str_replace('-', ' ', $r))->join(' & ') ?: 'Staff' }}
+                                      {{ Auth::user()->roles->pluck('name')->map(fn($r) => __($r))->join(' & ') ?: __('Staff') }}
                                    @else
-                                      Admin Role
+                                      {{ __('Admin Role') }}
                                    @endif
                                 </small>
                             </div>

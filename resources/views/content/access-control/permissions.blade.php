@@ -164,7 +164,7 @@
           </td>
           <td>
             <div class="text-muted small">
-              <i class="bx bx-calendar me-1"></i>{{ $permission->created_at ? $permission->created_at->format('M d, Y') : 'N/A' }}
+              <i class="bx bx-calendar me-1"></i>{{ $permission->created_at ? $permission->created_at->formatDate() : 'N/A' }}
             </div>
           </td>
           <td>

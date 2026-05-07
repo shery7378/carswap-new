@@ -47,7 +47,7 @@
                 <td>{{ $customer->email }}</td>
                 <td>{{ $customer->phone ?? 'N/A' }}</td>
                 <td>{{ $customer->country ?? 'N/A' }}</td>
-                <td>{{ $customer->created_at->format('M d, Y') }}</td>
+                <td>{{ $customer->created_at->formatDate() }}</td>
                 <td><span class="badge bg-label-success">Active</span></td>
                 <td>
                   <div class="dropdown">

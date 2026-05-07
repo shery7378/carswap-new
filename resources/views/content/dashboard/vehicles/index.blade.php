@@ -38,7 +38,8 @@
                                 <option value="Elutasítva" {{ request('status') == 'Elutasítva' ? 'selected' : '' }}>
                                     {{ __('Rejected') }}
                                 </option>
-                                <option value="Piszkozat" {{ request('status') == 'Piszkozat' ? 'selected' : '' }}>{{ __('Draft') }}
+                                <option value="Piszkozat" {{ request('status') == 'Piszkozat' ? 'selected' : '' }}>
+                                    {{ __('Draft') }}
                                 </option>
                             </select>
                         </form>
@@ -124,10 +125,9 @@
 
                                         <td class="d-none d-xl-table-cell">
                                             <div class="d-flex flex-column small">
-                                                <span><i
-                                                        class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
-                                                <span><i
-                                                        class="bx bx-cog me-1"></i>{{ optional($vehicle->transmission)->name }}</span>
+                                                <span><i class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
+                                                <span class="mx-2 text-muted">|</span>
+                                                <span><i class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
                                                 <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
                                             </div>
                                         </td>
@@ -155,7 +155,7 @@
                                                 <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <span
-                                                        class="badge bg-{{ $statusClass }}">{{ $vehicle->ad_status }}</span>
+                                                        class="badge bg-{{ $statusClass }}">{{ __($vehicle->ad_status) }}</span>
                                                 </button>
                                                 <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
                                                     <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
@@ -166,7 +166,7 @@
                                                                 <button type="submit" name="ad_status" value="{{ $val }}"
                                                                     class="dropdown-item d-flex align-items-center py-2">
                                                                     <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                    {{ $val }}
+                                                                    {{ __($val) }}
                                                                 </button>
                                                             </li>
                                                         @endforeach
@@ -277,7 +277,7 @@
                                                     <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
                                                         data-bs-toggle="dropdown">
                                                         <span
-                                                            class="badge bg-{{ $statusClass }}">{{ $vehicle->ad_status }}</span>
+                                                            class="badge bg-{{ $statusClass }}">{{ __($vehicle->ad_status) }}</span>
                                                     </button>
                                                     <ul class="dropdown-menu dropdown-menu-end shadow border-0">
                                                         <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
@@ -288,7 +288,7 @@
                                                                     <button type="submit" name="ad_status" value="{{ $val }}"
                                                                         class="dropdown-item d-flex align-items-center py-2">
                                                                         <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                        {{ $val }}
+                                                                        {{ __($val) }}
                                                                     </button>
                                                                 </li>
                                                             @endforeach
@@ -406,7 +406,7 @@
                 $('#vehicles-table').DataTable({
                     order: [[1, 'asc']],
                     pageLength: 25,
-                    responsive: false, // we handle responsiveness ourselves
+                    responsive: false,
                     dom:
                         "<'row align-items-center mb-3'" +
                         "<'col-12 col-sm-6 mb-2 mb-sm-0 d-flex align-items-center'l>" +
@@ -418,15 +418,10 @@
                         "<'col-12 col-sm-6 d-flex justify-content-sm-end'p>" +
                         ">",
                     language: {
-                        search: '',
-                        searchPlaceholder: '{{ __('Quick Search Vehicles…') }}',
-                        paginate: {
-                            next: '<i class="bx bx-chevron-right"></i>',
-                            previous: '<i class="bx bx-chevron-left"></i>'
-                        }
+                        searchPlaceholder: "{{ __('Quick Search Vehicles…') }}"
                     },
                     columnDefs: [
-                        { orderable: false, targets: [0, 6, 7, 8] }
+                        { orderable: false, targets: [0, 6, 7, 8, 9] }
                     ]
                 });
             }

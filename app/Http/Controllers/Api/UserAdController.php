@@ -9,9 +9,11 @@ use App\Models\Vehicle;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\CanSyncEntities;
 
 class UserAdController extends Controller
 {
+    use CanSyncEntities;
     // -------------------------------------------------------------------------
     // Eager-load relationships used on every response
     // -------------------------------------------------------------------------
@@ -148,6 +150,19 @@ class UserAdController extends Controller
         $user = $request->user();
         $validated['user_id'] = $user->id;
 
+        // --- Sync/Resolve Entities (Check if exists, if not add it) ---
+        $validated['brand_id']          = $this->resolveEntityId(\App\Models\Brand::class, $validated['brand_id'] ?? null);
+        $validated['model_id']          = $this->resolveEntityId(\App\Models\VehicleModel::class, $validated['model_id'] ?? null, ['brand_id' => $validated['brand_id']]);
+        $validated['body_type_id']      = $this->resolveEntityId(\App\Models\BodyType::class, $validated['body_type_id'] ?? null);
+        $validated['fuel_type_id']      = $this->resolveEntityId(\App\Models\FuelType::class, $validated['fuel_type_id'] ?? null);
+        $validated['transmission_id']   = $this->resolveEntityId(\App\Models\Transmission::class, $validated['transmission_id'] ?? null);
+        $validated['drive_type_id']     = $this->resolveEntityId(\App\Models\DriveType::class, $validated['drive_type_id'] ?? null);
+        $validated['exterior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['exterior_color_id'] ?? null);
+        $validated['interior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['interior_color_id'] ?? null);
+        $validated['document_type_id']  = $this->resolveEntityId(\App\Models\DocumentType::class, $validated['document_type_id'] ?? null);
+        $validated['sales_method_id']   = $this->resolveEntityId(\App\Models\SalesMethod::class, $validated['sales_method_id'] ?? null);
+        $validated['vehicle_status_id'] = $this->resolveEntityId(\App\Models\VehicleStatus::class, $validated['vehicle_status_id'] ?? null);
+
         // Check subscription limits
         $limitCheck = $this->checkSubscriptionLimits(
             $user, 
@@ -270,6 +285,41 @@ class UserAdController extends Controller
         }
 
         $validated = $request->validated();
+
+        // --- Sync/Resolve Entities (Check if exists, if not add it) ---
+        if (isset($validated['brand_id'])) {
+            $validated['brand_id'] = $this->resolveEntityId(\App\Models\Brand::class, $validated['brand_id']);
+        }
+        if (isset($validated['model_id'])) {
+            $validated['model_id'] = $this->resolveEntityId(\App\Models\VehicleModel::class, $validated['model_id'], ['brand_id' => $validated['brand_id'] ?? $vehicle->brand_id]);
+        }
+        if (isset($validated['body_type_id'])) {
+            $validated['body_type_id'] = $this->resolveEntityId(\App\Models\BodyType::class, $validated['body_type_id']);
+        }
+        if (isset($validated['fuel_type_id'])) {
+            $validated['fuel_type_id'] = $this->resolveEntityId(\App\Models\FuelType::class, $validated['fuel_type_id']);
+        }
+        if (isset($validated['transmission_id'])) {
+            $validated['transmission_id'] = $this->resolveEntityId(\App\Models\Transmission::class, $validated['transmission_id']);
+        }
+        if (isset($validated['drive_type_id'])) {
+            $validated['drive_type_id'] = $this->resolveEntityId(\App\Models\DriveType::class, $validated['drive_type_id']);
+        }
+        if (isset($validated['exterior_color_id'])) {
+            $validated['exterior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['exterior_color_id']);
+        }
+        if (isset($validated['interior_color_id'])) {
+            $validated['interior_color_id'] = $this->resolveEntityId(\App\Models\Color::class, $validated['interior_color_id']);
+        }
+        if (isset($validated['document_type_id'])) {
+            $validated['document_type_id'] = $this->resolveEntityId(\App\Models\DocumentType::class, $validated['document_type_id']);
+        }
+        if (isset($validated['sales_method_id'])) {
+            $validated['sales_method_id'] = $this->resolveEntityId(\App\Models\SalesMethod::class, $validated['sales_method_id']);
+        }
+        if (isset($validated['vehicle_status_id'])) {
+            $validated['vehicle_status_id'] = $this->resolveEntityId(\App\Models\VehicleStatus::class, $validated['vehicle_status_id']);
+        }
 
         $properties = $validated['properties'] ?? null;
         unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
