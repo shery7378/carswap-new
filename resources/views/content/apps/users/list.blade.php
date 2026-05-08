@@ -50,8 +50,8 @@
                                 <tr>
                                     <th>{{ __('Avatar') }}</th>
                                     <th>{{ __('User Info') }}</th>
-                                    <th class="d-none d-lg-table-cell">{{ __('Phone') }}</th>
-                                    <th class="d-none d-md-table-cell">{{ __('Role') }}</th>
+	                                    <th>{{ __('Phone') }}</th>
+	                                    <th>{{ __('Role') }}</th>
                                     <th class="text-center">{{ __('Trader') }}</th>
                                     <th class="text-center">{{ __('Status') }}</th>
                                     <th class="text-center">{{ __('Joined') }}</th>
@@ -72,12 +72,12 @@
                                                 <small class="text-muted">{{ $user->email }}</small>
                                             </div>
                                         </td>
-                                        <td class="d-none d-lg-table-cell">
-                                            <span class="text-muted small">{{ $user->phone ?? 'N/A' }}</span>
-                                        </td>
-                                        <td class="d-none d-md-table-cell">
-                                            <span class="badge bg-label-secondary small text-capitalize">{{ __($user->role ?? 'Web User') }}</span>
-                                        </td>
+	                                        <td>
+	                                            <span class="text-muted small">{{ $user->phone ?? 'N/A' }}</span>
+	                                        </td>
+	                                        <td>
+	                                            <span class="badge bg-label-secondary small text-capitalize">{{ __($user->role ?? 'Web User') }}</span>
+	                                        </td>
                                         <td class="text-center">
                                             @if($user->is_trader)
                                                 <span class="badge bg-label-info pb-1"><i class="bx bx-check me-1 small"></i>{{ __('Yes') }}</span>
@@ -114,25 +114,39 @@
                                         <td class="text-center text-muted small">
                                             {{ $user->created_at->formatDate() }}
                                         </td>
-                                        <td class="text-end pe-4">
-                                            <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
-                                                    <i class="icon-base bx bx-show"></i>
-                                                </button>
-                                                <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0 shadow-none" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}">
-                                                    <i class="icon-base bx bx-edit-alt"></i>
-                                                </a>
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 shadow-none change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}">
-                                                    <i class="icon-base bx bx-key"></i>
-                                                </button>
-                                                <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
-                                                    @csrf @method('DELETE')
-                                                    <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}">
-                                                        <i class="icon-base bx bx-trash"></i>
-                                                    </button>
-                                                </form>
-                                            </div>
-                                        </td>
+	                                        <td class="text-end pe-4">
+	                                            <div class="dropdown users-actions">
+	                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
+	                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
+	                                                </button>
+		                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+		                                                    <li>
+		                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view show-details-btn" data-id="{{ $user->id }}">
+		                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
+		                                                        </button>
+		                                                    </li>
+		                                                    <li>
+		                                                        <a href="{{ route('admin.web-users.edit', $user->id) }}" class="dropdown-item d-flex align-items-center action-edit">
+		                                                            <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Profile') }}
+		                                                        </a>
+		                                                    </li>
+		                                                    <li>
+		                                                        <button type="button" class="dropdown-item d-flex align-items-center action-password change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">
+		                                                            <i class="bx bx-key me-2"></i>{{ __('Change Password') }}
+		                                                        </button>
+		                                                    </li>
+	                                                    <li><hr class="dropdown-divider"></li>
+	                                                    <li>
+	                                                        <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="m-0 delete-form">
+	                                                            @csrf @method('DELETE')
+	                                                            <button type="button" class="dropdown-item d-flex align-items-center delete-confirmation">
+	                                                                <i class="bx bx-trash me-2"></i>{{ __('Delete User') }}
+	                                                            </button>
+	                                                        </form>
+	                                                    </li>
+	                                                </ul>
+	                                            </div>
+	                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
@@ -194,15 +208,15 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
                                         <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
-                                        <div class="d-flex gap-1">
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}"><i class="icon-base bx bx-show"></i></button>
-                                            <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}"><i class="icon-base bx bx-edit-alt"></i></a>
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}"><i class="icon-base bx bx-key"></i></button>
-                                            <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
-                                                @csrf @method('DELETE')
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}"><i class="icon-base bx bx-trash"></i></button>
-                                            </form>
-                                        </div>
+	                                        <div class="d-flex gap-1 users-actions">
+	                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}"><i class="icon-base bx bx-show"></i></button>
+	                                            <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}"><i class="icon-base bx bx-edit-alt"></i></a>
+	                                            <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}"><i class="icon-base bx bx-key"></i></button>
+	                                            <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
+	                                                @csrf @method('DELETE')
+	                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}"><i class="icon-base bx bx-trash"></i></button>
+	                                            </form>
+	                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -287,11 +301,28 @@ function togglePassword(id) {
 }
 
 $(document).ready(function () {
+    function openUserDetailsModal(id) {
+        if(!id) return;
+        $('#userDetailsModal').modal('show');
+        $('#modal-content-area').html('<div class="text-center py-5 my-5"><div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;"></div><p class="mt-4 text-muted outfit-font fs-5">{{ __('Fetching profile data...') }}</p></div>');
+        $.ajax({
+            url: `{{ url('/app/users') }}/${id}`,
+            method: 'GET',
+            success: function(html) {
+                $('#modal-content-area').html(html);
+            },
+            error: function() {
+                $('#modal-content-area').html('<div class="alert alert-danger m-5 d-flex align-items-center"><i class="bx bx-error-circle me-3 fs-3"></i> {{ __('Failed to pull user details.') }}</div>');
+            }
+        });
+    }
+
     // ─── INITIALIZE DATATABLE ───
     if ($.fn.DataTable) {
         $('#users-table').DataTable({
             order: [[1, 'asc']],
-            pageLength: 25,
+	            pageLength: 25,
+	            autoWidth: false,
             dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>t<'row mt-3'<'col-sm-6'i><'col-sm-6'p>>",
             language: { 
                 search: '', 
@@ -324,6 +355,22 @@ $(document).ready(function () {
     });
     $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
         $(this).closest('tr').removeClass('status-dropdown-open');
+    });
+
+    // View details (works from actions dropdown too)
+    $(document).on('click', '.show-details-btn', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        const id = $(this).data('id') || $(this).closest('tr,[data-id]').data('id');
+        openUserDetailsModal(id);
+    });
+
+    // Keep actions dropdown above other table rows
+    $(document).on('shown.bs.dropdown', '.users-actions.dropdown', function () {
+        $(this).closest('tr').addClass('actions-dropdown-open');
+    });
+    $(document).on('hide.bs.dropdown', '.users-actions.dropdown', function () {
+        $(this).closest('tr').removeClass('actions-dropdown-open');
     });
 
     // ─── CHANGE PASSWORD LOGIC ───
@@ -360,26 +407,14 @@ $(document).ready(function () {
     });
 
     // ─── ROW CLICK & SHOW BUTTON -> OPEN POPUP MODAL ───
-    $(document).on('click', '#users-table tbody tr, .user-mobile-card, .show-details-btn', function (e) {
+    $(document).on('click', '#users-table tbody tr, .user-mobile-card', function (e) {
         if ($(e.target).closest('form, a:not(.show-details-btn), button, .dropdown, .social-btn').length) return;
         
         e.preventDefault();
         const id = $(this).data('id');
         if(!id) return;
 
-        $('#userDetailsModal').modal('show');
-        $('#modal-content-area').html('<div class="text-center py-5 my-5"><div class="spinner-border text-primary" style="width: 3.5rem; height: 3.5rem;"></div><p class="mt-4 text-muted outfit-font fs-5">{{ __('Fetching profile data...') }}</p></div>');
-        
-        $.ajax({
-            url: `{{ url('/app/users') }}/${id}`,
-            method: 'GET',
-            success: function(html) {
-                $('#modal-content-area').html(html);
-            },
-            error: function() {
-                $('#modal-content-area').html('<div class="alert alert-danger m-5 d-flex align-items-center"><i class="bx bx-error-circle me-3 fs-3"></i> {{ __('Failed to pull user details.') }}</div>');
-            }
-        });
+        openUserDetailsModal(id);
     });
 
     // ─── DELETE CONFIRMATION ───
@@ -432,5 +467,67 @@ $(document).ready(function () {
 		    .status-dropdown { position: relative; }
 		    .status-dropdown.show { z-index: 1066; }
 		    .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+
+		    /* Actions dropdown should open above other table rows */
+		    #users-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
+		    #users-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
+		    .users-actions.dropdown.show { z-index: 1072; }
+		    .users-actions.dropdown .dropdown-menu { z-index: 1073; }
+
+		    /* Actions icons visibility */
+		    .users-actions .btn.btn-icon {
+		        width: 38px;
+		        height: 38px;
+		        display: inline-flex;
+		        align-items: center;
+		        justify-content: center;
+		    }
+		    .users-actions .btn.btn-icon i {
+		        font-size: 1.25rem;
+		        line-height: 1;
+		    }
+		    .users-actions .btn.btn-label-secondary:hover i,
+		    .users-actions .btn.btn-label-secondary:focus i { color: var(--bs-secondary) !important; }
+		    .users-actions .btn.btn-label-info:hover i,
+		    .users-actions .btn.btn-label-info:focus i { color: var(--bs-info) !important; }
+		    .users-actions .btn.btn-label-warning:hover i,
+		    .users-actions .btn.btn-label-warning:focus i { color: var(--bs-warning) !important; }
+		    .users-actions .btn.btn-label-danger:hover i,
+		    .users-actions .btn.btn-label-danger:focus i { color: var(--bs-danger) !important; }
+		    .users-actions .show-details-btn:hover i,
+		    .users-actions .show-details-btn:focus i { color: var(--bs-primary) !important; }
+		    .users-actions .dropdown-item.delete-confirmation { color: inherit; }
+		    .users-actions .dropdown-item { transition: color .15s ease; }
+		    .users-actions .dropdown-item i { transition: color .15s ease; }
+		    .users-actions .dropdown-item.action-view:hover,
+		    .users-actions .dropdown-item.action-view:focus,
+		    .users-actions .dropdown-item.action-view:hover i,
+		    .users-actions .dropdown-item.action-view:focus i { color: var(--bs-primary) !important; }
+		    .users-actions .dropdown-item.action-edit:hover,
+		    .users-actions .dropdown-item.action-edit:focus,
+		    .users-actions .dropdown-item.action-edit:hover i,
+		    .users-actions .dropdown-item.action-edit:focus i { color: var(--bs-info) !important; }
+		    .users-actions .dropdown-item.action-password:hover,
+		    .users-actions .dropdown-item.action-password:focus,
+		    .users-actions .dropdown-item.action-password:hover i,
+		    .users-actions .dropdown-item.action-password:focus i { color: var(--bs-warning) !important; }
+		    .users-actions .dropdown-item.delete-confirmation:hover,
+		    .users-actions .dropdown-item.delete-confirmation:focus,
+		    .users-actions .dropdown-item.delete-confirmation:hover i,
+		    .users-actions .dropdown-item.delete-confirmation:focus i { color: var(--bs-danger) !important; }
+
+		    /* Fit all columns on screen (no bottom scrollbar) */
+		    .table-responsive.d-none.d-md-block { overflow-x: visible !important; overflow-y: visible !important; }
+		    #users-table_wrapper { overflow-x: visible !important; }
+		    #users-table { width: 100% !important; table-layout: fixed; }
+		    #users-table th, #users-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
+		    #users-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
+		    #users-table td { word-break: break-word; }
+		    #users-table td:nth-child(2) { white-space: normal; }
+		    #users-table td:nth-child(2) .fw-bold,
+		    #users-table td:nth-child(2) small { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+		    #users-table td:nth-child(1) { width: 70px; }
+		    #users-table td:nth-child(8) { width: 90px; }
+		    #users-table .avatar.avatar-md img { width: 34px !important; height: 34px !important; }
 		</style>
 		@endsection
