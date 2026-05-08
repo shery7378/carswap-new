@@ -41,7 +41,7 @@ class CompareController extends Controller
         // Limit to matching active ads for public comparison
         $vehicles = Vehicle::with($this->relations)
             ->whereIn('id', $ids)
-            ->where('ad_status', 'published')
+            ->whereIn('ad_status', ['published', 'Publikált'])
             ->get();
 
         return response()->json([

@@ -1,13 +1,13 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Payment Settings')
+@section('title', __('Payment Settings'))
 
 @section('content')
 <div class="row">
     <div class="col-12">
         <div class="card mb-4">
             <div class="card-header">
-                <h5 class="card-title mb-0">Payment Settings</h5>
+                <h5 class="card-title mb-0">@lang('Payment Settings')</h5>
             </div>
             <div class="card-body">
                 <form>
@@ -18,11 +18,11 @@
                         <div class="col-md-6">
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="creditCard" checked>
-                                <label class="form-check-label" for="creditCard">Credit/Debit Cards</label>
+                                <label class="form-check-label" for="creditCard">@lang('Credit/Debit Cards')</label>
                             </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="paypal" checked>
-                                <label class="form-check-label" for="paypal">PayPal</label>
+                                <label class="form-check-label" for="paypal">@lang('PayPal')</label>
                             </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="stripe">
@@ -30,13 +30,13 @@
                             </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="bankTransfer" checked>
-                                <label class="form-check-label" for="bankTransfer">Bank Transfer</label>
+                                <label class="form-check-label" for="bankTransfer">@lang('Bank Transfer')</label>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="cashOnDelivery" checked>
-                                <label class="form-check-label" for="cashOnDelivery">Cash on Delivery</label>
+                                <label class="form-check-label" for="cashOnDelivery">@lang('Cash on Delivery')</label>
                             </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="applePay">
@@ -51,19 +51,19 @@
                             <hr class="my-4">
                         </div>
                         <div class="col-12">
-                            <h6 class="text-uppercase fw-medium mb-3">Payment Gateway Configuration</h6>
+                            <h6 class="text-uppercase fw-medium mb-3">@lang('Payment Gateway Configuration')</h6>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="gatewayProvider">Default Gateway</label>
+                            <label class="form-label" for="gatewayProvider">@lang('Default Gateway')</label>
                             <select class="form-select" id="gatewayProvider">
-                                <option selected>Select gateway</option>
+                                <option selected>@lang('Select gateway')</option>
                                 <option value="stripe">Stripe</option>
                                 <option value="paypal">PayPal</option>
                                 <option value="square">Square</option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="currency">Currency</label>
+                            <label class="form-label" for="currency">@lang('Currency')</label>
                             <select class="form-select" id="currency">
                                 <option selected>USD - US Dollar</option>
                                 <option value="eur">EUR - Euro</option>
@@ -71,51 +71,51 @@
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="apiKey">API Key</label>
-                            <input type="password" class="form-control" id="apiKey" placeholder="Enter API key">
+                            <label class="form-label" for="apiKey">@lang('API Key')</label>
+                            <input type="password" class="form-control" id="apiKey" placeholder="{{ __('Enter API key') }}">
                         </div>
                         <div class="col-md-6">
-                            <label class="form-label" for="secretKey">Secret Key</label>
-                            <input type="password" class="form-control" id="secretKey" placeholder="Enter secret key">
+                            <label class="form-label" for="secretKey">@lang('Secret Key')</label>
+                            <input type="password" class="form-control" id="secretKey" placeholder="{{ __('Enter secret key') }}">
                         </div>
                         <div class="col-12">
                             <hr class="my-4">
                         </div>
                         <div class="col-12">
-                            <h6 class="text-uppercase fw-medium mb-3">Transaction Settings</h6>
+                            <h6 class="text-uppercase fw-medium mb-3">@lang('Transaction Settings')</h6>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label" for="minAmount">Minimum Amount</label>
+                            <label class="form-label" for="minAmount">@lang('Minimum Amount')</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="number" class="form-control" id="minAmount" value="10.00">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label" for="maxAmount">Maximum Amount</label>
+                            <label class="form-label" for="maxAmount">@lang('Maximum Amount')</label>
                             <div class="input-group">
                                 <span class="input-group-text">$</span>
                                 <input type="number" class="form-control" id="maxAmount" value="10000.00">
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label class="form-label" for="transactionFee">Transaction Fee (%)</label>
+                            <label class="form-label" for="transactionFee">@lang('Transaction Fee (%)')</label>
                             <input type="number" class="form-control" id="transactionFee" value="2.9" step="0.1">
                         </div>
                         <div class="col-12">
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="autoRefund" checked>
-                                <label class="form-check-label" for="autoRefund">Enable Automatic Refunds</label>
+                                <label class="form-check-label" for="autoRefund">@lang('Enable Automatic Refunds')</label>
                             </div>
                             <div class="form-check form-switch mb-3">
                                 <input class="form-check-input" type="checkbox" id="fraudDetection" checked>
-                                <label class="form-check-label" for="fraudDetection">Enable Fraud Detection</label>
+                                <label class="form-check-label" for="fraudDetection">@lang('Enable Fraud Detection')</label>
                             </div>
                         </div>
                         <div class="col-12">
                             <div class="d-flex justify-content-end gap-2">
-                                <button type="button" class="btn btn-outline-secondary">Cancel</button>
-                                <button type="submit" class="btn btn-primary">Save Changes</button>
+                                <button type="button" class="btn btn-outline-secondary">@lang('Cancel')</button>
+                                <button type="submit" class="btn btn-primary">@lang('Save Changes')</button>
                             </div>
                         </div>
                     </div>
