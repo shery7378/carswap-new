@@ -85,32 +85,32 @@
                                                 <span class="badge bg-label-secondary pb-1">{{ __('No') }}</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
-                                            @php
-                                                $status = $user->status ?: 'active';
-                                                $statusClass = match ($status) {
-                                                    'active' => 'success',
-                                                    'inactive' => 'warning',
-                                                    'banned' => 'danger',
-                                                    default => 'primary',
-                                                };
-                                            @endphp
-                                            <div class="dropdown status-dropdown">
-                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
-                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
-                                                    @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
-                                                        <li>
-                                                            <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
-                                                                <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                {{ __(ucfirst($val)) }}
-                                                            </button>
-                                                        </li>
-                                                    @endforeach
-                                                </ul>
-                                            </div>
-                                        </td>
+	                                        <td class="text-center td-status">
+	                                            @php
+	                                                $status = $user->status ?: 'active';
+	                                                $statusClass = match ($status) {
+	                                                    'active' => 'success',
+	                                                    'inactive' => 'warning',
+	                                                    'banned' => 'danger',
+	                                                    default => 'primary',
+	                                                };
+	                                            @endphp
+	                                            <div class="dropdown status-dropdown">
+	                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
+	                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
+	                                                </button>
+	                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
+	                                                    @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
+	                                                        <li>
+	                                                            <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
+	                                                                <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
+	                                                                {{ __(ucfirst($val)) }}
+	                                                            </button>
+	                                                        </li>
+	                                                    @endforeach
+	                                                </ul>
+	                                            </div>
+	                                        </td>
                                         <td class="text-center text-muted small">
                                             {{ $user->created_at->formatDate() }}
                                         </td>
@@ -318,6 +318,14 @@ $(document).ready(function () {
         });
     });
 
+    // Keep status dropdown above other table rows
+    $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
+        $(this).closest('tr').addClass('status-dropdown-open');
+    });
+    $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
+        $(this).closest('tr').removeClass('status-dropdown-open');
+    });
+
     // ─── CHANGE PASSWORD LOGIC ───
     $(document).on('click', '.change-password-btn', function(e) {
         e.stopPropagation();
@@ -412,8 +420,17 @@ $(document).ready(function () {
     #users-table tbody tr:hover { background-color: rgba(105, 108, 255, 0.05) !important; transform: scale(1.002); }
     .user-mobile-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
     
-    .outfit-font { font-family: 'Outfit', sans-serif !important; }
-    
-    .bg-label-info { background-color: rgba(3, 195, 236, 0.1) !important; color: #03c3ec !important; }
-</style>
-@endsection
+	    .outfit-font { font-family: 'Outfit', sans-serif !important; }
+	    
+	    .bg-label-info { background-color: rgba(3, 195, 236, 0.1) !important; color: #03c3ec !important; }
+
+		    /* Status dropdown should open above other table rows */
+		    .table-responsive { overflow-y: visible; }
+		    #users-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
+		    .td-status { position: relative; }
+		    #users-table tbody tr.status-dropdown-open .td-status { z-index: 1066; }
+		    .status-dropdown { position: relative; }
+		    .status-dropdown.show { z-index: 1066; }
+		    .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+		</style>
+		@endsection
