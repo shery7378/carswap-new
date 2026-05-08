@@ -215,7 +215,7 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">@lang('Item Title')</label>
-                        <input type="text" name="title" class="form-control" placeholder="e.g. Easy Exchange" required>
+                        <input type="text" name="title" class="form-control" placeholder="{{ __('e.g. Easy Exchange') }}" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">@lang('Date (Optional)')</label>

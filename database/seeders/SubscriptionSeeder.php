@@ -14,7 +14,7 @@ class SubscriptionSeeder extends Seeder
     {
         $plans = [
             [
-                'name' => 'FREE',
+                'name' => 'INGYENES',
                 'slug' => 'free',
                 'price' => 0,
                 'billing_period' => 'month',
@@ -23,32 +23,32 @@ class SubscriptionSeeder extends Seeder
                 'active_ads_limit' => 2,
                 'garage_ads_limit' => 2,
                 'features' => [
-                    '2 active ads',
-                    '2 spaces in the garage',
-                    'Exchange offer function',
-                    'Free image upload'
+                    '2 aktív hirdetés',
+                    '2 hely a garázsban',
+                    'Csere ajánlat funkció',
+                    'Ingyenes képfeltöltés'
                 ],
-                'description' => 'Start for free'
+                'description' => 'Ingyenes kezdés'
             ],
             [
-                'name' => 'PARTNER PACKAGE',
+                'name' => 'PARTNER CSOMAG',
                 'slug' => 'partner-package',
                 'price' => 3000,
                 'billing_period' => 'month',
                 'color' => 'primary',
                 'is_popular' => false,
                 'features' => [
-                    'Brief introduction',
-                    'Price list / services',
-                    '5 pictures',
-                    'Opening hours',
-                    'Contact details',
-                    'Price list and list of services'
+                    'Rövid bemutatkozás',
+                    'Árlista / szolgáltatások',
+                    '5 fénykép',
+                    'Nyitvatartási idő',
+                    'Kapcsolatfelvételi adatok',
+                    'Árlista és szolgáltatások listája'
                 ],
-                'description' => 'For partners'
+                'description' => 'Partnereknek'
             ],
             [
-                'name' => 'I HAVE SEVERAL CARS.',
+                'name' => 'TÖBB AUTÓM VAN.',
                 'slug' => 'several-cars',
                 'price' => 22000,
                 'billing_period' => 'month',
@@ -59,16 +59,16 @@ class SubscriptionSeeder extends Seeder
                 'highlight_ads' => 2,
                 'hd_images' => 2,
                 'features' => [
-                    '5 Active Ads',
-                    '10 garage slots',
-                    'Expandable active ad slots',
-                    'HD images, 12 instead of 6 — usable for 2 ads per month',
-                    'Highlighting — usable for 2 ads per month'
+                    '5 Aktív hirdetés',
+                    '10 garázs hely',
+                    'Bővíthető aktív hirdetési helyek',
+                    'HD képek, 12 helyett 6 — havi 2 hirdetéshez használható',
+                    'Kiemelés — havi 2 hirdetéshez használható'
                 ],
-                'description' => 'For individual enthusiasts'
+                'description' => 'Egyéni rajongóknak'
             ],
             [
-                'name' => 'DEALER PACKAGE',
+                'name' => 'KERESKEDŐI CSOMAG',
                 'slug' => 'dealer-package',
                 'price' => 40000,
                 'billing_period' => 'month',
@@ -77,13 +77,13 @@ class SubscriptionSeeder extends Seeder
                 'highlight_ads' => 5,
                 'hd_images' => 5,
                 'features' => [
-                    'Brief introduction of the trader',
-                    'Bonus: Highlight – can be used for 5 ads per month',
-                    'Bonus: HD images, 12 instead of 6',
-                    'Unlimited garage space',
-                    'Unlimited active ad space'
+                    'Rövid bemutatkozás a kereskedőről',
+                    'Bónusz: Kiemelés – havi 5 hirdetéshez használható',
+                    'Bónusz: HD képek, 12 helyett 6',
+                    'Korlátlan garázs hely',
+                    'Korlátlan aktív hirdetési hely'
                 ],
-                'description' => 'For professional dealers'
+                'description' => 'Professzionális kereskedőknek'
             ],
         ];
 

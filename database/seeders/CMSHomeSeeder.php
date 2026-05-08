@@ -14,17 +14,17 @@ class CMSHomeSeeder extends Seeder
         $hero = CMSSection::updateOrCreate(
             ['slug' => 'home-hero'],
             [
-                'name' => 'Home Intro Text',
-                'title' => 'Trusted Partner for Car Enthusiasts',
-                'description' => 'This is the main introduction paragraph displayed on the Home Page next to the logo.',
+                'name' => 'Főoldali bevezető szöveg',
+                'title' => 'Megbízható partner az autórajongók számára',
+                'description' => 'Ez a fő bevezető bekezdés, amely a kezdőlapon a logó mellett jelenik meg.',
                 'status' => 1,
             ]
         );
 
         CMSItem::updateOrCreate(
-            ['section_id' => $hero->id, 'title' => 'Main Content'],
+            ['section_id' => $hero->id, 'title' => 'Fő tartalom'],
             [
-                'description' => '<p>CARSWAP&reg; is a trusted partner for car enthusiasts looking to swap or sell used cars. On our platform, you can easily upload your vehicle, trade it in, or find a buyer.</p><p><br></p><p>Join the CARSWAP&reg; community and make your car transactions seamless!</p>',
+                'description' => '<p>A CARSWAP&reg; megbízható partner az autórajongók számára, akik használt autót szeretnének cserélni vagy eladni. Platformunkon könnyedén feltöltheti járművét, beszámíttathatja azt, vagy vevőt találhat rá.</p><p><br></p><p>Csatlakozzon a CARSWAP&reg; közösségéhez, és tegye zökkenőmentessé autóügyleteit!</p>',
                 'order' => 0
             ]
         );
@@ -33,59 +33,59 @@ class CMSHomeSeeder extends Seeder
         $services = CMSSection::updateOrCreate(
             ['slug' => 'home-services'],
             [
-                'name' => 'Home Services / Features',
-                'title' => 'Our Solutions for You',
-                'description' => 'Explore the primary services offered by CARSWAP to make your experience better.',
+                'name' => 'Főoldali szolgáltatások / Funkciók',
+                'title' => 'Megoldásaink Önnek',
+                'description' => 'Fedezze fel a CARSWAP által kínált szolgáltatásokat, amelyek jobbá teszik az élményt.',
                 'status' => 1,
             ]
         );
 
         $service_items = [
             [
-                'title' => 'Easy car exchange',
-                'description' => 'CARSWAP provides full support in the process of car swapping. No matter what type of vehicle it is, we will help you find the ideal swap partner.',
+                'title' => 'Egyszerű autócsere',
+                'description' => 'A CARSWAP teljes körű támogatást nyújt az autócsere folyamatában. Legyen szó bármilyen típusú járműről, segítünk megtalálni az ideális cserepartnert.',
                 'icon' => 'bx-transfer-alt',
                 'order' => 1
             ],
             [
-                'title' => 'Car sales and advertising',
-                'description' => 'Sell your used car quickly and easily on CARSWAP. Create your ad and reach your potential buyer today!',
+                'title' => 'Autóeladás és hirdetés',
+                'description' => 'Adja el használt autóját gyorsan és egyszerűen a CARSWAP-on. Hozza létre hirdetését, és érje el potenciális vásárlóját még ma!',
                 'icon' => 'bx-megaphone',
                 'order' => 2
             ],
             [
-                'title' => 'Car service and accessories',
-                'description' => 'You can also find car repair shops and accessories dealers recommended by CARSWAP.',
+                'title' => 'Autószerviz és kiegészítők',
+                'description' => 'A CARSWAP által ajánlott autójavító műhelyeket és kiegészítő-kereskedőket is megtalálhatja nálunk.',
                 'icon' => 'bx-wrench',
                 'order' => 3
             ],
             [
-                'title' => 'Documentation management',
-                'description' => 'We help you prepare and manage the necessary documents when buying or selling a car.',
+                'title' => 'Dokumentáció kezelése',
+                'description' => 'Segítünk a szükséges dokumentumok elkészítésében és kezelésében autóvásárlás vagy -eladás során.',
                 'icon' => 'bx-file',
                 'order' => 4
             ],
             [
-                'title' => 'HD images and virtual tour',
-                'description' => 'Let us show your vehicle at its best! We will help you present your cars with HD quality images and soon with a virtual tour.',
+                'title' => 'HD képek és virtuális túra',
+                'description' => 'Mutassuk meg járművét a legjobb formájában! Segítünk HD minőségű képekkel, és hamarosan virtuális túrával bemutatni autóit.',
                 'icon' => 'bx-camera-movie',
                 'order' => 5
             ],
             [
-                'title' => 'Service recommendation and expert assistance',
-                'description' => 'We know the best service centers and professionals. The partners we recommend provide proven, reliable support for your vehicle.',
+                'title' => 'Szervizajánlás és szakértői segítség',
+                'description' => 'Ismerjük a legjobb szervizeket és szakembereket. Az általunk ajánlott partnerek bizonyított, megbízható támogatást nyújtanak járművéhez.',
                 'icon' => 'bx-user-voice',
                 'order' => 6
             ],
             [
-                'title' => 'Sales of company cars',
-                'description' => 'We also offer companies opportunities to exchange or sell their fleet vehicles.',
+                'title' => 'Céges autók értékesítése',
+                'description' => 'Vállalkozások számára is kínálunk lehetőséget flottajárműveik cseréjére vagy eladására.',
                 'icon' => 'bx-buildings',
                 'order' => 7
             ],
             [
-                'title' => 'Other Services',
-                'description' => 'We offer additional unique services to meet all your needs.',
+                'title' => 'Egyéb szolgáltatások',
+                'description' => 'További egyedi szolgáltatásokat kínálunk minden igényének kielégítésére.',
                 'icon' => 'bx-dots-horizontal-rounded',
                 'order' => 8
             ]
@@ -106,19 +106,19 @@ class CMSHomeSeeder extends Seeder
         $headings = CMSSection::updateOrCreate(
             ['slug' => 'home-headings'],
             [
-                'name' => 'Home Page Headings',
-                'title' => 'Home Section Titles',
-                'description' => 'Manage the titles for various layout sections on the home page.',
+                'name' => 'Főoldali címsorok',
+                'title' => 'Főoldali szekció címek',
+                'description' => 'Kezelje a kezdőlap különböző elrendezési szekcióinak címeit.',
                 'status' => 1,
             ]
         );
 
         $heading_items = [
-            ['title' => 'Top Cars Header', 'description' => 'New and used cars', 'order' => 1],
-            ['title' => 'Browse By Brands Header', 'description' => 'Browse by Brand', 'order' => 2],
-            ['title' => 'Browse By Design Header', 'description' => '..or By design', 'order' => 3],
-            ['title' => 'Featured Ads Header', 'description' => 'FEATURED ADS', 'order' => 4],
-            ['title' => 'Latest Ads Header', 'description' => 'LATEST ADS', 'order' => 5],
+            ['title' => 'Top Cars Header', 'description' => 'Új és használt autók', 'order' => 1],
+            ['title' => 'Browse By Brands Header', 'description' => 'Böngészés márka szerint', 'order' => 2],
+            ['title' => 'Browse By Design Header', 'description' => '..vagy kivitel szerint', 'order' => 3],
+            ['title' => 'Featured Ads Header', 'description' => 'KIEMELT HIRDETÉSEK', 'order' => 4],
+            ['title' => 'Latest Ads Header', 'description' => 'LEGUTÓBBI HIRDETÉSEK', 'order' => 5],
         ];
 
         foreach ($heading_items as $item) {

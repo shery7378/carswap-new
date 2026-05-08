@@ -16,35 +16,35 @@ class CMSLegalSeeder extends Seeder
     {
         $legalSections = [
             [
-                'name' => 'General Terms and Conditions',
+                'name' => 'Általános Szerződési Feltételek',
                 'slug' => 'general-terms-and-conditions',
-                'title' => 'General Terms and Conditions',
-                'subtitle' => 'Legal agreement between the service and the users.',
-                'description' => 'This section contains the official terms and conditions for using CarSwap.',
+                'title' => 'Általános Szerződési Feltételek',
+                'subtitle' => 'Jogi megállapodás a szolgáltatás és a felhasználók között.',
+                'description' => 'Ez a rész tartalmazza a CarSwap használatára vonatkozó hivatalos általános szerződési feltételeket.',
                 'status' => true,
             ],
             [
-                'name' => 'Data Protection Notice',
+                'name' => 'Adatkezelési Tájékoztató',
                 'slug' => 'data-protection-notice',
-                'title' => 'Data Protection Notice',
-                'subtitle' => 'Information about how we handle your data.',
-                'description' => 'This section contains information about data privacy and protection policies.',
+                'title' => 'Adatkezelési Tájékoztató',
+                'subtitle' => 'Információk az adatai kezeléséről.',
+                'description' => 'Ez a rész az adatvédelmi és adatkezelési irányelvekkel kapcsolatos információkat tartalmazza.',
                 'status' => true,
             ],
             [
-                'name' => 'Frequently Asked Questions',
+                'name' => 'Gyakran Ismételt Kérdések',
                 'slug' => 'faq',
-                'title' => 'Frequently Asked Questions',
-                'subtitle' => 'Answers to common questions about using CarSwap.',
-                'description' => 'A comprehensive list of common questions and answers.',
+                'title' => 'Gyakran Ismételt Kérdések',
+                'subtitle' => 'Válaszok a CarSwap használatával kapcsolatos gyakori kérdésekre.',
+                'description' => 'A gyakori kérdések és válaszok átfogó listája.',
                 'status' => true,
             ],
             [
-                'name' => 'Join our mailing list',
+                'name' => 'Iratkozzon fel hírlevelünkre',
                 'slug' => 'mailing-list-info',
-                'title' => 'Join our mailing list!',
-                'subtitle' => 'Subscribe to our newsletter.',
-                'description' => 'Content for the newsletter subscription area.',
+                'title' => 'Iratkozzon fel hírlevelünkre!',
+                'subtitle' => 'Iratkozzon fel hírlevelünkre a legfrissebb hírekért.',
+                'description' => 'A hírlevél feliratkozási rész tartalma.',
                 'status' => true,
             ],
         ];
@@ -56,72 +56,72 @@ class CMSLegalSeeder extends Seeder
             );
 
             // Detailed content for General Terms and Conditions if provided
-            $itemContent = 'Please enter the content here...';
+            $itemContent = 'Kérjük, adja meg a tartalmat itt...';
             if ($sectionData['slug'] === 'general-terms-and-conditions') {
                 $itemContent = '
-                    <h4>General Terms and Conditions</h4>
-                    <p>Regarding the website <a href="https://carswap.hexafume.com">https://carswap.hexafume.com</a> (hereinafter: Website) and the services of the Company.</p>
-                    <p>The service is provided to the Clients by Swap Group Limited Liability Company (hereinafter: Company) – as the operating Company – and its partners in a contractual relationship with it, in accordance with these general terms and conditions (hereinafter: GTC) in connection with the use of the activities performed by the Company on the Website.</p>
-                    <p>By using the services available on the Company\'s Website, a contractual relationship is established between the Client and the Company in accordance with the terms of these GTC, which, in the absence of a different agreement, is deemed to be concluded electronically and shall be deemed to be in writing pursuant to Section 6:7. (3) of Act V of 2013 on the Civil Code (hereinafter: the Civil Code) (hereinafter: the Contract).</p>
+                    <h4>Általános Szerződési Feltételek</h4>
+                    <p>A <a href="https://carswap.hexafume.com">https://carswap.hexafume.com</a> weboldalra (a továbbiakban: Weboldal) és a Társaság szolgáltatásaira vonatkozóan.</p>
+                    <p>A szolgáltatást az Ügyfelek részére a Swap Group Korlátolt Felelősségű Társaság (a továbbiakban: Társaság) – mint üzemeltető Társaság – és a vele szerződéses kapcsolatban álló partnerei nyújtják, a jelen általános szerződési feltételeknek (a továbbiakban: ÁSZF) megfelelően a Társaság által a Weboldalon végzett tevékenységek igénybevételével kapcsolatban.</p>
+                    <p>A Társaság Weboldalán elérhető szolgáltatások igénybevételével az Ügyfél és a Társaság között a jelen ÁSZF feltételei szerinti szerződéses jogviszony jön létre, amely eltérő megállapodás hiányában elektronikus úton megkötöttnek minősül, és a Polgári Törvénykönyvről szóló 2013. évi V. törvény (a továbbiakban: Ptk.) 6:7. § (3) bekezdése alapján írásbelinek tekintendő (a továbbiakban: Szerződés).</p>
 
-                    <h4>Merchant & Private Clients</h4>
-                    <p>For the purposes of these GTC, a Customer is any person who views the Website, places an advertisement, offers a product for sale or makes an offer to purchase a product, i.e. applies for an advertisement (hereinafter: Customer). The Company distinguishes the following categories of Customers in these GTC:</p>
+                    <h4>Kereskedő és Magánügyfelek</h4>
+                    <p>Jelen ÁSZF alkalmazásában Ügyfél minden olyan személy, aki a Weboldalt megtekinti, hirdetést ad fel, terméket kínál eladásra vagy ajánlatot tesz termék megvételére, azaz hirdetésre jelentkezik (a továbbiakban: Ügyfél). A Társaság az Ügyfelek alábbi kategóriáit különbözteti meg a jelen ÁSZF-ben:</p>
                     <ul>
-                        <li><strong>Merchant:</strong> The Customer who defines himself as a Merchant Customer after the first login to the admin account. Merchant status is displayed with a "Trade" label.</li>
-                        <li><strong>Private Client:</strong> A Client posting an advertisement who is not a Merchant.</li>
+                        <li><strong>Kereskedő:</strong> Az az Ügyfél, aki az admin fiókba történő első bejelentkezés után Kereskedő Ügyfélként határozza meg magát. A kereskedői státuszt "Kereskedés" címke jelzi.</li>
+                        <li><strong>Magánügyfél:</strong> Az a hirdetést feladó Ügyfél, aki nem Kereskedő.</li>
                     </ul>
 
-                    <h4>1. COMPANY DETAILS</h4>
-                    <p>Name: Swap Group Limited Liability Company<br>
-                    Headquarters: 1039 Budapest, Álmos Street 3.<br>
-                    Company registration number: 01-09-423632<br>
-                    Tax number: 32429073-2-41<br>
-                    Email: swapgroupkft@gmail.com<br>
-                    Phone number: +36305990290</p>
+                    <h4>1. A TÁRSASÁG ADATAI</h4>
+                    <p>Név: Swap Group Korlátolt Felelősségű Társaság<br>
+                    Székhely: 1039 Budapest, Álmos utca 3.<br>
+                    Cégjegyzékszám: 01-09-423632<br>
+                    Adószám: 32429073-2-41<br>
+                    E-mail: swapgroupkft@gmail.com<br>
+                    Telefonszám: +36305990290</p>
 
-                    <h4>3. SUBSCRIPTION SERVICES OFFERED BY US</h4>
+                    <h4>3. ÁLTALUNK KÍNÁLT ELŐFIZETÉSI SZOLGÁLTATÁSOK</h4>
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th>Services</th>
-                                <th>Awards</th>
-                                <th>Payment due date</th>
+                                <th>Szolgáltatások</th>
+                                <th>Díjak</th>
+                                <th>Fizetési határidő</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td>Free package</td>
-                                <td>0 HUF / month</td>
-                                <td>no payment required</td>
+                                <td>Ingyenes csomag</td>
+                                <td>0 Ft / hó</td>
+                                <td>nem szükséges fizetés</td>
                             </tr>
                             <tr>
-                                <td>I have several cars, package</td>
-                                <td>21,990 HUF + VAT / month</td>
-                                <td>monthly in advance</td>
+                                <td>Több autóm van csomag</td>
+                                <td>21.990 Ft + ÁFA / hó</td>
+                                <td>havonta előre</td>
                             </tr>
                             <tr>
-                                <td>Merchant package</td>
-                                <td>39,990,- Ft + VAT / month</td>
-                                <td>monthly in advance</td>
+                                <td>Kereskedői csomag</td>
+                                <td>39.990 Ft + ÁFA / hó</td>
+                                <td>havonta előre</td>
                             </tr>
                         </tbody>
                     </table>
 
-                    <p><em>Effective date: May 28, 2025.</em></p>
+                    <p><em>Hatálybalépés dátuma: 2025. május 28.</em></p>
                 ';
             }
 
             if ($sectionData['slug'] === 'faq') {
                 $faqs = [
-                    ['q' => 'How do I register on CARSWAP?', 'a' => 'You can register by clicking the Register button and providing your details...'],
-                    ['q' => 'What documents are required to advertise a car?', 'a' => 'To post an ad, you will need the vehicle\'s registration certificate, registration book, service book, and technical inspection document.'],
-                    ['q' => 'Is it possible for me to purchase the car directly, without a trade-in?', 'a' => 'Yes, users can buy vehicles directly if the seller allows it.'],
-                    ['q' => 'How does the car swap function work?', 'a' => 'Car Swap allows you to trade your vehicle for another...'],
-                    ['q' => 'Is it possible to exchange multiple cars at once?', 'a' => 'Currently,CarSwap supports 1:1 or N:1 swaps depending on...'],
-                    ['q' => 'What happens if my exchange request is rejected?', 'a' => 'You will be notified and can make other offers...'],
-                    ['q' => 'How can I receive notifications about cars that interest me?', 'a' => 'You can save searches or add vehicles to your favorites...'],
-                    ['q' => 'What filtering options are available to me?', 'a' => 'We offer filtering by Brand, Model, Year, Fuel Type, and more.'],
-                    ['q' => 'What should I do if I have a problem with another user?', 'a' => 'Please contact our support team immediately.'],
+                    ['q' => 'Hogyan regisztrálhatok a CARSWAP-on?', 'a' => 'A Regisztráció gombra kattintva és az adatai megadásával regisztrálhat...'],
+                    ['q' => 'Milyen dokumentumok szükségesek egy autó hirdetéséhez?', 'a' => 'A hirdetés feladásához szüksége lesz a jármű forgalmi engedélyére, törzskönyvére, szervizkönyvére és a műszaki vizsga dokumentumára.'],
+                    ['q' => 'Vásárolhatok-e autót közvetlenül, beszámítás nélkül?', 'a' => 'Igen, a felhasználók közvetlenül is vásárolhatnak járműveket, ha az eladó ezt lehetővé teszi.'],
+                    ['q' => 'Hogyan működik az autócsere funkció?', 'a' => 'Az autócsere lehetővé teszi, hogy járművét egy másikra cserélje...'],
+                    ['q' => 'Lehetséges-e egyszerre több autót cserélni?', 'a' => 'Jelenleg a CarSwap az 1:1 vagy N:1 cseréket támogatja, attól függően, hogy...'],
+                    ['q' => 'Mi történik, ha a cserekérelmemet elutasítják?', 'a' => 'Értesítést kap, és tehet más ajánlatokat...'],
+                    ['q' => 'Hogyan kaphatok értesítést az engem érdeklő autókról?', 'a' => 'Mentheti a kereséseket, vagy hozzáadhatja a járműveket a kedvenceihez...'],
+                    ['q' => 'Milyen szűrési lehetőségek állnak rendelkezésemre?', 'a' => 'Szűrést kínálunk Márka, Modell, Évjárat, Üzemanyag típusa és egyebek alapján.'],
+                    ['q' => 'Mit tegyek, ha problémám van egy másik felhasználóval?', 'a' => 'Kérjük, azonnal vegye fel a kapcsolatot ügyfélszolgálatunkkal.'],
                 ];
 
                 foreach ($faqs as $index => $faq) {
@@ -142,9 +142,9 @@ class CMSLegalSeeder extends Seeder
 
             if ($sectionData['slug'] === 'mailing-list-info') {
                 $itemContent = '
-                    <h4>Join our mailing list!</h4>
-                    <p>Would you like to be the first to know about new products, secret deals, or inspiring content? Subscribe to our newsletter and we guarantee that you will only receive useful, interesting, or smile-inducing messages - we hate spam too.</p>
-                    <p>A few letters a month, nothing superfluous, just the essentials.</p>
+                    <h4>Iratkozzon fel hírlevelünkre!</h4>
+                    <p>Szeretne elsőként értesülni az új termékekről, titkos ajánlatokról vagy inspiráló tartalmakról? Iratkozzon fel hírlevelünkre, és garantáljuk, hogy csak hasznos, érdekes vagy mosolyt csaló üzeneteket kap - mi is utáljuk a spameket.</p>
+                    <p>Havonta néhány levél, semmi felesleges, csak a lényeg.</p>
                 ';
             }
 
@@ -152,7 +152,7 @@ class CMSLegalSeeder extends Seeder
             CMSItem::updateOrCreate(
                 [
                     'section_id' => $section->id,
-                    'title' => 'Main Content',
+                    'title' => 'Fő tartalom',
                 ],
                 [
                     'description' => $itemContent,

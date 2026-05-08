@@ -14,29 +14,29 @@ class CMSBlogSeeder extends Seeder
         $blogSection = CMSSection::updateOrCreate(
             ['slug' => 'blog-posts'],
             [
-                'name' => 'Blog Posts',
-                'title' => 'Latest News & Guides',
-                'description' => 'Manage all blog posts and articles for the website.',
+                'name' => 'Blog bejegyzések',
+                'title' => 'Legfrissebb hírek és útmutatók',
+                'description' => 'A weboldal összes blogbejegyzésének és cikkének kezelése.',
                 'status' => 1,
             ]
         );
 
         $posts = [
             [
-                'title' => 'What do you look for before buying a car?',
-                'description' => '<p>Buying a car can be an overwhelming experience. You need to consider the budget, the specific needs you have, and the type of vehicle that fits your lifestyle. In this post, we discuss the top 10 things you must check before making a final decision.</p>',
+                'title' => 'Mit nézzünk meg autóvásárlás előtt?',
+                'description' => '<p>Az autóvásárlás megterhelő élmény lehet. Figyelembe kell venni a költségvetést, a saját igényeit és az életstílusához illő járműtípust. Ebben a bejegyzésben a 10 legfontosabb dolgot beszéljük meg, amit ellenőriznie kell a végső döntés előtt.</p>',
                 'link' => json_encode(['date' => '2024.04.17.', 'comments' => 4]),
                 'order' => 1
             ],
             [
-                'title' => 'Car exchange - Simple and great',
-                'description' => '<p>Exchanging your car shouldn\'t be a hassle. With CARSWAP, the process is streamlined to ensure you get the best value without the traditional headaches. Learn how our platform simplifies the car exchange process from start to finish.</p>',
+                'title' => 'Autócsere - Egyszerű és nagyszerű',
+                'description' => '<p>Az autócsere nem szabadna, hogy gondot okozzon. A CARSWAP-nál a folyamat egyszerűsítve van, hogy Ön a legjobb értéket kapja a hagyományos fejfájás nélkül. Tudja meg, hogyan teszi platformunk egyszerűvé az autócserét az elejétől a végéig.</p>',
                 'link' => json_encode(['date' => '2024.04.17.', 'comments' => 5]),
                 'order' => 2
             ],
             [
-                'title' => 'What you NEED to know about the sales contract!',
-                'description' => '<p>A clear and legally binding sales contract protects both the buyer and the seller. This article covers the essential clauses that should be included in every vehicle sales agreement and how to interpret them correctly.</p>',
+                'title' => 'Amit tudnod KELL az adásvételi szerződésről!',
+                'description' => '<p>Egy világos és jogilag kötelező erejű adásvételi szerződés védi mind a vevőt, mind az eladót. Ez a cikk az alapvető záradékokat tárgyalja, amelyeket minden gépjármű-adásvételi szerződésnek tartalmaznia kell, és azt, hogyan értelmezzük azokat helyesen.</p>',
                 'link' => json_encode(['date' => '2024.04.17.', 'comments' => 5]),
                 'order' => 3
             ]
