@@ -74,7 +74,7 @@
                                     <th>{{ __('Thumbnail') }}</th>
                                     <th>{{ __('Vehicle') }}</th>
                                     <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
-                                    <th class="d-none d-md-table-cell">{{ __('Year') }}</th>
+                                    <th class="d-none d-md-table-cell">{{ __('Year of Manufacture') }}</th>
                                     <th>{{ __('Price') }}</th>
                                     <th class="d-none d-xl-table-cell">{{ __('Details') }}</th>
                                     <th class="text-center">{{ __('Featured') }}</th>

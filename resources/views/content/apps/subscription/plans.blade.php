@@ -66,7 +66,7 @@
 <div class="container-xxl flex-grow-1 container-p-y">
   <div class="d-flex justify-content-between align-items-center mb-5">
     <div>
-      <h3 class="fw-bold mb-1">{{ __('Subscription Tiers') }}</h3>
+      <h3 class="fw-bold mb-1">{{ __('Subscription Levels') }}</h3>
       <p class="text-muted mb-0">{{ __('Manage your business packages and customer value levels') }}</p>
     </div>
     

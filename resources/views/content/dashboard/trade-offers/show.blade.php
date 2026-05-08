@@ -41,7 +41,7 @@
                         <table class="table table-sm table-borderless mt-2">
                             <tr><th>{{ __('Brand') }}:</th><td>{{ $offer->brand }}</td></tr>
                             <tr><th>{{ __('Model') }}:</th><td>{{ $offer->model }}</td></tr>
-                            <tr><th>{{ __('Year') }}:</th><td>{{ $offer->year }}</td></tr>
+                            <tr><th>{{ __('Year of Manufacture') }}:</th><td>{{ $offer->year }}</td></tr>
                             <tr><th>{{ __('Odometer') }}:</th><td>{{ $offer->odometer }} km</td></tr>
                             <tr><th>{{ __('Fuel/Gearbox') }}:</th><td>{{ $offer->fuel_type }} / {{ $offer->gearbox_type }}</td></tr>
                             <tr><th>{{ __('Chassis #') }}:</th><td><code>{{ $offer->chassis_number }}</code></td></tr>

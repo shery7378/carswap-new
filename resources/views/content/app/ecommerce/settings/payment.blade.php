@@ -13,7 +13,7 @@
                 <form>
                     <div class="row g-3">
                         <div class="col-12">
-                            <h6 class="text-uppercase fw-medium mb-3">Payment Methods</h6>
+                            <h6 class="text-uppercase fw-medium mb-3">{{ __('Payment Methods') }}</h6>
                         </div>
                         <div class="col-md-6">
                             <div class="form-check form-switch mb-3">

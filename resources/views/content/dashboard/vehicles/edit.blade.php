@@ -143,7 +143,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ __('Year') }}</label>
+                                    <label class="form-label">{{ __('Year of Manufacture') }}</label>
                                     <input type="number" class="form-control" name="year" value="{{ old('year', $vehicle->year) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -342,7 +342,7 @@
                                      </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Interior Color</label>
+                                    <label class="form-label">{{ __('Interior Color') }}</label>
                                      <select class="form-select" name="interior_color_id">
                                          <option value="">{{ __('Select Color') }}</option>
                                          @foreach($interiorColors as $color)
@@ -351,7 +351,7 @@
                                      </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Ad Status</label>
+                                    <label class="form-label">{{ __('Ad Status') }}</label>
                                     <select class="form-select" name="ad_status">
                                         <option value="Publikált" {{ $vehicle->ad_status == 'Publikált' ? 'selected' : '' }}>{{ __('Published') }}</option>
                                         <option value="Piszkozat" {{ $vehicle->ad_status == 'Piszkozat' ? 'selected' : '' }}>{{ __('Draft') }}</option>

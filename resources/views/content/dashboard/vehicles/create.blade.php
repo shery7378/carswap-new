@@ -139,7 +139,7 @@
                                     </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ __('Year') }}</label>
+                                    <label class="form-label">{{ __('Year of Manufacture') }}</label>
                                     <input type="number" class="form-control" name="year" placeholder="2023">
                                 </div>
                                 <div class="col-md-6 mb-3">
@@ -302,7 +302,7 @@
                                     <input type="text" class="form-control" name="engine_number">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Exterior Color</label>
+                                    <label class="form-label">{{ __('Exterior Color') }}</label>
                                      <select class="form-select" name="exterior_color_id">
                                          <option value="">{{ __('Select Color') }}</option>
                                          @foreach($exteriorColors as $color)
@@ -311,7 +311,7 @@
                                      </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Interior Color</label>
+                                    <label class="form-label">{{ __('Interior Color') }}</label>
                                      <select class="form-select" name="interior_color_id">
                                          <option value="">{{ __('Select Color') }}</option>
                                          @foreach($interiorColors as $color)
@@ -320,7 +320,7 @@
                                      </select>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Ad Status</label>
+                                    <label class="form-label">{{ __('Ad Status') }}</label>
                                     <select class="form-select" name="ad_status">
                                         <option value="Publikált">{{ __('Published') }}</option>
                                         <option value="Piszkozat">{{ __('Draft') }}</option>
