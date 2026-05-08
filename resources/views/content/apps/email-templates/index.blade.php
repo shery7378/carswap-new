@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Email Template Manager')
+@section('title', __('Email Template Manager'))
 
 @section('page-style')
 <style>
@@ -286,7 +286,7 @@
             <div class="avatar avatar-md bg-label-primary rounded d-flex align-items-center justify-content-center me-2">
                 <i class="bx bx-mail-send fs-3"></i>
             </div>
-            Email Templates
+            @lang('Email Templates')
         </h2>
     </div>
 
@@ -309,7 +309,7 @@
             </form>
 
             <div class="premium-card mb-4" style="padding: 15px;">
-                <h6 class="text-uppercase text-muted fw-bold mb-3 px-3 mt-2" style="font-size: 11px; letter-spacing: 1px;">Categories</h6>
+                <h6 class="text-uppercase text-muted fw-bold mb-3 px-3 mt-2" style="font-size: 11px; letter-spacing: 1px;">@lang('Categories')</h6>
                 <div class="template-nav-list">
                     @foreach($templates as $category => $categoryTemplates)
                         @foreach($categoryTemplates as $template)
@@ -324,7 +324,7 @@
                 
                 <div class="px-2 pb-2">
                     <button type="submit" form="mainTemplateForm" class="btn-gradient">
-                        <i class="bx bx-save"></i> Save Changes
+                        <i class="bx bx-save"></i> @lang('Save Changes')
                     </button>
                 </div>
             </div>
@@ -341,14 +341,14 @@
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <div class="modern-input-group">
-                                <label><i class="bx bx-tag-alt me-1"></i> Template Name</label>
+                                <label><i class="bx bx-tag-alt me-1"></i> @lang('Template Name')</label>
                                 <input type="text" name="name" form="mainTemplateForm" class="modern-input" value="{{ old('name', $selectedTemplate->name) }}" placeholder="e.g. Welcome Email" required>
                                 @error('name') <span class="text-danger small mt-1 block">{{ $message }}</span> @enderror
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="modern-input-group">
-                                <label><i class="bx bx-text me-1"></i> Subject Line</label>
+                                <label><i class="bx bx-text me-1"></i> @lang('Subject Line')</label>
                                 <input type="text" name="subject" form="mainTemplateForm" class="modern-input" value="{{ old('subject', $selectedTemplate->subject) }}" placeholder="e.g. Welcome to CarSwap!" required>
                                 @error('subject') <span class="text-danger small mt-1 block">{{ $message }}</span> @enderror
                             </div>
@@ -357,11 +357,11 @@
 
                     <div class="editor-header-bar">
                         <label class="text-uppercase text-muted fw-bold" style="font-size: 13px; letter-spacing: 0.5px;">
-                            <i class="bx bx-edit-alt me-1"></i> Email Body
+                            <i class="bx bx-edit-alt me-1"></i> @lang('Email Body')
                         </label>
                         <div class="glass-tabs">
-                            <button type="button" id="visual-btn" class="glass-tab-btn active">Visual</button>
-                            <button type="button" id="code-btn" class="glass-tab-btn">Code</button>
+                            <button type="button" id="visual-btn" class="glass-tab-btn active">@lang('Visual')</button>
+                            <button type="button" id="code-btn" class="glass-tab-btn">@lang('Code')</button>
                         </div>
                     </div>
                     
@@ -374,9 +374,9 @@
                     <div class="shortcodes-section">
                         <div class="shortcodes-title">
                             <i class="bx bx-code-curly text-primary fs-5"></i>
-                            Dynamic Shortcodes
+                            @lang('Dynamic Shortcodes')
                         </div>
-                        <p class="text-muted small mb-3">Click any pill below to instantly copy it to your clipboard. Paste it into the subject or body to display dynamic user data.</p>
+                        <p class="text-muted small mb-3">@lang('Click any pill below to instantly copy it to your clipboard. Paste it into the subject or body to display dynamic user data.')</p>
                         
                         <div class="shortcode-pills">
                             @php 
@@ -391,7 +391,7 @@
                                 @endif
                             @endforeach
                             @if(empty($displayShortcodes) || count(array_filter($displayShortcodes, 'trim')) == 0)
-                                <span class="text-muted small italic">No specific variables available for this template.</span>
+                                <span class="text-muted small italic">@lang('No specific variables available for this template.')</span>
                             @endif
                         </div>
                     </div>
@@ -402,8 +402,8 @@
                     <div class="avatar avatar-xl bg-label-secondary rounded-circle mb-4">
                         <i class="bx bx-layout fs-1"></i>
                     </div>
-                    <h3 class="fw-bold text-dark">No Template Selected</h3>
-                    <p class="text-muted" style="max-width: 300px;">Please select an email template from the sidebar to begin customizing your emails.</p>
+                    <h3 class="fw-bold text-dark">@lang('No Template Selected')</h3>
+                    <p class="text-muted" style="max-width: 300px;">@lang('Please select an email template from the sidebar to begin customizing your emails.')</p>
                 </div>
             @endif
         </div>
@@ -423,7 +423,7 @@
 
         if (bodyTextarea.length) {
             bodyTextarea.summernote({
-                placeholder: 'Type your email content...',
+                placeholder: '{{ __('Type your email content...') }}',
                 height: 500,
                 toolbar: [
                     ['style', ['style']],

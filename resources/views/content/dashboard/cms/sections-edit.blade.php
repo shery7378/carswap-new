@@ -58,6 +58,17 @@
 @section('content')
     @php
         $isDocumentMode = in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice', 'home-hero']);
+
+        // Dynamic item label based on section slug
+        $itemLabel = match ($section->slug) {
+            'faq-section' => __('FAQ elem'),
+            'mailing-list' => __('Levelezőlista elem'),
+            'home-services' => __('Szolgáltatás elem'),
+            'home-headings' => __('Címsor elem'),
+            'blog-posts' => __('Blog elem'),
+            'general-terms-and-conditions', 'data-protection-notice' => __('Dokumentum elem'),
+            default => __('Rács elem'),
+        };
     @endphp
     <div class="d-flex justify-content-between align-items-center mb-5 mt-2">
         <div>
@@ -209,7 +220,7 @@
                 enctype="multipart/form-data">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title">@lang('Add Grid Item')</h5>
+                    <h5 class="modal-title">{{ __('Add :item', ['item' => $itemLabel]) }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -242,7 +253,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@lang('Close')</button>
-                    <button type="submit" class="btn btn-primary">@lang('Save Item')</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Save :item', ['item' => $itemLabel]) }}</button>
                 </div>
             </form>
         </div>
@@ -255,7 +266,7 @@
                 @csrf
                 @method('PUT')
                 <div class="modal-header">
-                    <h5 class="modal-title">@lang('Edit Grid Item')</h5>
+                    <h5 class="modal-title">{{ __('Edit :item', ['item' => $itemLabel]) }}</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -290,7 +301,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@lang('Close')</button>
-                    <button type="submit" class="btn btn-primary">@lang('Update Item')</button>
+                    <button type="submit" class="btn btn-primary">{{ __('Update :item', ['item' => $itemLabel]) }}</button>
                 </div>
             </form>
         </div>
