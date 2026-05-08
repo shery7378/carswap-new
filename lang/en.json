@@ -12,5 +12,8 @@
     "New Package": "New Package",
     "Delete Entire Card": "Delete Entire Card",
     "LIVE": "LIVE",
-    "OFF": "OFF"
+    "OFF": "OFF",
+    "Admin Management": "Administrators",
+    "Admin Users": "Administrators",
+    "admin": "Administrators"
 }
