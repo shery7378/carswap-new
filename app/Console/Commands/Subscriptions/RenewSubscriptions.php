@@ -77,7 +77,7 @@ class RenewSubscriptions extends Command
                     'payment_method' => $sub->stripe_payment_method_id,
                     'off_session' => true,
                     'confirm' => true,
-                    'description' => "Auto-renewal: {$plan->name} ({$sub->duration})",
+                    'description' => "Automatikus megújítás: {$plan->name} (" . ($sub->duration === 'Yearly' ? 'Éves' : 'Havi') . ")",
                 ]);
 
                 if ($paymentIntent->status === 'succeeded') {

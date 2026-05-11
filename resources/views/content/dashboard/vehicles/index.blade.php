@@ -65,8 +65,7 @@
                     @endif
 
                     <!-- ─── TABLE ─── -->
-                    <div class="table-responsive vehicles-table-responsive">
-                        <table class="table table-hover" id="vehicles-table">
+                    <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
                                     <th width="10">
@@ -234,7 +233,6 @@
                                 @endforelse
                             </tbody>
                         </table>
-                    </div>
 
                     <!-- ─── MOBILE CARD LIST (disabled – using table on all screens) ─── -->
                     <div class="d-none" id="vehicles-mobile-list">
@@ -421,10 +419,10 @@
                     responsive: false,
                     dom:
                         "<'row align-items-center mb-3'" +
-                        "<'col-12 col-sm-6 mb-2 mb-sm-0 d-flex align-items-center'l>" +
+                        "<'col-12 col-sm-6 mb-2 mb-sm-0'l>" +
                         "<'col-12 col-sm-6 d-flex justify-content-sm-end'f>" +
                         ">" +
-                        "t" +
+                        "<'table-responsive vehicles-table-responsive't>" +
                         "<'row mt-3'" +
                         "<'col-12 col-sm-6 mb-2 mb-sm-0'i>" +
                         "<'col-12 col-sm-6 d-flex justify-content-sm-end'p>" +

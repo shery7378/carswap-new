@@ -85,8 +85,8 @@ class StripeController extends Controller
                         'price_data' => [
                             'currency' => 'huf',
                             'product_data' => [
-                                'name' => $plan->name . ($request->billing === 'yearly' ? ' (Yearly)' : ' (Monthly)'),
-                                'description' => 'Subscription for ' . $plan->name,
+                                'name' => $plan->name . ($request->billing === 'yearly' ? ' (Éves)' : ' (Havi)'),
+                                'description' => 'Előfizetés a következőre: ' . $plan->name,
                             ],
                             'unit_amount' => (int) ($amount * 100),
                         ],
