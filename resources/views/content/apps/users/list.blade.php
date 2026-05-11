@@ -44,8 +44,8 @@
                     @endif
 
                     <!-- ─── DESKTOP TABLE ─── -->
-                    <div class="table-responsive d-none d-md-block">
-                        <table class="table table-hover" id="users-table">
+	                    <div class="table-responsive users-table-responsive">
+	                        <table class="table table-hover" id="users-table">
                             <thead>
                                 <tr>
                                     <th>{{ __('Avatar') }}</th>
@@ -158,7 +158,7 @@
                     </div>
 
                     <!-- ─── MOBILE CARD LIST ─── -->
-                    <div class="d-md-none" id="users-mobile-list">
+                    <div class="d-none" id="users-mobile-list">
                         <div class="mb-3">
                             <input type="text" id="mobile-search" class="form-control form-control-sm" placeholder="{{ __('Quick search users…') }}">
                         </div>
@@ -206,18 +206,40 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
-	                                        <div class="d-flex gap-1 users-actions">
-	                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}"><i class="icon-base bx bx-show"></i></button>
-	                                            <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}" aria-label="{{ __('Edit Profile') }}"><i class="icon-base bx bx-edit-alt"></i></a>
-	                                            <button type="button" class="btn btn-icon btn-sm btn-label-warning border-0 change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}" aria-label="{{ __('Change Password') }}"><i class="icon-base bx bx-key"></i></button>
-	                                            <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="d-inline delete-form">
-	                                                @csrf @method('DELETE')
-	                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}" aria-label="{{ __('Delete User') }}"><i class="icon-base bx bx-trash"></i></button>
-	                                            </form>
+	                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
+	                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
+	                                        <div class="dropdown users-actions">
+	                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
+	                                                <i class="icon-base bx bx-dots-vertical-rounded"></i>
+	                                            </button>
+	                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+	                                                <li>
+	                                                    <button type="button" class="dropdown-item d-flex align-items-center action-view show-details-btn" data-id="{{ $user->id }}">
+	                                                        <i class="bx bx-show me-2"></i>{{ __('View Details') }}
+	                                                    </button>
+	                                                </li>
+	                                                <li>
+	                                                    <a href="{{ route('admin.web-users.edit', $user->id) }}" class="dropdown-item d-flex align-items-center action-edit">
+	                                                        <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Profile') }}
+	                                                    </a>
+	                                                </li>
+	                                                <li>
+	                                                    <button type="button" class="dropdown-item d-flex align-items-center action-password change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">
+	                                                        <i class="bx bx-key me-2"></i>{{ __('Change Password') }}
+	                                                    </button>
+	                                                </li>
+	                                                <li><hr class="dropdown-divider"></li>
+	                                                <li>
+	                                                    <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="m-0 delete-form">
+	                                                        @csrf @method('DELETE')
+	                                                        <button type="button" class="dropdown-item d-flex align-items-center delete-confirmation">
+	                                                            <i class="bx bx-trash me-2"></i>{{ __('Delete User') }}
+	                                                        </button>
+	                                                    </form>
+	                                                </li>
+	                                            </ul>
 	                                        </div>
-                                    </div>
+	                                    </div>
                                 </div>
                             </div>
                         @empty
@@ -315,11 +337,97 @@ $(document).ready(function () {
                 $('#modal-content-area').html('<div class="alert alert-danger m-5 d-flex align-items-center"><i class="bx bx-error-circle me-3 fs-3"></i> {{ __('Failed to pull user details.') }}</div>');
             }
         });
-    }
+
+	    }
+
+    // Mobile sticky header for users table (works with horizontal scroll)
+    let usersStickySyncing = false;
+	    function buildUsersStickyHead() {
+	        const isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+	        const $sticky = $('#users-table-sticky-head');
+	        const $wrapper = $('.users-table-responsive');
+	        const $table = $('#users-table');
+	        if (!$sticky.length || !$wrapper.length || !$table.length) return;
+
+	        if (!isMobile) {
+	            document.documentElement.classList.remove('users-table-sticky-ready');
+	            $sticky.empty();
+	            return;
+	        }
+
+	        document.documentElement.classList.add('users-table-sticky-ready');
+	        $sticky.empty();
+
+	        const $cloneTable = $('<table class="table table-hover mb-0"></table>');
+	        const $cloneHead = $table.find('thead').clone();
+	        $cloneHead.find('th').each(function (idx) {
+	            $(this).attr('data-col-idx', idx);
+	        });
+
+			        $cloneTable.append($cloneHead);
+			        $sticky.append($cloneTable);
+
+	        $sticky.find('th').on('click', function (e) {
+	            e.preventDefault();
+	            const idx = Number($(this).attr('data-col-idx'));
+	            const $orig = $table.find('thead th').eq(idx);
+	            if ($orig.length) $orig.trigger('click');
+	        });
+
+	        if (!$wrapper.data('usersStickyBound')) {
+	            $wrapper.on('scroll', function () {
+	                if (usersStickySyncing) return;
+	                usersStickySyncing = true;
+	                $sticky.scrollLeft(this.scrollLeft);
+	                usersStickySyncing = false;
+	            });
+	            $sticky.on('scroll', function () {
+	                if (usersStickySyncing) return;
+	                usersStickySyncing = true;
+	                $wrapper.scrollLeft(this.scrollLeft);
+	                usersStickySyncing = false;
+	            });
+	            $wrapper.data('usersStickyBound', true);
+	        }
+
+	        const $origTh = $table.find('thead th');
+	        const $cloneTh = $sticky.find('th');
+	        $cloneTh.each(function (i) {
+	            const w = $origTh.eq(i).outerWidth();
+	            if (w) $(this).css('width', w);
+	        });
+	        $sticky.find('table').css('width', $table.outerWidth());
+	    }
+
+	    function updateUsersStickyActive() {
+	        const isMobile = window.matchMedia('(max-width: 767.98px)').matches;
+	        const $sticky = $('#users-table-sticky-head');
+	        const $wrapper = $('.users-table-responsive');
+	        if (!$sticky.length || !$wrapper.length) return;
+
+	        if (!isMobile || !document.documentElement.classList.contains('users-table-sticky-ready')) {
+	            $sticky.removeClass('is-active');
+	            return;
+	        }
+
+	        const wrapperRect = $wrapper[0].getBoundingClientRect();
+	        const stickyHeight = $sticky.outerHeight() || 0;
+	        const navbarEl = document.getElementById('layout-navbar');
+	        const stickyTop = navbarEl ? Math.max(0, Math.round(navbarEl.getBoundingClientRect().bottom)) : 0;
+	        $sticky.css('top', `${stickyTop}px`);
+	        const shouldShow = wrapperRect.top <= stickyTop && wrapperRect.bottom > stickyTop + stickyHeight + 8;
+	        $sticky.toggleClass('is-active', shouldShow);
+	        $wrapper.css('padding-top', shouldShow ? `${stickyHeight}px` : '');
+	        if (shouldShow) {
+	            $sticky.css({ left: `${wrapperRect.left}px`, width: `${wrapperRect.width}px`, right: 'auto' });
+	        } else {
+	            $sticky.css({ left: '', width: '', right: '' });
+	        }
+	    }
 
     // ─── INITIALIZE DATATABLE ───
     if ($.fn.DataTable) {
-        $('#users-table').DataTable({
+	        const usersDt = $('#users-table').DataTable({
             order: [[1, 'asc']],
 	            pageLength: 25,
 	            autoWidth: false,
@@ -329,7 +437,21 @@ $(document).ready(function () {
                 searchPlaceholder: '{{ __('Quick Search Users…') }}'
             }
         });
+
+        // On mobile, sync pagination row width with table
+        if (window.matchMedia('(max-width: 767.98px)').matches) {
+            var tblW = $('#users-table').outerWidth();
+            if (tblW) {
+                $('#users-table_wrapper > .row.mt-3').css('min-width', tblW + 'px');
+            }
+        }
     }
+
+    buildUsersStickyHead();
+    updateUsersStickyActive();
+    $(window).on('scroll', function () { updateUsersStickyActive(); });
+    $(window).on('resize', function () { buildUsersStickyHead(); updateUsersStickyActive(); });
+    $('#users-table').on('draw.dt column-sizing.dt', function () { buildUsersStickyHead(); updateUsersStickyActive(); });
 
     // ─── AJAX STATUS UPDATE ───
     $(document).on('click', '.change-status', function(e) {
@@ -352,9 +474,11 @@ $(document).ready(function () {
     // Keep status dropdown above other table rows
     $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
         $(this).closest('tr').addClass('status-dropdown-open');
+        $(this).closest('.user-mobile-card').addClass('status-dropdown-open');
     });
     $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
         $(this).closest('tr').removeClass('status-dropdown-open');
+        $(this).closest('.user-mobile-card').removeClass('status-dropdown-open');
     });
 
     // View details (works from actions dropdown too)
@@ -368,9 +492,11 @@ $(document).ready(function () {
     // Keep actions dropdown above other table rows
     $(document).on('shown.bs.dropdown', '.users-actions.dropdown', function () {
         $(this).closest('tr').addClass('actions-dropdown-open');
+        $(this).closest('.user-mobile-card').addClass('actions-dropdown-open');
     });
     $(document).on('hide.bs.dropdown', '.users-actions.dropdown', function () {
         $(this).closest('tr').removeClass('actions-dropdown-open');
+        $(this).closest('.user-mobile-card').removeClass('actions-dropdown-open');
     });
 
     // ─── CHANGE PASSWORD LOGIC ───
@@ -467,12 +593,14 @@ $(document).ready(function () {
 		    .status-dropdown { position: relative; }
 		    .status-dropdown.show { z-index: 1066; }
 		    .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+		    .user-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
 		    /* Actions dropdown should open above other table rows */
 		    #users-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
 		    #users-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
 		    .users-actions.dropdown.show { z-index: 1072; }
 		    .users-actions.dropdown .dropdown-menu { z-index: 1073; }
+		    .user-mobile-card.actions-dropdown-open { position: relative; z-index: 1070; }
 
 		    /* Actions icons visibility */
 		    .users-actions .btn.btn-icon {
@@ -516,9 +644,9 @@ $(document).ready(function () {
 		    .users-actions .dropdown-item.delete-confirmation:hover i,
 		    .users-actions .dropdown-item.delete-confirmation:focus i { color: var(--bs-danger) !important; }
 
-		    /* Fit all columns on screen (no bottom scrollbar) */
-		    .table-responsive.d-none.d-md-block { overflow-x: visible !important; overflow-y: visible !important; }
-		    #users-table_wrapper { overflow-x: visible !important; }
+		    /* Fit all columns on screen (desktop) */
+		    .users-table-responsive { overflow-x: visible; overflow-y: visible; }
+		    #users-table_wrapper { overflow-x: visible; }
 		    #users-table { width: 100% !important; table-layout: fixed; }
 		    #users-table th, #users-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
 		    #users-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
@@ -529,5 +657,62 @@ $(document).ready(function () {
 		    #users-table td:nth-child(1) { width: 70px; }
 		    #users-table td:nth-child(8) { width: 90px; }
 		    #users-table .avatar.avatar-md img { width: 34px !important; height: 34px !important; }
+
+			    /* Mobile dropdowns should not be clipped */
+			    .user-mobile-card { overflow: visible; }
+
+			    .users-table-sticky-head { display: none; }
+
+				    /* Mobile: show same DataTable with horizontal scroll + sticky thead */
+				    @media (max-width: 767.98px) {
+			        .users-table-responsive { overflow-x: auto !important; overflow-y: auto !important; max-height: 75vh; -webkit-overflow-scrolling: touch; }
+			        #users-table { min-width: 820px; table-layout: fixed; }
+			        #users-table thead th { position: sticky; top: 0; z-index: 10; background: var(--bs-body-bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+			        #users-table th, #users-table td { font-size: .78rem; padding: .45rem .3rem !important; }
+			        #users-table th { font-size: .74rem; }
+			        .users-actions .btn.btn-icon { width: 34px; height: 34px; }
+			        #users-table th:nth-child(1), #users-table td:nth-child(1) { width: 60px; }
+			        #users-table th:nth-child(2), #users-table td:nth-child(2) { width: 190px; }
+			        #users-table th:nth-child(3), #users-table td:nth-child(3) { width: 135px; }
+			        #users-table th:nth-child(4), #users-table td:nth-child(4) { width: 120px; }
+			        #users-table th:nth-child(5), #users-table td:nth-child(5) { width: 85px; }
+			        #users-table th:nth-child(6), #users-table td:nth-child(6) { width: 85px; }
+			        #users-table th:nth-child(7), #users-table td:nth-child(7) { width: 105px; }
+				        #users-table th:nth-child(8), #users-table td:nth-child(8) { width: 60px; }
+				        #users-table td:nth-child(3) { white-space: nowrap; }
+				        #users-table td:nth-child(7) { white-space: nowrap; }
+
+				        /* Info + pagination: same row */
+				        #users-table_wrapper > .row.mt-3 {
+				            display: flex !important;
+				            flex-wrap: nowrap !important;
+				            align-items: center !important;
+				            justify-content: space-between !important;
+				            width: 100% !important;
+				            gap: 8px;
+				            margin: 0 !important;
+				            padding: 8px 0 !important;
+				        }
+				        #users-table_wrapper > .row.mt-3 > div {
+				            flex: 0 0 auto !important;
+				            width: auto !important;
+				            max-width: none !important;
+				            padding: 0 !important;
+				        }
+				        #users-table_wrapper > .row.mt-3 .dataTables_info {
+				            font-size: .75rem;
+				            white-space: nowrap;
+				            padding-top: 0 !important;
+				        }
+				        #users-table_wrapper > .row.mt-3 .dataTables_paginate {
+				            font-size: .75rem;
+				            white-space: nowrap;
+				            padding-top: 0 !important;
+				        }
+				        #users-table_wrapper > .row.mt-3 .dataTables_paginate .paginate_button {
+				            padding: 2px 8px !important;
+				            min-width: auto;
+				        }
+				    }
 		</style>
 		@endsection
