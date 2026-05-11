@@ -15,16 +15,19 @@
                         <!-- Bulk Actions -->
                         <div id="bulk-actions" class="d-none me-3">
                             <div class="btn-group">
-                                <button type="button" class="btn btn-label-success btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                <button type="button" class="btn btn-label-success btn-sm dropdown-toggle"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <i class="bx bx-check-double me-1"></i> {{ __('Bulk Actions') }}
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);" data-status="Publikált">{{ __('Mark as Published') }}</a></li>
-                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);" data-status="Elutasítva">{{ __('Reject All') }}</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn " href="javascript:void(0);"
+                                            data-status="Publikált">{{ __('Mark as Published') }}</a></li>
+                                    <li><a class="dropdown-item bulk-status-btn text-danger" href="javascript:void(0);"
+                                            data-status="Elutasítva">{{ __('Reject All') }}</a></li>
                                 </ul>
                             </div>
                         </div>
- 
+
                         <!-- Status Filter -->
                         <form action="{{ route('admin.vehicles.index') }}" method="GET">
                             <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
@@ -88,7 +91,8 @@
                                     <tr data-id="{{ $vehicle->id }}">
                                         <td>
                                             <div class="form-check">
-                                                <input class="form-check-input vehicle-checkbox" type="checkbox" value="{{ $vehicle->id }}">
+                                                <input class="form-check-input vehicle-checkbox" type="checkbox"
+                                                    value="{{ $vehicle->id }}">
                                             </div>
                                         </td>
                                         <td>
@@ -125,9 +129,11 @@
 
                                         <td class="d-none d-xl-table-cell">
                                             <div class="d-flex flex-column small">
-                                                <span><i class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
+                                                <span><i
+                                                        class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
                                                 <span class="mx-2 text-muted">|</span>
-                                                <span><i class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
+                                                <span><i
+                                                        class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
                                                 <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
                                             </div>
                                         </td>
@@ -174,8 +180,10 @@
                                                 </ul>
                                             </div>
                                             @if($vehicle->ad_status !== 'Publikált')
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1" 
-                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('Quick Approve') }}" aria-label="{{ __('Quick Approve') }}">
+                                                <button type="button"
+                                                    class="btn btn-icon btn-sm btn-label-success border-0 shadow-none quick-approve-btn mt-1"
+                                                    data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip"
+                                                    title="{{ __('Quick Approve') }}" aria-label="{{ __('Quick Approve') }}">
                                                     <i class="icon-base bx bx-check"></i>
                                                 </button>
                                             @endif
@@ -185,14 +193,16 @@
                                             <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
                                                 <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
                                                     class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
+                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}"
+                                                    aria-label="{{ __('View Details') }}">
                                                     <i class="icon-base bx bx-show"></i>
                                                 </a>
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
                                                         class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}"
+                                                        aria-label="{{ __('Edit Vehicle') }}">
                                                         <i class="icon-base bx bx-edit-alt"></i>
                                                     </a>
                                                 @endif
@@ -203,7 +213,8 @@
                                                         @csrf @method('DELETE')
                                                         <button type="button"
                                                             class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}" aria-label="{{ __('Delete Vehicle') }}">
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}"
+                                                            aria-label="{{ __('Delete Vehicle') }}">
                                                             <i class="icon-base bx bx-trash"></i>
                                                         </button>
                                                     </form>
@@ -341,14 +352,15 @@
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
                                                 class="btn btn-icon btn-sm btn-label-secondary border-0"
-                                                data-bs-toggle="tooltip" title="{{ __('View Details') }}" aria-label="{{ __('View Details') }}">
+                                                data-bs-toggle="tooltip" title="{{ __('View Details') }}"
+                                                aria-label="{{ __('View Details') }}">
                                                 <i class="icon-base bx bx-show"></i>
                                             </a>
 
                                             @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                 <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                                    class="btn btn-icon btn-sm btn-label-info border-0"
-                                                    data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
+                                                    class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip"
+                                                    title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
                                                     <i class="icon-base bx bx-edit-alt"></i>
                                                 </a>
                                             @endif
@@ -359,7 +371,8 @@
                                                     @csrf @method('DELETE')
                                                     <button type="button"
                                                         class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation"
-                                                        data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}" aria-label="{{ __('Delete Vehicle') }}">
+                                                        data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}"
+                                                        aria-label="{{ __('Delete Vehicle') }}">
                                                         <i class="icon-base bx bx-trash"></i>
                                                     </button>
                                                 </form>
@@ -484,10 +497,10 @@
                 const container = document.getElementById('v-modal-loader-content');
 
                 container.innerHTML = `
-                                        <div class="modal-body text-center py-5">
-                                            <div class="spinner-grow text-primary" role="status"></div>
-                                            <p class="mt-3 text-muted fw-semibold small">{{ __('Fetching vehicle data…') }}</p>
-                                        </div>`;
+                                                <div class="modal-body text-center py-5">
+                                                    <div class="spinner-grow text-primary" role="status"></div>
+                                                    <p class="mt-3 text-muted fw-semibold small">{{ __('Fetching vehicle data…') }}</p>
+                                                </div>`;
 
                 modal.show();
 
@@ -496,7 +509,7 @@
                     .then(html => { container.innerHTML = html; })
                     .catch(() => {
                         container.innerHTML = `<div class="modal-body text-center py-5 text-danger fw-bold">
-                                                {{ __('Error loading vehicle details. Please try again.') }}</div>`;
+                                                        {{ __('Error loading vehicle details. Please try again.') }}</div>`;
                     });
             }
 
@@ -514,12 +527,12 @@
             const checkAll = $('#check-all');
             const checkboxes = $('.vehicle-checkbox');
 
-            checkAll.on('change', function() {
+            checkAll.on('change', function () {
                 checkboxes.prop('checked', this.checked);
                 toggleBulkActions();
             });
 
-            checkboxes.on('change', function() {
+            checkboxes.on('change', function () {
                 toggleBulkActions();
             });
 
@@ -532,9 +545,9 @@
                 }
             }
 
-            $('.bulk-status-btn').on('click', function() {
+            $('.bulk-status-btn').on('click', function () {
                 const status = $(this).data('status');
-                const selectedIds = $('.vehicle-checkbox:checked').map(function() { return $(this).val(); }).get();
+                const selectedIds = $('.vehicle-checkbox:checked').map(function () { return $(this).val(); }).get();
 
                 if (selectedIds.length === 0) return;
 
@@ -559,7 +572,7 @@
                                 ids: selectedIds,
                                 ad_status: status
                             },
-                            success: function(res) {
+                            success: function (res) {
                                 if (res.success) {
                                     toastr.success(res.message);
                                     setTimeout(() => window.location.reload(), 1000);
@@ -571,7 +584,7 @@
             });
 
             // ── Quick Approve ────────────────────────────────────────────────────
-            $(document).on('click', '.quick-approve-btn', function() {
+            $(document).on('click', '.quick-approve-btn', function () {
                 const id = $(this).data('id');
                 const btn = $(this);
 
@@ -582,11 +595,21 @@
                         _token: '{{ csrf_token() }}',
                         ad_status: 'Publikált'
                     },
-                    success: function(res) {
+                    success: function (res) {
                         toastr.success('{{ __('Vehicle approved successfully!') }}');
                         setTimeout(() => window.location.reload(), 500);
                     }
                 });
+            });
+
+            // ── Keep status dropdown above sibling rows (same as users page) ─────
+            $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
+                $(this).closest('tr').addClass('status-dropdown-open');
+                $(this).closest('.vehicle-mobile-card').addClass('status-dropdown-open');
+            });
+            $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
+                $(this).closest('tr').removeClass('status-dropdown-open');
+                $(this).closest('.vehicle-mobile-card').removeClass('status-dropdown-open');
             });
 
             // ── Init tooltips ────────────────────────────────────────────────────
@@ -652,15 +675,15 @@
             transform: scale(1.002);
         }
 
-        /* ── Status dropdown z-index ────────────────────────── */
-        .status-dropdown .dropdown-menu {
-            z-index: 1060;
-            min-width: 140px;
-        }
-
-        .td-status {
-            position: relative;
-        }
+        /* ── Status dropdown – same fix as users page (proven to work) ─── */
+        .table-responsive { overflow-y: visible; }
+        #vehicles-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
+        .td-status { position: relative; }
+        #vehicles-table tbody tr.status-dropdown-open .td-status { z-index: 1066; }
+        .status-dropdown { position: relative; }
+        .status-dropdown.show { z-index: 1066; }
+        .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+        .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
         /* ── Mobile card ────────────────────────────────────── */
         .vehicle-mobile-card {
@@ -690,16 +713,20 @@
         .d-flex.flex-nowrap {
             flex-wrap: nowrap !important;
         }
+
         /* Ensure all columns are visible on screens 1440px and wider without horizontal scrollbar */
         @media (min-width: 1440px) {
             .table-responsive {
                 overflow-x: visible !important;
             }
+
             #vehicles-table {
                 width: 100% !important;
                 table-layout: auto;
             }
-            #vehicles-table th, #vehicles-table td {
+
+            #vehicles-table th,
+            #vehicles-table td {
                 padding-left: 0.5rem !important;
                 padding-right: 0.5rem !important;
             }
