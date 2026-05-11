@@ -64,8 +64,8 @@
                         </div>
                     @endif
 
-                    <!-- ─── TABLE ─── -->
-                    <table class="table table-hover" id="vehicles-table">
+                    <!-- TABLE VIEW -->
+                    <table class="table table-hover align-middle mb-0" id="vehicles-table">
                             <thead>
                                 <tr>
                                     <th width="10">
@@ -111,11 +111,11 @@
                                             </small>
                                         </td>
 
-                                        <td class="d-none d-lg-table-cell">
+                                        <td class="d-none d-lg-table-cell" style="max-width: 150px;">
                                             <div class="d-flex flex-column">
-                                                <span class="fw-bold">{{ $vehicle->user->first_name ?? 'N/A' }}
+                                                <span class="fw-bold text-truncate">{{ $vehicle->user->first_name ?? 'N/A' }}
                                                     {{ $vehicle->user->last_name ?? '' }}</span>
-                                                <small class="text-muted">{{ $vehicle->user->email ?? '' }}</small>
+                                                <small class="text-muted text-truncate">{{ $vehicle->user->email ?? '' }}</small>
                                             </div>
                                         </td>
 
@@ -126,14 +126,11 @@
                                         <td><span class="fw-bold text-primary">@formatCurrency($vehicle->price)</span>
                                         </td>
 
-                                        <td class="d-none d-xl-table-cell">
+                                        <td class="d-none d-xl-table-cell" style="max-width: 180px;">
                                             <div class="d-flex flex-column small">
-                                                <span><i
-                                                        class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
-                                                <span class="mx-2 text-muted">|</span>
-                                                <span><i
-                                                        class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
-                                                <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
+                                                <span class="text-truncate"><i class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
+                                                <span class="text-truncate"><i class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
+                                                <span class="text-truncate"><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
                                             </div>
                                         </td>
 
@@ -189,37 +186,29 @@
                                         </td>
 
                                         <td class="text-end pe-4">
-                                            <div class="dropdown vehicles-actions">
-                                                <button type="button"
-                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                            <div class="action-container">
+                                                <button type="button" class="btn-action view open-vehicle-modal-btn" 
+                                                        data-id="{{ $vehicle->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}">
+                                                    <i class="bx bx-show"></i>
                                                 </button>
-                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                                    <li>
-                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
-                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
+                                                
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
+                                                       class="btn-action edit"
+                                                       data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}">
+                                                        <i class="bx bx-edit-alt"></i>
+                                                    </a>
+                                                @endif
+
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                    <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button" class="btn-action delete delete-confirmation"
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}">
+                                                            <i class="bx bx-trash"></i>
                                                         </button>
-                                                    </li>
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                        <li>
-                                                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
-                                                                <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li>
-                                                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
-                                                                @csrf @method('DELETE')
-                                                                <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
-                                                                    <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    @endif
-                                                </ul>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
@@ -234,158 +223,8 @@
                             </tbody>
                         </table>
 
-                    <!-- ─── MOBILE CARD LIST (disabled – using table on all screens) ─── -->
-                    <div class="d-none" id="vehicles-mobile-list">
 
-                        <div class="mb-3">
-                            <input type="text" id="mobile-search" class="form-control form-control-sm"
-                                placeholder="{{ __('Quick search vehicles…') }}">
-                        </div>
 
-                        @forelse($vehicles as $vehicle)
-                            @php
-                                $statusClass = match ($vehicle->ad_status) {
-                                    'Publikált' => 'success',
-                                    'Függőben' => 'warning',
-                                    'Elutasítva' => 'danger',
-                                    'Piszkozat' => 'secondary',
-                                    default => 'primary',
-                                };
-                            @endphp
-
-                            <div class="vehicle-mobile-card card mb-3 shadow-sm border-0" data-id="{{ $vehicle->id }}"
-                                data-title="{{ strtolower($vehicle->title . ' ' . optional($vehicle->brand)->name . ' ' . optional($vehicle->model)->name) }}">
-
-                                <div class="card-body p-3">
-
-                                    <div class="d-flex gap-3 align-items-start">
-                                        <div class="flex-shrink-0">
-                                            @if($vehicle->main_image)
-                                                <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="70" height="55"
-                                                    class="rounded object-fit-cover">
-                                            @else
-                                                <div class="rounded bg-light d-flex align-items-center justify-content-center"
-                                                    style="width:70px;height:55px">
-                                                    <i class="bx bx-car text-muted fs-4"></i>
-                                                </div>
-                                            @endif
-                                        </div>
-
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="d-flex justify-content-between align-items-start flex-wrap gap-1">
-                                                <div>
-                                                    <strong class="d-block text-truncate"
-                                                        style="max-width:180px">{{ $vehicle->title }}</strong>
-                                                    <small class="text-muted">
-                                                        {{ optional($vehicle->brand)->name }}
-                                                        {{ optional($vehicle->model)->name }}
-                                                    </small>
-                                                </div>
-                                                <div class="dropdown status-dropdown">
-                                                    <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
-                                                        data-bs-toggle="dropdown">
-                                                        <span
-                                                            class="badge bg-{{ $statusClass }}">{{ __($vehicle->ad_status) }}</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                                        <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
-                                                            method="POST">
-                                                            @csrf @method('PATCH')
-                                                            @foreach(['Publikált' => 'success', 'Függőben' => 'warning', 'Elutasítva' => 'danger', 'Piszkozat' => 'secondary'] as $val => $cls)
-                                                                <li>
-                                                                    <button type="submit" name="ad_status" value="{{ $val }}"
-                                                                        class="dropdown-item d-flex align-items-center py-2">
-                                                                        <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
-                                                                        {{ __($val) }}
-                                                                    </button>
-                                                                </li>
-                                                            @endforeach
-                                                        </form>
-                                                    </ul>
-                                                </div>
-                                            </div>
-
-                                            <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                                                <span class="fw-bold text-primary small">@formatCurrency($vehicle->price)</span>
-                                                <span class="badge bg-label-secondary small">{{ $vehicle->year }}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="d-flex gap-3 mt-2 text-muted small flex-wrap">
-                                        @if(optional($vehicle->fuelType)->name)
-                                            <span><i class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
-                                        @endif
-                                        @if(optional($vehicle->transmission)->name)
-                                            <span><i class="bx bx-cog me-1"></i>{{ optional($vehicle->transmission)->name }}</span>
-                                        @endif
-                                        @if($vehicle->mileage)
-                                            <span><i class="bx bx-tachometer me-1"></i>{{ $vehicle->mileage }} km</span>
-                                        @endif
-                                    </div>
-
-                                    <div class="mt-1 small text-muted">
-                                        <i class="bx bx-user me-1"></i>
-                                        {{ $vehicle->user->first_name ?? 'N/A' }} {{ $vehicle->user->last_name ?? '' }}
-                                        @if($vehicle->user->email ?? null)
-                                            <span class="ms-1 d-none d-sm-inline">&bull; {{ $vehicle->user->email }}</span>
-                                        @endif
-                                    </div>
-
-                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-
-                                        <button type="button"
-                                            class="btn btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn"
-                                            data-id="{{ $vehicle->id }}">
-                                            <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }} me-1"></i>
-                                            {{ $vehicle->is_featured ? __('Featured') : __('Feature') }}
-                                        </button>
-
-                                        <div class="dropdown vehicles-actions">
-                                            <button type="button"
-                                                class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
-                                                data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-                                                <i class="icon-base bx bx-dots-vertical-rounded"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                                <li>
-                                                    <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
-                                                        <i class="bx bx-show me-2"></i>{{ __('View Details') }}
-                                                    </button>
-                                                </li>
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                    <li>
-                                                        <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
-                                                            <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
-                                                        </a>
-                                                    </li>
-                                                @endif
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                    <li><hr class="dropdown-divider"></li>
-                                                    <li>
-                                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
-                                                            @csrf @method('DELETE')
-                                                            <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
-                                                                <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
-                                                            </button>
-                                                        </form>
-                                                    </li>
-                                                @endif
-                                            </ul>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                        @empty
-                            <div class="text-center py-5 text-muted">
-                                <i class="bx bx-car fs-1 d-block mb-2"></i>
-                                {{ __('No vehicles found.') }}
-                            </div>
-                        @endforelse
-
-                    </div>
 
                 </div>
             </div>
@@ -736,16 +575,48 @@
 
         /* ── Table layout ───────────────────────────────────── */
         .vehicles-table-responsive {
-            overflow-x: visible;
-            overflow-y: auto;        /* enables sticky header */
-            max-height: 75vh;        /* scroll container needed for sticky */
+            overflow-x: auto;        /* Restore horizontal scroll when needed */
+            overflow-y: auto;        /* Enables sticky header */
+            max-height: 75vh;        /* Scroll container needed for sticky */
         }
-        #vehicles-table_wrapper { overflow-x: visible; }
-        #vehicles-table { width: 100% !important; table-layout: fixed; }
+        #vehicles-table_wrapper { overflow-x: hidden; }
+        #vehicles-table { width: 100% !important; table-layout: auto; }
         #vehicles-table th,
-        #vehicles-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
-        #vehicles-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
+        #vehicles-table td { padding: .75rem .5rem !important; font-size: .82rem; vertical-align: middle; }
+        #vehicles-table th { font-size: .78rem; white-space: normal; line-height: 1.2; position: relative; padding-right: 25px !important; }
         #vehicles-table td { word-break: break-word; }
+        
+        /* Truncation and column sizing */
+        .text-truncate { max-width: 100%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        #vehicles-table td:last-child { width: 100px; text-align: right; }
+        
+        /* Premium Action Buttons */
+        .btn-action {
+            width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+            padding: 0 !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+        .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+        .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+        .btn-action i { font-size: 1.15rem !important; }
+        
+        .action-container {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
 
         /* ── STICKY HEADER – all screen sizes ──────────────── */
         #vehicles-table thead th {

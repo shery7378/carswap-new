@@ -148,6 +148,7 @@
                 </div>
             </div>
             <div class="card-body p-0">
+                <!-- TABLE VIEW -->
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover align-middle mb-0" id="relationships-table">
                         <thead>
@@ -182,7 +183,7 @@
                                     <td class="name-cell">
                                         <div class="d-flex align-items-center">
                                             <div class="indicator badge rounded-pill bg-{{ $item->is_active ? 'success' : 'secondary' }} me-2 p-1"></div>
-                                            <span class="fw-bold text-dark fs-6 item-name">{{ $item->name }}</span>
+                                            <span class="fw-bold text-dark fs-6 item-name text-truncate">{{ $item->name }}</span>
                                         </div>
                                     </td>
                                     @if($type === 'models')
@@ -204,35 +205,34 @@
                                                 data-type="{{ $type }}"
                                                 {{ ($item->is_active ?? true) ? 'checked' : '' }}>
                                         </div>
-                                    </td>
-                                    <td class="text-center pe-4">
-                                        <div class="d-flex justify-content-center gap-2">
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
-                                                data-id="{{ $item->id }}"
-                                                data-name="{{ $item->name }}"
-                                                @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
-                                                @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
-                                                data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Edit Item') }}" aria-label="{{ __('Edit Item') }}">
-                                                <i class="icon-base bx bx-edit-alt"></i>
-                                            </button>
+                                    </td>                                     <td class="text-center pe-4">
+                                         <div class="action-container">
+                                             <button type="button" class="btn-action edit edit-btn"
+                                                 data-id="{{ $item->id }}"
+                                                 data-name="{{ $item->name }}"
+                                                 @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
+                                                 @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
+                                                 data-bs-toggle="tooltip" title="{{ __('Edit Item') }}">
+                                                 <i class="bx bx-edit-alt"></i>
+                                             </button>
 
-                                            <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
-                                                method="POST" class="d-inline delete-form">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-trigger"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top" title="{{ __('Delete Item') }}" aria-label="{{ __('Delete Item') }}">
-                                                    <i class="icon-base bx bx-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
+                                             <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
+                                                 method="POST" class="d-inline delete-form">
+                                                 @csrf
+                                                 @method('DELETE')
+                                                 <button type="button" class="btn-action delete delete-trigger"
+                                                     data-bs-toggle="tooltip" title="{{ __('Delete Item') }}">
+                                                     <i class="bx bx-trash"></i>
+                                                 </button>
+                                             </form>
+                                         </div>
+                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="{{ $type === 'models' ? 5 : 4 }}" class="text-center py-5">
+                                    <td colspan="{{ $type === 'models' ? 6 : 5 }}" class="text-center py-5">
                                         <div class="opacity-25 mb-2"><i class="bx bx-layers display-4 text-muted"></i></div>
-                                        <h6 class="text-muted fw-normal">{{ __('No :title records matching your search.', ['title' => Str::lower(__($title))]) }}</h6>
+                                        <h6 class="text-muted fw-normal">{{ __('No records found.') }}</h6>
                                     </td>
                                 </tr>
                             @endforelse
@@ -589,12 +589,57 @@
 }
 
 .relationships-card .table thead th {
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: #475569;
-    padding: 1rem 0.5rem;
+    padding: 0.75rem 0.5rem !important;
+    position: relative;
+    padding-right: 30px !important;
+    white-space: normal;
+    line-height: 1.2;
+}
+
+.relationships-card .table tbody td {
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.82rem;
+}
+
+.text-truncate {
+    max-width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Premium Action Buttons */
+.btn-action {
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+.btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+.btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+.btn-action i { font-size: 1.15rem !important; }
+
+.action-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
 }
 
 .status-toggle-switch {

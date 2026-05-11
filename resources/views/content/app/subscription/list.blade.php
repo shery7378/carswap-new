@@ -15,8 +15,8 @@
                 </div>
             </div>
             <div class="card-body p-0 pt-3">
-                <!-- ─── DESKTOP TABLE ─── -->
-                <div class="table-responsive text-nowrap d-none d-md-block">
+                <!-- TABLE VIEW -->
+                <div class="table-responsive text-nowrap">
                     <table class="table table-hover align-middle border-top" id="subscriptions-table">
                         <thead class="bg-light bg-opacity-50">
                             <tr>
@@ -57,7 +57,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex flex-column">
-                                        <span class="fw-bold fs-6">@formatCurrency($subscription->amount)</span>
+                                        <span class="fw-bold fs-6">@formatCurrency($subscription->amount, $subscription->duration === 'Monthly')</span>
                                         <small class="text-muted text-uppercase" style="font-size: 0.7rem;">{{ __('Every') }} {{ __($subscription->plan->billing_period ?? 'Month') }}</small>
                                     </div>
                                 </td>
@@ -83,21 +83,22 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="dropdown">
-                                        <button type="button" class="btn btn-icon btn-sm dropdown-toggle hide-arrow shadow-none" data-bs-toggle="dropdown" title="{{ __('Actions') }}" aria-label="{{ __('Actions') }}">
-                                            <i class="icon-base bx bx-dots-vertical-rounded"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            <a class="dropdown-item py-2" href="{{ route('app-subscription-view', $subscription->id) }}"><i class="bx bx-show-alt me-1 text-primary"></i> {{ __('View Details') }}</a>
-                                            <a class="dropdown-item py-2" href="{{ route('app-subscription-view', $subscription->id) }}#edit"><i class="bx bx-edit-alt me-1 text-info"></i> {{ __('Adjust Plan') }}</a>
-                                            <div class="dropdown-divider"></div>
-                                            @if($subscription->status === 'active')
-                                                <a class="dropdown-item py-2 text-warning status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="paused"><i class="bx bx-pause-circle me-1"></i> {{ __('Suspend') }}</a>
-                                            @else
-                                                <a class="dropdown-item py-2 text-success status-toggle-btn" href="javascript:void(0);" data-id="{{ $subscription->id }}" data-status="active"><i class="bx bx-play-circle me-1"></i> {{ __('Reactivate') }}</a>
-                                            @endif
-                                            <a class="dropdown-item py-2 text-danger" href="javascript:void(0);"><i class="bx bx-x-circle me-1"></i> {{ __('Cancel Flow') }}</a>
-                                        </div>
+                                    <div class="action-container">
+                                        <a class="btn-action view" href="{{ route('app-subscription-view', $subscription->id) }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}">
+                                            <i class="bx bx-show"></i>
+                                        </a>
+                                        <a class="btn-action edit" href="{{ route('app-subscription-view', $subscription->id) }}#edit" data-bs-toggle="tooltip" title="{{ __('Adjust Plan') }}">
+                                            <i class="bx bx-edit-alt"></i>
+                                        </a>
+                                        @if($subscription->status === 'active')
+                                            <button class="btn-action view status-toggle-btn" style="background-color: #fff3e0 !important; color: #ff9800 !important;" data-id="{{ $subscription->id }}" data-status="paused" data-bs-toggle="tooltip" title="{{ __('Suspend') }}">
+                                                <i class="bx bx-pause-circle"></i>
+                                            </button>
+                                        @else
+                                            <button class="btn-action edit" style="background-color: #e8f5e9 !important; color: #4caf50 !important;" data-id="{{ $subscription->id }}" data-status="active" data-bs-toggle="tooltip" title="{{ __('Reactivate') }}">
+                                                <i class="bx bx-play-circle"></i>
+                                            </button>
+                                        @endif
                                     </div>
                                 </td>
                             </tr>
@@ -106,66 +107,6 @@
                     </table>
                 </div>
 
-                <!-- ─── MOBILE CARD LIST ─── -->
-                <div class="d-md-none p-3">
-                    @foreach($subscriptions as $subscription)
-                    <div class="card mb-3 shadow-none border rounded-3 overflow-hidden subscription-row" data-id="{{ $subscription->id }}">
-                        <div class="card-body p-3">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar avatar-sm me-2">
-                                        <span class="avatar-initial rounded-circle bg-label-primary">
-                                            {{ strtoupper(substr($subscription->user->name ?? $subscription->user->first_name ?? 'U', 0, 1)) }}
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">{{ $subscription->user->name ?? $subscription->user->first_name . ' ' . $subscription->user->last_name ?? __('Unknown') }}</h6>
-                                        <small class="text-muted small">{{ $subscription->user->email }}</small>
-                                    </div>
-                                </div>
-                                <span class="badge bg-label-{{ $subscription->plan->color ?? 'primary' }} rounded-pill">
-                                    {{ __($subscription->plan->name ?? 'Standard') }}
-                                </span>
-                            </div>
-                            
-                            <div class="row g-2 mb-3">
-                                <div class="col-6">
-                                    <small class="text-muted d-block smaller text-uppercase">{{ __('Status') }}</small>
-                                    @php
-                                        $statusClass = [
-                                            'active' => 'text-success',
-                                            'trial' => 'text-info',
-                                            'expired' => 'text-danger',
-                                            'cancelled' => 'text-secondary',
-                                            'pending' => 'text-warning',
-                                            'paused' => 'text-warning'
-                                        ][$subscription->status] ?? 'text-primary';
-                                    @endphp
-                                    <span class="{{ $statusClass }} fw-bold small"><i class="bx bx-circle me-1 small"></i>{{ __($subscription->status) }}</span>
-                                </div>
-                                <div class="col-6 text-end">
-                                    <small class="text-muted d-block smaller text-uppercase">{{ __('Amount') }}</small>
-                                    <span class="fw-bold small">@formatCurrency($subscription->amount, ($subscription->plan->billing_period ?? '') == 'Month')</span>
-                                </div>
-                            </div>
-
-                            <div class="d-flex gap-2 border-top pt-2 mt-2">
-                                <a href="{{ route('app-subscription-view', $subscription->id) }}" class="btn btn-sm btn-label-primary flex-grow-1 shadow-none">
-                                    <i class="bx bx-show me-1"></i> {{ __('Details') }}
-                                </a>
-                                @if($subscription->status === 'active')
-                                    <button class="btn btn-sm btn-label-warning flex-grow-1 shadow-none status-toggle-btn" data-id="{{ $subscription->id }}" data-status="paused">
-                                        <i class="bx bx-pause me-1"></i> {{ __('Suspend') }}
-                                    </button>
-                                @else
-                                    <button class="btn btn-sm btn-label-success flex-grow-1 shadow-none status-toggle-btn" data-id="{{ $subscription->id }}" data-status="active">
-                                        <i class="bx bx-play me-1"></i> {{ __('Activate') }}
-                                    </button>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
                 </div>
 
             </div>
@@ -308,10 +249,50 @@
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);
 }
 #subscriptions-table thead th {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     letter-spacing: 0.8px;
     text-transform: uppercase;
     font-weight: 700;
+    padding: 0.6rem 0.5rem !important;
+    position: relative;
+    padding-right: 30px !important;
+    white-space: normal;
+    line-height: 1.2;
+}
+#subscriptions-table tbody td {
+    padding: 0.5rem 0.5rem !important;
+    font-size: 0.82rem;
+}
+.table-responsive {
+    overflow-x: auto !important;
+}
+
+/* Premium Action Buttons */
+.btn-action {
+    width: 32px !important;
+    height: 32px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 8px !important;
+    padding: 0 !important;
+    border: none !important;
+    transition: all 0.2s ease !important;
+    text-decoration: none !important;
+}
+.btn-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+.btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+.btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+.btn-action i { font-size: 1.15rem !important; }
+
+.action-container {
+    display: flex;
+    gap: 8px;
+    justify-content: center;
 }
 .bg-label-success {
     background-color: #e8fadf !important;

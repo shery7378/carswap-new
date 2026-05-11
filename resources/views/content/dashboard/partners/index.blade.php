@@ -27,21 +27,21 @@
                         </div>
                     @endif
 
+                    <!-- TABLE VIEW -->
                     <div class="table-responsive">
                         <table class="table table-hover align-middle border-top" id="partners-table">
                             <thead class="bg-light bg-opacity-50">
                                 <tr>
-                                    <th style="width: 80px;">{{ __('Logo') }}</th>
+                                    <th>{{ __('Logo') }}</th>
                                     <th>{{ __('Partner Name') }}</th>
-                                    <th>{{ __('Contact Information') }}</th>
+                                    <th>{{ __('Contact Info') }}</th>
                                     <th>{{ __('Status') }}</th>
-                                    <th class="text-center" style="width: 100px;">{{ __('Actions') }}</th>
+                                    <th class="text-center">{{ __('Actions') }}</th>
                                 </tr>
                             </thead>
-
-                            <tbody>
+                            <tbody class="table-border-bottom-0">
                                 @forelse($partners as $partner)
-                                    <tr data-id="{{ $partner->id }}">
+                                    <tr>
                                         <td>
                                             @if($partner->image)
                                                 <img src="{{ asset('storage/' . $partner->image) }}" width="55" height="55"
@@ -55,87 +55,62 @@
                                             @endif
                                         </td>
 
-                                        <td>
-                                            <strong>{{ $partner->name }}</strong>
+                                         <td style="max-width: 200px;">
+                                            <strong class="text-truncate d-block">{{ $partner->name }}</strong>
                                             @if($partner->website)
-                                                <br>
-                                                <small class="text-primary">
+                                                <small class="text-primary text-truncate d-block">
                                                     <i class="bx bx-link-external me-1"></i>
                                                     {{ str_replace(['http://', 'https://'], '', $partner->website) }}
                                                 </small>
                                             @endif
                                         </td>
 
-                                        <td>
-                                            <small class="text-muted d-block mb-1">
+                                         <td style="max-width: 220px;">
+                                            <small class="text-muted d-block mb-0 text-truncate">
                                                 <i class="bx bx-envelope me-1"></i>
                                                 {{ $partner->email ?? 'N/A' }}
                                             </small>
-                                            <small class="text-muted d-block mb-1">
+                                            <small class="text-muted d-block mb-0 text-truncate">
                                                 <i class="bx bx-phone me-1"></i>
                                                 {{ $partner->phone ?? 'N/A' }}
                                             </small>
                                             @if($partner->address)
-                                                <small class="text-dark d-block">
+                                                <small class="text-dark d-block text-truncate">
                                                     <i class="bx bx-map-pin me-1 text-primary"></i>
-                                                    {{ Str::limit($partner->address, 35) }}
+                                                    {{ $partner->address }}
                                                 </small>
                                             @endif
                                         </td>
 
                                         <td>
-                                            @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
-                                                <div class="dropdown">
-                                                    <button type="button" 
-                                                            class="btn btn-sm btn-{{ $partner->is_active ? 'label-success' : 'label-danger' }} dropdown-toggle hide-arrow p-1 px-2" 
-                                                            data-bs-toggle="dropdown" 
-                                                            aria-expanded="false"
-                                                            data-bs-popper-config='{"strategy":"fixed"}'>
-                                                        {{ $partner->is_active ? __('Active') : __('Inactive') }}
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0" style="z-index: 1060; min-width: 120px;">
-                                                        <li>
-                                                            <form action="{{ route('admin.partners.toggle-status', $partner->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('PATCH')
-                                                                <button type="submit" class="dropdown-item d-flex align-items-center py-2">
-                                                                    <i class="bx {{ $partner->is_active ? 'bx-block text-danger' : 'bx-check-circle text-success' }} me-2 fs-5"></i>
-                                                                    <span>{{ $partner->is_active ? __('Set Inactive') : __('Set Active') }}</span>
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            @else
-                                                <span class="badge {{ $partner->is_active ? 'bg-label-success' : 'bg-label-danger' }}">
-                                                    {{ $partner->is_active ? __('Active') : __('Inactive') }}
-                                                </span>
-                                            @endif
+                                            <span class="badge bg-label-{{ $partner->is_active ? 'success' : 'secondary' }} rounded-pill">
+                                                {{ $partner->is_active ? __('Active') : __('Inactive') }}
+                                            </span>
                                         </td>
 
-                                        <td>
-                                            <div class="d-flex align-items-center justify-content-center gap-1">
+                                         <td>
+                                            <div class="action-container">
                                                 <a href="{{ route('admin.partners.show', $partner->id) }}"
-                                                   class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                   data-bs-toggle="tooltip" title="{{ __('Full Page') }}" aria-label="{{ __('Full Page') }}">
-                                                    <i class="icon-base bx bx-show"></i>
+                                                   class="btn-action view"
+                                                   data-bs-toggle="tooltip" title="{{ __('Full Page') }}">
+                                                    <i class="bx bx-show"></i>
                                                 </a>
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('edit-partners', 'admin-guard'))
                                                     <a href="{{ route('admin.partners.edit', $partner->id) }}"
-                                                       class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                       data-bs-toggle="tooltip" title="{{ __('Edit Partner') }}" aria-label="{{ __('Edit Partner') }}">
-                                                        <i class="icon-base bx bx-edit-alt"></i>
+                                                       class="btn-action edit"
+                                                       data-bs-toggle="tooltip" title="{{ __('Edit Partner') }}">
+                                                    <i class="bx bx-edit-alt"></i>
                                                     </a>
                                                 @endif
 
                                                 @if(auth('admin-guard')->user()->hasPermissionTo('delete-partners', 'admin-guard'))
-                                                    <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST">
+                                                    <form action="{{ route('admin.partners.destroy', $partner->id) }}" method="POST" class="d-inline">
                                                         @csrf
                                                         @method('DELETE')
-                                                        <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete Partner') }}" aria-label="{{ __('Delete Partner') }}">
-                                                            <i class="icon-base bx bx-trash"></i>
+                                                        <button type="button" class="btn-action delete delete-confirmation"
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Partner') }}">
+                                                            <i class="bx bx-trash"></i>
                                                         </button>
                                                     </form>
                                                 @endif
@@ -153,6 +128,7 @@
                             </tbody>
                         </table>
                     </div>
+
 
                 </div>
             </div>
@@ -273,9 +249,55 @@
 
         /* Table header */
         #partners-table thead th {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             letter-spacing: 0.5px;
             text-transform: uppercase;
+            padding: 0.6rem 0.4rem !important;
+            position: relative;
+            padding-right: 25px !important;
+            white-space: normal;
+            line-height: 1.2;
+        }
+
+        #partners-table tbody td {
+            padding: 0.5rem 0.4rem !important;
+            font-size: 0.82rem;
+        }
+
+        .text-truncate {
+            max-width: 100%;
+            display: inline-block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Premium Action Buttons */
+        .btn-action {
+            width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+            padding: 0 !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+        .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+        .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+        .btn-action i { font-size: 1.15rem !important; }
+        
+        .action-container {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
         }
 
         /* Shadow */
@@ -302,7 +324,7 @@
 
         /* Dropdown fix for table-responsive */
         .table-responsive {
-            overflow: visible !important;
+            overflow-x: auto !important;
         }
         
         .dropdown-menu {

@@ -71,7 +71,7 @@ class RenewSubscriptions extends Command
 
                 // 1. Create and confirm a PaymentIntent off-session
                 $paymentIntent = PaymentIntent::create([
-                    'amount' => (int)($amount * 100),
+                    'amount' => (int)$amount,
                     'currency' => 'huf',
                     'customer' => $sub->stripe_customer_id,
                     'payment_method' => $sub->stripe_payment_method_id,

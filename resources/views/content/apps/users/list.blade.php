@@ -43,7 +43,7 @@
                         </div>
                     @endif
 
-                    <!-- ─── DESKTOP TABLE ─── -->
+                    <!-- TABLE VIEW -->
 	                    <div class="table-responsive users-table-responsive">
 	                        <table class="table table-hover" id="users-table">
                             <thead>
@@ -115,36 +115,22 @@
                                             {{ $user->created_at->formatDate() }}
                                         </td>
 	                                        <td class="text-end pe-4">
-	                                            <div class="dropdown users-actions">
-	                                                <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-	                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
-	                                                </button>
-		                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-		                                                    <li>
-		                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view show-details-btn" data-id="{{ $user->id }}">
-		                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
-		                                                        </button>
-		                                                    </li>
-		                                                    <li>
-		                                                        <a href="{{ route('admin.web-users.edit', $user->id) }}" class="dropdown-item d-flex align-items-center action-edit">
-		                                                            <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Profile') }}
-		                                                        </a>
-		                                                    </li>
-		                                                    <li>
-		                                                        <button type="button" class="dropdown-item d-flex align-items-center action-password change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">
-		                                                            <i class="bx bx-key me-2"></i>{{ __('Change Password') }}
-		                                                        </button>
-		                                                    </li>
-	                                                    <li><hr class="dropdown-divider"></li>
-	                                                    <li>
-	                                                        <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="m-0 delete-form">
-	                                                            @csrf @method('DELETE')
-	                                                            <button type="button" class="dropdown-item d-flex align-items-center delete-confirmation">
-	                                                                <i class="bx bx-trash me-2"></i>{{ __('Delete User') }}
-	                                                            </button>
-	                                                        </form>
-	                                                    </li>
-	                                                </ul>
+	                                            <div class="action-container">
+                                                    <button type="button" class="btn-action view show-details-btn" data-id="{{ $user->id }}" data-bs-toggle="tooltip" title="{{ __('View Details') }}">
+                                                        <i class="bx bx-show"></i>
+                                                    </button>
+                                                    <a href="{{ route('admin.web-users.edit', $user->id) }}" class="btn-action edit" data-bs-toggle="tooltip" title="{{ __('Edit Profile') }}">
+                                                        <i class="bx bx-edit-alt"></i>
+                                                    </a>
+                                                    <button type="button" class="btn-action password change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}" data-bs-toggle="tooltip" title="{{ __('Change Password') }}">
+                                                        <i class="bx bx-key"></i>
+                                                    </button>
+                                                    <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="m-0 delete-form d-inline">
+                                                        @csrf @method('DELETE')
+                                                        <button type="button" class="btn-action delete delete-confirmation" data-bs-toggle="tooltip" title="{{ __('Delete User') }}">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </form>
 	                                            </div>
 	                                        </td>
                                     </tr>
@@ -157,94 +143,6 @@
                         </table>
                     </div>
 
-                    <!-- ─── MOBILE CARD LIST ─── -->
-                    <div class="d-none" id="users-mobile-list">
-                        <div class="mb-3">
-                            <input type="text" id="mobile-search" class="form-control form-control-sm" placeholder="{{ __('Quick search users…') }}">
-                        </div>
-                        @forelse($users as $user)
-                            @php
-                                $status = $user->status ?: 'active';
-                                $statusClass = match ($status) {
-                                    'active' => 'success',
-                                    'inactive' => 'warning',
-                                    'banned' => 'danger',
-                                    default => 'primary',
-                                };
-                            @endphp
-                            <div class="user-mobile-card card mb-3 shadow-sm border-0" data-id="{{ $user->id }}" data-title="{{ strtolower($user->first_name . ' ' . $user->last_name . ' ' . $user->email) }}">
-                                <div class="card-body p-3">
-                                    <div class="d-flex gap-3 align-items-start">
-                                        <div class="avatar avatar-md border border-light shadow-sm bg-white rounded-circle flex-shrink-0">
-                                            <img src="{{ $user->getAvatarUrl() }}" alt="avatar" class="rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                                        </div>
-                                        <div class="flex-grow-1 min-width-0">
-                                            <div class="d-flex justify-content-between align-items-start">
-                                                <div>
-                                                    <strong class="d-block text-truncate">{{ $user->first_name }} {{ $user->last_name }}</strong>
-                                                    <small class="text-muted d-block text-truncate">{{ $user->email }}</small>
-                                                    <div class="mt-1">
-                                                        @if($user->is_trader)
-                                                            <span class="badge bg-label-info small me-1">{{ __('Trader') }}</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
-                                                <div class="dropdown status-dropdown">
-                                                    <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
-                                                        <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
-                                                    </button>
-                                                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-                                                        @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
-                                                            <li>
-                                                                <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
-                                                                    <span class="badge badge-dot bg-{{ $cls }} me-2"></span>{{ __(ucfirst($val)) }}
-                                                                </button>
-                                                            </li>
-                                                        @endforeach
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-	                                    <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
-	                                        <small class="text-muted">{{ __('Joined') }} {{ $user->created_at->formatDate() }}</small>
-	                                        <div class="dropdown users-actions">
-	                                            <button type="button" class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-	                                                <i class="icon-base bx bx-dots-vertical-rounded"></i>
-	                                            </button>
-	                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
-	                                                <li>
-	                                                    <button type="button" class="dropdown-item d-flex align-items-center action-view show-details-btn" data-id="{{ $user->id }}">
-	                                                        <i class="bx bx-show me-2"></i>{{ __('View Details') }}
-	                                                    </button>
-	                                                </li>
-	                                                <li>
-	                                                    <a href="{{ route('admin.web-users.edit', $user->id) }}" class="dropdown-item d-flex align-items-center action-edit">
-	                                                        <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Profile') }}
-	                                                    </a>
-	                                                </li>
-	                                                <li>
-	                                                    <button type="button" class="dropdown-item d-flex align-items-center action-password change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">
-	                                                        <i class="bx bx-key me-2"></i>{{ __('Change Password') }}
-	                                                    </button>
-	                                                </li>
-	                                                <li><hr class="dropdown-divider"></li>
-	                                                <li>
-	                                                    <form action="{{ route('admin.web-users.destroy', $user->id) }}" method="POST" class="m-0 delete-form">
-	                                                        @csrf @method('DELETE')
-	                                                        <button type="button" class="dropdown-item d-flex align-items-center delete-confirmation">
-	                                                            <i class="bx bx-trash me-2"></i>{{ __('Delete User') }}
-	                                                        </button>
-	                                                    </form>
-	                                                </li>
-	                                            </ul>
-	                                        </div>
-	                                    </div>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="text-center py-5 text-muted">{{ __('No web users found.') }}</div>
-                        @endforelse
                     </div>
                 </div>
             </div>
@@ -639,17 +537,44 @@ $(document).ready(function () {
 		    .users-actions .dropdown-item.action-password:focus,
 		    .users-actions .dropdown-item.action-password:hover i,
 		    .users-actions .dropdown-item.action-password:focus i { color: var(--bs-warning) !important; }
-		    .users-actions .dropdown-item.delete-confirmation:hover,
-		    .users-actions .dropdown-item.delete-confirmation:focus,
 		    .users-actions .dropdown-item.delete-confirmation:hover i,
 		    .users-actions .dropdown-item.delete-confirmation:focus i { color: var(--bs-danger) !important; }
+            
+            /* Premium Action Buttons */
+            .btn-action {
+                width: 32px !important;
+                height: 32px !important;
+                display: inline-flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                border-radius: 8px !important;
+                padding: 0 !important;
+                border: none !important;
+                transition: all 0.2s ease !important;
+                text-decoration: none !important;
+            }
+            .btn-action:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+            .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+            .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+            .btn-action.password { background-color: #fff8e1 !important; color: #ffb300 !important; }
+            .btn-action i { font-size: 1.15rem !important; }
+
+            .action-container {
+                display: flex;
+                gap: 8px;
+                justify-content: flex-end;
+            }
 
 		    /* Fit all columns on screen (desktop) */
-		    .users-table-responsive { overflow-x: visible; overflow-y: visible; }
-		    #users-table_wrapper { overflow-x: visible; }
-		    #users-table { width: 100% !important; table-layout: fixed; }
-		    #users-table th, #users-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
-		    #users-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
+		    .users-table-responsive { overflow-x: hidden !important; overflow-y: visible; }
+		    #users-table_wrapper { overflow-x: hidden !important; }
+		    #users-table { width: 100% !important; table-layout: auto; }
+		    #users-table th, #users-table td { padding: .45rem .25rem !important; font-size: .82rem; vertical-align: middle; }
+		    #users-table th { font-size: .78rem; white-space: nowrap; line-height: 1.15; }
 		    #users-table td { word-break: break-word; }
 		    #users-table td:nth-child(2) { white-space: normal; }
 		    #users-table td:nth-child(2) .fw-bold,
@@ -669,7 +594,7 @@ $(document).ready(function () {
 			        #users-table { min-width: 820px; table-layout: fixed; }
 			        #users-table thead th { position: sticky; top: 0; z-index: 10; background: var(--bs-body-bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 			        #users-table th, #users-table td { font-size: .78rem; padding: .45rem .3rem !important; }
-			        #users-table th { font-size: .74rem; }
+			        #users-table th { font-size: .74rem; position: relative; padding-right: 30px !important; white-space: normal; line-height: 1.2; }
 			        .users-actions .btn.btn-icon { width: 34px; height: 34px; }
 			        #users-table th:nth-child(1), #users-table td:nth-child(1) { width: 60px; }
 			        #users-table th:nth-child(2), #users-table td:nth-child(2) { width: 190px; }

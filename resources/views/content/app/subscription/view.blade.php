@@ -23,12 +23,12 @@
                         <div>
                             <h4 class="fw-bold mb-2">#INVOICE-{{ $subscription->id }}</h4>
                             <div class="mb-2">
-                                <span class="me-1">Date Issues:</span>
+                                <span class="me-1">Kiadás dátuma:</span>
                                 <span
                                     class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }}</span>
                             </div>
                             <div>
-                                <span class="me-1">Status:</span>
+                                <span class="me-1">Állapot:</span>
                                 @php
                                     $statusClass = [
                                         'active' => 'bg-label-success',
@@ -47,7 +47,7 @@
                 <div class="card-body">
                     <div class="row p-sm-3 p-0">
                         <div class="col-xl-6 col-md-12 col-sm-5 col-12 mb-xl-0 mb-md-4 mb-sm-0 mb-4">
-                            <h6 class="pb-2 fw-bold text-uppercase">Invoice To:</h6>
+                            <h6 class="pb-2 fw-bold text-uppercase">Számlázási címzett:</h6>
                             <p class="mb-1 fw-bold">
                                 {{ $subscription->billing_full_name ?? $subscription->user->name ?? 'N/A' }}</p>
                             <p class="mb-1 text-muted">{{ $subscription->billing_company_name ?? 'N/A' }}</p>
@@ -56,19 +56,19 @@
                             <p class="mb-0 text-muted">{{ $subscription->user->email ?? 'N/A' }}</p>
                         </div>
                         <div class="col-xl-6 col-md-12 col-sm-7 col-12">
-                            <h6 class="pb-2 fw-bold text-uppercase">Subscription Details:</h6>
+                            <h6 class="pb-2 fw-bold text-uppercase">Előfizetés részletei:</h6>
                             <table>
                                 <tbody>
                                     <tr>
-                                        <td class="pe-3">Plan:</td>
+                                        <td class="pe-3">Csomag:</td>
                                         <td class="fw-bold">{{ $subscription->plan->name ?? 'Standard' }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="pe-3">Cycle:</td>
-                                        <td>Every {{ $subscription->plan->billing_period ?? 'Month' }}</td>
+                                        <td class="pe-3">Ciklus:</td>
+                                        <td>Minden {{ $subscription->plan->billing_period ?? 'Hónap' }}</td>
                                     </tr>
                                     <tr>
-                                        <td class="pe-3">Valid Until:</td>
+                                        <td class="pe-3">Érvényes eddig:</td>
                                         <td>{{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                                         </td>
                                     </tr>
@@ -81,15 +81,15 @@
                     <table class="table border-top m-0">
                         <thead>
                             <tr>
-                                <th>Item Description</th>
-                                <th>Billing Period</th>
-                                <th>Amount</th>
+                                <th>Tétel megnevezése</th>
+                                <th>Számlázási időszak</th>
+                                <th>Összeg</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td class="text-nowrap fw-bold fs-6">
-                                    Subscription to {{ $subscription->plan->name ?? 'Standard' }} Plan
+                                    Előfizetés a {{ $subscription->plan->name ?? 'Standard' }} csomagra
                                 </td>
                                 <td class="text-nowrap text-muted">
                                     {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} -
@@ -105,24 +105,23 @@
                     <div class="row">
                         <div class="col-12 text-end">
                             <div class="d-flex justify-content-end align-items-center mb-2">
-                                <span class="me-3">Subtotal:</span>
+                                <span class="me-3">Részösszeg:</span>
                                 <span class="fw-bold fs-6">@formatCurrency($subscription->amount)</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center mb-2">
-                                <span class="me-3">Tax:</span>
+                                <span class="me-3">Adó:</span>
                                 <span class="fw-bold fs-6">@formatCurrency(0)</span>
                             </div>
                             <div class="d-flex justify-content-end align-items-center border-top pt-2">
-                                <span class="me-3 fs-5 fw-bold">Total:</span>
+                                <span class="me-3 fs-5 fw-bold">Összesen:</span>
                                 <span class="fw-bold fs-4 text-primary">@formatCurrency($subscription->amount)</span>
                             </div>
                         </div>
                     </div>
                     <div class="row mt-4">
                         <div class="col-12">
-                            <h6 class="fw-bold">Note:</h6>
-                            <span class="text-muted small">It was a pleasure working with you and your team. We hope you
-                                keep using CarSwap. Thank you!</span>
+                            <h6 class="fw-bold">Megjegyzés:</h6>
+                            <span class="text-muted small">Öröm volt Önnel és csapatával dolgozni. Reméljük, továbbra is a CarSwap-ot használja. Köszönjük!</span>
                         </div>
                     </div>
                 </div>
@@ -130,17 +129,17 @@
 
             <div class="card mt-4 border-0 shadow-sm overflow-hidden">
                 <div class="card-header border-bottom">
-                    <h5 class="mb-0 fw-bold">Recent Payments</h5>
+                    <h5 class="mb-0 fw-bold">Legutóbbi fizetések</h5>
                 </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover align-middle">
                         <thead class="bg-light">
                             <tr>
-                                <th>ID</th>
-                                <th>Amount</th>
-                                <th>Method</th>
-                                <th>Status</th>
-                                <th>Date</th>
+                                <th>Azonosító</th>
+                                <th>Összeg</th>
+                                <th>Mód</th>
+                                <th>Állapot</th>
+                                <th>Dátum</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -155,7 +154,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="text-center text-muted py-4">No payment records found.</td>
+                                    <td colspan="5" class="text-center text-muted py-4">Nem találhatók fizetési rekordok.</td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -168,38 +167,38 @@
         <div class="col-xl-3 col-md-4 col-12">
             <div class="card mb-4 border-0 shadow-sm">
                 <div class="card-header border-bottom">
-                    <h5 class="mb-0 fw-bold">Actions</h5>
+                    <h5 class="mb-0 fw-bold">Műveletek</h5>
                 </div>
                 <div class="card-body pt-4">
                     <button class="btn btn-primary d-grid w-100 mb-3" data-bs-toggle="modal"
                         data-bs-target="#editSubscriptionModal">
                         <span class="d-flex align-items-center justify-content-center">
-                            <i class="bx bx-edit me-2"></i>Edit Plan
+                            <i class="bx bx-edit me-2"></i>Csomag szerkesztése
                         </span>
                     </button>
 
                     @if($subscription->status === 'active')
                         <button class="btn btn-warning d-grid w-100 mb-3 status-toggle" data-status="paused">
                             <span class="d-flex align-items-center justify-content-center">
-                                <i class="bx bx-pause-circle me-2"></i>Pause User
+                                <i class="bx bx-pause-circle me-2"></i>Felhasználó szüneteltetése
                             </span>
                         </button>
                     @else
                         <button class="btn btn-success d-grid w-100 mb-3 status-toggle" data-status="active">
                             <span class="d-flex align-items-center justify-content-center">
-                                <i class="bx bx-play-circle me-2"></i>Resume User
+                                <i class="bx bx-play-circle me-2"></i>Felhasználó folytatása
                             </span>
                         </button>
                     @endif
 
                     <button class="btn btn-secondary d-grid w-100 mb-3" onclick="window.print()">
                         <span class="d-flex align-items-center justify-content-center">
-                            <i class="bx bx-printer me-2"></i>Print Invoice
+                            <i class="bx bx-printer me-2"></i>Számla nyomtatása
                         </span>
                     </button>
 
                     <a href="{{ route('app-subscription-list') }}" class="btn btn-outline-secondary d-grid w-100">
-                        Back to List
+                        Vissza a listához
                     </a>
                 </div>
             </div>
@@ -211,8 +210,8 @@
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">Update Subscription Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <h5 class="modal-title fw-bold">Előfizetés részleteinek frissítése</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Bezárás"></button>
                 </div>
                 <form action="{{ route('app-subscription-update', $subscription->id) }}" method="POST">
                     @csrf
@@ -220,7 +219,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Subscription Plan</label>
+                                <label class="form-label">Előfizetési csomag</label>
                                 <select name="plan_id" class="form-select">
                                     @foreach($plans as $plan)
                                         @php
@@ -236,52 +235,52 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Amount Paid</label>
+                                <label class="form-label">Kifizetett összeg</label>
                                 <input type="number" step="0.01" name="amount" class="form-control"
                                     value="{{ $subscription->amount }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Start Date</label>
+                                <label class="form-label">Kezdő dátum</label>
                                 <input type="datetime-local" name="starts_at" class="form-control"
                                     value="{{ $subscription->starts_at ? $subscription->starts_at->format('Y-m-d\TH:i') : '' }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">End Date</label>
+                                <label class="form-label">Záró dátum</label>
                                 <input type="datetime-local" name="ends_at" class="form-control"
                                     value="{{ $subscription->ends_at ? $subscription->ends_at->format('Y-m-d\TH:i') : '' }}">
                             </div>
                         </div>
                         <hr>
-                        <h6 class="mt-4 fw-bold">Billing Information</h6>
+                        <h6 class="mt-4 fw-bold">Számlázási információk</h6>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Full Name</label>
+                                <label class="form-label">Teljes név</label>
                                 <input type="text" name="billing_full_name" class="form-control"
                                     value="{{ $subscription->billing_full_name }}">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Company Name</label>
+                                <label class="form-label">Cégnév</label>
                                 <input type="text" name="billing_company_name" class="form-control"
                                     value="{{ $subscription->billing_company_name }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-8 mb-3">
-                                <label class="form-label">Address</label>
+                                <label class="form-label">Cím</label>
                                 <input type="text" name="billing_address" class="form-control"
                                     value="{{ $subscription->billing_address }}">
                             </div>
                             <div class="col-md-4 mb-3">
-                                <label class="form-label">City</label>
+                                <label class="form-label">Város</label>
                                 <input type="text" name="billing_city" class="form-control"
                                     value="{{ $subscription->billing_city }}">
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Duration/Term</label>
+                                <label class="form-label">Időtartam</label>
                                 <select name="duration" class="form-select">
                                     <option value="Monthly" {{ $subscription->duration == 'Monthly' ? 'selected' : '' }}>
                                         Monthly</option>
@@ -293,7 +292,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Status</label>
+                                <label class="form-label">Állapot</label>
                                 <select name="status" class="form-select">
                                     <option value="active" {{ $subscription->status == 'active' ? 'selected' : '' }}>Active
                                     </option>
@@ -310,8 +309,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">Bezárás</button>
+                        <button type="submit" class="btn btn-primary">Módosítások mentése</button>
                     </div>
                 </form>
             </div>

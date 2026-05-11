@@ -70,6 +70,22 @@
   .table-responsive {
     overflow-x: auto !important;
   }
+  
+  #admins-table th, #admins-table td {
+    padding: .5rem .5rem !important;
+    font-size: .85rem;
+    vertical-align: middle;
+  }
+  
+  #admins-table th {
+    font-size: .75rem;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    position: relative;
+    padding-right: 30px !important;
+    white-space: normal;
+    line-height: 1.2;
+  }
 
   /* MOBILE FIX */
   @media (max-width: 768px) {
@@ -120,6 +136,34 @@
     justify-content: center;
     border-radius: 6px;
   }
+
+  /* Premium Action Buttons */
+  .btn-action {
+      width: 32px !important;
+      height: 32px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      border-radius: 8px !important;
+      padding: 0 !important;
+      border: none !important;
+      transition: all 0.2s ease !important;
+      text-decoration: none !important;
+  }
+  .btn-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+  .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+  .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+  .btn-action i { font-size: 1.15rem !important; }
+  
+  .action-container {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-start;
+  }
 </style>
 
 <!-- HEADER -->
@@ -140,6 +184,7 @@
   </div>
 
   <div class="card-body">
+    <!-- TABLE VIEW -->
     <div class="table-responsive">
       <table class="table table-hover" id="admins-table">
 
@@ -179,20 +224,20 @@
               @forelse($user->permissions as $permission)
               <span class="badge bg-label-warning badge-premium">{{ __($permission->name) }}</span>
               @empty
-              <span class="text-muted">{{ __('No extra permissions') }}</span>
+              <span class="text-muted small italic">{{ __('No Direct Permissions') }}</span>
               @endforelse
             </td>
 
             <td>
-              <div class="d-flex gap-2">
-                <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn bg-label-info text-info" data-bs-toggle="tooltip" title="{{ __('Edit Admin User') }}">
+              <div class="action-container">
+                <a href="{{ route('admin.users.edit', $user->id) }}" class="btn-action edit" data-bs-toggle="tooltip" title="{{ __('Edit Admin User') }}">
                   <i class="bx bx-edit"></i>
                 </a>
 
-                <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}">
+                <form method="POST" action="{{ route('admin.users.destroy', $user->id) }}" class="d-inline">
                   @csrf
                   @method('DELETE')
-                  <button type="button" class="action-btn bg-label-danger text-danger border-0 delete-confirmation"
+                  <button type="button" class="btn-action delete delete-confirmation"
                     data-confirm-text="{{ __('Delete this admin user permanently?') }}" data-bs-toggle="tooltip" title="{{ __('Delete Admin User') }}">
                     <i class="bx bx-trash"></i>
                   </button>
@@ -205,6 +250,8 @@
 
       </table>
     </div>
+
+
   </div>
 </div>
 

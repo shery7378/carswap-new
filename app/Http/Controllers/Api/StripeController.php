@@ -88,7 +88,7 @@ class StripeController extends Controller
                                 'name' => $plan->name . ($request->billing === 'yearly' ? ' (Éves)' : ' (Havi)'),
                                 'description' => 'Előfizetés a következőre: ' . $plan->name,
                             ],
-                            'unit_amount' => (int) ($amount * 100),
+                            'unit_amount' => (int) $amount,
                         ],
                         'quantity' => 1,
                     ]

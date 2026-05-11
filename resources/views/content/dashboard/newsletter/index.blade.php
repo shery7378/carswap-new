@@ -17,8 +17,8 @@
     <h5 class="mb-0 fw-bold">{{ __('Subscribers List') }}</h5>
   </div>
   <div class="card-body">
-    <!-- ─── DESKTOP TABLE ─── -->
-    <div class="table-responsive text-nowrap d-none d-md-block">
+    <!-- TABLE VIEW -->
+    <div class="table-responsive text-nowrap">
         <table class="table table-hover align-middle border-top" id="newsletter-table">
         <thead class="bg-light bg-opacity-50">
             <tr>
@@ -37,52 +37,22 @@
             <td><strong>{{ $subscriber->email }}</strong></td>
             <td>{{ $subscriber->created_at->formatDateTime() }}</td>
             <td class="text-center">
-                <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="button" class="btn btn-sm btn-icon btn-label-danger shadow-none delete-confirmation" 
-                            data-bs-toggle="tooltip" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}"
-                            data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
-                        <i class="icon-base bx bx-trash"></i>
-                    </button>
-                </form>
+                <div class="action-container">
+                    <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline">
+                        @csrf
+                        @method('DELETE')
+                        <button type="button" class="btn-action delete delete-confirmation" 
+                                data-bs-toggle="tooltip" title="{{ __('Delete') }}"
+                                data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </form>
+                </div>
             </td>
             </tr>
             @endforeach
         </tbody>
         </table>
-    </div>
-
-    <!-- ─── MOBILE CARD LIST ─── -->
-    <div class="d-md-none">
-        @forelse($subscribers as $subscriber)
-            <div class="card mb-3 shadow-none border rounded-3 overflow-hidden">
-                <div class="card-body p-3">
-                    <div class="d-flex justify-content-between align-items-center mb-2">
-                        <h6 class="mb-0 fw-bold">{{ $subscriber->name ?? __('N/A') }}</h6>
-                        <small class="text-muted">#{{ $subscriber->id }}</small>
-                    </div>
-                    <div class="mb-3">
-                        <p class="mb-1 fw-semibold text-primary">{{ $subscriber->email }}</p>
-                        <small class="text-muted"><i class="bx bx-calendar me-1"></i>{{ $subscriber->created_at->formatDateTime() }}</small>
-                    </div>
-                    <div class="border-top pt-2 text-end">
-                        <form action="{{ route('admin.newsletter.destroy', $subscriber->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('DELETE')
-                            <button type="button" class="btn btn-sm btn-label-danger shadow-none delete-confirmation" data-confirm-text="{{ __('Are you sure you want to delete this subscriber?') }}">
-                                <i class="bx bx-trash me-1"></i> {{ __('Delete Subscriber') }}
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        @empty
-            <div class="text-center py-4 text-muted">
-                <i class="bx bx-user-plus display-4 d-block mb-2"></i>
-                {{ __('No subscribers found.') }}
-            </div>
-        @endforelse
     </div>
   </div>
 </div>
@@ -143,9 +113,51 @@
 
     /* Table header */
     #newsletter-table thead th {
-        font-size: 0.75rem;
+        font-size: 0.72rem;
         letter-spacing: 0.5px;
         text-transform: uppercase;
+        padding: 0.6rem 0.5rem !important;
+        position: relative;
+        padding-right: 30px !important;
+        white-space: normal;
+        line-height: 1.2;
+    }
+
+    #newsletter-table tbody td {
+        padding: 0.5rem 0.5rem !important;
+        font-size: 0.82rem;
+    }
+
+    .table-responsive {
+        overflow-x: auto !important;
+    }
+
+    /* Premium Action Buttons */
+    .btn-action {
+        width: 32px !important;
+        height: 32px !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 8px !important;
+        padding: 0 !important;
+        border: none !important;
+        transition: all 0.2s ease !important;
+        text-decoration: none !important;
+    }
+    .btn-action:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+    .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+    .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+    .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
+    .btn-action i { font-size: 1.15rem !important; }
+    
+    .action-container {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
     }
 
     /* Shadow */
