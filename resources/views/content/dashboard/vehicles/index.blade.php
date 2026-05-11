@@ -64,7 +64,7 @@
                         </div>
                     @endif
 
-                    <!-- ─── TABLE (visible on all screens, scrollable on mobile) ─── -->
+                    <!-- ─── TABLE ─── -->
                     <div class="table-responsive vehicles-table-responsive">
                         <table class="table table-hover" id="vehicles-table">
                             <thead>
@@ -234,12 +234,11 @@
                                 @endforelse
                             </tbody>
                         </table>
-                    </div><!-- /desktop table -->
+                    </div>
 
                     <!-- ─── MOBILE CARD LIST (disabled – using table on all screens) ─── -->
                     <div class="d-none" id="vehicles-mobile-list">
 
-                        <!-- Mobile search bar -->
                         <div class="mb-3">
                             <input type="text" id="mobile-search" class="form-control form-control-sm"
                                 placeholder="{{ __('Quick search vehicles…') }}">
@@ -261,7 +260,6 @@
 
                                 <div class="card-body p-3">
 
-                                    <!-- Row 1: Thumbnail + Title + Badges -->
                                     <div class="d-flex gap-3 align-items-start">
                                         <div class="flex-shrink-0">
                                             @if($vehicle->main_image)
@@ -285,7 +283,6 @@
                                                         {{ optional($vehicle->model)->name }}
                                                     </small>
                                                 </div>
-                                                <!-- Status dropdown (mobile) -->
                                                 <div class="dropdown status-dropdown">
                                                     <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
                                                         data-bs-toggle="dropdown">
@@ -310,7 +307,6 @@
                                                 </div>
                                             </div>
 
-                                            <!-- Row 2: Price + Year -->
                                             <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
                                                 <span class="fw-bold text-primary small">@formatCurrency($vehicle->price)</span>
                                                 <span class="badge bg-label-secondary small">{{ $vehicle->year }}</span>
@@ -318,7 +314,6 @@
                                         </div>
                                     </div>
 
-                                    <!-- Row 3: Details strip -->
                                     <div class="d-flex gap-3 mt-2 text-muted small flex-wrap">
                                         @if(optional($vehicle->fuelType)->name)
                                             <span><i class="bx bx-gas-pump me-1"></i>{{ optional($vehicle->fuelType)->name }}</span>
@@ -331,7 +326,6 @@
                                         @endif
                                     </div>
 
-                                    <!-- Row 4: User -->
                                     <div class="mt-1 small text-muted">
                                         <i class="bx bx-user me-1"></i>
                                         {{ $vehicle->user->first_name ?? 'N/A' }} {{ $vehicle->user->last_name ?? '' }}
@@ -340,10 +334,8 @@
                                         @endif
                                     </div>
 
-                                    <!-- Row 5: Action buttons -->
                                     <div class="d-flex justify-content-between align-items-center mt-3 pt-2 border-top">
 
-                                        <!-- Featured toggle -->
                                         <button type="button"
                                             class="btn btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn"
                                             data-id="{{ $vehicle->id }}">
@@ -352,41 +344,41 @@
                                         </button>
 
                                         <div class="dropdown vehicles-actions">
-                                                <button type="button"
-                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
-                                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
-                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
-                                                </button>
-                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                            <button type="button"
+                                                class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
+                                                data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
+                                                <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                                <li>
+                                                    <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
+                                                        <i class="bx bx-show me-2"></i>{{ __('View Details') }}
+                                                    </button>
+                                                </li>
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
                                                     <li>
-                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
-                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
-                                                        </button>
+                                                        <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
+                                                            <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
+                                                        </a>
                                                     </li>
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                        <li>
-                                                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
-                                                                <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
-                                                            </a>
-                                                        </li>
-                                                    @endif
-                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                        <li><hr class="dropdown-divider"></li>
-                                                        <li>
-                                                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
-                                                                @csrf @method('DELETE')
-                                                                <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
-                                                                    <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
-                                                                </button>
-                                                            </form>
-                                                        </li>
-                                                    @endif
-                                                </ul>
-                                            </div>
+                                                @endif
+                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li>
+                                                        <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
+                                                            @csrf @method('DELETE')
+                                                            <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
+                                                                <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                @endif
+                                            </ul>
+                                        </div>
                                     </div>
 
-                                </div><!-- /card-body -->
-                            </div><!-- /vehicle-mobile-card -->
+                                </div>
+                            </div>
 
                         @empty
                             <div class="text-center py-5 text-muted">
@@ -395,9 +387,9 @@
                             </div>
                         @endforelse
 
-                    </div><!-- /mobile list -->
+                    </div>
 
-                </div><!-- /card-body -->
+                </div>
             </div>
         </div>
     </div>
@@ -421,7 +413,7 @@
     <script>
         $(document).ready(function () {
 
-            // ── DataTable (desktop only) ─────────────────────────────────────────
+            // ── DataTable ────────────────────────────────────────────────────────
             if ($.fn.DataTable) {
                 $('#vehicles-table').DataTable({
                     order: [[1, 'asc']],
@@ -457,7 +449,6 @@
                     data: { _token: '{{ csrf_token() }}' },
                     success: function (res) {
                         if (res.success) {
-                            // Sync ALL buttons for this vehicle (table + mobile card + modal)
                             $(`.featured-toggle-btn[data-id="${id}"]`).each(function () {
                                 const t = $(this);
                                 const icon = t.find('i');
@@ -490,7 +481,7 @@
                 openVehicleModal($(this).data('id'));
             });
 
-            // ── Mobile card click → modal (tap on card body, not buttons) ────────
+            // ── Mobile card click → modal ────────────────────────────────────────
             $(document).on('click', '.vehicle-mobile-card', function (e) {
                 if ($(e.target).closest('form, a, button, .dropdown-menu, .dropdown-toggle').length) return;
                 openVehicleModal($(this).data('id'));
@@ -502,10 +493,10 @@
                 const container = document.getElementById('v-modal-loader-content');
 
                 container.innerHTML = `
-                                                <div class="modal-body text-center py-5">
-                                                    <div class="spinner-grow text-primary" role="status"></div>
-                                                    <p class="mt-3 text-muted fw-semibold small">{{ __('Fetching vehicle data…') }}</p>
-                                                </div>`;
+                    <div class="modal-body text-center py-5">
+                        <div class="spinner-grow text-primary" role="status"></div>
+                        <p class="mt-3 text-muted fw-semibold small">{{ __('Fetching vehicle data…') }}</p>
+                    </div>`;
 
                 modal.show();
 
@@ -514,11 +505,11 @@
                     .then(html => { container.innerHTML = html; })
                     .catch(() => {
                         container.innerHTML = `<div class="modal-body text-center py-5 text-danger fw-bold">
-                                                        {{ __('Error loading vehicle details. Please try again.') }}</div>`;
+                            {{ __('Error loading vehicle details. Please try again.') }}</div>`;
                     });
             }
 
-            // ── Mobile card search ───────────────────────────────────────────────
+            // ── Mobile search ────────────────────────────────────────────────────
             $('#mobile-search').on('input', function () {
                 const q = $(this).val().toLowerCase();
                 $('.vehicle-mobile-card').each(function () {
@@ -527,7 +518,7 @@
                 });
             });
 
-            // ── Bulk Status Update ───────────────────────────────────────────────
+            // ── Bulk Status ──────────────────────────────────────────────────────
             const bulkActions = $('#bulk-actions');
             const checkAll = $('#check-all');
             const checkboxes = $('.vehicle-checkbox');
@@ -591,7 +582,6 @@
             // ── Quick Approve ────────────────────────────────────────────────────
             $(document).on('click', '.quick-approve-btn', function () {
                 const id = $(this).data('id');
-                const btn = $(this);
 
                 $.ajax({
                     url: `{{ url('/app/vehicles') }}/${id}/status`,
@@ -607,7 +597,7 @@
                 });
             });
 
-            // ── Keep status dropdown above sibling rows (same as users page) ─────
+            // ── Status dropdown z-index fix ───────────────────────────────────────
             $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').addClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').addClass('status-dropdown-open');
@@ -617,7 +607,7 @@
                 $(this).closest('.vehicle-mobile-card').removeClass('status-dropdown-open');
             });
 
-            // ── Keep actions dropdown above sibling rows (same as users page) ────
+            // ── Actions dropdown z-index fix ─────────────────────────────────────
             $(document).on('shown.bs.dropdown', '.vehicles-actions.dropdown', function () {
                 $(this).closest('tr').addClass('actions-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').addClass('actions-dropdown-open');
@@ -668,7 +658,6 @@
         }
 
         @media (max-width: 576px) {
-
             .dataTables_filter,
             .dataTables_paginate {
                 justify-content: flex-start !important;
@@ -690,7 +679,7 @@
             transform: scale(1.002);
         }
 
-        /* ── Status dropdown – same fix as users page (proven to work) ─── */
+        /* ── Status dropdown z-index ────────────────────────── */
         .table-responsive { overflow-y: visible; }
         #vehicles-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
         .td-status { position: relative; }
@@ -700,14 +689,14 @@
         .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
         .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
-        /* ── Actions dropdown z-index ────────────────────────── */
+        /* ── Actions dropdown z-index ───────────────────────── */
         #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
         #vehicles-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
         .vehicles-actions.dropdown.show { z-index: 1072; }
         .vehicles-actions.dropdown .dropdown-menu { z-index: 1073; }
         .vehicle-mobile-card.actions-dropdown-open { position: relative; z-index: 1070; }
 
-        /* ── Actions dropdown item colors ───────────────────────── */
+        /* ── Actions dropdown item colors ───────────────────── */
         .vehicles-actions .dropdown-item { transition: color .15s ease; }
         .vehicles-actions .dropdown-item i { transition: color .15s ease; }
         .vehicles-actions .dropdown-item.action-view:hover,
@@ -739,7 +728,7 @@
             object-fit: cover;
         }
 
-        /* ── Modal scrollable on small screens ──────────────── */
+        /* ── Modal on small screens ─────────────────────────── */
         @media (max-width: 576px) {
             .modal-xl {
                 margin: .5rem;
@@ -747,13 +736,12 @@
             }
         }
 
-        /* ── Actions: never wrap ────────────────────────────── */
-        .d-flex.flex-nowrap {
-            flex-wrap: nowrap !important;
+        /* ── Table layout ───────────────────────────────────── */
+        .vehicles-table-responsive {
+            overflow-x: visible;
+            overflow-y: auto;        /* enables sticky header */
+            max-height: 75vh;        /* scroll container needed for sticky */
         }
-
-        /* ── Fit all columns on screen (desktop) – no horizontal scrollbar ── */
-        .vehicles-table-responsive { overflow-x: visible; overflow-y: visible; }
         #vehicles-table_wrapper { overflow-x: visible; }
         #vehicles-table { width: 100% !important; table-layout: fixed; }
         #vehicles-table th,
@@ -761,25 +749,31 @@
         #vehicles-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
         #vehicles-table td { word-break: break-word; }
 
-        /* ── Mobile: horizontal-scroll table with sticky header ── */
+        /* ── STICKY HEADER – all screen sizes ──────────────── */
+        #vehicles-table thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background: var(--bs-body-bg, #fff);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+        }
+
+        /* ── Mobile overrides ───────────────────────────────── */
         @media (max-width: 767.98px) {
             .vehicles-table-responsive {
                 overflow-x: auto !important;
                 overflow-y: auto !important;
-                max-height: 75vh;
+                max-height: 70vh;
                 -webkit-overflow-scrolling: touch;
             }
-            #vehicles-table { min-width: 900px; table-layout: fixed; }
-            #vehicles-table thead th {
-                position: sticky;
-                top: 0;
-                z-index: 10;
-                background: var(--bs-body-bg, #fff);
-                box-shadow: 0 1px 2px rgba(0,0,0,.08);
-            }
+            /* Remove min-width so table fits mobile screen without horizontal scroll */
+            #vehicles-table { min-width: unset !important; width: 100% !important; }
             #vehicles-table th,
             #vehicles-table td { font-size: .78rem; padding: .45rem .3rem !important; }
             #vehicles-table th { font-size: .74rem; }
+            /* Hide checkbox column on mobile to save space */
+            #vehicles-table th:first-child,
+            #vehicles-table td:first-child { display: none; }
         }
     </style>
 @endsection
