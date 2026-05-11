@@ -76,6 +76,7 @@ class StripeController extends Controller
         try {
             $sessionParams = [
                 'mode' => 'payment',
+                'locale' => 'hu',
                 'payment_intent_data' => [
                     'setup_future_usage' => 'off_session',
                 ],
