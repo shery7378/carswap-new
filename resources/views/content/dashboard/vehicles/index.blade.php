@@ -190,35 +190,37 @@
                                         </td>
 
                                         <td class="text-end pe-4">
-                                            <div class="d-flex justify-content-end align-items-center gap-1 flex-nowrap">
-                                                <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none"
-                                                    data-bs-toggle="tooltip" title="{{ __('View Details') }}"
-                                                    aria-label="{{ __('View Details') }}">
-                                                    <i class="icon-base bx bx-show"></i>
-                                                </a>
-
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                    <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                                        class="btn btn-icon btn-sm btn-label-info border-0 shadow-none"
-                                                        data-bs-toggle="tooltip" title="{{ __('Edit Vehicle') }}"
-                                                        aria-label="{{ __('Edit Vehicle') }}">
-                                                        <i class="icon-base bx bx-edit-alt"></i>
-                                                    </a>
-                                                @endif
-
-                                                @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                    <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
-                                                        class="d-inline delete-form">
-                                                        @csrf @method('DELETE')
-                                                        <button type="button"
-                                                            class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-confirmation"
-                                                            data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}"
-                                                            aria-label="{{ __('Delete Vehicle') }}">
-                                                            <i class="icon-base bx bx-trash"></i>
+                                            <div class="dropdown vehicles-actions">
+                                                <button type="button"
+                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
+                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                                    <li>
+                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
+                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
                                                         </button>
-                                                    </form>
-                                                @endif
+                                                    </li>
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                        <li>
+                                                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
+                                                                <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li>
+                                                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
+                                                                @csrf @method('DELETE')
+                                                                <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
+                                                                    <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    @endif
+                                                </ul>
                                             </div>
                                         </td>
                                     </tr>
@@ -349,35 +351,38 @@
                                             {{ $vehicle->is_featured ? __('Featured') : __('Feature') }}
                                         </button>
 
-                                        <div class="d-flex gap-1">
-                                            <a href="{{ route('admin.vehicles.show', $vehicle->id) }}"
-                                                class="btn btn-icon btn-sm btn-label-secondary border-0"
-                                                data-bs-toggle="tooltip" title="{{ __('View Details') }}"
-                                                aria-label="{{ __('View Details') }}">
-                                                <i class="icon-base bx bx-show"></i>
-                                            </a>
-
-                                            @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
-                                                <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}"
-                                                    class="btn btn-icon btn-sm btn-label-info border-0" data-bs-toggle="tooltip"
-                                                    title="{{ __('Edit Vehicle') }}" aria-label="{{ __('Edit Vehicle') }}">
-                                                    <i class="icon-base bx bx-edit-alt"></i>
-                                                </a>
-                                            @endif
-
-                                            @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
-                                                <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST"
-                                                    class="d-inline delete-form">
-                                                    @csrf @method('DELETE')
-                                                    <button type="button"
-                                                        class="btn btn-icon btn-sm btn-label-danger border-0 delete-confirmation"
-                                                        data-bs-toggle="tooltip" title="{{ __('Delete Vehicle') }}"
-                                                        aria-label="{{ __('Delete Vehicle') }}">
-                                                        <i class="icon-base bx bx-trash"></i>
-                                                    </button>
-                                                </form>
-                                            @endif
-                                        </div>
+                                        <div class="dropdown vehicles-actions">
+                                                <button type="button"
+                                                    class="btn btn-icon btn-sm btn-label-secondary border-0 shadow-none dropdown-toggle hide-arrow"
+                                                    data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="true">
+                                                    <i class="icon-base bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                                                    <li>
+                                                        <button type="button" class="dropdown-item d-flex align-items-center action-view open-vehicle-modal-btn" data-id="{{ $vehicle->id }}">
+                                                            <i class="bx bx-show me-2"></i>{{ __('View Details') }}
+                                                        </button>
+                                                    </li>
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('edit-vehicles', 'admin-guard'))
+                                                        <li>
+                                                            <a href="{{ route('admin.vehicles.edit', $vehicle->id) }}" class="dropdown-item d-flex align-items-center action-edit">
+                                                                <i class="bx bx-edit-alt me-2"></i>{{ __('Edit Vehicle') }}
+                                                            </a>
+                                                        </li>
+                                                    @endif
+                                                    @if(auth('admin-guard')->user()->hasPermissionTo('delete-vehicles', 'admin-guard'))
+                                                        <li><hr class="dropdown-divider"></li>
+                                                        <li>
+                                                            <form action="{{ route('admin.vehicles.destroy', $vehicle->id) }}" method="POST" class="m-0 delete-form">
+                                                                @csrf @method('DELETE')
+                                                                <button type="button" class="dropdown-item d-flex align-items-center action-delete delete-confirmation">
+                                                                    <i class="bx bx-trash me-2"></i>{{ __('Delete Vehicle') }}
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            </div>
                                     </div>
 
                                 </div><!-- /card-body -->
@@ -612,6 +617,16 @@
                 $(this).closest('.vehicle-mobile-card').removeClass('status-dropdown-open');
             });
 
+            // ── Keep actions dropdown above sibling rows (same as users page) ────
+            $(document).on('shown.bs.dropdown', '.vehicles-actions.dropdown', function () {
+                $(this).closest('tr').addClass('actions-dropdown-open');
+                $(this).closest('.vehicle-mobile-card').addClass('actions-dropdown-open');
+            });
+            $(document).on('hide.bs.dropdown', '.vehicles-actions.dropdown', function () {
+                $(this).closest('tr').removeClass('actions-dropdown-open');
+                $(this).closest('.vehicle-mobile-card').removeClass('actions-dropdown-open');
+            });
+
             // ── Init tooltips ────────────────────────────────────────────────────
             $('[data-bs-toggle="tooltip"]').tooltip();
 
@@ -684,6 +699,29 @@
         .status-dropdown.show { z-index: 1066; }
         .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
         .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
+
+        /* ── Actions dropdown z-index ────────────────────────── */
+        #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
+        #vehicles-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
+        .vehicles-actions.dropdown.show { z-index: 1072; }
+        .vehicles-actions.dropdown .dropdown-menu { z-index: 1073; }
+        .vehicle-mobile-card.actions-dropdown-open { position: relative; z-index: 1070; }
+
+        /* ── Actions dropdown item colors ───────────────────────── */
+        .vehicles-actions .dropdown-item { transition: color .15s ease; }
+        .vehicles-actions .dropdown-item i { transition: color .15s ease; }
+        .vehicles-actions .dropdown-item.action-view:hover,
+        .vehicles-actions .dropdown-item.action-view:focus,
+        .vehicles-actions .dropdown-item.action-view:hover i,
+        .vehicles-actions .dropdown-item.action-view:focus i { color: var(--bs-primary) !important; }
+        .vehicles-actions .dropdown-item.action-edit:hover,
+        .vehicles-actions .dropdown-item.action-edit:focus,
+        .vehicles-actions .dropdown-item.action-edit:hover i,
+        .vehicles-actions .dropdown-item.action-edit:focus i { color: var(--bs-info) !important; }
+        .vehicles-actions .dropdown-item.action-delete:hover,
+        .vehicles-actions .dropdown-item.action-delete:focus,
+        .vehicles-actions .dropdown-item.action-delete:hover i,
+        .vehicles-actions .dropdown-item.action-delete:focus i { color: var(--bs-danger) !important; }
 
         /* ── Mobile card ────────────────────────────────────── */
         .vehicle-mobile-card {
