@@ -64,8 +64,8 @@
                         </div>
                     @endif
 
-                    <!-- ─── DESKTOP TABLE (hidden on xs/sm) ─── -->
-                    <div class="table-responsive d-none d-md-block">
+                    <!-- ─── TABLE (visible on all screens, scrollable on mobile) ─── -->
+                    <div class="table-responsive vehicles-table-responsive">
                         <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
@@ -236,8 +236,8 @@
                         </table>
                     </div><!-- /desktop table -->
 
-                    <!-- ─── MOBILE CARD LIST (visible only xs/sm) ─── -->
-                    <div class="d-md-none" id="vehicles-mobile-list">
+                    <!-- ─── MOBILE CARD LIST (disabled – using table on all screens) ─── -->
+                    <div class="d-none" id="vehicles-mobile-list">
 
                         <!-- Mobile search bar -->
                         <div class="mb-3">
@@ -752,22 +752,34 @@
             flex-wrap: nowrap !important;
         }
 
-        /* Ensure all columns are visible on screens 1440px and wider without horizontal scrollbar */
-        @media (min-width: 1440px) {
-            .table-responsive {
-                overflow-x: visible !important;
-            }
+        /* ── Fit all columns on screen (desktop) – no horizontal scrollbar ── */
+        .vehicles-table-responsive { overflow-x: visible; overflow-y: visible; }
+        #vehicles-table_wrapper { overflow-x: visible; }
+        #vehicles-table { width: 100% !important; table-layout: fixed; }
+        #vehicles-table th,
+        #vehicles-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
+        #vehicles-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
+        #vehicles-table td { word-break: break-word; }
 
-            #vehicles-table {
-                width: 100% !important;
-                table-layout: auto;
+        /* ── Mobile: horizontal-scroll table with sticky header ── */
+        @media (max-width: 767.98px) {
+            .vehicles-table-responsive {
+                overflow-x: auto !important;
+                overflow-y: auto !important;
+                max-height: 75vh;
+                -webkit-overflow-scrolling: touch;
             }
-
+            #vehicles-table { min-width: 900px; table-layout: fixed; }
+            #vehicles-table thead th {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: var(--bs-body-bg, #fff);
+                box-shadow: 0 1px 2px rgba(0,0,0,.08);
+            }
             #vehicles-table th,
-            #vehicles-table td {
-                padding-left: 0.5rem !important;
-                padding-right: 0.5rem !important;
-            }
+            #vehicles-table td { font-size: .78rem; padding: .45rem .3rem !important; }
+            #vehicles-table th { font-size: .74rem; }
         }
     </style>
 @endsection
