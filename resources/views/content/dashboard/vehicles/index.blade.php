@@ -65,7 +65,7 @@
                     @endif
 
                     <!-- ─── TABLE ─── -->
-                    <div class="table-responsive vehicles-table-responsive">
+                    <div class="vehicles-table-responsive">
                         <table class="table table-hover" id="vehicles-table">
                             <thead>
                                 <tr>
@@ -419,6 +419,8 @@
                     order: [[1, 'asc']],
                     pageLength: 25,
                     responsive: false,
+                    scrollX: false,        // ← horizontal scroll disabled
+                    autoWidth: false,      // ← prevents DataTable from adding extra width
                     dom:
                         "<'row align-items-center mb-3'" +
                         "<'col-12 col-sm-6 mb-2 mb-sm-0 d-flex align-items-center'l>" +
@@ -433,7 +435,17 @@
                         searchPlaceholder: "{{ __('Quick Search Vehicles…') }}"
                     },
                     columnDefs: [
-                        { orderable: false, targets: [0, 6, 7, 8, 9] }
+                        { orderable: false, targets: [0, 6, 7, 8, 9] },
+                        { width: '30px',  targets: 0 },   // checkbox
+                        { width: '55px',  targets: 1 },   // thumbnail
+                        { width: '160px', targets: 2 },   // vehicle
+                        { width: '120px', targets: 3 },   // user
+                        { width: '60px',  targets: 4 },   // year
+                        { width: '90px',  targets: 5 },   // price
+                        { width: '130px', targets: 6 },   // details
+                        { width: '60px',  targets: 7 },   // featured
+                        { width: '110px', targets: 8 },   // status
+                        { width: '60px',  targets: 9 },   // actions
                     ]
                 });
             }
@@ -623,8 +635,6 @@
         });
     </script>
 
-    <script async src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google_maps.key') }}"></script>
-
     <style>
         /* ── DataTable controls ─────────────────────────────── */
         .dataTables_filter input {
@@ -657,6 +667,17 @@
             justify-content: flex-end;
         }
 
+        /* ── KEY FIX: Kill the horizontal scrollbar completely ── */
+        .dataTables_wrapper {
+            overflow-x: hidden !important;
+        }
+
+        .dataTables_scroll,
+        .dataTables_scrollBody,
+        .dataTables_scrollHead {
+            overflow-x: hidden !important;
+        }
+
         @media (max-width: 576px) {
             .dataTables_filter,
             .dataTables_paginate {
@@ -680,7 +701,7 @@
         }
 
         /* ── Status dropdown z-index ────────────────────────── */
-        .table-responsive { overflow-y: visible; }
+        .vehicles-table-responsive { overflow: visible !important; }
         #vehicles-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
         .td-status { position: relative; }
         #vehicles-table tbody tr.status-dropdown-open .td-status { z-index: 1066; }
@@ -738,18 +759,35 @@
 
         /* ── Table layout ───────────────────────────────────── */
         .vehicles-table-responsive {
-            overflow-x: visible;
-            overflow-y: auto;        /* enables sticky header */
-            max-height: 75vh;        /* scroll container needed for sticky */
+            overflow: visible !important;   /* ← NO scrollbar at all */
         }
-        #vehicles-table_wrapper { overflow-x: visible; }
-        #vehicles-table { width: 100% !important; table-layout: fixed; }
-        #vehicles-table th,
-        #vehicles-table td { padding: .55rem .35rem !important; font-size: .875rem; vertical-align: middle; }
-        #vehicles-table th { font-size: .82rem; white-space: normal; line-height: 1.15; }
-        #vehicles-table td { word-break: break-word; }
 
-        /* ── STICKY HEADER – all screen sizes ──────────────── */
+        #vehicles-table_wrapper {
+            overflow-x: hidden !important;  /* ← DataTable wrapper clipped */
+        }
+
+        #vehicles-table {
+            width: 100% !important;
+            table-layout: fixed;            /* ← columns respect defined widths */
+        }
+
+        #vehicles-table th,
+        #vehicles-table td {
+            padding: .55rem .35rem !important;
+            font-size: .875rem;
+            vertical-align: middle;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        #vehicles-table th {
+            font-size: .82rem;
+            white-space: normal;
+            line-height: 1.15;
+        }
+
+        /* ── STICKY HEADER ──────────────────────────────────── */
         #vehicles-table thead th {
             position: sticky;
             top: 0;
@@ -760,13 +798,6 @@
 
         /* ── Mobile overrides ───────────────────────────────── */
         @media (max-width: 767.98px) {
-            .vehicles-table-responsive {
-                overflow-x: auto !important;
-                overflow-y: auto !important;
-                max-height: 70vh;
-                -webkit-overflow-scrolling: touch;
-            }
-            /* Remove min-width so table fits mobile screen without horizontal scroll */
             #vehicles-table { min-width: unset !important; width: 100% !important; }
             #vehicles-table th,
             #vehicles-table td { font-size: .78rem; padding: .45rem .3rem !important; }
