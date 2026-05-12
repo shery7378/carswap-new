@@ -110,8 +110,8 @@
   </a>
   <div>
     <h4 class="mb-0">
-      <span class="text-muted fw-light">Access Control / Roles /</span>
-      <span class="fw-bold text-primary">Edit Role</span>
+	      <span class="text-muted fw-light">Hozzáférés-kezelés / Szerepkörök /</span>
+	      <span class="fw-bold text-primary">Szerepkör szerkesztése</span>
     </h4>
   </div>
 </div>
@@ -125,29 +125,29 @@
           @method('PUT')
 
           {{-- ── Role Details ── --}}
-          <div class="section-label mb-3">
-            <i class="bx bx-cog"></i> Role Details
-          </div>
+	          <div class="section-label mb-3">
+	            <i class="bx bx-cog"></i> Szerepkör adatai
+	          </div>
 
           <div class="row mb-4">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold" for="role-name">Role Name</label>
+	              <label class="form-label fw-bold" for="role-name">Szerepkör neve</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-shield"></i></span>
-                <input type="text" class="form-control" id="role-name" name="name"
-                  value="{{ $role->name }}" placeholder="e.g. Sales Manager" required />
+	                <input type="text" class="form-control" id="role-name" name="name"
+	                  value="{{ $role->name }}" placeholder="pl. Értékesítési vezető" required />
               </div>
               @error('name')
                 <div class="text-danger mt-1 small">{{ $message }}</div>
               @enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Guard</label>
+	              <label class="form-label fw-bold">Őr (Guard)</label>
               <div class="mt-2">
                 <span class="badge {{ $role->guard_name === 'admin-guard' ? 'bg-label-danger' : 'bg-label-info' }} py-2 px-3 fw-bold">
                   <i class="bx bx-lock-alt me-1"></i> {{ strtoupper($role->guard_name) }}
                 </span>
-                <p class="text-muted small mt-2 mb-0">Guard cannot be changed after creation.</p>
+	                <p class="text-muted small mt-2 mb-0">A guard a létrehozás után nem módosítható.</p>
               </div>
             </div>
           </div>
@@ -158,17 +158,17 @@
           <div class="d-flex justify-content-between align-items-center mb-1 mt-4">
             <div>
               <div class="section-label mb-0">
-                <i class="bx bx-key"></i> Role Permissions
-              </div>
-              <p class="text-muted small mb-0 mt-1">Update the role permissions in the form below</p>
+	                <i class="bx bx-key"></i> Szerepkör jogosultságok
+	              </div>
+	              <p class="text-muted small mb-0 mt-1">Frissítse a szerepkör jogosultságait az alábbi űrlapon</p>
             </div>
             <div class="d-flex gap-2">
-              <button type="button" class="btn btn-sm btn-label-primary" onclick="toggleAll(true)">
-                <i class="bx bx-check-square me-1"></i> Select All
-              </button>
-              <button type="button" class="btn btn-sm btn-label-secondary" onclick="toggleAll(false)">
-                <i class="bx bx-square me-1"></i> Deselect All
-              </button>
+	              <button type="button" class="btn btn-sm btn-label-primary" onclick="toggleAll(true)">
+	                <i class="bx bx-check-square me-1"></i> Összes kijelölése
+	              </button>
+	              <button type="button" class="btn btn-sm btn-label-secondary" onclick="toggleAll(false)">
+	                <i class="bx bx-square me-1"></i> Kijelölések törlése
+	              </button>
             </div>
           </div>
 
@@ -178,21 +178,52 @@
               // Chunk permissions into rows of 4
               $chunks = $modulePermissions->chunk(4);
             @endphp
-            <div class="perm-module-block">
-              <div class="perm-section-header">
-                {{ ucwords(str_replace('-', ' ', $module)) }}
-              </div>
+	            <div class="perm-module-block">
+	              <div class="perm-section-header">
+	                @php
+	                  $huModules = [
+	                    'dashboard' => 'Irányítópult',
+	                    'frontend-pages' => 'Frontend oldalak',
+	                    'vehicles' => 'Járművek',
+	                    'users' => 'Felhasználók',
+	                    'roles' => 'Szerepkörök',
+	                    'subscriptions' => 'Előfizetések',
+	                    'orders' => 'Rendelések',
+	                    'partners' => 'Partnerek',
+	                    'inquiries' => 'Megkeresések',
+	                    'email_templates' => 'E-mail sablonok',
+	                    'settings' => 'Beállítások',
+	                    'car_settings' => 'Jármű beállítások',
+	                    'products' => 'Termékek',
+	                    'customers' => 'Ügyfelek',
+	                    'cms' => 'CMS',
+	                    'trade_offers' => 'Csere ajánlatok',
+	                    'newsletter' => 'Hírlevél',
+	                    'contacts' => 'Kapcsolatok',
+	                  ];
+	                  $moduleLabel = $huModules[$module] ?? ucwords(str_replace('-', ' ', $module));
+	                @endphp
+	                {{ $moduleLabel }}
+	              </div>
               <div class="perm-rows-wrap">
                 @foreach($chunks as $chunk)
                 <div class="perm-row">
                   @foreach($chunk as $permission)
-                  @php
-                    $isChecked = in_array($permission->name, $rolePermissions);
-                    $parts = explode('-', $permission->name);
-                    $action = ucfirst($parts[0] ?? '');
-                    $modLabel = ucwords(str_replace('-', ' ', $module));
-                    $label = $action . ' ' . $modLabel;
-                  @endphp
+	                  @php
+	                    $isChecked = in_array($permission->name, $rolePermissions);
+	                    $parts = explode('-', $permission->name);
+	                    $action = ucfirst($parts[0] ?? '');
+	                    $huActions = [
+	                      'View' => 'megtekintése',
+	                      'Create' => 'létrehozása',
+	                      'Edit' => 'szerkesztése',
+	                      'Delete' => 'törlése',
+	                      'Access' => 'hozzáférés',
+	                      'Manage' => 'kezelése',
+	                    ];
+
+	                    $label = ($huModules[$module] ?? ucwords(str_replace('-', ' ', $module))) . ' ' . ($huActions[$action] ?? strtolower($action));
+	                  @endphp
                   <div class="perm-item">
                     <input
                       type="checkbox"
@@ -211,12 +242,12 @@
             @endforeach
           </div>
 
-          <div class="d-flex justify-content-end gap-3 mt-4">
-            <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-secondary px-4">Discard</a>
-            <button type="submit" class="btn btn-primary px-5 shadow-sm">
-              <i class="bx bx-save me-1"></i> Save Changes
-            </button>
-          </div>
+	          <div class="d-flex justify-content-end gap-3 mt-4">
+	            <a href="{{ route('admin.roles.index') }}" class="btn btn-outline-secondary px-4">Mégse</a>
+	            <button type="submit" class="btn btn-primary px-5 shadow-sm">
+	              <i class="bx bx-save me-1"></i> Mentés
+	            </button>
+	          </div>
         </form>
       </div>
     </div>
