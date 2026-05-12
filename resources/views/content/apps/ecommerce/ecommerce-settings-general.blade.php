@@ -12,7 +12,7 @@
         <div class="col-lg-8">
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="card-title mb-0">General Settings</h5>
+              <h5 class="card-title mb-0">Általános beállítások</h5>
             </div>
             <div class="card-body">
               <form id="generalSettingsForm" method="POST" action="{{ route('app-ecommerce-settings-general-store') }}" enctype="multipart/form-data">
@@ -27,39 +27,39 @@
                 
                 <!-- Store Information -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">Store Information</h6>
+                  <h6 class="mb-3">Bolt információk</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="storeName" class="form-label">Store Name</label>
+                      <label for="storeName" class="form-label">Bolt neve</label>
                       <input type="text" class="form-control" name="storeName" id="storeName" value="{{ $settings['storeName'] ?? '' }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="storeEmail" class="form-label">Store Email</label>
+                      <label for="storeEmail" class="form-label">Bolt e-mail</label>
                       <input type="email" class="form-control" name="storeEmail" id="storeEmail" value="{{ $settings['storeEmail'] ?? '' }}" required>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="storePhone" class="form-label">Store Phone</label>
+                      <label for="storePhone" class="form-label">Bolt telefonszám</label>
                       <input type="tel" class="form-control" name="storePhone" id="storePhone" value="{{ $settings['storePhone'] ?? '' }}">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="storeWebsite" class="form-label">Store Website</label>
+                      <label for="storeWebsite" class="form-label">Bolt weboldal</label>
                       <input type="url" class="form-control" name="storeWebsite" id="storeWebsite" value="{{ $settings['storeWebsite'] ?? '' }}">
                     </div>
                   </div>
                   <div class="mb-3">
-                    <label for="storeAddress" class="form-label">Store Address</label>
+                    <label for="storeAddress" class="form-label">Bolt cím</label>
                     <textarea class="form-control" name="storeAddress" id="storeAddress" rows="3">{{ $settings['storeAddress'] ?? '' }}</textarea>
                   </div>
                 </div>
 
                 <!-- Branding / Graphics -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">Branding Options</h6>
+                  <h6 class="mb-3">Márkaépítési lehetőségek</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="storeLogo" class="form-label">Store Logo (Primary)</label>
+                      <label for="storeLogo" class="form-label">Bolt Logó (Elsődleges)</label>
                       <input class="form-control" type="file" name="storeLogo" id="storeLogo" accept="image/*">
                       @if(isset($settings['storeLogo']))
                         <div class="mt-2">
@@ -68,7 +68,7 @@
                       @endif
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="storeFavicon" class="form-label">Favicon (Browser Tab Icon)</label>
+                      <label for="storeFavicon" class="form-label">Favicon (Böngésző lap ikonra)</label>
                       <input class="form-control" type="file" name="storeFavicon" id="storeFavicon" accept="image/*">
                       @if(isset($settings['storeFavicon']))
                         <div class="mt-2 d-flex align-items-center">
@@ -81,12 +81,12 @@
 
                 <!-- Currency Settings -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">Currency Settings</h6>
+                  <h6 class="mb-3">Pénznem beállítások</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="defaultCurrency" class="form-label">Default Currency</label>
+                      <label for="defaultCurrency" class="form-label">Alapértelmezett pénznem</label>
                       <select class="form-select" name="defaultCurrency" id="defaultCurrency">
-                        <option value="HUF" {{ ($settings['defaultCurrency'] ?? 'HUF') == 'HUF' ? 'selected' : '' }}>HUF - Hungarian Forint</option>
+                        <option value="Ft" {{ ($settings['defaultCurrency'] ?? 'Ft') == 'Ft' ? 'selected' : '' }}>Ft - Hungarian Forint</option>
                         <option value="USD" {{ ($settings['defaultCurrency'] ?? '') == 'USD' ? 'selected' : '' }}>USD - US Dollar</option>
                         <option value="EUR" {{ ($settings['defaultCurrency'] ?? '') == 'EUR' ? 'selected' : '' }}>EUR - Euro</option>
                         <option value="GBP" {{ ($settings['defaultCurrency'] ?? '') == 'GBP' ? 'selected' : '' }}>GBP - British Pound</option>
@@ -96,22 +96,22 @@
                       </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="currencyPosition" class="form-label">Currency Position</label>
+                      <label for="currencyPosition" class="form-label">Pénznem pozíciója</label>
                       <select class="form-select" name="currencyPosition" id="currencyPosition">
-                        <option value="left" {{ ($settings['currencyPosition'] ?? '') == 'left' ? 'selected' : '' }}>Left ($100.00)</option>
-                        <option value="right" {{ ($settings['currencyPosition'] ?? '') == 'right' ? 'selected' : '' }}>Right (100.00$)</option>
-                        <option value="left_space" {{ ($settings['currencyPosition'] ?? '') == 'left_space' ? 'selected' : '' }}>Left with space ($ 100.00)</option>
-                        <option value="right_space" {{ ($settings['currencyPosition'] ?? 'right_space') == 'right_space' ? 'selected' : '' }}>Right with space (100.00 $)</option>
+                        <option value="left" {{ ($settings['currencyPosition'] ?? '') == 'left' ? 'selected' : '' }}>Balra ($100.00)</option>
+                        <option value="right" {{ ($settings['currencyPosition'] ?? '') == 'right' ? 'selected' : '' }}>Jobbra (100.00$)</option>
+                        <option value="left_space" {{ ($settings['currencyPosition'] ?? '') == 'left_space' ? 'selected' : '' }}>Balra, szóközzel ($ 100.00)</option>
+                        <option value="right_space" {{ ($settings['currencyPosition'] ?? 'right_space') == 'right_space' ? 'selected' : '' }}>Jobbra, szóközzel (100.00 $)</option>
                       </select>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="thousandSeparator" class="form-label">Thousand Separator</label>
-                      <input type="text" class="form-control" name="thousandSeparator" id="thousandSeparator" value="{{ $settings['thousandSeparator'] ?? '.' }}" maxlength="1">
+                      <label for="thousandSeparator" class="form-label">Ezres elválasztó</label>
+                      <input type="text" class="form-control" name="thousandSeparator" id="thousandSeparator" value="{{ $settings['thousandSeparator'] ?? ' ' }}" maxlength="1">
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="decimalSeparator" class="form-label">Decimal Separator</label>
+                      <label for="decimalSeparator" class="form-label">Tizedes elválasztó</label>
                       <input type="text" class="form-control" name="decimalSeparator" id="decimalSeparator" value="{{ $settings['decimalSeparator'] ?? ',' }}" maxlength="1">
                     </div>
                   </div>
@@ -119,20 +119,20 @@
 
                 <!-- Localization Settings -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">Localization</h6>
+                  <h6 class="mb-3">Lokalizáció</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="timezone" class="form-label">Timezone</label>
+                      <label for="timezone" class="form-label">Időzóna</label>
                       <select class="form-select" name="timezone" id="timezone">
-                        <option value="Europe/Budapest" {{ ($settings['timezone'] ?? 'Europe/Budapest') == 'Europe/Budapest' ? 'selected' : '' }}>Europe/Budapest (CET/CEST)</option>
+                        <option value="Europe/Budapest" {{ ($settings['timezone'] ?? 'Europe/Budapest') == 'Europe/Budapest' ? 'selected' : '' }}>Európa/Budapest (CET/CEST)</option>
                         <option value="UTC" {{ ($settings['timezone'] ?? '') == 'UTC' ? 'selected' : '' }}>UTC</option>
-                        <option value="Europe/London" {{ ($settings['timezone'] ?? '') == 'Europe/London' ? 'selected' : '' }}>Europe/London (GMT)</option>
-                        <option value="Asia/Tokyo" {{ ($settings['timezone'] ?? '') == 'Asia/Tokyo' ? 'selected' : '' }}>Asia/Tokyo (JST)</option>
-                        <option value="Asia/Dubai" {{ ($settings['timezone'] ?? '') == 'Asia/Dubai' ? 'selected' : '' }}>Asia/Dubai (GST)</option>
+                        <option value="Europe/London" {{ ($settings['timezone'] ?? '') == 'Europe/London' ? 'selected' : '' }}>Európa/London (GMT)</option>
+                        <option value="Asia/Tokyo" {{ ($settings['timezone'] ?? '') == 'Asia/Tokyo' ? 'selected' : '' }}>Ázsia/Tokió (JST)</option>
+                        <option value="Asia/Dubai" {{ ($settings['timezone'] ?? '') == 'Asia/Dubai' ? 'selected' : '' }}>Ázsia/Dubai (GST)</option>
                       </select>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="dateFormat" class="form-label">Date Format</label>
+                      <label for="dateFormat" class="form-label">Dátumformátum</label>
                       <select class="form-select" name="dateFormat" id="dateFormat">
                         <option value="Y-m-d" {{ ($settings['dateFormat'] ?? '') == 'Y-m-d' ? 'selected' : '' }}>2024-01-15 (Y-m-d)</option>
                         <option value="m/d/Y" {{ ($settings['dateFormat'] ?? '') == 'm/d/Y' ? 'selected' : '' }}>01/15/2024 (m/d/Y)</option>
@@ -144,13 +144,13 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-3">
-                      <label for="language" class="form-label">Default Language</label>
+                      <label for="language" class="form-label">Alapértelmezett nyelv</label>
                       <select class="form-select" name="language" id="language">
-                        <option value="hu" {{ ($settings['language'] ?? 'hu') == 'hu' ? 'selected' : '' }}>Hungarian</option>
-                        <option value="en" {{ ($settings['language'] ?? '') == 'en' ? 'selected' : '' }}>English</option>
-                        <option value="es" {{ ($settings['language'] ?? '') == 'es' ? 'selected' : '' }}>Spanish</option>
-                        <option value="fr" {{ ($settings['language'] ?? '') == 'fr' ? 'selected' : '' }}>French</option>
-                        <option value="de" {{ ($settings['language'] ?? '') == 'de' ? 'selected' : '' }}>German</option>
+                        <option value="hu" {{ ($settings['language'] ?? 'hu') == 'hu' ? 'selected' : '' }}>Magyar</option>
+                        <option value="en" {{ ($settings['language'] ?? '') == 'en' ? 'selected' : '' }}>Angol</option>
+                        <option value="es" {{ ($settings['language'] ?? '') == 'es' ? 'selected' : '' }}>Spanyol</option>
+                        <option value="fr" {{ ($settings['language'] ?? '') == 'fr' ? 'selected' : '' }}>Francia</option>
+                        <option value="de" {{ ($settings['language'] ?? '') == 'de' ? 'selected' : '' }}>Német</option>
                       </select>
                     </div>
                   </div>
@@ -158,54 +158,54 @@
 
                 <!-- SEO Settings -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">SEO Settings</h6>
+                  <h6 class="mb-3">SEO Beállítások elemre</h6>
                   <div class="row">
                     <div class="col-md-12 mb-3">
-                      <label for="metaTitle" class="form-label">Default Meta Title</label>
+                      <label for="metaTitle" class="form-label">Alapértelmezett metacím</label>
                       <input type="text" class="form-control" name="metaTitle" id="metaTitle"
                         value="{{ $settings['metaTitle'] ?? '' }}">
-                      <small class="text-muted">Default title for pages when no specific title is set</small>
+                      <small class="text-muted">Oldalak alapértelmezett címe, ha nincs beállítva konkrét cím</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-3">
-                      <label for="metaDescription" class="form-label">Default Meta Description</label>
+                      <label for="metaDescription" class="form-label">Alapértelmezett meta leírás</label>
                       <textarea class="form-control" name="metaDescription" id="metaDescription" rows="3">{{ $settings['metaDescription'] ?? '' }}</textarea>
-                      <small class="text-muted">Default meta description for pages</small>
+                      <small class="text-muted">Oldalak alapértelmezett meta leírása, ha nincs beállítva konkrét leírás</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="metaKeywords" class="form-label">Default Meta Keywords</label>
+                      <label for="metaKeywords" class="form-label">Alapértelmezett meta kulcsszavak</label>
                       <input type="text" class="form-control" name="metaKeywords" id="metaKeywords"
                         value="{{ $settings['metaKeywords'] ?? '' }}">
-                      <small class="text-muted">Comma-separated keywords</small>
+                      <small class="text-muted">Vesszővel elválasztott kulcsszavak</small>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="googleAnalytics" class="form-label">Google Analytics ID</label>
+                      <label for="googleAnalytics" class="form-label">Google Analytics azonosító</label>
                       <input type="text" class="form-control" name="googleAnalytics" id="googleAnalytics" value="{{ $settings['googleAnalytics'] ?? '' }}" placeholder="G-XXXXXXXXXX">
-                      <small class="text-muted">Google Analytics 4 Measurement ID</small>
+                      <small class="text-muted">Google Analytics 4 Mérés azonosító</small>
                     </div>
                   </div>
                 </div>
 
                 <!-- Maintenance Mode -->
                 <div class="mb-4 pb-2">
-                  <h6 class="mb-3">Maintenance Mode</h6>
+                  <h6 class="mb-3">Karbantartási mód</h6>
                   <div class="row">
                     <div class="col-md-12 mb-3">
                       <div class="form-check form-switch mb-3">
                         <input class="form-check-input" type="checkbox" name="maintenanceMode" id="maintenanceMode" value="1" {{ ($settings['maintenanceMode'] ?? '0') === '1' ? 'checked' : '' }}>
                         <label class="form-check-label" for="maintenanceMode">
-                          Enable Maintenance Mode
+                          Karbantartási mód engedélyezése
                         </label>
                       </div>
-                      <small class="text-muted">When enabled, visitors will see a maintenance page while administrators can still access the site.</small>
+                      <small class="text-muted">Ha engedélyezve van, a látogatók egy karbantartási oldalt fognak látni, míg az adminisztrátorok továbbra is hozzáférhetnek a webhelyhez.</small>
                     </div>
                   </div>
                   <div class="row">
                     <div class="col-md-12 mb-3">
-                      <label for="maintenanceMessage" class="form-label">Maintenance Message</label>
+                      <label for="maintenanceMessage" class="form-label">Karbantartási üzenet</label>
                       <textarea class="form-control" name="maintenanceMessage" id="maintenanceMessage" rows="3">{{ $settings['maintenanceMessage'] ?? "We are currently performing maintenance. We'll be back shortly!" }}</textarea>
                     </div>
                   </div>
@@ -213,9 +213,9 @@
 
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end">
-                  <button type="reset" class="btn btn-outline-secondary me-2">{{ __('Cancel') }}</button>
+                  <button type="reset" class="btn btn-outline-secondary me-2">{{ __('Mégse') }}</button>
                   <button type="submit" class="btn btn-primary">
-                    <i class="bx bx-save me-1"></i> {{ __('Save Changes') }}
+                    <i class="bx bx-save me-1"></i> {{ __('Módosítások mentése') }}
                   </button>
                 </div>
               </form>
@@ -228,16 +228,16 @@
           <!-- System Information -->
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="card-title mb-0">System Information</h5>
+              <h5 class="card-title mb-0">Rendszerinformációk</h5>
             </div>
             <div class="card-body">
               <div class="mb-3">
                 <div class="d-flex justify-content-between mb-2">
-                  <span>PHP Version:</span>
+                  <span>PHP Változat:</span>
                   <span class="badge bg-primary">8.3.28</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                  <span>Laravel Version:</span>
+                  <span>Laravel Változat:</span>
                   <span class="badge bg-success">12.32.0</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
@@ -245,8 +245,8 @@
                   <span class="badge bg-info">MySQL</span>
                 </div>
                 <div class="d-flex justify-content-between mb-2">
-                  <span>Last Backup:</span>
-                  <span class="badge bg-warning">2 days ago</span>
+                  <span>Utolsó biztonsági mentés:</span>
+                  <span class="badge bg-warning">2 napja</span>
                 </div>
               </div>
             </div>

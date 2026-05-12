@@ -44,6 +44,6 @@ class SettingsGeneral extends Controller
         // Clear the cache so new settings are immediately applied
         \Illuminate\Support\Facades\Cache::forget('carswap_settings_public');
 
-        return redirect()->back()->with('success', 'General settings updated successfully.');
+        return redirect()->back()->with('success', 'Az általános beállítások sikeresen frissítve.');
     }
 }
