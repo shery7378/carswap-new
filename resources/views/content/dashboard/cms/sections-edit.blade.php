@@ -3,10 +3,48 @@
 @section('title', __('CMS Editor - ') . $section->name)
 
 @section('page-style')
-    <style>
-        .edit-panel {
-            background: #ffffff;
-            border: 1px solid #eef0f7;
+	    <style>
+	        .date-picker-btn {
+	            width: 46px;
+	            min-width: 46px;
+	            display: inline-flex;
+	            align-items: center;
+	            justify-content: center;
+	            padding: 0;
+	            background: #fff;
+	            border-color: #d9dee3;
+	            border-top-left-radius: 0;
+	            border-bottom-left-radius: 0;
+	            border-top-right-radius: 0.375rem;
+	            border-bottom-right-radius: 0.375rem;
+	            line-height: 1;
+	        }
+
+	        .date-picker-btn i {
+	            font-size: 1.1rem;
+	            margin: 0;
+	        }
+
+	        .ymd-picker-group {
+	            border-radius: 0.375rem;
+	            overflow: hidden;
+	        }
+
+	        .ymd-picker-group .form-control {
+	            border-top-right-radius: 0;
+	            border-bottom-right-radius: 0;
+	            border-right: 0;
+	        }
+
+	        .ymd-picker-group .date-picker-btn {
+	            border-top-right-radius: 0;
+	            border-bottom-right-radius: 0;
+	            border-left: 0;
+	        }
+
+	        .edit-panel {
+	            background: #ffffff;
+	            border: 1px solid #eef0f7;
             border-radius: 0.75rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
         }
@@ -228,10 +266,16 @@
                         <label class="form-label">@lang('Item Title')</label>
                         <input type="text" name="title" class="form-control" placeholder="{{ __('e.g. Easy Exchange') }}" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">@lang('Date (Optional)')</label>
-                        <input type="date" name="date" class="form-control">
-                    </div>
+	                    <div class="mb-3">
+	                        <label class="form-label">@lang('Date (Optional)')</label>
+	                        <div class="input-group position-relative ymd-picker-group">
+	                            <input type="text" class="form-control" id="cms-item-date-display" placeholder="yyyy/mm/dd" readonly>
+	                            <button class="btn btn-outline-secondary date-picker-btn" type="button" id="cms-item-date-btn" aria-label="Open date picker">
+	                                <i class="bx bx-calendar"></i>
+	                            </button>
+	                            <input type="date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;" id="cms-item-date-picker">
+	                        </div>
+	                    </div>
                     <div class="mb-3">
                         <label class="form-label">@lang('Description')</label>
                         <textarea name="description" class="form-control" rows="3" required></textarea>
@@ -274,10 +318,16 @@
                         <label class="form-label">@lang('Item Title')</label>
                         <input type="text" id="edit-item-title" name="title" class="form-control" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label">@lang('Date (Optional)')</label>
-                        <input type="date" id="edit-item-date" name="date" class="form-control">
-                    </div>
+	                    <div class="mb-3">
+	                        <label class="form-label">@lang('Date (Optional)')</label>
+	                        <div class="input-group position-relative ymd-picker-group">
+	                            <input type="text" class="form-control" id="edit-item-date-display" placeholder="yyyy/mm/dd" readonly>
+	                            <button class="btn btn-outline-secondary date-picker-btn" type="button" id="edit-item-date-btn" aria-label="Open date picker">
+	                                <i class="bx bx-calendar"></i>
+	                            </button>
+	                            <input type="date" id="edit-item-date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;">
+	                        </div>
+	                    </div>
                     <div class="mb-3">
                         <label class="form-label">@lang('Description')</label>
                         <textarea id="edit-item-description" name="description" class="form-control" rows="3"
@@ -314,11 +364,51 @@
     <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Shared Summernote Init
-            function initSummernote(selector) {
-                $(selector).summernote({
+	    <script>
+	        document.addEventListener('DOMContentLoaded', function () {
+	            function formatToYmdSlashes(value) {
+	                if (!value) return '';
+	                const parts = value.split('-');
+	                if (parts.length !== 3) return value;
+	                return `${parts[0]}/${parts[1]}/${parts[2]}`;
+	            }
+	
+	            function wireYmdDatePicker(pickerEl, displayEl, buttonEl) {
+	                if (!pickerEl || !displayEl || !buttonEl) return;
+	
+	                function syncFromPicker() {
+	                    displayEl.value = formatToYmdSlashes(pickerEl.value);
+	                }
+	
+	                buttonEl.addEventListener('click', function () {
+	                    if (pickerEl.showPicker) pickerEl.showPicker();
+	                    else {
+	                        pickerEl.focus();
+	                        pickerEl.click();
+	                    }
+	                });
+	
+	                pickerEl.addEventListener('change', syncFromPicker);
+	                syncFromPicker();
+	            }
+	
+	            // Add item modal date
+	            wireYmdDatePicker(
+	                document.getElementById('cms-item-date-picker'),
+	                document.getElementById('cms-item-date-display'),
+	                document.getElementById('cms-item-date-btn')
+	            );
+	
+	            // Edit item modal date
+	            wireYmdDatePicker(
+	                document.getElementById('edit-item-date'),
+	                document.getElementById('edit-item-date-display'),
+	                document.getElementById('edit-item-date-btn')
+	            );
+
+	            // Shared Summernote Init
+	            function initSummernote(selector) {
+	                $(selector).summernote({
                     placeholder: '{{ __('Write your content here...') }}',
                     tabsize: 2,
                     height: 350,
@@ -349,9 +439,11 @@
                     form.action = `/app/cms/items/${item.id}`;
 
                     document.querySelector('#edit-item-title').value = item.title;
-                    if (document.querySelector('#edit-item-date')) {
-                        document.querySelector('#edit-item-date').value = item.date ? item.date.split('T')[0] : '';
-                    }
+	                    if (document.querySelector('#edit-item-date')) {
+	                        document.querySelector('#edit-item-date').value = item.date ? item.date.split('T')[0] : '';
+	                        const display = document.querySelector('#edit-item-date-display');
+	                        if (display) display.value = formatToYmdSlashes(document.querySelector('#edit-item-date').value);
+	                    }
                     const descField = $('#edit-item-description');
                     if (descField.length) {
                         descField.summernote('code', item.description || '');
