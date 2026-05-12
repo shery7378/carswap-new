@@ -11,8 +11,8 @@
                  style="background: linear-gradient(135deg, #696cff 0%, #3f4191 100%) !important;">
                 <div class="card-body d-flex align-items-center justify-content-between p-4">
                     <div>
-                        <h4 class="fw-bold mb-1 text-white">Email Server Configuration</h4>
-                        <p class="mb-0 opacity-75">Configure and monitor your system-wide email delivery service.</p>
+                        <h4 class="fw-bold mb-1 text-white"> E-mail szerver beállítások</h4>
+                        <p class="mb-0 opacity-75">Konfigurálja és figyelje a rendszerszintű e-mail kézbesítési szolgáltatását.</p>
                     </div>
                     <div class="d-none d-md-block">
                         <i class="bx bx-mail-send fs-1 opacity-50"></i>
@@ -32,18 +32,18 @@
                             <i class="bx bx-server"></i>
                         </div>
                         <div>
-                            <h5 class="mb-0 fw-bold">SMTP Connection</h5>
-                            <small class="text-muted">Protocol & authentication settings</small>
+                            <h5 class="mb-0 fw-bold">SMTP kapcsolat</h5>
+                            <small class="text-muted">Protokoll- és hitelesítési beállítások</small>
                         </div>
                     </div>
                     <div class="card-body pt-4">
                         <div class="row g-3">
                             <div class="col-md-12">
-                                <label class="form-label fw-semibold">Delivery Protocol</label>
+                                <label class="form-label fw-semibold">Kézbesítési protokoll</label>
                                 <div class="d-flex gap-3 mt-1 mb-2">
                                     <div class="form-check custom-radio">
                                         <input name="mail_mailer" class="form-check-input" type="radio" value="smtp" id="protocolSmtp" checked>
-                                        <label class="form-check-label" for="protocolSmtp">SMTP (Recommended)</label>
+                                        <label class="form-check-label" for="protocolSmtp">SMTP (ajánlott)</label>
                                     </div>
                                     <div class="form-check custom-radio">
                                         <input name="mail_mailer" class="form-check-input" type="radio" value="mailgun" id="protocolMailgun">
@@ -68,7 +68,7 @@
                             </div>
 
                             <div class="col-md-12">
-                                <label for="mail_encryption" class="form-label">Security Protocol</label>
+                                <label for="mail_encryption" class="form-label">Biztonsági protokoll</label>
                                 <div class="btn-group w-100" role="group">
                                     <input type="radio" class="btn-check" name="mail_encryption" id="enc-tls" value="tls" {{ ($settings['mail_encryption'] ?? 'tls') == 'tls' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-primary" for="enc-tls">TLS</label>
@@ -82,13 +82,13 @@
                             </div>
 
                             <div class="col-md-6 mt-4">
-                                <label for="mail_username" class="form-label">Auth Username</label>
+                                <label for="mail_username" class="form-label">Felhasználónév </label>
                                 <input type="text" class="form-control" name="mail_username" id="mail_username" 
                                        placeholder="Username" value="{{ $settings['mail_username'] ?? '' }}">
                             </div>
                             
                             <div class="col-md-6 mt-4">
-                                <label for="mail_password" class="form-label">Auth Password</label>
+                                <label for="mail_password" class="form-label">Jelszó</label>
                                 <div class="input-group input-group-merge">
                                     <input type="password" class="form-control" name="mail_password" id="mail_password" 
                                            placeholder="••••••••" value="{{ $settings['mail_password'] ?? '' }}">
@@ -112,8 +112,8 @@
                                         <i class="bx bx-power-off"></i>
                                     </div>
                                     <div>
-                                        <h6 class="mb-0 fw-bold">Service Status</h6>
-                                        <small class="text-muted">Global switch for emails</small>
+                                        <h6 class="mb-0 fw-bold">Szolgáltatás állapota</h6>
+                                        <small class="text-muted">Váltson globális e-mailre</small>
                                     </div>
                                 </div>
                                 <div class="form-check form-switch mb-0">
@@ -133,18 +133,18 @@
                                     <i class="bx bx-user-circle"></i>
                                 </div>
                                 <div>
-                                    <h5 class="mb-0 fw-bold">Sender Identity</h5>
-                                    <small class="text-muted">How users see your emails</small>
+                                    <h5 class="mb-0 fw-bold">Feladó személyazonossága</h5>
+                                    <small class="text-muted">Hogyan látják a felhasználók az e-mailjeidet</small>
                                 </div>
                             </div>
                             <div class="card-body pt-4">
                                 <div class="mb-3">
-                                    <label for="mail_from_name" class="form-label">Display Name</label>
+                                    <label for="mail_from_name" class="form-label">Megjelenítési név</label>
                                     <input type="text" class="form-control" name="mail_from_name" id="mail_from_name" 
                                            value="{{ $settings['mail_from_name'] ?? 'My eCommerce Store' }}">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="mail_from_address" class="form-label">Sender Email</label>
+                                    <label for="mail_from_address" class="form-label">Feladó e-mail</label>
                                     <div class="input-group input-group-merge">
                                         <span class="input-group-text"><i class="bx bx-envelope"></i></span>
                                         <input type="email" class="form-control" name="mail_from_address" id="mail_from_address" 
@@ -152,9 +152,9 @@
                                     </div>
                                 </div>
                                 <div class="mb-0">
-                                    <label for="mail_reply_to" class="form-label">Reply-To Address</label>
+                                    <label for="mail_reply_to" class="form-label">Válasz a címre</label>
                                     <input type="email" class="form-control bg-light" name="mail_reply_to" id="mail_reply_to" 
-                                           value="{{ $settings['mail_reply_to'] ?? '' }}" placeholder="Default: Same as sender">
+                                           value="{{ $settings['mail_reply_to'] ?? '' }}" placeholder="Alapértelmezett: Ugyanaz, mint a feladó">
                                 </div>
                             </div>
                         </div>
@@ -166,10 +166,10 @@
                 <div class="d-flex align-items-center justify-content-end p-3 bg-lighter rounded">
                     <div class="d-flex gap-2">
                         <button type="button" id="testConnectivityBtn" class="btn btn-outline-secondary waves-effect d-flex align-items-center">
-                            <i class="bx bx-test-tube me-2"></i> Test Connectivity
+                            <i class="bx bx-test-tube me-2"></i> Teszt kapcsolat
                         </button>
                         <button type="submit" class="btn btn-primary d-flex align-items-center shadow-primary px-5">
-                            <i class="bx bx-save me-2"></i> Save Changes
+                            <i class="bx bx-save me-2"></i> Módosítások mentése
                         </button>
                     </div>
                 </div>
