@@ -54,6 +54,6 @@ class EmailTemplateController extends Controller
         ]);
 
         return redirect()->route('admin.email-templates.index', ['template' => $template->id])
-            ->with('success', 'Email template updated successfully!');
+            ->with('success', __('Email template updated successfully!'));
     }
 }
