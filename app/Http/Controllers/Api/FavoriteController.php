@@ -33,7 +33,7 @@ class FavoriteController extends Controller
         $favorites = $request->user()
             ->favorites()
             ->with($this->relations)
-            ->where('ad_status', 'Published')
+            ->where('ad_status', 'Publikált')
             ->orderBy('favorites.created_at', 'desc')
             ->paginate($request->input('limit', 12));
 
