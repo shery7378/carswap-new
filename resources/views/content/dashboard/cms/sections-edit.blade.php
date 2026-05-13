@@ -105,7 +105,7 @@
             'home-headings' => __('Címsor elem'),
             'blog-posts' => __('Blog elem'),
             'general-terms-and-conditions', 'data-protection-notice' => __('Dokumentum elem'),
-            default => __('Rács elem'),
+            default => __('FAQ elem'),
         };
     @endphp
     <div class="d-flex justify-content-between align-items-center mb-5 mt-2">
