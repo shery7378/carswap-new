@@ -96,6 +96,7 @@
 @section('content')
     @php
         $isDocumentMode = in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice', 'home-hero']);
+        $isFaqSection = in_array($section->slug, ['faq', 'faq-section']);
 
         // Dynamic item label based on section slug
         $itemLabel = match ($section->slug) {
@@ -266,34 +267,42 @@
                         <label class="form-label">@lang('Item Title')</label>
                         <input type="text" name="title" class="form-control" placeholder="{{ __('e.g. Easy Exchange') }}" required>
                     </div>
-	                    <div class="mb-3">
-	                        <label class="form-label">@lang('Date (Optional)')</label>
-	                        <div class="input-group position-relative ymd-picker-group">
-	                            <input type="text" class="form-control" id="cms-item-date-display" placeholder="yyyy/mm/dd" readonly>
-	                            <button class="btn btn-outline-secondary date-picker-btn" type="button" id="cms-item-date-btn" aria-label="Open date picker">
-	                                <i class="bx bx-calendar"></i>
-	                            </button>
-	                            <input type="date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;" id="cms-item-date-picker">
+                        @if (!$isFaqSection)
+	                        <div class="mb-3">
+	                            <label class="form-label">@lang('Date (Optional)')</label>
+	                            <div class="input-group position-relative ymd-picker-group">
+	                                <input type="text" class="form-control" id="cms-item-date-display" placeholder="yyyy/mm/dd" readonly>
+	                                <button class="btn btn-outline-secondary date-picker-btn" type="button" id="cms-item-date-btn" aria-label="Open date picker">
+	                                    <i class="bx bx-calendar"></i>
+	                                </button>
+	                                <input type="date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;" id="cms-item-date-picker">
+	                            </div>
 	                        </div>
-	                    </div>
+                        @endif
                     <div class="mb-3">
                         <label class="form-label">@lang('Description')</label>
                         <textarea name="description" class="form-control" rows="3" required></textarea>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@lang('Icon Class (Boxicons)')</label>
-                            <input type="text" name="icon" class="form-control" placeholder="bx-car">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@lang('Display Order')</label>
-                            <input type="number" name="order" class="form-control" value="0">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">@lang('Custom Image (Optional)')</label>
-                        <input type="file" name="image" class="form-control">
-                    </div>
+	                    <div class="row">
+                            @if (!$isFaqSection)
+	                            <div class="col-md-6 mb-3">
+	                                <label class="form-label">@lang('Icon Class (Boxicons)')</label>
+	                                <input type="text" name="icon" class="form-control" placeholder="bx-car">
+	                            </div>
+                                <div class="col-md-6 mb-3">
+                            @else
+                                <div class="col-md-12 mb-3">
+                            @endif
+	                            <label class="form-label">@lang('Display Order')</label>
+	                            <input type="number" name="order" class="form-control" value="0">
+	                        </div>
+	                    </div>
+                        @if (!$isFaqSection)
+	                        <div class="mb-3">
+	                            <label class="form-label">@lang('Custom Image (Optional)')</label>
+	                            <input type="file" name="image" class="form-control">
+	                        </div>
+                        @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@lang('Close')</button>
@@ -318,36 +327,44 @@
                         <label class="form-label">@lang('Item Title')</label>
                         <input type="text" id="edit-item-title" name="title" class="form-control" required>
                     </div>
-	                    <div class="mb-3">
-	                        <label class="form-label">@lang('Date (Optional)')</label>
-	                        <div class="input-group position-relative ymd-picker-group">
-	                            <input type="text" class="form-control" id="edit-item-date-display" placeholder="yyyy/mm/dd" readonly>
-	                            <button class="btn btn-outline-secondary date-picker-btn" type="button" id="edit-item-date-btn" aria-label="Open date picker">
-	                                <i class="bx bx-calendar"></i>
-	                            </button>
-	                            <input type="date" id="edit-item-date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;">
+                        @if (!$isFaqSection)
+	                        <div class="mb-3">
+	                            <label class="form-label">@lang('Date (Optional)')</label>
+	                            <div class="input-group position-relative ymd-picker-group">
+	                                <input type="text" class="form-control" id="edit-item-date-display" placeholder="yyyy/mm/dd" readonly>
+	                                <button class="btn btn-outline-secondary date-picker-btn" type="button" id="edit-item-date-btn" aria-label="Open date picker">
+	                                    <i class="bx bx-calendar"></i>
+	                                </button>
+	                                <input type="date" id="edit-item-date" name="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;">
+	                            </div>
 	                        </div>
-	                    </div>
+                        @endif
                     <div class="mb-3">
                         <label class="form-label">@lang('Description')</label>
                         <textarea id="edit-item-description" name="description" class="form-control" rows="3"
                             required></textarea>
                     </div>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@lang('Icon Class')</label>
-                            <input type="text" id="edit-item-icon" name="icon" class="form-control">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label">@lang('Display Order')</label>
-                            <input type="number" id="edit-item-order" name="order" class="form-control">
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label">@lang('Custom Image (Optional)')</label>
-                        <input type="file" id="edit-item-image" name="image" class="form-control">
-                        <small class="text-muted">@lang('Leave empty to keep current image.')</small>
-                    </div>
+	                    <div class="row">
+                            @if (!$isFaqSection)
+	                            <div class="col-md-6 mb-3">
+	                                <label class="form-label">@lang('Icon Class')</label>
+	                                <input type="text" id="edit-item-icon" name="icon" class="form-control">
+	                            </div>
+                                <div class="col-md-6 mb-3">
+                            @else
+                                <div class="col-md-12 mb-3">
+                            @endif
+	                            <label class="form-label">@lang('Display Order')</label>
+	                            <input type="number" id="edit-item-order" name="order" class="form-control">
+	                        </div>
+	                    </div>
+                        @if (!$isFaqSection)
+	                        <div class="mb-3">
+	                            <label class="form-label">@lang('Custom Image (Optional)')</label>
+	                            <input type="file" id="edit-item-image" name="image" class="form-control">
+	                            <small class="text-muted">@lang('Leave empty to keep current image.')</small>
+	                        </div>
+                        @endif
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">@lang('Close')</button>
