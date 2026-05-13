@@ -73,7 +73,7 @@
                 <tr>
                     <th>ID</th>
                     <th>{{ __('Name') }}</th>
-                    <th>{{ __('Email') }}</th>
+                    <th>{{ __('Email Address') }}</th>
                     <th>{{ __('Subject') }}</th>
                     <th>{{ __('Status') }}</th>
                     <th>{{ __('Date') }}</th>
