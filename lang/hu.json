@@ -701,7 +701,7 @@
     "Featured Image (Logo)": "Kiemelt kép (Logó)",
     "Current Logo": "Jelenlegi logó",
     "New Logo Preview": "Új logó előnézete",
-    "Save Changes": "Mentés",
+    "Save changes": "Mentés",
     "Photos": "Fotók",
     "Delete Vehicle": "Jármű törlése",
     "No vehicles found.": "Nem található jármű.",
@@ -915,5 +915,9 @@
     "user": "Felhasználó", 
     "dealer": "Kereskedő",
     "subscriber": "Előfizető",
-    "sub-admin": "Aladminisztrátor"
+    "sub-admin": "Aladminisztrátor", 
+    "Store Information": "Bolt információ",
+    "Store Name": "Bolt neve",
+    "General settings updated successfully.": "Az általános beállítások sikeresen frissítve.",
+    "Store Email": "Bolt e-mail"
 }

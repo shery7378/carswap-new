@@ -12,7 +12,7 @@
         <div class="col-lg-8">
           <div class="card mb-4">
             <div class="card-header">
-              <h5 class="card-title mb-0">Általános beállítások</h5>
+              <h5 class="card-title mb-0">{{ __('General Settings') }}</h5>
             </div>
             <div class="card-body">
               <form id="generalSettingsForm" method="POST" action="{{ route('app-ecommerce-settings-general-store') }}" enctype="multipart/form-data">
@@ -27,14 +27,14 @@
                 
                 <!-- Store Information -->
                 <div class="mb-4 border-bottom pb-4">
-                  <h6 class="mb-3">Bolt információk</h6>
+                  <h6 class="mb-3">{{ __('Store Information') }}</h6>
                   <div class="row">
                     <div class="col-md-6 mb-3">
-                      <label for="storeName" class="form-label">Bolt neve</label>
+                      <label for="storeName" class="form-label">{{ __('Store Name') }}</label>
                       <input type="text" class="form-control" name="storeName" id="storeName" value="{{ $settings['storeName'] ?? '' }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                      <label for="storeEmail" class="form-label">Bolt e-mail</label>
+                      <label for="storeEmail" class="form-label">Bolt E-mail</label>
                       <input type="email" class="form-control" name="storeEmail" id="storeEmail" value="{{ $settings['storeEmail'] ?? '' }}" required>
                     </div>
                   </div>
@@ -213,9 +213,9 @@
 
                 <!-- Form Actions -->
                 <div class="d-flex justify-content-end">
-                  <button type="reset" class="btn btn-outline-secondary me-2">{{ __('Mégse') }}</button>
+                  <button type="reset" class="btn btn-outline-secondary me-2">{{ __('Cancel') }}</button>
                   <button type="submit" class="btn btn-primary">
-                    <i class="bx bx-save me-1"></i> {{ __('Módosítások mentése') }}
+                    <i class="bx bx-save me-1"></i> {{ __('Save changes') }}
                   </button>
                 </div>
               </form>
