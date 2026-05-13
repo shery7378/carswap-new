@@ -100,8 +100,8 @@
 
         // Dynamic item label based on section slug
         $itemLabel = match ($section->slug) {
-            'faq-section' => __('FAQ elem'),
-            'mailing-list' => __('Levelezőlista elem'),
+            'faq-section', 'faq' => __('FAQ elem'),
+            'mailing-list', 'mailing-list-info' => __('Rács elem'),
             'home-services' => __('Szolgáltatás elem'),
             'home-headings' => __('Címsor elem'),
             'blog-posts' => __('Blog elem'),
