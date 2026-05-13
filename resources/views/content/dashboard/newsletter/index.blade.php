@@ -23,8 +23,8 @@
         <thead class="bg-light bg-opacity-50">
             <tr>
             <th>ID</th>
-            <th>{{ __('Name') }}</th>
-            <th>{{ __('Email') }}</th>
+            <th>Név</th>
+            <th>E-mail cím</th>
             <th>{{ __('Subscribed At') }}</th>
             <th class="text-center">{{ __('Actions') }}</th>
             </tr>
