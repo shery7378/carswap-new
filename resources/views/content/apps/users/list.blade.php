@@ -19,6 +19,7 @@
                                 <option value="active" {{ request('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
                                 <option value="inactive" {{ request('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
                                 <option value="banned" {{ request('status') == 'banned' ? 'selected' : '' }}>{{ __('Banned') }}</option>
+                                <option value="suspended" {{ request('status') == 'suspended' ? 'selected' : '' }}>{{ __('Suspended') }}</option>
                             </select>
                         </form>
 
@@ -91,6 +92,7 @@
 		                                                $statusClass = match ($status) {
 		                                                    'active' => 'success',
 		                                                    'inactive' => 'secondary',
+		                                                    'suspended' => 'warning',
 		                                                    'banned' => 'danger',
 		                                                    default => 'primary',
 		                                                };
@@ -100,7 +102,7 @@
 	                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
 	                                                </button>
 	                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
-		                                                    @foreach(['active' => 'success', 'inactive' => 'secondary', 'banned' => 'danger'] as $val => $cls)
+		                                                    @foreach(['active' => 'success', 'inactive' => 'secondary', 'suspended' => 'warning', 'banned' => 'danger'] as $val => $cls)
 	                                                        <li>
                                                             <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status status-option-{{ $val }}" data-id="{{ $user->id }}" data-status="{{ $val }}">
 	                                                                <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
@@ -498,6 +500,8 @@ $(document).ready(function () {
             .status-dropdown .dropdown-item.status-option-inactive:focus { color: var(--bs-secondary) !important; }
             .status-dropdown .dropdown-item.status-option-banned:hover,
             .status-dropdown .dropdown-item.status-option-banned:focus { color: var(--bs-danger) !important; }
+            .status-dropdown .dropdown-item.status-option-suspended:hover,
+            .status-dropdown .dropdown-item.status-option-suspended:focus { color: var(--bs-warning) !important; }
 		    .user-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
 		    /* Actions dropdown should open above other table rows */

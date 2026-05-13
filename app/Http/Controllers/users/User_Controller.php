@@ -55,7 +55,7 @@ class User_Controller extends Controller
                 'regex:/^[A-Z]/',
                 'regex:/[!@#$%^&*(),.?":{}|<>]/',
             ],
-            'status' => 'required|in:active,inactive,banned',
+            'status' => 'required|in:active,inactive,banned,suspended',
         ], [
             'password.min' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
             'password.regex' => 'A jelszónak legalább 6 karakter hosszúnak kell lennie. Nagybetűvel kell kezdődnie, és tartalmaznia kell speciális karaktert.',
@@ -90,7 +90,7 @@ class User_Controller extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
             'phone' => 'nullable|string|unique:users,phone,' . $id,
-            'status' => 'required|in:active,inactive,banned',
+            'status' => 'required|in:active,inactive,banned,suspended',
         ], [
             'phone.unique' => 'Ez a telefonszám már regisztrálva van valaki máshoz!',
         ]);
@@ -117,7 +117,7 @@ class User_Controller extends Controller
     public function updateStatus(Request $request, $id)
     {
         $user = User::findOrFail($id);
-        $request->validate(['status' => 'required|in:active,inactive,banned']);
+        $request->validate(['status' => 'required|in:active,inactive,banned,suspended']);
         $user->status = $request->status;
         $user->save();
 
