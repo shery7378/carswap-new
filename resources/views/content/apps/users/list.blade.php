@@ -59,7 +59,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($users as $user)
+                                @foreach($users as $user)
                                     <tr data-id="{{ $user->id }}">
                                         <td>
                                             <div class="avatar avatar-md border border-light shadow-sm bg-white rounded-circle">
@@ -134,11 +134,7 @@
 	                                            </div>
 	                                        </td>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center py-4 text-muted">{{ __('No web users found.') }}</td>
-                                    </tr>
-                                @endforelse
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -332,7 +328,9 @@ $(document).ready(function () {
             dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>t<'row mt-3'<'col-sm-6'i><'col-sm-6'p>>",
             language: { 
                 search: '', 
-                searchPlaceholder: '{{ __('Quick Search Users…') }}'
+                searchPlaceholder: '{{ __('Quick Search Users…') }}',
+                emptyTable: '{{ __('No web users found.') }}',
+                zeroRecords: '{{ __('No matching records found') }}'
             }
         });
 

@@ -917,10 +917,17 @@
     "Enable Fraud Detection": "Csalás felderítés engedélyezése",
     "user": "Felhasználó", 
     "dealer": "Kereskedő",
-    "subscriber": "Előfizető",
+    "subscriber": "Felhasználó",
     "sub-admin": "Aladminisztrátor", 
     "Store Information": "Bolt információ",
     "Store Name": "Bolt neve",
     "General settings updated successfully.": "Az általános beállítások sikeresen frissítve.",
-    "Store Email": "Bolt e-mail"
+    "Store Email": "Bolt e-mail",
+    "Normal": "Normál",
+    "Quote": "Idezet",
+    "Insert Link": "Link beszúrása",
+    "Insert Image": "Kép beszúrása",
+    "Insert Video": "Videó beszúrása",
+    "partner": "Partner"
+
 }

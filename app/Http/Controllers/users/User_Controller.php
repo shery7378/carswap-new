@@ -8,9 +8,15 @@ use App\Models\User;
 
 class User_Controller extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::orderBy("created_at", "desc")->paginate(500);
+        $query = User::query();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+
+        $users = $query->orderBy("created_at", "desc")->paginate(500);
         return view('content.apps.users.list', compact('users'));
     }
 
