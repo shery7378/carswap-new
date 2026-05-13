@@ -13,7 +13,7 @@
 @endif
 
 <div class="card border-0 shadow-sm">
-  <div class="card-header d-flex justify-content-between align-items-center py-3">
+  <div class="card-header py-3">
     <h5 class="mb-0 fw-bold">{{ __('Subscribers List') }}</h5>
   </div>
   <div class="card-body">
@@ -30,7 +30,7 @@
             </tr>
         </thead>
         <tbody class="table-border-bottom-0">
-            @foreach($subscribers as $subscriber)
+            @forelse($subscribers as $subscriber)
             <tr>
             <td>{{ $subscriber->id }}</td>
             <td>{{ $subscriber->name ?? __('N/A') }}</td>
@@ -50,7 +50,19 @@
                 </div>
             </td>
             </tr>
-            @endforeach
+            @empty
+            <tr>
+              <td colspan="5" class="text-center py-5">
+                <div class="newsletter-empty-state">
+                  <div class="newsletter-empty-icon">
+                    <i class="bx bx-envelope"></i>
+                  </div>
+                  <h6 class="mb-1">{{ __('No newsletter subscribers found.') }}</h6>
+                  <p class="mb-0 text-muted">{{ __('Subscribers will appear here once people join your mailing list.') }}</p>
+                </div>
+              </td>
+            </tr>
+            @endforelse
         </tbody>
         </table>
     </div>
@@ -65,23 +77,31 @@
             order: [[3, "desc"]],
             pageLength: 25,
             dom:
-                "<'row align-items-center mb-3'<'col-md-6 d-flex align-items-center'l><'col-md-6 d-flex justify-content-end'f>>" +
+                "<'row align-items-center mb-3 newsletter-toolbar-row'<'col-md-4 d-flex align-items-center'l><'col-md-8 d-flex justify-content-end align-items-center gap-2 newsletter-toolbar-actions'f<'newsletter-export-wrapper'>>>" +
                 "t" +
                 "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
             language: {
-                searchPlaceholder: "{{ __('Quick Search Newsletter Subscribers…') }}"
+                searchPlaceholder: "{{ __('Quick Search Newsletter Subscribers…') }}",
+                emptyTable: "{{ __('No newsletter subscribers found.') }}",
+                zeroRecords: "{{ __('No matching subscribers found.') }}"
             },
             columnDefs: [
                 { orderable: false, targets: [4] }
             ]
         });
+
+        $('.newsletter-export-wrapper').html(`
+            <a href="{{ route('admin.newsletter.export') }}" class="btn btn-outline-primary newsletter-export-btn">
+                <i class="bx bx-download me-1"></i> CSV export
+            </a>
+        `);
     });
 </script>
 
 <style>
     /* Search box */
     .dataTables_filter input {
-        width: 220px !important;
+        width: 320px !important;
         border-radius: 8px;
         padding: 6px 10px;
         border: 1px solid #d9dee3;
@@ -91,11 +111,26 @@
     .dataTables_wrapper .dataTables_filter {
         display: flex;
         justify-content: flex-end;
+        margin-bottom: 0;
     }
 
     .dataTables_wrapper .dataTables_length {
         display: flex;
         align-items: center;
+    }
+
+    .newsletter-toolbar-row > div {
+        margin-bottom: 0 !important;
+    }
+
+    .newsletter-toolbar-actions {
+        flex-wrap: nowrap;
+    }
+
+    .newsletter-export-btn {
+        white-space: nowrap;
+        border-radius: 8px;
+        padding: 0.48rem 1rem;
     }
 
     .dataTables_length select {
@@ -160,6 +195,24 @@
         justify-content: center;
     }
 
+    .newsletter-empty-state {
+        max-width: 420px;
+        margin: 0 auto;
+    }
+
+    .newsletter-empty-icon {
+        width: 56px;
+        height: 56px;
+        margin: 0 auto 12px;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f4f6ff;
+        color: #696cff;
+        font-size: 1.5rem;
+    }
+
     /* Shadow */
     .shadow-xs {
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
@@ -170,6 +223,15 @@
         .dataTables_filter {
             justify-content: start !important;
             margin-top: 10px;
+        }
+
+        .newsletter-toolbar-actions {
+            justify-content: flex-start !important;
+            flex-wrap: wrap;
+        }
+
+        .dataTables_filter input {
+            width: 100% !important;
         }
     }
 </style>

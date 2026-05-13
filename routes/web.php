@@ -298,6 +298,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
     Route::middleware(['permission:view-newsletter,admin-guard'])->group(function () {
         Route::group(['prefix' => 'app/newsletter'], function () {
             Route::get('/', [\App\Http\Controllers\Admin\NewsletterController::class, 'index'])->name('admin.newsletter.index');
+            Route::get('/export/csv', [\App\Http\Controllers\Admin\NewsletterController::class, 'exportCsv'])->name('admin.newsletter.export');
             Route::delete('/{id}', [\App\Http\Controllers\Admin\NewsletterController::class, 'destroy'])->name('admin.newsletter.destroy')->middleware('permission:delete-newsletter,admin-guard');
         });
     });
