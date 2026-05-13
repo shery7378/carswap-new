@@ -88,21 +88,21 @@
 	                                        <td class="text-center td-status">
 	                                            @php
 	                                                $status = $user->status ?: 'active';
-	                                                $statusClass = match ($status) {
-	                                                    'active' => 'success',
-	                                                    'inactive' => 'warning',
-	                                                    'banned' => 'danger',
-	                                                    default => 'primary',
-	                                                };
+		                                                $statusClass = match ($status) {
+		                                                    'active' => 'success',
+		                                                    'inactive' => 'secondary',
+		                                                    'banned' => 'danger',
+		                                                    default => 'primary',
+		                                                };
 	                                            @endphp
 	                                            <div class="dropdown status-dropdown">
 	                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
 	                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
 	                                                </button>
 	                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
-	                                                    @foreach(['active' => 'success', 'inactive' => 'warning', 'banned' => 'danger'] as $val => $cls)
+		                                                    @foreach(['active' => 'success', 'inactive' => 'secondary', 'banned' => 'danger'] as $val => $cls)
 	                                                        <li>
-	                                                            <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status" data-id="{{ $user->id }}" data-status="{{ $val }}">
+                                                            <button type="button" class="dropdown-item d-flex align-items-center py-2 change-status status-option-{{ $val }}" data-id="{{ $user->id }}" data-status="{{ $val }}">
 	                                                                <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
 	                                                                {{ __(ucfirst($val)) }}
 	                                                            </button>
@@ -491,6 +491,15 @@ $(document).ready(function () {
 		    .status-dropdown { position: relative; }
 		    .status-dropdown.show { z-index: 1066; }
 		    .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+            .status-dropdown .dropdown-item { transition: color .15s ease; }
+            .status-dropdown .dropdown-item i,
+            .status-dropdown .dropdown-item .badge-dot { transition: color .15s ease, background-color .15s ease; }
+            .status-dropdown .dropdown-item.status-option-active:hover,
+            .status-dropdown .dropdown-item.status-option-active:focus { color: var(--bs-success) !important; }
+            .status-dropdown .dropdown-item.status-option-inactive:hover,
+            .status-dropdown .dropdown-item.status-option-inactive:focus { color: var(--bs-secondary) !important; }
+            .status-dropdown .dropdown-item.status-option-banned:hover,
+            .status-dropdown .dropdown-item.status-option-banned:focus { color: var(--bs-danger) !important; }
 		    .user-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
 		    /* Actions dropdown should open above other table rows */

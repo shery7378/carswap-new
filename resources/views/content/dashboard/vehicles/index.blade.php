@@ -166,7 +166,7 @@
                                                         @foreach(['Publikált' => 'success', 'Függőben' => 'warning', 'Elutasítva' => 'danger', 'Piszkozat' => 'secondary'] as $val => $cls)
                                                             <li>
                                                                 <button type="submit" name="ad_status" value="{{ $val }}"
-                                                                    class="dropdown-item d-flex align-items-center py-2">
+                                                                    class="dropdown-item d-flex align-items-center py-2 status-option-{{ $cls }}">
                                                                     <span class="badge badge-dot bg-{{ $cls }} me-2"></span>
                                                                     {{ __($val) }}
                                                                 </button>
@@ -521,10 +521,21 @@
         #vehicles-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
         .td-status { position: relative; }
         #vehicles-table tbody tr.status-dropdown-open .td-status { z-index: 1066; }
-        .status-dropdown { position: relative; }
-        .status-dropdown.show { z-index: 1066; }
-        .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
-        .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
+	        .status-dropdown { position: relative; }
+	        .status-dropdown.show { z-index: 1066; }
+	        .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+            .status-dropdown .dropdown-item { transition: color .15s ease; }
+            .status-dropdown .dropdown-item i,
+            .status-dropdown .dropdown-item .badge-dot { transition: color .15s ease, background-color .15s ease; }
+            .status-dropdown .dropdown-item.status-option-success:hover,
+            .status-dropdown .dropdown-item.status-option-success:focus { color: var(--bs-success) !important; }
+            .status-dropdown .dropdown-item.status-option-warning:hover,
+            .status-dropdown .dropdown-item.status-option-warning:focus { color: var(--bs-warning) !important; }
+            .status-dropdown .dropdown-item.status-option-danger:hover,
+            .status-dropdown .dropdown-item.status-option-danger:focus { color: var(--bs-danger) !important; }
+            .status-dropdown .dropdown-item.status-option-secondary:hover,
+            .status-dropdown .dropdown-item.status-option-secondary:focus { color: var(--bs-secondary) !important; }
+	        .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
         /* ── Actions dropdown z-index ───────────────────────── */
         #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
