@@ -130,7 +130,7 @@ class SubscriptionCreate extends Controller
             // Clear plans cache for the API/Frontend
             \Illuminate\Support\Facades\Cache::forget('carswap_subscription_plans');
 
-            return redirect()->route('app-subscription-plans')->with('success', 'Plans updated successfully');
+            return redirect()->route('app-subscription-plans')->with('success', __('Plans updated successfully'));
             
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\DB::rollBack();
