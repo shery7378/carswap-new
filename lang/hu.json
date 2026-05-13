@@ -71,7 +71,7 @@
     "Profile": "Profil",
     "Profile Settings": "Profilbeállítások",
     "Account Settings": "Fiók beállítások",
-    "super-admin": "Super Admin",
+    "super-admin": "Szuperadminisztrátor",
     "admin": "Ügyintézők",
     "staff": "Személyzet",
     "editor": "Szerkesztő",
@@ -311,7 +311,7 @@
     "OFF": "KIKAPCSOLVA",
     "Roles List": "Szerepkörök listája",
     "Add Role": "Szerepkör hozzáadása",
-    "Super Admin": "Super Admin",
+    "Super Admin": "Szuperadminisztrátor",
     "Full system access with all permissions": "Teljes rendszerhozzáférés minden jogosultsággal",
     "Administrative access with limited permissions": "Ügyintézői hozzáférés korlátozott jogosultságokkal",
     "Editor": "Szerkesztő",
@@ -911,5 +911,9 @@
     "Maximum Amount": "Maximum összeg",
     "Transaction Fee (%)": "Tranzakciós díj (%)",
     "Enable Automatic Refunds": "Automatikus visszatérítés engedélyezése",
-    "Enable Fraud Detection": "Csalás felderítés engedélyezése"
+    "Enable Fraud Detection": "Csalás felderítés engedélyezése",
+    "user": "Felhasználó", 
+    "dealer": "Kereskedő",
+    "subscriber": "Előfizető",
+    "sub-admin": "Aladminisztrátor"
 }

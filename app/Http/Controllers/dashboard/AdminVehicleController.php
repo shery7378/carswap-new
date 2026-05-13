@@ -374,7 +374,7 @@ class AdminVehicleController extends Controller
             }
 
             $vehicle->delete();
-            return redirect()->route('admin.vehicles.index')->with('success', 'Vehicle deleted successfully.');
+            return redirect()->route('admin.vehicles.index')->with('success', 'A jármű sikeresen törölve.');
         } catch (\Exception $e) {
             \Log::error('Vehicle deletion error: ' . $e->getMessage());
             return redirect()->route('admin.vehicles.index')->with('error', 'Error deleting vehicle: ' . $e->getMessage());

@@ -399,7 +399,7 @@ class AdminVehicleController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Vehicle deleted successfully.',
+            'message' => 'A jármű sikeresen törölve.',
         ]);
     }
 
