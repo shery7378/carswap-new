@@ -57,8 +57,8 @@
                   <div class="newsletter-empty-icon">
                     <i class="bx bx-envelope"></i>
                   </div>
-                  <h6 class="mb-1">{{ __('No newsletter subscribers found.') }}</h6>
-                  <p class="mb-0 text-muted">{{ __('Subscribers will appear here once people join your mailing list.') }}</p>
+                  <h6 class="mb-1">Nem találhatók hírlevél-feliratkozók.</h6>
+                  <p class="mb-0 text-muted">A feliratkozók itt jelennek meg, amint csatlakoznak a levelezőlistához.</p>
                 </div>
               </td>
             </tr>
@@ -82,8 +82,8 @@
                 "<'row mt-3'<'col-md-6'i><'col-md-6 d-flex justify-content-end'p>>",
             language: {
                 searchPlaceholder: "{{ __('Quick Search Newsletter Subscribers…') }}",
-                emptyTable: "{{ __('No newsletter subscribers found.') }}",
-                zeroRecords: "{{ __('No matching subscribers found.') }}"
+                emptyTable: "Nem találhatók hírlevél-feliratkozók.",
+                zeroRecords: "Nem található egyező feliratkozó."
             },
             columnDefs: [
                 { orderable: false, targets: [4] }
@@ -92,7 +92,7 @@
 
         $('.newsletter-export-wrapper').html(`
             <a href="{{ route('admin.newsletter.export') }}" class="btn btn-outline-primary newsletter-export-btn">
-                <i class="bx bx-download me-1"></i> CSV export
+                <i class="bx bx-download me-1"></i> CSV-exportálás
             </a>
         `);
     });
