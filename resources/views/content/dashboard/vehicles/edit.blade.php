@@ -25,6 +25,21 @@
 	            margin: 0;
 	        }
 
+	        .date-picker-trigger {
+	            position: relative;
+	            width: 46px;
+	            min-width: 46px;
+	            flex: 0 0 46px;
+	        }
+
+	        .date-picker-native {
+	            position: absolute;
+	            inset: 0;
+	            opacity: 0;
+	            cursor: pointer;
+	            z-index: 2;
+	        }
+
 	        .ymd-picker-group {
 	            border-radius: 0.375rem;
 	            overflow: hidden;
@@ -327,14 +342,16 @@
                             <div class="row">
 	                                <div class="col-md-6 mb-3">
 	                                    <label class="form-label">{{ __('Technical Expiration Date') }}</label>
-	                                    <div class="input-group position-relative ymd-picker-group">
-	                                        <input type="text" class="form-control" id="technical_expiration_display" placeholder="yyyy/mm/dd" readonly value="{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y/m/d') : '' }}">
-	                                        <button class="btn btn-outline-secondary date-picker-btn" type="button" id="technical_expiration_picker_btn" aria-label="Open date picker">
-	                                            <i class="bx bx-calendar"></i>
-	                                        </button>
-	                                    </div>
-	                                    <input type="date" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" style="cursor:pointer;" id="technical_expiration_picker" name="technical_expiration" value="{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : '' }}">
-	                                </div>
+		                                    <div class="input-group ymd-picker-group">
+		                                        <input type="text" class="form-control" id="technical_expiration_display" placeholder="yyyy/mm/dd" readonly value="{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y/m/d') : '' }}">
+		                                        <div class="date-picker-trigger">
+		                                            <button class="btn btn-outline-secondary date-picker-btn w-100 h-100" type="button" aria-label="Open date picker" tabindex="-1">
+		                                                <i class="bx bx-calendar"></i>
+		                                            </button>
+		                                            <input type="date" class="date-picker-native" id="technical_expiration_picker" name="technical_expiration" value="{{ $vehicle->technical_expiration ? $vehicle->technical_expiration->format('Y-m-d') : '' }}">
+		                                        </div>
+		                                    </div>
+		                                </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Vehicle History Report') }}</label>
                                     <input type="text" class="form-control" name="history_report" value="{{ old('history_report', $vehicle->history_report) }}">
@@ -838,9 +855,8 @@
 	        (function () {
 	            const picker = document.getElementById('technical_expiration_picker');
 	            const display = document.getElementById('technical_expiration_display');
-	            const btn = document.getElementById('technical_expiration_picker_btn');
 	
-	            if (!picker || !display || !btn) return;
+	            if (!picker || !display) return;
 	
 	            function formatToYmdSlashes(value) {
 	                if (!value) return '';
@@ -852,14 +868,6 @@
 	            function syncFromPicker() {
 	                display.value = formatToYmdSlashes(picker.value);
 	            }
-	
-		            btn.addEventListener('click', function () {
-		                if (picker.showPicker) picker.showPicker();
-		                else {
-		                    picker.focus();
-		                    picker.click();
-		                }
-		            });
 	
 	            picker.addEventListener('change', syncFromPicker);
 	            syncFromPicker();
