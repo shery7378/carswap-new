@@ -50,9 +50,46 @@
 
 <div class="row">
   <div class="col-xl-12">
-    <div class="card admin-form-card mb-4">
-      <div class="card-body p-4">
-        <form action="{{ route('admin.users.store') }}" method="POST">
+	<div class="card admin-form-card mb-4">
+	      <div class="card-body p-4">
+	        @php
+	          $roleLabels = [
+	            'admin' => 'Adminisztrátor',
+	            'sub-admin' => 'Aladminisztrátor',
+	            'super-admin' => 'Szuperadminisztrátor',
+	          ];
+
+	          $moduleIconsMap = [
+	            'dashboard'       => ['icon'=>'bx-home-circle',     'color'=>'secondary', 'label'=>'Műszerfal'],
+	            'frontend_pages'  => ['icon'=>'bx-window-alt',      'color'=>'secondary', 'label'=>'Frontend oldalak'],
+	            'vehicles'        => ['icon'=>'bx-car',             'color'=>'primary',   'label'=>'Járművek'],
+	            'users'           => ['icon'=>'bx-user',            'color'=>'info',      'label'=>'Ügyintézők'],
+	            'roles'           => ['icon'=>'bx-shield-quarter',  'color'=>'warning',   'label'=>'Szerepkörök'],
+	            'subscriptions'   => ['icon'=>'bx-credit-card',     'color'=>'success',   'label'=>'Előfizetések'],
+	            'orders'          => ['icon'=>'bx-shopping-bag',    'color'=>'danger',    'label'=>'Rendelések'],
+	            'partners'        => ['icon'=>'bx-group',           'color'=>'secondary', 'label'=>'Partnerek'],
+	            'inquiries'       => ['icon'=>'bx-message-dots',    'color'=>'info',      'label'=>'Érdeklődések'],
+	            'email_templates' => ['icon'=>'bx-envelope',        'color'=>'primary',   'label'=>'E-mail sablonok'],
+	            'settings'        => ['icon'=>'bx-cog',             'color'=>'secondary', 'label'=>'Beállítások'],
+	            'car_settings'    => ['icon'=>'bx-wrench',          'color'=>'warning',   'label'=>'Járműbeállítások'],
+	            'products'        => ['icon'=>'bx-cart',            'color'=>'success',   'label'=>'Termékek'],
+	            'customers'       => ['icon'=>'bx-user-circle',     'color'=>'info',      'label'=>'Ügyfelek'],
+	            'trade_offers'    => ['icon'=>'bx-transfer-alt',    'color'=>'secondary', 'label'=>'Csereajánlatok'],
+	            'newsletter'      => ['icon'=>'bx-news',            'color'=>'secondary', 'label'=>'Hírlevél'],
+	            'contacts'        => ['icon'=>'bx-phone',           'color'=>'secondary', 'label'=>'Kapcsolatok'],
+	            'cms'             => ['icon'=>'bx-file',            'color'=>'secondary', 'label'=>'CMS'],
+	            'general'         => ['icon'=>'bx-list-check',      'color'=>'dark',      'label'=>'Általános'],
+	          ];
+
+	          $actionIconsMap = [
+	            'view'   => ['icon'=>'bx-show',        'label'=>'Megtekintés'],
+	            'create' => ['icon'=>'bx-plus-circle', 'label'=>'Létrehozás'],
+	            'edit'   => ['icon'=>'bx-edit',        'label'=>'Szerkesztés'],
+	            'delete' => ['icon'=>'bx-trash',       'label'=>'Törlés'],
+	            'access' => ['icon'=>'bx-key',         'label'=>'Hozzáférés'],
+	          ];
+	        @endphp
+	        <form action="{{ route('admin.users.store') }}" method="POST">
           @csrf
 
           <!-- Basic Info -->
@@ -91,13 +128,13 @@
             <div class="d-flex flex-wrap gap-2">
               @foreach($roles as $role)
               @php $oldRole = in_array($role->name, old('roles', [])); @endphp
-              <label class="perm-action-pill {{ $oldRole ? 'is-checked' : '' }}" onclick="togglePill(this)" style="font-size:13px; padding:7px 18px;">
-                <input type="checkbox" name="roles[]" value="{{ $role->name }}" {{ $oldRole ? 'checked' : '' }}>
-                <i class="bx bx-shield-quarter"></i> {{ ucfirst($role->name) }}
-              </label>
-              @endforeach
-            </div>
-          </div>
+	              <label class="perm-action-pill {{ $oldRole ? 'is-checked' : '' }}" onclick="togglePill(this)" style="font-size:13px; padding:7px 18px;">
+	                <input type="checkbox" name="roles[]" value="{{ $role->name }}" {{ $oldRole ? 'checked' : '' }}>
+	                <i class="bx bx-shield-quarter"></i> {{ $roleLabels[$role->name] ?? ucfirst(str_replace('-', ' ', $role->name)) }}
+	              </label>
+	              @endforeach
+	            </div>
+	          </div>
 
           <hr class="opacity-25">
 
@@ -115,33 +152,8 @@
           </div>
           <p class="text-muted small mt-2 mb-4">{{ __('Grant additional permissions on top of the assigned role, grouped by section for clarity.') }}</p>
 
-          @php
-            $moduleIconsMap = [
-              'vehicles'        => ['icon'=>'bx-car',            'color'=>'primary',   'label'=>__('Vehicles')],
-              'users'           => ['icon'=>'bx-user',           'color'=>'info',      'label'=>__('Admin Users')],
-              'roles'           => ['icon'=>'bx-shield-quarter', 'color'=>'warning',   'label'=>__('Roles')],
-              'subscriptions'   => ['icon'=>'bx-credit-card',    'color'=>'success',   'label'=>__('Subscriptions')],
-              'orders'          => ['icon'=>'bx-shopping-bag',   'color'=>'danger',    'label'=>__('Orders')],
-              'partners'        => ['icon'=>'bx-group',          'color'=>'secondary', 'label'=>__('Partners')],
-              'inquiries'       => ['icon'=>'bx-message-dots',   'color'=>'info',      'label'=>__('Inquiries')],
-              'email_templates' => ['icon'=>'bx-envelope',       'color'=>'primary',   'label'=>__('Email Templates')],
-              'settings'        => ['icon'=>'bx-cog',            'color'=>'secondary', 'label'=>__('Settings')],
-              'car_settings'    => ['icon'=>'bx-wrench',         'color'=>'warning',   'label'=>__('Car Settings')],
-              'products'        => ['icon'=>'bx-cart',           'color'=>'success',   'label'=>__('Products')],
-              'customers'       => ['icon'=>'bx-user-circle',    'color'=>'info',      'label'=>__('Customers')],
-              'general'         => ['icon'=>'bx-list-check',     'color'=>'dark',      'label'=>__('General')],
-            ];
-            $actionIconsMap = [
-              'view'   => ['icon'=>'bx-show',        'label'=>__('View')],
-              'create' => ['icon'=>'bx-plus-circle', 'label'=>__('Create')],
-              'edit'   => ['icon'=>'bx-edit',        'label'=>__('Edit')],
-              'delete' => ['icon'=>'bx-trash',       'label'=>__('Delete')],
-              'access' => ['icon'=>'bx-key',         'label'=>__('Access')],
-            ];
-          @endphp
-
-          <div class="row g-3">
-            @foreach($permissions as $module => $modulePerms)
+	          <div class="row g-3">
+	            @foreach($permissions as $module => $modulePerms)
             @php
               $meta     = $moduleIconsMap[$module] ?? ['icon'=>'bx-circle','color'=>'secondary','label'=>ucwords(str_replace('_',' ',$module))];
               $color    = $meta['color'];
