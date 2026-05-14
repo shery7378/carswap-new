@@ -103,17 +103,16 @@
   }
 </style>
 
-<div class="d-flex align-items-center mb-4">
-  <a href="{{ route('admin.roles.index') }}" class="btn btn-label-secondary btn-icon me-3 shadow-sm rounded-circle">
+<h4 class="fw-bold py-3 mb-4">
+  <a href="{{ route('admin.roles.index') }}" class="btn btn-label-secondary btn-icon me-3 shadow-sm rounded-circle" style="z-index: 1050;">
     <i class="bx bx-chevron-left"></i>
   </a>
-  <div>
-    <h4 class="mb-0">
-      <span class="text-muted fw-light">{{ __('Access Control') }} / {{ __('Roles') }} /</span>
-      <span class="fw-bold text-primary">{{ __('View Role') }}</span>
-    </h4>
-  </div>
-</div>
+  <span class="text-muted fw-light">
+    <a href="{{ route('admin.roles.index') }}" class="text-muted">{{ __('Access Control') }}</a> / 
+    <a href="{{ route('admin.roles.index') }}" class="text-muted">{{ __('Roles') }}</a> /
+  </span>
+  {{ __('View Role') }}
+</h4>
 
 <div class="row">
   <div class="col-xl-12">
