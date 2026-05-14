@@ -77,6 +77,6 @@ class ContactController extends Controller
         $contact = Contact::findOrFail($id);
         $contact->delete();
 
-        return redirect()->route('admin.contacts.index')->with('success', 'Contact deleted successfully.');
+        return redirect()->route('admin.contacts.index')->with('success', __('Contact deleted successfully.'));
     }
 }
