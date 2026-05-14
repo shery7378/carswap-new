@@ -598,7 +598,7 @@ $(document).ready(function () {
                 -ms-overflow-style: none;
             }
             .users-table-responsive::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
-		    #users-table_wrapper { overflow-x: visible; }
+		    #users-table_wrapper { overflow-x: hidden; }
             
             /* ── STICKY HEADER – all screen sizes ──────────────── */
             #users-table thead th {
@@ -662,14 +662,25 @@ $(document).ready(function () {
 
 				        /* Info + pagination: same row */
 				        /* Info + pagination alignment */
+				        /* Info + pagination alignment */
 				        #users-table_wrapper > .row.mt-3 {
+				            display: flex !important;
+                            flex-direction: column !important;
+                            align-items: flex-start !important;
 				            text-align: left !important;
+                            width: 100% !important;
+                            margin: 0 !important;
+                            padding: 10px 0 !important;
 				        }
                         #users-table_wrapper .dataTables_info,
                         #users-table_wrapper .dataTables_paginate {
                             justify-content: flex-start !important;
                             text-align: left !important;
                             padding-left: 0 !important;
+                            width: 100% !important;
+                        }
+                        #users-table_wrapper .dataTables_paginate .pagination {
+                            justify-content: flex-start !important;
                         }
 				    }
 		</style>

@@ -309,12 +309,12 @@
                 "searchPlaceholder": "{{ __('Quick Search :title…', ['title' => __($title)]) }}"
             },
             "dom": '<"row mx-0 border-bottom bg-light bg-opacity-10"' +
-                   '<"col-md-4 py-3"l>' +
-                   '<"col-md-8 py-3 d-flex justify-content-end"f>' +
+                   '<"col-12 col-md-4 py-2 py-md-3"l>' +
+                   '<"col-12 col-md-8 py-2 py-md-3 d-flex justify-content-md-end"f>' +
                    '>t' +
-                   '<"row mx-0 p-3 bg-light bg-opacity-10 border-top"' +
-                   '<"col-md-6"i>' +
-                   '<"col-md-6 d-flex justify-content-end"p>' +
+                   '<"row mx-0 px-2 py-3 bg-light bg-opacity-10 border-top"' +
+                   '<"col-12 col-md-6 mb-2 mb-md-0"i>' +
+                   '<"col-12 col-md-6 d-flex justify-content-md-end"p>' +
                    '>',
             "columnDefs": [
                 { "orderable": false, "targets": [{{ $type === 'models' ? 3 : 2 }}, {{ $type === 'models' ? 4 : 3 }}] }
