@@ -309,11 +309,12 @@
                 "searchPlaceholder": "{{ __('Quick Search :title…', ['title' => __($title)]) }}"
             },
             "dom": '<"row mx-0 border-bottom bg-light bg-opacity-10"' +
-                   '<"col-12 col-md-4 py-2 py-md-3"l>' +
-                   '<"col-12 col-md-8 py-2 py-md-3 d-flex justify-content-md-end"f>' +
-                   '>t' +
-                   '<"row mx-0 px-2 py-3 bg-light bg-opacity-10 border-top"' +
-                   '<"col-12 col-md-6 mb-2 mb-md-0"i>' +
+                   '<"col-12 col-md-4 py-2"l>' +
+                   '<"col-12 col-md-8 py-2 d-flex justify-content-md-end"f>' +
+                   '>' +
+                   '<"table-responsive relationships-table-responsive"t>' +
+                   '<"row mx-0 px-2 py-2 bg-light bg-opacity-10 border-top"' +
+                   '<"col-12 col-md-6 mb-1 mb-md-0"i>' +
                    '<"col-12 col-md-6 d-flex justify-content-md-end"p>' +
                    '>',
             "columnDefs": [
@@ -668,6 +669,36 @@
 .dataTables_info {
     font-size: 0.85rem;
     color: #8592a3;
+}
+/* Mobile Responsive & Sticky Header */
+.relationships-table-responsive {
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 70vh;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+.relationships-table-responsive::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+    background: transparent;
+}
+#relationships-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f9fa !important;
+    box-shadow: 0 1px 0 #d9dee3;
+}
+@media (max-width: 767.98px) {
+    .dataTables_length, .dataTables_filter {
+        text-align: left !important;
+        justify-content: flex-start !important;
+    }
+    .dataTables_filter input {
+        width: 100% !important;
+        margin-left: 0 !important;
+    }
 }
 </style>
 @endsection
