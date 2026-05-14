@@ -930,5 +930,15 @@
     "Insert Image": "Kép beszúrása",
     "Insert Video": "Videó beszúrása",
     "partner": "Partner",
-    "Name": "Név"
+    "Name": "Név",
+    "View Role Details": "Szerepkör részletei",
+    "View Role": "Szerepkör megtekintése",
+    "Role Details": "Szerepkör adatai",
+    "Total Permissions": "Összes jogosultság",
+    "Assigned Permissions": "Hozzárendelt jogosultságok",
+    "Detailed breakdown of all permissions assigned to this role": "A szerepkörhöz rendelt összes jogosultság részletes áttekintése",
+    "No permissions assigned to this role yet.": "Ehhez a szerepkörhöz még nincs jogosultság hozzárendelve.",
+    "Assign Permissions": "Jogosultságok hozzárendelése",
+    "View Permissions": "Jogosultságok megtekintése",
+    "Permissions Count": "Jogosultságok száma"
 }

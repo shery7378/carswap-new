@@ -91,8 +91,8 @@
           <tr>
             <th>{{ __('Role Name') }}</th>
             <th>{{ __('Security Guard') }}</th>
-            <th>{{ __('Permissions Bound') }}</th>
-            <th style="width: 120px;">{{ __('Actions') }}</th>
+            <th class="text-center">{{ __('Permissions Count') }}</th>
+            <th style="width: 150px;">{{ __('Actions') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -111,23 +111,17 @@
                   {{ strtoupper($role->guard_name) }}
                 </span>
               </td>
-              <td>
-                <div class="permission-scroll d-flex flex-wrap gap-1">
-                  @forelse($role->permissions as $permission)
-                    <span class="badge bg-label-secondary badge-premium py-1 px-2"
-                      style="font-size: 10px;">{{ __($permission->name) }}</span>
-                  @empty
-                    <span class="text-muted small italic">{{ __('No permissions assigned') }}</span>
-                  @endforelse
-                </div>
+              <td class="text-center">
+                <span class="badge rounded-pill bg-label-primary px-3 py-2">
+                  <i class="bx bx-key me-1 small"></i> {{ $role->permissions->count() }}
+                </span>
               </td>
               <td>
-                @if($role->name === 'super-admin')
-                  <div class="d-flex align-items-center">
-                    <span class="badge bg-label-secondary"><i class="bx bx-lock-alt me-1"></i> {{ __('Protected') }}</span>
-                  </div>
-                @else
                   <div class="d-flex gap-2">
+                    <a href="{{ route('admin.roles.show', $role->id) }}" class="action-btn text-primary bg-label-primary shadow-none"
+                      title="{{ __('View Permissions') }}">
+                      <i class="bx bx-show"></i>
+                    </a>
                     @if(auth('admin-guard')->user()->hasRole('super-admin', 'admin-guard') || auth('admin-guard')->user()->hasPermissionTo('edit-roles', 'admin-guard'))
                       <a href="{{ route('admin.roles.edit', $role->id) }}" class="action-btn text-info bg-label-info shadow-none"
                         title="{{ __('Edit Role') }}">
@@ -145,7 +139,6 @@
                       </form>
                     @endif
                   </div>
-                @endif
               </td>
             </tr>
           @endforeach

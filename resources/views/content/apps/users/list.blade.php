@@ -581,8 +581,8 @@ $(document).ready(function () {
             }
 
 		    /* Fit all columns on screen (desktop) */
-		    .users-table-responsive { overflow-x: hidden !important; overflow-y: visible; }
-		    #users-table_wrapper { overflow-x: hidden !important; }
+		    .users-table-responsive { overflow-x: auto; overflow-y: visible; }
+		    #users-table_wrapper { overflow-x: visible; }
 		    #users-table { width: 100% !important; table-layout: auto; }
 		    #users-table th, #users-table td { padding: .45rem .25rem !important; font-size: .82rem; vertical-align: middle; }
 		    #users-table th { font-size: .78rem; white-space: nowrap; line-height: 1.15; }

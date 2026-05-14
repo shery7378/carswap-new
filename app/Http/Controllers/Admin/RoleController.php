@@ -15,6 +15,22 @@ class RoleController extends Controller
         return view('content.access-control.roles', compact('roles'));
     }
 
+    public function show($id)
+    {
+        $role = Role::with('permissions')->findOrFail($id);
+        
+        $permissions = $role->permissions->groupBy(function($perm) {
+            $parts = explode('-', $perm->name);
+            if (count($parts) > 1) {
+                array_shift($parts); // remove first element (the action)
+                return implode('-', $parts);
+            }
+            return 'general';
+        });
+
+        return view('content.access-control.roles-view', compact('role', 'permissions'));
+    }
+
     public function create()
     {
         $permissions = Permission::all()->groupBy(function($perm) {

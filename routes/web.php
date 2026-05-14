@@ -181,6 +181,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/access-control/roles', [AdminRoleController::class, 'index'])->name('admin.roles.index');
         Route::get('/app/access-control/roles/create', [AdminRoleController::class, 'create'])->name('admin.roles.create')->middleware('permission:create-roles,admin-guard');
         Route::post('/app/access-control/roles', [AdminRoleController::class, 'store'])->name('admin.roles.store')->middleware('permission:create-roles,admin-guard');
+        Route::get('/app/access-control/roles/{id}', [AdminRoleController::class, 'show'])->name('admin.roles.show');
         Route::get('/app/access-control/roles/{id}/edit', [AdminRoleController::class, 'edit'])->name('admin.roles.edit')->middleware('permission:edit-roles,admin-guard');
         Route::put('/app/access-control/roles/{id}', [AdminRoleController::class, 'update'])->name('admin.roles.update')->middleware('permission:edit-roles,admin-guard');
         Route::delete('/app/access-control/roles/{id}', [AdminRoleController::class, 'destroy'])->name('admin.roles.destroy')->middleware('permission:delete-roles,admin-guard');
