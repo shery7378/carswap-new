@@ -249,4 +249,59 @@
 
 .nav-tabs .nav-link { color: #8592a3; border-bottom: 3px solid transparent !important; }
 .nav-tabs .nav-link.active { color: #696cff !important; border-bottom: 3px solid #696cff !important; background: transparent !important; }
+
+@media (max-width: 767.98px) {
+    .modal-body .row.g-0 {
+        flex-direction: column;
+    }
+
+    .modal-body .col-md-5,
+    .modal-body .col-md-7 {
+        width: 100%;
+        max-width: 100%;
+        flex: 0 0 100%;
+    }
+
+    .modal-body .col-md-5 {
+        border-right: 0 !important;
+        border-bottom: 1px solid var(--bs-border-color, #d9dee3);
+        padding: 1rem !important;
+    }
+
+    .modal-body .tab-content.custom-scrollbar {
+        max-height: none !important;
+        overflow-y: visible !important;
+        padding: 1rem !important;
+    }
+
+    .modal-body .nav-tabs {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    .modal-body .nav-tabs .nav-item {
+        flex: 1 0 auto;
+    }
+
+    .modal-header {
+        align-items: flex-start;
+    }
+
+    .modal-header .d-flex.align-items-center {
+        min-width: 0;
+        flex: 1 1 auto;
+    }
+
+    .modal-footer {
+        gap: 0.5rem;
+        justify-content: stretch;
+    }
+
+    .modal-footer .btn,
+    .modal-footer a.btn {
+        flex: 1 1 auto;
+        margin: 0 !important;
+    }
+}
 </style>

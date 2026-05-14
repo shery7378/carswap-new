@@ -313,6 +313,12 @@
             });
 
             // ── Desktop row click → modal ────────────────────────────────────────
+            $(document).on('click', '.open-vehicle-modal-btn', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                openVehicleModal($(this).data('id'));
+            });
+
             $(document).on('click', '#vehicles-table tbody tr', function (e) {
                 if ($(e.target).closest('.dropdown-menu, .dropdown-toggle, .btn-close, form, a, button, .form-check').length) return;
                 openVehicleModal($(this).data('id'));
