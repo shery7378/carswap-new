@@ -45,7 +45,7 @@
                     @endif
 
                     <!-- TABLE VIEW -->
-	                    <div class="table-responsive users-table-responsive">
+	                    <div>
 	                        <table class="table table-hover" id="users-table">
                             <thead>
                                 <tr>
@@ -327,7 +327,16 @@ $(document).ready(function () {
             order: [[1, 'asc']],
 	            pageLength: 25,
 	            autoWidth: false,
-            dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>t<'row mt-3'<'col-sm-6'i><'col-sm-6'p>>",
+            dom:
+                "<'row align-items-center mb-3'" +
+                "<'col-12 col-sm-6 mb-2 mb-sm-0'l>" +
+                "<'col-12 col-sm-6 d-flex justify-content-sm-end'f>" +
+                ">" +
+                "<'table-responsive users-table-responsive't>" +
+                "<'row mt-3'" +
+                "<'col-12 col-sm-6 mb-2 mb-sm-0'i>" +
+                "<'col-12 col-sm-6 d-flex justify-content-sm-end'p>" +
+                ">",
             language: { 
                 search: '', 
                 searchPlaceholder: '{{ __('Quick Search Users…') }}',
@@ -581,8 +590,24 @@ $(document).ready(function () {
             }
 
 		    /* Fit all columns on screen (desktop) */
-		    .users-table-responsive { overflow-x: auto; overflow-y: visible; }
+		    .users-table-responsive { 
+                overflow-x: auto; 
+                overflow-y: auto; 
+                max-height: 75vh;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+            .users-table-responsive::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
 		    #users-table_wrapper { overflow-x: visible; }
+            
+            /* ── STICKY HEADER – all screen sizes ──────────────── */
+            #users-table thead th {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background: var(--bs-body-bg, #fff);
+                box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
+            }
 		    #users-table { width: 100% !important; table-layout: auto; }
 		    #users-table th, #users-table td { padding: .45rem .25rem !important; font-size: .82rem; vertical-align: middle; }
 		    #users-table th { font-size: .78rem; white-space: nowrap; line-height: 1.15; }
@@ -601,9 +626,8 @@ $(document).ready(function () {
 
 				    /* Mobile: show same DataTable with horizontal scroll + sticky thead */
 				    @media (max-width: 767.98px) {
-			        .users-table-responsive { overflow-x: auto !important; overflow-y: auto !important; max-height: 75vh; -webkit-overflow-scrolling: touch; }
+			        .users-table-responsive { overflow-x: auto !important; overflow-y: auto !important; max-height: 70vh; -webkit-overflow-scrolling: touch; }
 			        #users-table { min-width: 820px; table-layout: fixed; }
-			        #users-table thead th { position: sticky; top: 0; z-index: 10; background: var(--bs-body-bg, #fff); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
 			        #users-table th, #users-table td { font-size: .78rem; padding: .45rem .3rem !important; }
 			        #users-table th { font-size: .74rem; position: relative; padding-right: 30px !important; white-space: normal; line-height: 1.2; }
 			        .users-actions .btn.btn-icon { width: 34px; height: 34px; }
@@ -617,38 +641,36 @@ $(document).ready(function () {
 				        #users-table th:nth-child(8), #users-table td:nth-child(8) { width: 60px; }
 				        #users-table td:nth-child(3) { white-space: nowrap; }
 				        #users-table td:nth-child(7) { white-space: nowrap; }
+                        
+                        /* Align length and search to left on mobile */
+                        .dataTables_length, .dataTables_filter {
+                            text-align: left !important;
+                            justify-content: flex-start !important;
+                        }
+                        .dataTables_filter input {
+                            margin-left: 0 !important;
+                            width: 100% !important;
+                            max-width: 300px;
+                        }
+                        .dataTables_length label {
+                            justify-content: flex-start !important;
+                            display: flex;
+                            align-items: center;
+                            gap: 5px;
+                            margin-bottom: 10px;
+                        }
 
 				        /* Info + pagination: same row */
+				        /* Info + pagination alignment */
 				        #users-table_wrapper > .row.mt-3 {
-				            display: flex !important;
-				            flex-wrap: nowrap !important;
-				            align-items: center !important;
-				            justify-content: space-between !important;
-				            width: 100% !important;
-				            gap: 8px;
-				            margin: 0 !important;
-				            padding: 8px 0 !important;
+				            text-align: left !important;
 				        }
-				        #users-table_wrapper > .row.mt-3 > div {
-				            flex: 0 0 auto !important;
-				            width: auto !important;
-				            max-width: none !important;
-				            padding: 0 !important;
-				        }
-				        #users-table_wrapper > .row.mt-3 .dataTables_info {
-				            font-size: .75rem;
-				            white-space: nowrap;
-				            padding-top: 0 !important;
-				        }
-				        #users-table_wrapper > .row.mt-3 .dataTables_paginate {
-				            font-size: .75rem;
-				            white-space: nowrap;
-				            padding-top: 0 !important;
-				        }
-				        #users-table_wrapper > .row.mt-3 .dataTables_paginate .paginate_button {
-				            padding: 2px 8px !important;
-				            min-width: auto;
-				        }
+                        #users-table_wrapper .dataTables_info,
+                        #users-table_wrapper .dataTables_paginate {
+                            justify-content: flex-start !important;
+                            text-align: left !important;
+                            padding-left: 0 !important;
+                        }
 				    }
 		</style>
 		@endsection
