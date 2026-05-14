@@ -40,7 +40,7 @@ class ContactController extends Controller
         $contact = Contact::findOrFail($id);
         $contact->update(['status' => $request->status]);
 
-        return redirect()->back()->with('success', 'Contact status updated successfully.');
+        return redirect()->back()->with('success', __('Contact status updated successfully.'));
     }
 
     /**

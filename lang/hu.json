@@ -520,11 +520,12 @@
     "Beérkezett csereajánlatok": "Beérkezett csereajánlatok",
     "Cél Jármű": "Cél jármű",
     "Feladó": "Feladó",
-    "Ajánlott Autó": "Felajánlott jármű",
+    "Ajánlott Autó": "Ajánlott autó",
     "Deleted vehicle": "Törölt jármű",
     "Date": "Dátum",
     "Nincsenek beérkezett csereajánlatok.": "Nincsenek beérkezett csereajánlatok.",
     "Contact Us Requests": "Kapcsolatfelvételi kérelmek",
+    "Contact status updated successfully.": "A kapcsolatfelvételi állapot sikeresen frissítve.",
     "Contact Requests": "Kapcsolatfelvételi kérelmek",
     "Are you sure you want to delete this request?": "Biztosan törölni szeretné ezt a kérelmet?",
     "No contact requests found.": "Nem található kapcsolatfelvételi kérelem.",
@@ -533,8 +534,11 @@
     "Request Details": "Kérelem részletei",
     "Manage Status": "Állapot kezelése",
     "Unread": "Olvasatlan",
+    "unread":"Olvasatlan",
     "Read": "Olvasott",
+    "read":"Olvasott",
     "Replied": "Válaszolt",
+    "replied": "Válaszolt",
     "Update Status": "Mentés",
     "Quick Reply": "Gyors válasz",
     "Type your reply here...": "Írja ide a választ...",
@@ -941,5 +945,6 @@
     "No permissions assigned to this role yet.": "Ehhez a szerepkörhöz még nincs jogosultság hozzárendelve.",
     "Assign Permissions": "Jogosultságok hozzárendelése",
     "View Permissions": "Jogosultságok megtekintése",
-    "Permissions Count": "Jogosultságok száma"
+    "Permissions Count": "Jogosultságok száma",
+    "Back": "Vissza"
 }
