@@ -37,6 +37,70 @@
         border-color: #d9dee3;
         box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45);
     }
+    /* Global Premium Pagination Styling */
+    .pagination .page-item .page-link {
+        border-radius: 6px !important;
+        margin: 0 3px;
+        border: none !important;
+        background-color: #f0f2f5;
+        color: #566a7f;
+        padding: 6px 12px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 36px;
+    }
+    .pagination .page-item.active .page-link {
+        background-color: #696cff !important;
+        color: #fff !important;
+        box-shadow: 0 3px 8px rgba(105, 108, 255, 0.3) !important;
+    }
+    .pagination .page-item:not(.active) .page-link:hover {
+        background-color: #e2e5e9;
+        color: #696cff;
+    }
+    .pagination .page-item.disabled .page-link {
+        background-color: #f8f9fa;
+        color: #c4ccd4;
+        opacity: 0.7;
+    }
+    .dataTables_info {
+        font-size: 0.82rem;
+        color: #697a8d;
+        font-weight: 500;
+        margin-bottom: 12px;
+    }
+
+    /* Mobile Responsive Optimizations for Pagination */
+    @media (max-width: 767.98px) {
+        .pagination .page-item .page-link {
+            padding: 6px 10px !important;
+            min-width: 32px !important;
+            margin: 0 2px !important;
+            font-size: 0.78rem !important;
+        }
+        .dataTables_wrapper .row {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 5px;
+            padding: 10px 0 !important;
+            margin: 0 !important;
+        }
+        .dataTables_wrapper .dataTables_info,
+        .dataTables_wrapper .dataTables_paginate {
+            justify-content: flex-start !important;
+            text-align: left !important;
+            width: 100% !important;
+            padding: 0 !important;
+            margin-bottom: 8px !important;
+        }
+        .dataTables_wrapper .dataTables_paginate .pagination {
+            justify-content: flex-start !important;
+            flex-wrap: wrap !important;
+        }
+    }
 </style>
 @yield('vendor-style')
 
