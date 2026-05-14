@@ -73,12 +73,12 @@
                                             <input class="form-check-input" type="checkbox" id="check-all">
                                         </div>
                                     </th>
-                                    <th>{{ __('Thumbnail') }}</th>
+                                    <th class="col-thumb">{{ __('Thumbnail') }}</th>
                                     <th>{{ __('Vehicle') }}</th>
-                                    <th class="d-none d-lg-table-cell">{{ __('User') }}</th>
-                                    <th class="d-none d-md-table-cell">{{ __('Year of Manufacture') }}</th>
+                                    <th class="col-user">{{ __('User') }}</th>
+                                    <th class="col-year">{{ __('Year of Manufacture') }}</th>
                                     <th>{{ __('Price') }}</th>
-                                    <th class="d-none d-xl-table-cell">{{ __('Details') }}</th>
+                                    <th class="col-details">{{ __('Details') }}</th>
                                     <th class="text-center">{{ __('Featured') }}</th>
                                     <th class="text-center">{{ __('Status') }}</th>
                                     <th class="text-end pe-4">{{ __('Actions') }}</th>
@@ -94,7 +94,7 @@
                                                     value="{{ $vehicle->id }}">
                                             </div>
                                         </td>
-                                        <td>
+                                        <td class="col-thumb">
                                             @if($vehicle->main_image)
                                                 <img src="{{ asset('storage/' . $vehicle->main_image) }}" width="50"
                                                     class="rounded">
@@ -111,7 +111,7 @@
                                             </small>
                                         </td>
 
-                                        <td class="d-none d-lg-table-cell" style="max-width: 150px;">
+                                        <td class="col-user" style="max-width: 150px;">
                                             <div class="d-flex flex-column">
                                                 <span class="fw-bold text-truncate">{{ $vehicle->user->first_name ?? 'N/A' }}
                                                     {{ $vehicle->user->last_name ?? '' }}</span>
@@ -119,14 +119,14 @@
                                             </div>
                                         </td>
 
-                                        <td class="d-none d-md-table-cell">
+                                        <td class="col-year">
                                             <span class="badge bg-label-secondary">{{ $vehicle->year }}</span>
                                         </td>
 
                                         <td><span class="fw-bold text-primary">@formatCurrency($vehicle->price)</span>
                                         </td>
 
-                                        <td class="d-none d-xl-table-cell" style="max-width: 180px;">
+                                        <td class="col-details" style="max-width: 180px;">
                                             <div class="d-flex flex-column small">
                                                 <span class="text-truncate"><i class="bx bx-gas-pump me-1"></i>{{ __(optional($vehicle->fuelType)->name) }}</span>
                                                 <span class="text-truncate"><i class="bx bx-cog me-1"></i>{{ __(optional($vehicle->transmission)->name) }}</span>
@@ -595,26 +595,57 @@
             overflow-x: auto;        /* Restore horizontal scroll when needed */
             overflow-y: auto;        /* Enables sticky header */
             max-height: 75vh;        /* Scroll container needed for sticky */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .vehicles-table-responsive::-webkit-scrollbar {
+            width: 0;
+            height: 0;
+            background: transparent;
+        }
+        .vehicles-table-responsive::-webkit-scrollbar-track,
+        .vehicles-table-responsive::-webkit-scrollbar-thumb {
+            display: none;
+            background: transparent;
         }
         #vehicles-table_wrapper { overflow-x: hidden; }
-        #vehicles-table { width: 100% !important; table-layout: auto; }
+        #vehicles-table { width: 100% !important; min-width: 0 !important; table-layout: fixed; }
         #vehicles-table th,
-        #vehicles-table td { padding: .75rem .5rem !important; font-size: .82rem; vertical-align: middle; }
-        #vehicles-table th { font-size: .78rem; white-space: normal; line-height: 1.2; position: relative; padding-right: 25px !important; }
+        #vehicles-table td { padding: .65rem .35rem !important; font-size: .76rem; vertical-align: middle; }
+        #vehicles-table th { font-size: .74rem; white-space: nowrap; line-height: 1.15; position: relative; padding-right: 18px !important; }
         #vehicles-table td { word-break: break-word; }
         
         /* Truncation and column sizing */
         .text-truncate { max-width: 100%; display: inline-block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        #vehicles-table td:last-child { width: 100px; text-align: right; }
+        #vehicles-table th:nth-child(1),
+        #vehicles-table td:nth-child(1) { width: 3%; }
+        #vehicles-table th:nth-child(2),
+        #vehicles-table td:nth-child(2) { width: 9%; }
+        #vehicles-table th:nth-child(3),
+        #vehicles-table td:nth-child(3) { width: 14%; }
+        #vehicles-table th:nth-child(4),
+        #vehicles-table td:nth-child(4) { width: 17%; }
+        #vehicles-table th:nth-child(5),
+        #vehicles-table td:nth-child(5) { width: 7%; text-align: center; }
+        #vehicles-table th:nth-child(6),
+        #vehicles-table td:nth-child(6) { width: 9%; }
+        #vehicles-table th:nth-child(7),
+        #vehicles-table td:nth-child(7) { width: 17%; }
+        #vehicles-table th:nth-child(8),
+        #vehicles-table td:nth-child(8) { width: 7%; text-align: center; }
+        #vehicles-table th:nth-child(9),
+        #vehicles-table td:nth-child(9) { width: 7%; text-align: center; }
+        #vehicles-table th:nth-child(10),
+        #vehicles-table td:nth-child(10) { width: 110px; text-align: right; }
         
         /* Premium Action Buttons */
         .btn-action {
-            width: 32px !important;
-            height: 32px !important;
+            width: 28px !important;
+            height: 28px !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            border-radius: 8px !important;
+            border-radius: 6px !important;
             padding: 0 !important;
             border: none !important;
             transition: all 0.2s ease !important;
@@ -627,12 +658,14 @@
         .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
         .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
         .btn-action.view { background-color: #f3e5f5 !important; color: #9c27b0 !important; }
-        .btn-action i { font-size: 1.15rem !important; }
+        .btn-action i { font-size: 1rem !important; }
         
         .action-container {
             display: flex;
-            gap: 8px;
+            gap: 4px;
             justify-content: flex-end;
+            flex-wrap: nowrap;
+            min-width: 98px;
         }
 
         /* ── STICKY HEADER – all screen sizes ──────────────── */
@@ -652,14 +685,46 @@
                 max-height: 70vh;
                 -webkit-overflow-scrolling: touch;
             }
-            /* Remove min-width so table fits mobile screen without horizontal scroll */
-            #vehicles-table { min-width: unset !important; width: 100% !important; }
+            /* Keep all desktop columns visible on mobile via horizontal scroll */
+            #vehicles-table { min-width: 980px !important; width: 980px !important; table-layout: auto !important; }
             #vehicles-table th,
             #vehicles-table td { font-size: .78rem; padding: .45rem .3rem !important; }
             #vehicles-table th { font-size: .74rem; }
-            /* Hide checkbox column on mobile to save space */
             #vehicles-table th:first-child,
-            #vehicles-table td:first-child { display: none; }
+            #vehicles-table td:first-child,
+            #vehicles-table .col-thumb,
+            #vehicles-table .col-user,
+            #vehicles-table .col-year,
+            #vehicles-table .col-details { display: table-cell !important; }
+            #vehicles-table td:last-child { width: 100px; }
+            .action-container { gap: 4px; }
+            .btn-action {
+                width: 28px !important;
+                height: 28px !important;
+            }
+            .btn-action i { font-size: 1rem !important; }
+            .vehicles-table-responsive,
+            #vehicles-table_wrapper,
+            #vehicles-table_wrapper .vehicles-table-responsive {
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
+            }
+            .vehicles-table-responsive::-webkit-scrollbar,
+            #vehicles-table_wrapper::-webkit-scrollbar,
+            #vehicles-table_wrapper .vehicles-table-responsive::-webkit-scrollbar {
+                width: 0 !important;
+                height: 0 !important;
+                background: transparent !important;
+            }
+            .vehicles-table-responsive::-webkit-scrollbar-track,
+            .vehicles-table-responsive::-webkit-scrollbar-thumb,
+            #vehicles-table_wrapper::-webkit-scrollbar-track,
+            #vehicles-table_wrapper::-webkit-scrollbar-thumb,
+            #vehicles-table_wrapper .vehicles-table-responsive::-webkit-scrollbar-track,
+            #vehicles-table_wrapper .vehicles-table-responsive::-webkit-scrollbar-thumb {
+                display: none !important;
+                background: transparent !important;
+            }
         }
     </style>
 @endsection
