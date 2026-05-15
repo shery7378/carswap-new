@@ -247,10 +247,10 @@
 <!-- Edit Modal -->
 <div class="modal fade shadow-lg" id="editModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content overflow-hidden border-0">
+        <div class="modal-content border-0 shadow-lg">
             <div class="modal-header bg-info py-3">
                 <h5 class="modal-title fw-bold text-white"><i class="bx bx-edit-alt me-2"></i>{{ __('Edit') }} {{ Str::singular(__($title)) }}</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form id="editForm" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -571,6 +571,37 @@
 }
 .premium-card:hover {
     box-shadow: 0 10px 30px rgba(0,0,0,0.1) !important;
+}
+
+.modal-header {
+    position: relative;
+    padding-right: 50px !important;
+}
+
+/* Modal Close Button Static Premium Styling */
+.modal-header .btn-close {
+    background-color: #fff;
+    opacity: 0.8; /* Slight opacity for the icon color look */
+    padding: 0;
+    margin: 0;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+    filter: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background-size: 14px;
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 100;
+    transition: all 0.2s ease;
+}
+.modal-header .btn-close:hover {
+    opacity: 1;
+    background-color: #fff;
 }
 .shadow-xs { box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
 .shadow-info { box-shadow: 0 4px 12px rgba(3, 195, 236, 0.3); }
