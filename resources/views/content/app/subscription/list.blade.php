@@ -128,9 +128,9 @@
                    '<"col-md-2"<"me-3 mt-3"l>>' +
                    '<"col-md-10"<"text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0 mt-3"f>>' +
                    '>t' +
-                   '<"row mx-2"' +
-                   '<"col-sm-12 col-md-6"i>' +
-                   '<"col-sm-12 col-md-6"p>' +
+                   '<"row mx-2 d-flex align-items-center justify-content-between flex-wrap"' +
+                   '<"col-12 col-md-auto mb-2 mb-md-0 text-center text-md-start"i>' +
+                   '<"col-12 col-md-auto d-flex justify-content-center justify-content-md-end"p>' +
                    '>',
             initComplete: function () {
                 // Plan Filter (Column 1)
@@ -244,6 +244,17 @@
     border-radius: 0.5rem !important;
     padding: 0.45rem 0.8rem !important;
     border: 1px solid #d9dee3 !important;
+}
+.dataTables_info {
+    white-space: normal !important;
+}
+.dataTables_paginate {
+    margin-top: 0.25rem;
+}
+@media (min-width: 768px) {
+    .dataTables_paginate {
+        margin-top: 0;
+    }
 }
 .shadow-xs {
     box-shadow: 0 1px 3px rgba(0,0,0,0.06);

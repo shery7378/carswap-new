@@ -313,9 +313,9 @@
                    '<"col-12 col-md-8 py-2 d-flex justify-content-md-end"f>' +
                    '>' +
                    '<"table-responsive relationships-table-responsive"t>' +
-                   '<"row mx-0 px-2 py-2 bg-light bg-opacity-10 border-top"' +
-                   '<"col-12 col-md-6 mb-1 mb-md-0"i>' +
-                   '<"col-12 col-md-6 d-flex justify-content-md-end"p>' +
+                   '<"row mx-0 px-2 py-2 bg-light bg-opacity-10 border-top d-flex align-items-center justify-content-between flex-wrap"' +
+                   '<"col-12 col-md-auto mb-2 mb-md-0 text-center text-md-start"i>' +
+                   '<"col-12 col-md-auto d-flex justify-content-center justify-content-md-end"p>' +
                    '>',
             "columnDefs": [
                 { "orderable": false, "targets": [{{ $type === 'models' ? 3 : 2 }}, {{ $type === 'models' ? 4 : 3 }}] }
@@ -392,8 +392,8 @@
                                     </div>
                                 </td>
                                 <td class="text-center pe-4">
-                                    <div class="d-flex justify-content-center gap-2">
-                                        <button type="button" class="btn btn-icon btn-sm btn-label-info border-0 edit-btn shadow-none"
+                                    <div class="action-container">
+                                        <button type="button" class="btn-action edit edit-btn"
                                             data-id="${item.id}" data-name="${item.name}" 
                                             ${(type === 'brands' || type === 'body-types') ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
                                             ${type === 'models' ? `data-brand="${item.brand_id}"` : ''}
@@ -402,7 +402,7 @@
                                         </button>
                                         <form action="{{ url('/app/vehicle-settings') }}/${type}/${item.id}" method="POST" class="d-inline delete-form">
                                             @csrf @method('DELETE')
-                                            <button type="button" class="btn btn-icon btn-sm btn-label-danger border-0 shadow-none delete-trigger"
+                                            <button type="button" class="btn-action delete delete-trigger"
                                                 data-bs-toggle="tooltip" title="Delete Item">
                                                 <i class="bx bx-trash"></i>
                                             </button>
@@ -702,6 +702,15 @@
 .dataTables_info {
     font-size: 0.85rem;
     color: #8592a3;
+    white-space: normal !important;
+}
+.dataTables_paginate {
+    margin-top: 0.25rem;
+}
+@media (min-width: 768px) {
+    .dataTables_paginate {
+        margin-top: 0;
+    }
 }
 /* Mobile Responsive & Sticky Header */
 .relationships-table-responsive {

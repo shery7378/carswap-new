@@ -258,13 +258,13 @@
                     responsive: false,
                     dom:
                         "<'row align-items-center mb-3'" +
-                        "<'col-12 col-sm-6 mb-2 mb-sm-0'l>" +
-                        "<'col-12 col-sm-6 d-flex justify-content-sm-end'f>" +
+                        "<'col-12 col-md-auto mb-2 mb-md-0'l>" +
+                        "<'col-12 col-md d-flex justify-content-md-end'f>" +
                         ">" +
                         "<'table-responsive vehicles-table-responsive't>" +
-                        "<'row mt-3'" +
-                        "<'col-12 col-sm-6 mb-2 mb-sm-0'i>" +
-                        "<'col-12 col-sm-6 d-flex justify-content-sm-end'p>" +
+                        "<'row mt-3 d-flex align-items-center justify-content-between flex-wrap'" +
+                        "<'col-12 col-md-auto mb-2 mb-md-0 text-center text-md-start'i>" +
+                        "<'col-12 col-md-auto d-flex justify-content-center justify-content-md-end'p>" +
                         ">",
                     language: {
                         searchPlaceholder: "{{ __('Quick Search Vehicles…') }}"
@@ -498,6 +498,17 @@
         .dataTables_paginate {
             display: flex;
             justify-content: flex-end;
+            margin-top: 0.25rem;
+        }
+
+        .dataTables_info {
+            white-space: normal !important;
+        }
+
+        @media (min-width: 768px) {
+            .dataTables_paginate {
+                margin-top: 0;
+            }
         }
 
         @media (max-width: 576px) {

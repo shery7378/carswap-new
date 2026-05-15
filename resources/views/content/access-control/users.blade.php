@@ -64,6 +64,17 @@
   .dataTables_paginate {
     display: flex;
     justify-content: flex-end;
+    margin-top: 0.25rem;
+  }
+
+  .dataTables_info {
+    white-space: normal !important;
+  }
+
+  @media (min-width: 768px) {
+    .dataTables_paginate {
+      margin-top: 0;
+    }
   }
 
   /* TABLE WRAPPER FIX */
@@ -269,9 +280,9 @@
       autoWidth: false,
 
       // CLEAN STRUCTURE
-      dom: "<'row'<'col-md-6'l><'col-md-6'f>>" +
+      dom: "<'row align-items-center mb-3'<'col-md-auto mb-2 mb-md-0'l><'col-md d-flex justify-content-md-end'f>>" +
         "t" +
-        "<'row'<'col-md-6'i><'col-md-6'p>>",
+        "<'row mt-3 d-flex align-items-center justify-content-between flex-wrap'<'col-12 col-md-auto mb-2 mb-md-0 text-center text-md-start'i><'col-12 col-md-auto d-flex justify-content-center justify-content-md-end'p>>",
 
       language: {
         search: "",
