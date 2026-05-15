@@ -601,6 +601,8 @@
     white-space: normal;
     line-height: 1.2;
 }
+ 
+
 
 .relationships-card .table tbody td {
     padding: 0.5rem 0.5rem !important;
