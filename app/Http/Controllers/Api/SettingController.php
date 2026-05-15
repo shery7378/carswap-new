@@ -86,7 +86,8 @@ class SettingController extends Controller
                 'footer_widget_title_font_size' => '18',
                 'footer_text_font_size' => '14',
                 'footer_bottom_bar_bg' => '#000000',
-                'stripe_public_key' => null
+                'stripe_public_key' => null,
+                'tinymce_api_key' => ''
             ];
 
             // Fetch all values currently in DB

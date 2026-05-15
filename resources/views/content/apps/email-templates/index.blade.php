@@ -275,6 +275,11 @@
         padding: 15px;
         margin-top: 2rem;
     }
+
+    /* Hide TinyMCE Promotion & Branding */
+    .tox-promotion, .tox-statusbar__branding {
+        display: none !important;
+    }
 </style>
 @endsection
 
@@ -412,45 +417,48 @@
 @endsection
 
 @section('page-script')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+<!-- TinyMCE Rich Text Editor -->
+@php
+    $tinyMceKey = \App\Models\Setting::where('key', 'tinymce_api_key')->first()?->value ?? 'no-api-key';
+@endphp
+<script src="https://cdn.tiny.cloud/1/{{ $tinyMceKey }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const visualBtn = document.getElementById('visual-btn');
         const codeBtn = document.getElementById('code-btn');
-        const bodyTextarea = $('#email-body');
+        const bodyTextarea = document.getElementById('email-body');
 
-        if (bodyTextarea.length) {
-            bodyTextarea.summernote({
-                placeholder: '{{ __('Type your email content...') }}',
+        if (bodyTextarea) {
+            tinymce.init({
+                selector: '#email-body',
+                plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount code',
+                toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat | code',
                 height: 500,
-                toolbar: [
-                    ['style', ['style']],
-                    ['font', ['bold', 'underline', 'clear']],
-                    ['color', ['color']],
-                    ['para', ['ul', 'ol', 'paragraph']],
-                    ['table', ['table']],
-                    ['insert', ['link', 'image']],
-                    ['view', ['fullscreen', 'codeview', 'help']]
-                ],
-                callbacks: {
-                    onChange: function(contents) {
-                        bodyTextarea.val(contents);
-                    }
+                promotion: false,
+                branding: false,
+                license_key: 'gpl',
+                setup: function (editor) {
+                    editor.on('change', function () {
+                        editor.save();
+                    });
                 }
             });
 
             visualBtn.addEventListener('click', function() {
-                bodyTextarea.summernote('codeview.deactivate');
-                visualBtn.classList.add('active');
-                codeBtn.classList.remove('active');
+                if (!visualBtn.classList.contains('active')) {
+                    tinymce.execCommand('mceToggleEditor', false, 'email-body');
+                    visualBtn.classList.add('active');
+                    codeBtn.classList.remove('active');
+                }
             });
 
             codeBtn.addEventListener('click', function() {
-                bodyTextarea.summernote('codeview.activate');
-                codeBtn.classList.add('active');
-                visualBtn.classList.remove('active');
+                if (!codeBtn.classList.contains('active')) {
+                    tinymce.execCommand('mceToggleEditor', false, 'email-body');
+                    codeBtn.classList.add('active');
+                    visualBtn.classList.remove('active');
+                }
             });
         }
     });

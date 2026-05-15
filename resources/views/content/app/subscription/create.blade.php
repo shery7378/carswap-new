@@ -54,6 +54,10 @@
     font-size: 0.8rem;
     font-weight: 500;
 }
+/* Hide TinyMCE Promotion & Branding */
+.tox-promotion, .tox-statusbar__branding {
+    display: none !important;
+}
 </style>
 @endsection
 
@@ -407,8 +411,11 @@
 
 
 @section('page-script')
-<link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+<!-- TinyMCE Rich Text Editor -->
+@php
+    $tinyMceKey = \App\Models\Setting::where('key', 'tinymce_api_key')->first()?->value ?? 'no-api-key';
+@endphp
+<script src="https://cdn.tiny.cloud/1/{{ $tinyMceKey }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -487,19 +494,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }, 500);
     }
 
-    // Initialize Summernote for description
-    $('textarea[name="description"]').summernote({
-        placeholder: '{{ __('Enter plan description...') }}',
-        tabsize: 2,
-        height: 120,
-        toolbar: [
-            ['style', ['style']],
-            ['font', ['bold', 'underline', 'clear']],
-            ['color', ['color']],
-            ['para', ['ul', 'ol', 'paragraph']],
-            ['insert', ['link']],
-            ['view', ['codeview']]
-        ]
+    // Initialize TinyMCE for description
+    tinymce.init({
+        selector: 'textarea[name="description"]',
+        plugins: 'anchor autolink charmap codesample emoticons link lists searchreplace visualblocks wordcount',
+        toolbar: 'undo redo | blocks | bold italic underline | link | numlist bullist | removeformat',
+        height: 200,
+        promotion: false,
+        branding: false,
+        license_key: 'gpl',
+        setup: function (editor) {
+            editor.on('change', function () {
+                editor.save();
+            });
+        }
     });
 
     // Feature management

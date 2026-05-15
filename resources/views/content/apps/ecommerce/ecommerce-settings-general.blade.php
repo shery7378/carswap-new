@@ -188,6 +188,18 @@
                     </div>
                   </div>
                 </div>
+                
+                <!-- Editor Settings -->
+                <div class="mb-4 border-bottom pb-4">
+                  <h6 class="mb-3">{{ __('Editor Settings') }}</h6>
+                  <div class="row">
+                    <div class="col-md-12 mb-3">
+                      <label for="tinymce_api_key" class="form-label">{{ __('TinyMCE API Key') }}</label>
+                      <input type="text" class="form-control" name="tinymce_api_key" id="tinymce_api_key" value="{{ $settings['tinymce_api_key'] ?? '' }}" placeholder="Enter your TinyMCE API key">
+                      <small class="text-muted">{{ __('Get your API key from') }} <a href="https://www.tiny.cloud/my-control-panel/account/api-key/" target="_blank">Tiny Cloud</a>. {{ __('Required for the rich text editor to work properly.') }}</small>
+                    </div>
+                  </div>
+                </div>
 
                 <!-- Maintenance Mode -->
                 <div class="mb-4 pb-2">

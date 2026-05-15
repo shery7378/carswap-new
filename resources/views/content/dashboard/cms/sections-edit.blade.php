@@ -111,6 +111,11 @@
         .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
         .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
         .btn-action i { font-size: 1.15rem !important; }
+
+        /* Hide TinyMCE Promotion & Branding */
+        .tox-promotion, .tox-statusbar__branding {
+            display: none !important;
+        }
     </style>
 @endsection
 
@@ -398,9 +403,11 @@
 @endsection
 
 @section('page-script')
-    <!-- Summernote Rich Text Editor -->
-    <link href="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/summernote@0.9.0/dist/summernote-lite.min.js"></script>
+    <!-- TinyMCE Rich Text Editor -->
+    @php
+        $tinyMceKey = \App\Models\Setting::where('key', 'tinymce_api_key')->first()?->value ?? 'no-api-key';
+    @endphp
+    <script src="https://cdn.tiny.cloud/1/{{ $tinyMceKey }}/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
 	    <script>
 	        document.addEventListener('DOMContentLoaded', function () {
@@ -444,30 +451,25 @@
 	                document.getElementById('edit-item-date-btn')
 	            );
 
-	            // Shared Summernote Init
-	            function initSummernote(selector) {
-	                $(selector).summernote({
-                    placeholder: '{{ __('Write your content here...') }}',
-                    tabsize: 2,
-                    height: 350,
-                    toolbar: [
-                        ['style', ['style']],
-                        ['font', ['bold', 'underline', 'clear']],
-                        ['color', ['color']],
-                        ['para', ['ul', 'ol', 'paragraph']],
-                        ['table', ['table']],
-                        ['insert', ['link', 'image']],
-                        ['view', ['fullscreen', 'codeview', 'help']]
-                    ]
-                });
-            }
+	            // Shared TinyMCE Init
+	            function initTinyMCE(selector) {
+	                tinymce.init({
+                        selector: selector,
+                        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+                        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+                        height: 350,
+                        promotion: false,
+                        branding: false,
+                        license_key: 'gpl'
+                    });
+                }
 
             // Apply only if the sections were specifically intended as legal/long document sections
             @if(in_array($section->slug, ['general-terms-and-conditions', 'data-protection-notice', 'home-hero']))
-                // Apply Summernote
-                initSummernote('#edit-item-description');
-                initSummernote('#document-editor');
-                initSummernote('textarea[name="description"]'); // For the add item modal
+                // Apply TinyMCE
+                initTinyMCE('#edit-item-description');
+                initTinyMCE('#document-editor');
+                initTinyMCE('textarea[name="description"]'); // For the add item modal
             @endif
 
             document.querySelectorAll('.edit-item').forEach(button => {
@@ -482,9 +484,8 @@
 	                        const display = document.querySelector('#edit-item-date-display');
 	                        if (display) display.value = formatToYmdSlashes(document.querySelector('#edit-item-date').value);
 	                    }
-                    const descField = $('#edit-item-description');
-                    if (descField.length) {
-                        descField.summernote('code', item.description || '');
+                    if (tinymce.get('edit-item-description')) {
+                        tinymce.get('edit-item-description').setContent(item.description || '');
                     } else {
                         document.querySelector('#edit-item-description').value = item.description;
                     }
