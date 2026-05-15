@@ -90,6 +90,27 @@
         .component-card:hover {
             border-color: #696cff;
         }
+
+        /* Premium Action Buttons */
+        .btn-action {
+            width: 32px !important;
+            height: 32px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            border-radius: 8px !important;
+            padding: 0 !important;
+            border: none !important;
+            transition: all 0.2s ease !important;
+            text-decoration: none !important;
+        }
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .btn-action.edit { background-color: #e0f7fa !important; color: #00bcd4 !important; }
+        .btn-action.delete { background-color: #ffebee !important; color: #f44336 !important; }
+        .btn-action i { font-size: 1.15rem !important; }
     </style>
 @endsection
 
@@ -225,14 +246,14 @@
                                             </div>
                                         </div>
                                         <div class="d-flex gap-2">
-                                            <button class="btn btn-icon btn-outline-light text-muted border-1 edit-item"
+                                            <button class="btn-action edit edit-item"
                                                 data-item="{{ json_encode($item) }}" data-bs-toggle="modal"
                                                 data-bs-target="#editItemModal" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
                                                 <i class="icon-base bx bx-edit-alt"></i>
                                             </button>
                                             <form action="{{ route('admin.cms.items.destroy', $item->id) }}" method="POST">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-icon btn-outline-light text-danger border-1"
+                                                <button type="submit" class="btn-action delete"
                                                     onclick="return confirm('{{ __('Remove?') }}')" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
                                                     <i class="icon-base bx bx-trash"></i>
                                                 </button>
