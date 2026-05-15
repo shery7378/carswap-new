@@ -31,6 +31,14 @@
                                 'cancelled' => 'Lemondva',
                                 'paused' => 'Felfüggesztve'
                             ];
+                            $statusClass = [
+                                'active' => 'bg-label-success',
+                                'trial' => 'bg-label-info',
+                                'expired' => 'bg-label-danger',
+                                'cancelled' => 'bg-label-secondary',
+                                'pending' => 'bg-label-warning',
+                                'paused' => 'bg-label-warning'
+                            ][$subscription->status] ?? 'bg-label-primary';
                         @endphp
                         <span
                             class="badge {{ $statusClass }} py-0 px-2 fw-normal">{{ $statusLabels[$subscription->status] ?? $subscription->status }}</span>
