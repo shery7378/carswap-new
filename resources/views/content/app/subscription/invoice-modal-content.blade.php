@@ -16,13 +16,13 @@
                 </div>
                 <div>
                     <h4 class="fw-bold mb-2">#INVOICE-{{ $subscription->id }}</h4>
-                    <div class="mb-1 small">
-                        <span class="me-1">{{ __('Date Issues:') }}</span>
+                    <div class="mb-1">
+                        <span class="me-1">Kiadás dátuma:</span>
                         <span
                             class="fw-bold">{{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }}</span>
                     </div>
-                    <div class="small">
-                        <span class="me-1">{{ __('Status:') }}</span>
+                    <div>
+                        <span class="me-1">Állapot:</span>
                         @php
                             $statusLabels = [
                                 'active' => 'Aktív',
@@ -50,94 +50,115 @@
 
             <div class="row pt-4">
                 <div class="col-6 mb-xl-0 mb-4">
-                    <h6 class="pb-2 fw-bold text-uppercase small">{{ __('Invoice To:') }}</h6>
+                    <h6 class="pb-2 fw-bold text-uppercase">Számlázási címzett:</h6>
                     <p class="mb-1 fw-bold">{{ $subscription->billing_full_name ?? $subscription->user->name ?? 'N/A' }}
                     </p>
-                    <p class="mb-1 text-muted small">{{ $subscription->billing_company_name ?? 'N/A' }}</p>
-                    <p class="mb-1 text-muted small">{{ $subscription->billing_address ?? 'N/A' }}</p>
-                    <p class="mb-1 text-muted small">{{ $subscription->billing_city ?? 'N/A' }}</p>
-                    <p class="mb-0 text-muted small">{{ $subscription->user->email ?? 'N/A' }}</p>
+                    <p class="mb-1 text-muted">{{ $subscription->billing_company_name ?? 'N/A' }}</p>
+                    <p class="mb-1 text-muted">{{ $subscription->billing_address ?? 'N/A' }}</p>
+                    <p class="mb-1 text-muted">{{ $subscription->billing_city ?? 'N/A' }}</p>
+                    <p class="mb-0 text-muted">{{ $subscription->user->email ?? 'N/A' }}</p>
                 </div>
                 <div class="col-6">
-                    <h6 class="pb-2 fw-bold text-uppercase small">{{ __('Subscription Details:') }}</h6>
-                    <table class="w-100 small">
+                    <h6 class="pb-2 fw-bold text-uppercase">Előfizetés részletei:</h6>
+                    <table>
                         <tbody>
                             <tr>
-                                <td class="pe-3 pb-1">{{ __('Plan:') }}</td>
-                                <td class="fw-bold pb-1 text-end">{{ $subscription->plan->name ?? 'Standard' }}</td>
+                                <td class="pe-3">Csomag:</td>
+                                <td class="fw-bold">{{ $subscription->plan->name ?? 'Standard' }}</td>
                             </tr>
                             <tr>
-                                <td class="pe-3 pb-1">{{ __('Cycle:') }}</td>
-                                <td class="pb-1 text-end">{{ __('Every') }} {{ $subscription->plan->billing_period ?? 'Month' }}
-                                </td>
+                                <td class="pe-3">Ciklus:</td>
+                                <td>Minden {{ $subscription->plan->billing_period ?? 'Hónap' }}</td>
                             </tr>
                             <tr>
-                                <td class="pe-3">{{ __('Valid Until:') }}</td>
-                                <td class="text-end fw-bold text-info">
-                                    {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}</td>
+                                <td class="pe-3">Érvényes eddig:</td>
+                                <td>{{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
 
-            <div class="table-responsive border rounded mt-4">
-                <table class="table table-sm m-0">
-                    <thead class="bg-light">
+            <div class="table-responsive">
+                <table class="table border-top m-0">
+                    <thead>
                         <tr>
-                            <th class="small py-2">{{ __('Item Description') }}</th>
-                            <th class="small py-2 text-center">{{ __('Period') }}</th>
-                            <th class="small py-2 text-end">{{ __('Amount') }}</th>
+                            <th>Tétel megnevezése</th>
+                            <th>Számlázási időszak</th>
+                            <th>Összeg</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="text-nowrap fw-bold fs-7 py-3">
-                                {{ __('Subscription to') }} {{ $subscription->plan->name ?? 'Standard' }} {{ __('Plan') }}
+                            <td class="text-nowrap fw-bold fs-6">
+                                Előfizetés a {{ $subscription->plan->name ?? 'Standard' }} csomagra
                             </td>
-                            <td class="text-nowrap text-muted text-center small">
+                            <td class="text-nowrap text-muted">
                                 {{ $subscription->starts_at ? $subscription->starts_at->formatDate() : 'N/A' }} -
                                 {{ $subscription->ends_at ? $subscription->ends_at->formatDate() : 'N/A' }}
                             </td>
-                            <td class="fw-bold text-end py-3">@formatCurrency($subscription->amount, $subscription->duration === 'Monthly')</td>
+                            <td class="fw-bold">@formatCurrency($subscription->amount)</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
             <div class="row pt-4">
-                <div class="col-md-6 mb-md-0 mb-3">
-                    <div class="mt-2">
-                        <small class="fw-bold d-block mb-1 text-uppercase">{{ __('Payment Method:') }}</small>
-                        <div class="d-flex align-items-center">
-                            <i class="bx bxl-stripe text-info fs-3 me-2"></i>
-                            <div class="small">
-                                <div class="text-muted mb-0">Powered by Stripe</div>
-                                <div class="text-muted mt-n1">→ A Stripe biztonságos fizetési rendszere</div>
-                            </div>
-                        </div>
+                <div class="col-12 text-end">
+                    <div class="d-flex justify-content-end align-items-center mb-2">
+                        <span class="me-3">Részösszeg:</span>
+                        <span class="fw-bold fs-6">@formatCurrency($subscription->amount)</span>
                     </div>
-                </div>
-                <div class="col-md-6 d-flex justify-content-end align-items-center">
-                    <div class="invoice-calculations w-100">
-                        <div class="d-flex justify-content-between mb-2">
-                            <span class="text-muted small">{{ __('Subtotal:') }}</span>
-                            <span class="fw-bold small">@formatCurrency($subscription->amount, $subscription->duration === 'Monthly')</span>
-                        </div>
-                        <div class="d-flex justify-content-between mb-2 border-bottom pb-2">
-                            <span class="text-muted small">{{ __('Tax (0%):') }}</span>
-                            <span class="fw-bold small">@formatCurrency(0)</span>
-                        </div>
-                        <div class="d-flex justify-content-between">
-                            <span class="fw-bold fs-5">{{ __('Total:') }}</span>
-                            <span class="fw-bold fs-5 text-primary">@formatCurrency($subscription->amount, $subscription->duration === 'Monthly')</span>
-                        </div>
+                    <div class="d-flex justify-content-end align-items-center mb-2">
+                        <span class="me-3">Adó:</span>
+                        <span class="fw-bold fs-6">@formatCurrency(0)</span>
+                    </div>
+                    <div class="d-flex justify-content-end align-items-center border-top pt-2">
+                        <span class="me-3 fs-5 fw-bold">Összesen:</span>
+                        <span class="fw-bold fs-5 text-primary">@formatCurrency($subscription->amount)</span>
                     </div>
                 </div>
             </div>
 
-            <div class="mt-4 pt-2 border-top">
-                <p class="text-muted small mb-0"><span class="fw-bold">{{ __('Note:') }}</span> {{ __('Your subscription will automatically renew. You can manage your plan at any time from your account settings.') }}</p>
+            <div class="row mt-4">
+                <div class="col-12">
+                    <h6 class="fw-bold">Megjegyzés:</h6>
+                    <span class="text-muted small">Öröm volt Önnel és csapatával dolgozni. Reméljük, továbbra is a CarSwap-ot használja. Köszönjük!</span>
+                </div>
+            </div>
+
+            <div class="card mt-4 border-0 shadow-sm overflow-hidden">
+                <div class="card-header border-bottom px-0">
+                    <h6 class="mb-2 fw-bold text-uppercase">Legutóbbi fizetések</h6>
+                </div>
+                <div class="table-responsive text-nowrap">
+                    <table class="table table-hover align-middle">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="py-2">Azonosító</th>
+                                <th class="py-2">Összeg</th>
+                                <th class="py-2">Mód</th>
+                                <th class="py-2">Állapot</th>
+                                <th class="py-2">Dátum</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($payments as $payment)
+                                <tr>
+                                    <td>#{{ $payment->transaction_id ?? $payment->id }}</td>
+                                    <td class="fw-bold text-dark">@formatCurrency($payment->amount)</td>
+                                    <td><span class="text-uppercase small">{{ $payment->payment_method ?? 'Stripe' }}</span></td>
+                                    <td><span class="badge bg-label-success">{{ ucfirst($payment->status) }}</span></td>
+                                    <td>{{ $payment->created_at->formatDateTime() }}</td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center text-muted py-4">Nem találhatók fizetési rekordok.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -171,31 +192,75 @@
     @media print {
         @page {
             margin: 0;
+            size: auto;
         }
 
-        body {
-            margin: 1.6cm;
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            background: #fff !important;
+            visibility: hidden !important;
         }
 
-        .layout-navbar,
-        .layout-menu,
-        .modal-header,
-        .btn,
-        .footer,
-        .btn-close,
-        .modal-footer {
-            display: none !important;
+        /* Show only the modal and its content */
+        #invoiceModal, 
+        #invoiceModalContent,
+        #invoiceModalContent * {
+            visibility: visible !important;
         }
 
-        .modal-content {
-            box-shadow: none !important;
+        /* Position the modal at the top left of the print page */
+        #invoiceModal {
+            position: absolute !important;
+            left: 0 !important;
+            top: 0 !important;
+            width: 100% !important;
+            display: block !important;
+            margin: 0 !important;
+            padding: 0 !important;
             border: none !important;
-            background: white !important;
+        }
+
+        /* Remove modal-dialog margins/styling for print */
+        #invoiceModal .modal-dialog {
+            max-width: 100% !important;
+            width: 100% !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            transform: none !important;
+        }
+
+        #invoiceModal .modal-content {
+            border: none !important;
+            box-shadow: none !important;
+            background: #fff !important;
+            padding: 1.6cm !important; /* Re-apply the desired margin here */
+        }
+
+        /* Hide buttons, footer, and header during print */
+        #invoiceModal .modal-footer,
+        #invoiceModal .btn,
+        #invoiceModal .btn-close,
+        #invoiceModal .modal-header {
+            display: none !important;
         }
 
         .modal-body {
             padding: 0 !important;
             margin: 0 !important;
+        }
+
+        /* Ensure content takes full width where intended, but allow col-6 to be side-by-side */
+        .col-12 {
+            width: 100% !important;
+            flex: 0 0 100% !important;
+            max-width: 100% !important;
+        }
+        
+        .col-6 {
+            width: 50% !important;
+            flex: 0 0 50% !important;
+            max-width: 50% !important;
         }
     }
 </style>
