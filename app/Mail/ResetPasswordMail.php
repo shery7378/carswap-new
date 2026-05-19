@@ -35,6 +35,7 @@ class ResetPasswordMail extends Mailable
         if ($template) {
             $rendered = $template->render([
                 'first_name' => $this->user->first_name,
+                'user_name' => trim($this->user->first_name . ' ' . $this->user->last_name),
                 'reset_link' => $this->resetUrl,
             ]);
 

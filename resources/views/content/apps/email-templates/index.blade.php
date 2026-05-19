@@ -364,9 +364,14 @@
                         <label class="text-uppercase text-muted fw-bold" style="font-size: 13px; letter-spacing: 0.5px;">
                             <i class="bx bx-edit-alt me-1"></i> @lang('Email Body')
                         </label>
-                        <div class="glass-tabs">
-                            <button type="button" id="visual-btn" class="glass-tab-btn active">@lang('Visual')</button>
-                            <button type="button" id="code-btn" class="glass-tab-btn">@lang('Code')</button>
+                        <div class="d-flex gap-3 align-items-center">
+                            <button type="button" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#previewModal">
+                                <i class="bx bx-show me-1"></i> @lang('Live Preview')
+                            </button>
+                            <div class="glass-tabs">
+                                <button type="button" id="visual-btn" class="glass-tab-btn active">@lang('Visual')</button>
+                                <button type="button" id="code-btn" class="glass-tab-btn">@lang('Code')</button>
+                            </div>
                         </div>
                     </div>
                     
@@ -401,6 +406,20 @@
                         </div>
                     </div>
 
+                    <!-- Send Test Email -->
+                    <div class="mt-4 p-4 rounded bg-label-secondary border border-secondary border-opacity-25 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
+                        <div>
+                            <h6 class="mb-1 fw-bold text-dark"><i class="bx bx-mail-send text-primary me-1"></i> @lang('Test This Template')</h6>
+                            <p class="text-muted small mb-0">@lang('Send a mock email to yourself to see how it looks in an inbox.')</p>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <input type="email" id="test-email-input" class="form-control" placeholder="Enter test email address" value="{{ auth()->user()->email ?? '' }}" style="min-width: 250px;">
+                            <button type="button" class="btn btn-primary text-nowrap" id="send-test-btn" onclick="sendTestEmail({{ $selectedTemplate->id }})">
+                                @lang('Send Test')
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             @else
                 <div class="premium-card text-center d-flex flex-column justify-content-center align-items-center" style="min-height: 60vh;">
@@ -414,6 +433,28 @@
         </div>
     </div>
 </div>
+
+<!-- Preview Modal -->
+@if(isset($selectedTemplate) && $selectedTemplate)
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="bx bx-show me-2 text-primary"></i>@lang('Template Live Preview'): {{ $selectedTemplate->name }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-0" style="background-color: #f8f9fa;">
+                <div class="w-100" style="height: 600px; border-bottom: 1px solid #ddd;">
+                    <iframe src="{{ route('admin.email-templates.preview', $selectedTemplate->id) }}" frameborder="0" width="100%" height="100%"></iframe>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal">@lang('Close Preview')</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
 @endsection
 
 @section('page-script')
@@ -501,6 +542,47 @@
             }, 2500);
             
             setTimeout(() => toast.remove(), 2800);
+        });
+    }
+
+    function sendTestEmail(templateId) {
+        const emailInput = document.getElementById('test-email-input').value;
+        const btn = document.getElementById('send-test-btn');
+        
+        if(!emailInput) {
+            alert('Please enter an email address.');
+            return;
+        }
+
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span> Sending...`;
+        btn.disabled = true;
+
+        fetch(`/app/email-templates/${templateId}/send-test`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ email: emailInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            
+            if(data.success) {
+                // Show success toast
+                copyToClipboard(data.message.replace('Copied: ', ''));
+            } else {
+                alert('Error: ' + data.message);
+            }
+        })
+        .catch(error => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            alert('A network error occurred while sending the test email.');
         });
     }
 </script>

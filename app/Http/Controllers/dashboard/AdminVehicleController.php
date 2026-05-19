@@ -403,7 +403,10 @@ class AdminVehicleController extends Controller
         if ($request->ad_status === 'Publikált' && $oldStatus !== 'Publikált' && $vehicle->user) {
             EmailService::send($vehicle->user->email, 'vehicle-approved', [
                 'first_name' => $vehicle->user->first_name,
-                'vehicle_name' => $vehicle->title,
+                'user_name' => trim($vehicle->user->first_name . ' ' . $vehicle->user->last_name),
+                'car_title' => $vehicle->title,
+                'listing_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id,
+                'vehicle_name' => $vehicle->title, // Keep old ones just in case
                 'vehicle_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id
             ]);
         }
@@ -429,7 +432,10 @@ class AdminVehicleController extends Controller
             if ($request->ad_status === 'Publikált' && $oldStatus !== 'Publikált' && $vehicle->user) {
                 EmailService::send($vehicle->user->email, 'vehicle-approved', [
                     'first_name' => $vehicle->user->first_name,
-                    'vehicle_name' => $vehicle->title,
+                    'user_name' => trim($vehicle->user->first_name . ' ' . $vehicle->user->last_name),
+                    'car_title' => $vehicle->title,
+                    'listing_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id,
+                    'vehicle_name' => $vehicle->title, // Keep old ones just in case
                     'vehicle_url' => env('FRONTEND_URL', 'http://localhost:3000') . '/vehicles/' . $vehicle->id
                 ]);
             }

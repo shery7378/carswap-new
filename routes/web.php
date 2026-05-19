@@ -255,6 +255,8 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::get('/app/email-templates', [EmailTemplateController::class, 'index'])->name('admin.email-templates.index');
         Route::put('/app/email-templates/{id}', [EmailTemplateController::class, 'update'])->name('admin.email-templates.update')->middleware('permission:edit-email_templates,admin-guard');
         Route::post('/app/email-templates/settings', [EmailTemplateController::class, 'updateEditorSettings'])->name('admin.email-templates.settings.update')->middleware('permission:edit-email_templates,admin-guard');
+        Route::post('/app/email-templates/{id}/send-test', [EmailTemplateController::class, 'sendTestEmail'])->name('admin.email-templates.send-test')->middleware('permission:edit-email_templates,admin-guard');
+        Route::get('/app/email-templates/{id}/preview', [EmailTemplateController::class, 'previewTemplate'])->name('admin.email-templates.preview');
     });
     // CONTACTS Module
     Route::middleware(['permission:view-contacts,admin-guard'])->group(function () {

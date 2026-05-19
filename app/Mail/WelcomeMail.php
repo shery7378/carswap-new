@@ -33,6 +33,7 @@ class WelcomeMail extends Mailable
         if ($template) {
             $rendered = $template->render([
                 'first_name' => $this->user->first_name,
+                'user_name' => trim($this->user->first_name . ' ' . $this->user->last_name),
                 'frontend_url' => $this->frontendUrl,
                 'login_url' => $this->frontendUrl . '/login',
             ]);
