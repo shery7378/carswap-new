@@ -70,7 +70,7 @@ class CMSController extends Controller
     public function update(Request $request, $id)
     {
         $section = CMSSection::findOrFail($id);
-        
+
         $request->validate([
             'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:cms_sections,slug,' . $id,
@@ -79,7 +79,7 @@ class CMSController extends Controller
         ]);
 
         $data = $request->except('image');
-        
+
         if ($request->hasFile('image')) {
             if ($section->image) {
                 Storage::disk('public')->delete($section->image);
@@ -185,10 +185,10 @@ class CMSController extends Controller
         // Clear CMS cache
         $section = CMSSection::find($request->section_id);
         if ($section) {
-             \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
+            \Illuminate\Support\Facades\Cache::forget("cms_section_{$section->slug}");
         }
         if ($request->filled('item_id')) {
-             \Illuminate\Support\Facades\Cache::forget("cms_item_{$request->item_id}");
+            \Illuminate\Support\Facades\Cache::forget("cms_item_{$request->item_id}");
         }
         \Illuminate\Support\Facades\Cache::forget("cms_blog_posts");
 
@@ -198,7 +198,7 @@ class CMSController extends Controller
     public function updateItem(Request $request, $itemId)
     {
         $item = CMSItem::findOrFail($itemId);
-        
+
         $request->validate([
             'title' => 'nullable|string|max:255',
             'description' => 'nullable|string',
