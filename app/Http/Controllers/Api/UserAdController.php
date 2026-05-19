@@ -163,10 +163,12 @@ class UserAdController extends Controller
         $validated['sales_method_id']   = $this->resolveEntityId(\App\Models\SalesMethod::class, $validated['sales_method_id'] ?? null);
         $validated['vehicle_status_id'] = $this->resolveEntityId(\App\Models\VehicleStatus::class, $validated['vehicle_status_id'] ?? null);
 
+        $isDraft = isset($validated['ad_status']) && ($validated['ad_status'] === 'Piszkozat' || $validated['ad_status'] === 'draft');
+
         // Check subscription limits
         $limitCheck = $this->checkSubscriptionLimits(
             $user, 
-            ($validated['ad_status'] ?? 'Függőben') === 'Piszkozat', 
+            $isDraft, 
             false, 
             count($validated['gallery_images'] ?? [])
         );
@@ -175,7 +177,7 @@ class UserAdController extends Controller
         }
 
         // Default ad_status for users is 'pending' for approval, unless they explicitly saved it as 'draft'
-        if (isset($validated['ad_status']) && $validated['ad_status'] === 'Piszkozat') {
+        if ($isDraft) {
             $validated['ad_status'] = 'Piszkozat';
         } else {
             $validated['ad_status'] = 'Függőben';
@@ -325,7 +327,7 @@ class UserAdController extends Controller
         unset($validated['properties'], $validated['gallery_images'], $validated['documents'], $validated['main_image']);
 
         // Reset status to pending for approval if updated, unless saving as draft
-        $newStatus = (isset($validated['ad_status']) && $validated['ad_status'] === 'Piszkozat') ? 'Piszkozat' : 'Függőben';
+        $newStatus = (isset($validated['ad_status']) && ($validated['ad_status'] === 'Piszkozat' || $validated['ad_status'] === 'draft')) ? 'Piszkozat' : 'Függőben';
 
         // Check active limit if moving from inactive (draft/rejected) to active
         // Also check HD image quota if the image count exceeds 6
