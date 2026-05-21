@@ -26,7 +26,7 @@ class SubscriptionSeeder extends Seeder
                     '2 aktív hirdetés',
                     '2 hely a garázsban',
                     'Csere ajánlat funkció',
-                    'Ingyenes képfeltöltés'
+                    '2 Ingyenes képfeltöltés'
                 ],
                 'description' => 'Ingyenes kezdés'
             ],
