@@ -965,5 +965,6 @@
     "expired": "Lejárt",
     "Accept": "Elfogadva",
     "accepted": "Elfogadva",
-    "accept": "Elfogadva"
+    "accept": "Elfogadva",
+    "This name has already been taken.": "Ez a megnevezés már foglalt."
 }

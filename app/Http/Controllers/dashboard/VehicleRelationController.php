@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class VehicleRelationController extends Controller
 {
@@ -43,9 +44,22 @@ class VehicleRelationController extends Controller
         if (!$table)
             abort(404);
 
+        $uniqueRule = Rule::unique($table, 'name');
+
+        if ($table === 'colors') {
+            $colorType = ($type === 'interior-colors') ? 'interior' : 'exterior';
+            $uniqueRule->where('type', $colorType);
+        }
+
+        if ($table === 'vehicle_models' && $request->has('brand_id')) {
+            $uniqueRule->where('brand_id', $request->brand_id);
+        }
+
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', $uniqueRule],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+        ], [
+            'name.unique' => __('This name has already been taken.'),
         ]);
 
         $data = ['name' => $request->name, 'created_at' => now(), 'updated_at' => now()];
@@ -92,9 +106,22 @@ class VehicleRelationController extends Controller
         $table = $this->getTableName($type);
         if (!$table) abort(404);
 
+        $uniqueRule = Rule::unique($table, 'name')->ignore($id);
+
+        if ($table === 'colors') {
+            $colorType = ($type === 'interior-colors') ? 'interior' : 'exterior';
+            $uniqueRule->where('type', $colorType);
+        }
+
+        if ($table === 'vehicle_models' && $request->has('brand_id')) {
+            $uniqueRule->where('brand_id', $request->brand_id);
+        }
+
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', $uniqueRule],
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+        ], [
+            'name.unique' => __('This name has already been taken.'),
         ]);
 
         $data = ['name' => $request->name, 'updated_at' => now()];

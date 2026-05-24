@@ -496,7 +496,7 @@
                     }
                 },
                 error: function(xhr) {
-                    toastr.error('Error updating item');
+                    toastr.error(xhr.responseJSON?.message || 'Error updating item');
                 }
             });
         });
