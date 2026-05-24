@@ -98,7 +98,10 @@
 		                                                };
 	                                            @endphp
 	                                            <div class="dropdown status-dropdown">
-	                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button" data-bs-toggle="dropdown">
+	                                                <button class="btn btn-sm dropdown-toggle hide-arrow p-0" type="button"
+	                                                    data-bs-toggle="dropdown"
+	                                                    data-bs-flip="false"
+	                                                    aria-expanded="false">
 	                                                    <span class="badge bg-{{ $statusClass }}">{{ __(ucfirst($status)) }}</span>
 	                                                </button>
 	                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
@@ -606,11 +609,11 @@ $(document).ready(function () {
             .users-table-responsive::-webkit-scrollbar { width: 0; height: 0; background: transparent; }
 		    #users-table_wrapper { overflow-x: hidden; }
             
-            /* ── STICKY HEADER – all screen sizes ──────────────── */
+            /* ── STICKY HEADER – always above table rows ─────── */
             #users-table thead th {
                 position: sticky;
                 top: 0;
-                z-index: 10;
+                z-index: 1068;           /* Above row (1065) and dropdown-menu (1067) – header never gets covered */
                 background: var(--bs-body-bg, #fff);
                 box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
             }
