@@ -76,6 +76,11 @@ class VehicleRelationController extends Controller
             $data['brand_id'] = $request->brand_id;
         }
 
+        // Add property_category_id for extra-features
+        if ($type === 'extra-features' && $request->has('property_category_id')) {
+            $data['property_category_id'] = $request->property_category_id;
+        }
+
         // Add type for colors slug-based management
         if ($type === 'exterior-colors') {
             $data['type'] = 'exterior';
@@ -91,7 +96,8 @@ class VehicleRelationController extends Controller
                 'success' => true,
                 'message' => Str::headline($type) . ' added successfully.',
                 'item' => $item,
-                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null
+                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null,
+                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null
             ]);
         }
 
@@ -115,6 +121,10 @@ class VehicleRelationController extends Controller
 
         if ($table === 'vehicle_models' && $request->has('brand_id')) {
             $uniqueRule->where('brand_id', $request->brand_id);
+        }
+
+        if ($table === 'properties' && $request->has('property_category_id')) {
+            $uniqueRule->where('property_category_id', $request->property_category_id);
         }
 
         $request->validate([
@@ -143,6 +153,10 @@ class VehicleRelationController extends Controller
             $data['brand_id'] = $request->brand_id;
         }
 
+        if ($type === 'extra-features' && $request->has('property_category_id')) {
+            $data['property_category_id'] = $request->property_category_id;
+        }
+
         DB::table($table)->where('id', $id)->update($data);
         $item = DB::table($table)->where('id', $id)->first();
 
@@ -151,7 +165,8 @@ class VehicleRelationController extends Controller
                 'success' => true,
                 'message' => Str::headline($type) . ' updated successfully.',
                 'item' => $item,
-                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null
+                'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null,
+                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null
             ]);
         }
 
@@ -225,6 +240,7 @@ class VehicleRelationController extends Controller
             'statuses' => 'vehicle_statuses',
             'vehicle-statuses' => 'vehicle_statuses',
             'extra-features' => 'properties',
+            'extra-feature-categories' => 'property_categories',
         ];
 
         return $map[$type] ?? null;

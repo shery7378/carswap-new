@@ -25,7 +25,7 @@
           $active = 'active open';
           $currentRouteName = Route::currentRouteName();
 
-          if ($currentRouteName === $submenu->slug) {
+          if ($currentRouteName === $submenu->slug || (isset($submenu->url) && request()->is(trim($submenu->url, '/')))) {
               $activeClass = 'active';
           } elseif (isset($submenu->submenu)) {
               if (gettype($submenu->slug) === 'array') {

@@ -123,6 +123,12 @@
           "name": "Extra Features",
           "slug": "admin.vehicle-settings.extra-features",
           "permission": "view-car_settings"
+        },
+        {
+          "url": "app/vehicle-settings/extra-feature-categories",
+          "name": "Extra Feature Categories",
+          "slug": "admin.vehicle-settings.extra-feature-categories",
+          "permission": "view-car_settings"
         }
       ]
     },

@@ -17,12 +17,19 @@
         'sales-methods' => 'bx-dollar-circle',
         'document-types' => 'bx-file',
         'vehicle-statuses' => 'bx-check-shield',
-        'extra-features' => 'bx-list-plus'
+        'extra-features' => 'bx-list-plus',
+        'extra-feature-categories' => 'bx-category'
     ];
     $icon = $icons[(string)$type] ?? 'bx-collection';
     $activeCount = $items->where('is_active', 1)->count();
     $inactiveCount = $items->where('is_active', 0)->count();
     $showImageField = in_array($type, ['brands', 'body-types']);
+    $totalCols = 4;
+    if ($showImageField) {
+        $totalCols = 5;
+    } elseif ($type === 'models' || $type === 'extra-features') {
+        $totalCols = 5;
+    }
 @endphp
 
 <!-- TITLE & STATS -->
@@ -111,10 +118,25 @@
                             <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Link to Parent Brand') }}</label>
                             <div class="input-group input-group-merge shadow-none border-0">
                                 <span class="input-group-text bg-light border-0"><i class="bx bx-purchase-tag"></i></span>
-                                <select class="form-select bg-light border-0 px-3 py-2" name="brand_id" id="add_brand_id" required>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="brand_id" id="add_brand_id" required>
                                     <option value="">{{ __('Choose a brand...') }}</option>
                                     @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
                                         <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($type === 'extra-features')
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Link to Parent Category') }}</label>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-category"></i></span>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="property_category_id" id="add_property_category_id" required>
+                                    <option value="">{{ __('Choose a category...') }}</option>
+                                    @foreach(DB::table('property_categories')->where('is_active', true)->orderBy('name')->get() as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -161,12 +183,16 @@
                                 @if($type === 'models')
                                     <th>{{ __('Parent Brand') }}</th>
                                 @endif
+                                @if($type === 'extra-features')
+                                    <th>{{ __('Parent Category') }}</th>
+                                @endif
                                 <th class="text-center">{{ __('Status') }}</th>
                                 <th class="text-center pe-4">{{ __('Actions') }}</th>
                             </tr>
                         </thead>
+                        
                         <tbody class="table-border-bottom-0">
-                            @forelse($items as $item)
+                            @foreach($items as $item)
                                 <tr class="transition-all hover-bg-light" data-id="{{ $item->id }}">
                                     <td class="ps-4"><span class="text-muted fw-semibold">#{{ $item->id }}</span></td>
                                     @if($showImageField)
@@ -198,6 +224,19 @@
                                             @endif
                                         </td>
                                     @endif
+
+                                    @if($type === 'extra-features')
+                                        <td class="brand-cell">
+                                            @php $category = DB::table('property_categories')->where('id', $item->property_category_id)->first(); @endphp
+                                            @if($category)
+                                                <span class="badge bg-label-info px-3 rounded-pill brand-badge">
+                                                    <i class="bx bx-category me-1 small"></i> {{ $category->name }}
+                                                </span>
+                                            @else
+                                                <span class="text-muted italic small">{{ __('Orphaned Category') }}</span>
+                                            @endif
+                                        </td>
+                                    @endif
                                     <td class="text-center">
                                         <div class="form-check form-switch d-flex justify-content-center">
                                             <input class="form-check-input status-toggle-switch" type="checkbox" 
@@ -212,10 +251,11 @@
                                                  data-name="{{ $item->name }}"
                                                  @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                  @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
+                                                 @if($type === 'extra-features') data-category="{{ $item->property_category_id }}" @endif
                                                  data-bs-toggle="tooltip" title="{{ __('Edit Item') }}">
                                                  <i class="bx bx-edit-alt"></i>
                                              </button>
-
+ 
                                              <form action="{{ route('admin.vehicle-settings.destroy', [$type, $item->id]) }}"
                                                  method="POST" class="d-inline delete-form">
                                                  @csrf
@@ -228,14 +268,7 @@
                                          </div>
                                      </td>
                                 </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="{{ $type === 'models' ? 6 : 5 }}" class="text-center py-5">
-                                        <div class="opacity-25 mb-2"><i class="bx bx-layers display-4 text-muted"></i></div>
-                                        <h6 class="text-muted fw-normal">{{ __('No records found.') }}</h6>
-                                    </td>
-                                </tr>
-                            @endforelse
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -280,12 +313,30 @@
                     @if($type === 'models')
                         <div class="mb-3">
                             <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Link to Parent Brand') }}</label>
-                            <select class="form-select border-light shadow-none bg-light" name="brand_id" id="edit_brand_id" required>
-                                <option value="">{{ __('Select Brand') }}</option>
-                                @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
-                                    <option value="{{ $brand->id }}">{{ $brand->name }}</option>
-                                @endforeach
-                            </select>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-purchase-tag"></i></span>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="brand_id" id="edit_brand_id" required>
+                                    <option value="">{{ __('Select Brand') }}</option>
+                                    @foreach(DB::table('brands')->where('is_active', true)->orderBy('name')->get() as $brand)
+                                        <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+
+                    @if($type === 'extra-features')
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Link to Parent Category') }}</label>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-category"></i></span>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="property_category_id" id="edit_property_category_id" required>
+                                    <option value="">{{ __('Select Category') }}</option>
+                                    @foreach(DB::table('property_categories')->where('is_active', true)->orderBy('name')->get() as $category)
+                                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                     @endif
                 </div>
@@ -306,7 +357,9 @@
             "pageLength": 10,
             "language": {
                 "search": "",
-                "searchPlaceholder": "{{ __('Quick Search :title…', ['title' => __($title)]) }}"
+                "searchPlaceholder": "{{ __('Quick Search :title…', ['title' => __($title)]) }}",
+                "emptyTable": "<div class='text-center py-4'><div class='opacity-25 mb-2'><i class='bx bx-layers display-4 text-muted'></i></div><h6 class='text-muted fw-normal'>{{ __('No records found.') }}</h6></div>",
+                "zeroRecords": "<div class='text-center py-4'><div class='opacity-25 mb-2'><i class='bx bx-layers display-4 text-muted'></i></div><h6 class='text-muted fw-normal'>{{ __('No records found.') }}</h6></div>"
             },
             "dom": '<"row mx-0 border-bottom bg-light bg-opacity-10"' +
                    '<"col-12 col-md-4 py-2"l>' +
@@ -318,7 +371,7 @@
                    '<"col-12 col-md-auto d-flex justify-content-center justify-content-md-end"p>' +
                    '>',
             "columnDefs": [
-                { "orderable": false, "targets": [{{ $type === 'models' ? 3 : 2 }}, {{ $type === 'models' ? 4 : 3 }}] }
+                { "orderable": false, "targets": [{{ $totalCols - 2 }}, {{ $totalCols - 1 }}] }
             ]
         });
 
@@ -384,6 +437,15 @@
                                 </td>`;
                         }
 
+                        if (type === 'extra-features') {
+                            rowHtml += `
+                                <td class="brand-cell">
+                                    <span class="badge bg-label-info px-3 rounded-pill brand-badge">
+                                        <i class="bx bx-category me-1 small"></i> ${response.category_name}
+                                    </span>
+                                </td>`;
+                        }
+
                         rowHtml += `
                                 <td class="text-center">
                                     <div class="form-check form-switch d-flex justify-content-center">
@@ -397,6 +459,7 @@
                                             data-id="${item.id}" data-name="${item.name}" 
                                             ${(type === 'brands' || type === 'body-types') ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
                                             ${type === 'models' ? `data-brand="${item.brand_id}"` : ''}
+                                            ${type === 'extra-features' ? `data-category="${item.property_category_id}"` : ''}
                                             data-bs-toggle="tooltip" title="Edit Item">
                                             <i class="bx bx-edit-alt"></i>
                                         </button>
@@ -435,11 +498,13 @@
             const id = $(this).data('id');
             const name = $(this).data('name');
             const brandId = $(this).data('brand');
+            const categoryId = $(this).data('category');
             const image = $(this).data('image');
             const type = '{{ $type }}';
-
+ 
             $('#edit_name').val(name);
             $('#edit_brand_id').val(brandId);
+            $('#edit_property_category_id').val(categoryId);
             
             if (type === 'brands' || type === 'body-types') {
                 if (image) {
@@ -484,12 +549,17 @@
                         if (response.brand_name) {
                             row.find('.brand-badge').html(`<i class="bx bx-award me-1 small"></i> ${response.brand_name}`);
                         }
+
+                        if (response.category_name) {
+                            row.find('.brand-badge').html(`<i class="bx bx-category me-1 small"></i> ${response.category_name}`);
+                        }
                         
                         // Update data attributes on edit button
                         const editBtn = row.find('.edit-btn');
                         editBtn.data('name', item.name);
                         if (item.image) editBtn.data('image', `{{ asset('storage') }}/${item.image}`);
                         if (item.brand_id) editBtn.data('brand', item.brand_id);
+                        if (item.property_category_id) editBtn.data('category', item.property_category_id);
 
                         bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
                         toastr.success('{{ __('Item updated successfully') }}');
@@ -741,6 +811,11 @@
         width: 100% !important;
         margin-left: 0 !important;
     }
+}
+.dataTables_empty {
+    padding: 3rem 1.5rem !important;
+    background-color: rgba(67, 89, 113, 0.01) !important;
+    border-bottom: 0 !important;
 }
 </style>
 @endsection

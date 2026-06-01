@@ -26,7 +26,7 @@ class VehicleController extends Controller
             'salesMethod',
             'documentType',
             'vehicleStatus',
-            'properties',
+            'properties.category',
             'user'
         ])->where('ad_status', 'Publikált');
 
@@ -177,7 +177,7 @@ class VehicleController extends Controller
             'salesMethod',
             'documentType',
             'vehicleStatus',
-            'properties'
+            'properties.category'
         ])->where('ad_status', 'Publikált')->findOrFail($id);
 
         return response()->json($vehicle);
@@ -266,7 +266,7 @@ class VehicleController extends Controller
             'salesMethod',
             'documentType',
             'vehicleStatus',
-            'properties',
+            'properties.category',
             'user'
         ];
     }

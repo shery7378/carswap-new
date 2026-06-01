@@ -90,6 +90,24 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.05);
             transform: translateY(-2px);
         }
+
+        /* Custom premium accordion overrides */
+        .accordion-button.collapsed {
+            background-color: rgba(105, 108, 255, 0.03) !important;
+            color: #566a7f !important;
+        }
+        .accordion-button:not(.collapsed) {
+            background-color: rgba(105, 108, 255, 0.08) !important;
+            color: #696cff !important;
+            box-shadow: none !important;
+        }
+        .accordion-button:focus {
+            box-shadow: none !important;
+        }
+        .accordion-item {
+            border: 1px solid rgba(105, 108, 255, 0.16) !important;
+            border-radius: 0.5rem !important;
+        }
     </style>
 @endsection
 
@@ -263,17 +281,112 @@
                         <!-- Extra Features -->
                         <div class="tab-pane fade" id="content-features">
                             <h4 class="mb-4">{{ __('Extra Features') }}</h4>
+                            @php
+                                $vehiclePropertyIds = $vehicle->properties->pluck('id')->toArray();
+                                $grouped = $properties->groupBy('property_category_id');
+                                $leftCol = collect();
+                                $rightCol = collect();
+                                $index = 0;
+                                foreach($grouped as $categoryId => $categoryProps) {
+                                    if ($index % 2 == 0) {
+                                        $leftCol->put($categoryId, $categoryProps);
+                                    } else {
+                                        $rightCol->put($categoryId, $categoryProps);
+                                    }
+                                    $index++;
+                                }
+                            @endphp
                             <div class="row">
-                                @php $vehiclePropertyIds = $vehicle->properties->pluck('id')->toArray(); @endphp
-                                @foreach($properties as $prop)
-                                    <div class="col-md-4 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="properties[]"
-                                                value="{{ $prop->id }}" id="prop_{{ $prop->id }}" {{ in_array($prop->id, $vehiclePropertyIds) ? 'checked' : '' }}>
-                                            <label class="form-check-label" for="prop_{{ $prop->id }}">{{ $prop->name }}</label>
-                                        </div>
+                                <!-- Left Column Accordion -->
+                                <div class="col-md-6">
+                                    <div class="accordion" id="accordionLeft">
+                                        @foreach($leftCol as $categoryId => $categoryProps)
+                                            @php
+                                                $category = $categoryProps->first()->category;
+                                                $categoryName = $category ? $category->name : __('Other / Uncategorized');
+                                                $accordionId = 'category_' . ($categoryId ?? 'other');
+                                                $selectedInThisCategory = $categoryProps->pluck('id')->intersect($vehiclePropertyIds)->count();
+                                                $isOpen = $selectedInThisCategory > 0;
+                                            @endphp
+                                            <div class="card accordion-item border-0 mb-3 shadow-xs rounded overflow-hidden">
+                                                <h2 class="accordion-header" id="heading_{{ $accordionId }}">
+                                                    <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} fw-bold bg-light py-3 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ $accordionId }}" aria-expanded="{{ $isOpen ? 'true' : 'false' }}" aria-controls="collapse_{{ $accordionId }}">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bx bx-category me-2 text-primary"></i> 
+                                                            <span>{{ $categoryName }}</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center me-3">
+                                                            @if($selectedInThisCategory > 0)
+                                                                <span class="badge bg-label-success rounded-pill me-2">{{ $selectedInThisCategory }}</span>
+                                                            @endif
+                                                            <span class="badge bg-label-primary rounded-pill">{{ $categoryProps->count() }}</span>
+                                                        </div>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse_{{ $accordionId }}" class="accordion-collapse collapse {{ $isOpen ? 'show' : '' }}" aria-labelledby="heading_{{ $accordionId }}" data-bs-parent="#accordionLeft">
+                                                    <div class="accordion-body bg-white border-top pt-4 pb-2">
+                                                        <div class="row">
+                                                            @foreach($categoryProps as $prop)
+                                                                <div class="col-sm-6 mb-3">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="properties[]"
+                                                                            value="{{ $prop->id }}" id="prop_{{ $prop->id }}" {{ in_array($prop->id, $vehiclePropertyIds) ? 'checked' : '' }}>
+                                                                        <label class="form-check-label text-dark" for="prop_{{ $prop->id }}">{{ $prop->name }}</label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
                                     </div>
-                                @endforeach
+                                </div>
+                                <!-- Right Column Accordion -->
+                                <div class="col-md-6">
+                                    <div class="accordion" id="accordionRight">
+                                        @foreach($rightCol as $categoryId => $categoryProps)
+                                            @php
+                                                $category = $categoryProps->first()->category;
+                                                $categoryName = $category ? $category->name : __('Other / Uncategorized');
+                                                $accordionId = 'category_' . ($categoryId ?? 'other');
+                                                $selectedInThisCategory = $categoryProps->pluck('id')->intersect($vehiclePropertyIds)->count();
+                                                $isOpen = $selectedInThisCategory > 0;
+                                            @endphp
+                                            <div class="card accordion-item border-0 mb-3 shadow-xs rounded overflow-hidden">
+                                                <h2 class="accordion-header" id="heading_{{ $accordionId }}">
+                                                    <button class="accordion-button {{ $isOpen ? '' : 'collapsed' }} fw-bold bg-light py-3 d-flex align-items-center justify-content-between" type="button" data-bs-toggle="collapse" data-bs-target="#collapse_{{ $accordionId }}" aria-expanded="{{ $isOpen ? 'true' : 'false' }}" aria-controls="collapse_{{ $accordionId }}">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="bx bx-category me-2 text-primary"></i> 
+                                                            <span>{{ $categoryName }}</span>
+                                                        </div>
+                                                        <div class="d-flex align-items-center me-3">
+                                                            @if($selectedInThisCategory > 0)
+                                                                <span class="badge bg-label-success rounded-pill me-2">{{ $selectedInThisCategory }}</span>
+                                                            @endif
+                                                            <span class="badge bg-label-primary rounded-pill">{{ $categoryProps->count() }}</span>
+                                                        </div>
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse_{{ $accordionId }}" class="accordion-collapse collapse {{ $isOpen ? 'show' : '' }}" aria-labelledby="heading_{{ $accordionId }}" data-bs-parent="#accordionRight">
+                                                    <div class="accordion-body bg-white border-top pt-4 pb-2">
+                                                        <div class="row">
+                                                            @foreach($categoryProps as $prop)
+                                                                <div class="col-sm-6 mb-3">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="properties[]"
+                                                                            value="{{ $prop->id }}" id="prop_{{ $prop->id }}" {{ in_array($prop->id, $vehiclePropertyIds) ? 'checked' : '' }}>
+                                                                        <label class="form-check-label text-dark" for="prop_{{ $prop->id }}">{{ $prop->name }}</label>
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

@@ -36,7 +36,7 @@ class VehicleOptionController extends Controller
             'sales_methods' => SalesMethod::orderBy('name')->get(),
             'document_types' => DocumentType::orderBy('name')->get(),
             'vehicle_statuses' => VehicleStatus::orderBy('name')->get(),
-            'properties' => Property::orderBy('name')->get(),
+            'properties' => Property::with('category')->orderBy('name')->get(),
         ]);
     }
 

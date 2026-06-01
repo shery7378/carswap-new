@@ -59,7 +59,7 @@ class AdminVehicleController extends Controller
         $bodyTypes = BodyType::where('is_active', true)->get();
         $salesMethods = SalesMethod::where('is_active', true)->get();
         $vehicleStatuses = VehicleStatus::where('is_active', true)->get();
-        $properties = Property::where('is_active', true)->get();
+        $properties = Property::with('category')->where('is_active', true)->get();
         $colors = Color::where('is_active', true)->get();
         $exteriorColors = Color::where('is_active', true)->where('type', 'exterior')->get();
         $interiorColors = Color::where('is_active', true)->where('type', 'interior')->get();
@@ -198,7 +198,7 @@ class AdminVehicleController extends Controller
         $bodyTypes = BodyType::where('is_active', true)->get();
         $salesMethods = SalesMethod::where('is_active', true)->get();
         $vehicleStatuses = VehicleStatus::where('is_active', true)->get();
-        $properties = Property::where('is_active', true)->get();
+        $properties = Property::with('category')->where('is_active', true)->get();
         $colors = Color::where('is_active', true)->get();
         $exteriorColors = Color::where('is_active', true)->where('type', 'exterior')->get();
         $interiorColors = Color::where('is_active', true)->where('type', 'interior')->get();
