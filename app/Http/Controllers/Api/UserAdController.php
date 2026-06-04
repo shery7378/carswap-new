@@ -543,7 +543,7 @@ class UserAdController extends Controller
         // 1. Check Garage (Total) Limit
         if (!$isUpdate) {
             $garageAdsLimit = (int) $plan->garage_ads_limit;
-            if ($garageAdsLimit > 0) {
+            if ($garageAdsLimit !== -1) {
                 $totalCount = Vehicle::where('user_id', $user->id)
                     ->whereIn('ad_status', ['Publikált', 'Függőben', 'Piszkozat', 'Elutasítva'])
                     ->count();
@@ -570,7 +570,7 @@ class UserAdController extends Controller
 
             if ($shouldCheckActive) {
                 $activeAdsLimit = (int) $plan->active_ads_limit;
-                if ($activeAdsLimit > 0) {
+                if ($activeAdsLimit !== -1) {
                     $activeCount = Vehicle::where('user_id', $user->id)
                         ->whereIn('ad_status', ['Publikált', 'Függőben'])
                         ->count();
@@ -590,29 +590,31 @@ class UserAdController extends Controller
             $hdQuota = (int) $plan->hd_images;
             
             // If quota is 0 (like Free plan), they can't have more than 6 images
-            if ($hdQuota <= 0) {
+            if ($hdQuota === 0) {
                 return response()->json([
                     'success' => false,
                     'message' => "Your plan only allows up to 6 gallery images per ad. Please upgrade for HD ads.",
                 ], 403);
             }
 
-            // Count how many HD ads they currently have
-            // and exclude the current one if it's an update and was already HD
-            $hdAdsQuery = Vehicle::where('user_id', $user->id)
-                ->whereRaw("JSON_LENGTH(gallery_images) > 6");
+            if ($hdQuota !== -1) {
+                // Count how many HD ads they currently have
+                // and exclude the current one if it's an update and was already HD
+                $hdAdsQuery = Vehicle::where('user_id', $user->id)
+                    ->whereRaw("JSON_LENGTH(gallery_images) > 6");
             
             if ($vehicleId) {
                 $hdAdsQuery->where('id', '!=', $vehicleId);
             }
 
-            $currentHdCount = $hdAdsQuery->count();
+                $currentHdCount = $hdAdsQuery->count();
 
-            if ($currentHdCount >= $hdQuota) {
-                return response()->json([
-                    'success' => false,
-                    'message' => "You have reached your limit of {$hdQuota} HD ads. Please remove images from other ads or upgrade your plan.",
-                ], 403);
+                if ($currentHdCount >= $hdQuota) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => "You have reached your limit of {$hdQuota} HD ads. Please remove images from other ads or upgrade your plan.",
+                    ], 403);
+                }
             }
         }
 
