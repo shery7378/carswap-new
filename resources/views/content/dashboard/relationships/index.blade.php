@@ -807,6 +807,9 @@
         text-align: left !important;
         justify-content: flex-start !important;
     }
+    .relationships-card .dataTables_length {
+        margin-left: 0.80rem;
+    }
     .dataTables_filter input {
         width: 100% !important;
         margin-left: 0 !important;
