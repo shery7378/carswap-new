@@ -37,6 +37,12 @@
     white-space: nowrap;
   }
 
+  .dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
   /* RIGHT SIDE */
   .dataTables_filter {
     display: flex;
@@ -103,6 +109,13 @@
     .dataTables_wrapper .row {
       flex-direction: column;
       align-items: stretch;
+    }
+
+    .admin-card .dataTables_length {
+      justify-content: flex-start;
+      margin-left: 0.75rem;
+      margin-bottom: 0.5rem;
+      width: calc(100% - 1.5rem);
     }
 
     .dataTables_filter {

@@ -490,6 +490,12 @@
             align-items: center;
         }
 
+        .dataTables_length label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
         .dataTables_length select {
             padding: .25rem 1.5rem .25rem .5rem !important;
             border-radius: 6px !important;

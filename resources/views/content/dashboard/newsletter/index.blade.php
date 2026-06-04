@@ -119,6 +119,12 @@
         align-items: center;
     }
 
+    .dataTables_length label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+    }
+
     .newsletter-toolbar-row > div {
         margin-bottom: 0 !important;
     }

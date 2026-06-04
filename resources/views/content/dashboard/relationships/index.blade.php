@@ -690,6 +690,12 @@
     background: #fcfcfd;
 }
 
+.relationships-card .dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
 .relationships-card .table thead th {
     font-size: 0.68rem;
     font-weight: 700;
@@ -809,6 +815,11 @@
     }
     .relationships-card .dataTables_length {
         margin-left: 0.80rem;
+    }
+    .relationships-card .dataTables_length label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
     }
     .dataTables_filter input {
         width: 100% !important;

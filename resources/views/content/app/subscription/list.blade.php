@@ -245,6 +245,11 @@
     padding: 0.45rem 0.8rem !important;
     border: 1px solid #d9dee3 !important;
 }
+.dataTables_length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
 .dataTables_info {
     white-space: normal !important;
 }

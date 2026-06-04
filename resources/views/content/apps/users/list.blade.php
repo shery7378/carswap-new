@@ -486,6 +486,7 @@ $(document).ready(function () {
 <style>
     .dataTables_filter input { border-radius: 12px; padding: 8px 12px; border: 1px solid #e2e8f0; width: 250px; background: #f8fafc; transition: all 0.2s; }
     .dataTables_filter input:focus { width: 300px; border-color: #696cff; outline: none; box-shadow: 0 0 0 3px rgba(105, 108, 255, 0.1); }
+    .dataTables_length label { display: inline-flex; align-items: center; gap: 0.45rem; }
     
     .dataTables_info { white-space: normal !important; }
     .dataTables_paginate { margin-top: 0.25rem; }
@@ -665,7 +666,7 @@ $(document).ready(function () {
                             justify-content: flex-start !important;
                             display: flex;
                             align-items: center;
-                            gap: 5px;
+                            gap: 0.45rem;
                             margin-bottom: 10px;
                         }
 
