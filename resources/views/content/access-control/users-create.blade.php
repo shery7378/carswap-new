@@ -117,6 +117,7 @@
                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                 <input type="password" class="form-control" name="password" placeholder="············" required />
               </div>
+              @error('password')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
           </div>
 
