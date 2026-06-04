@@ -82,7 +82,7 @@ class StoreAdRequest extends FormRequest
             // Accepts up to 8 gallery images (landscape, max 10 MB each)
             // ----------------------------------------------------------------
             'main_image'         => 'nullable|image|mimes:jpg,jpeg,png,webp|max:10240',
-            'gallery_images'     => 'nullable|array|max:12',
+            'gallery_images'     => 'nullable|array|max:30',
             'gallery_images.*'   => 'image|mimes:jpg,jpeg,png,webp|max:10240',
             'video_url'          => 'nullable|url|max:500',
 
@@ -150,7 +150,7 @@ class StoreAdRequest extends FormRequest
             'battery_capacity.numeric'   => 'Battery capacity must be a number.',
             'range.integer'              => 'Range must be an integer.',
             'price.required'             => 'Price is required.',
-            'gallery_images.max'         => 'You can upload a maximum of 12 pictures.',
+            'gallery_images.max'         => 'You can upload a maximum of 30 pictures.',
             'gallery_images.*.max'       => 'Each image must be less than 10 MB.',
             'gallery_images.*.mimes'     => 'Supported image types: jpg, jpeg, png, webp.',
             'main_image.mimes'           => 'Supported image types: jpg, jpeg, png, webp.',
