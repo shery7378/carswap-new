@@ -156,7 +156,7 @@ class SubscriptionController extends Controller
 
         // ── Active Ads Usage ──────────────────────────────────────────────────
         $activeAdsLimit = (int) $plan->active_ads_limit;
-        $isUnlimitedAds = $activeAdsLimit <= 0;
+        $isUnlimitedAds = $activeAdsLimit === -1;
         $usedActiveAds = \App\Models\Vehicle::where('user_id', $user->id)
             ->whereIn('ad_status', ['published', 'pending'])
             ->count();
@@ -164,7 +164,7 @@ class SubscriptionController extends Controller
 
         // ── Garage (Inventory) Usage ──────────────────────────────────────────
         $garageAdsLimit = (int) ($plan->garage_ads_limit ?? 0);
-        $isUnlimitedGarage = $garageAdsLimit <= 0;
+        $isUnlimitedGarage = $garageAdsLimit === -1;
         // Inventory includes published, pending, draft, and rejected.
         $usedGarageAds = \App\Models\Vehicle::where('user_id', $user->id)
             ->whereIn('ad_status', ['published', 'pending', 'draft', 'rejected'])
