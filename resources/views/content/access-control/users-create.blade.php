@@ -129,7 +129,7 @@
             <div class="d-flex flex-wrap gap-2">
               @foreach($roles as $role)
               @php $oldRole = in_array($role->name, old('roles', [])); @endphp
-	              <label class="perm-action-pill {{ $oldRole ? 'is-checked' : '' }}" onclick="togglePill(this)" style="font-size:13px; padding:7px 18px;">
+	              <label class="perm-action-pill {{ $oldRole ? 'is-checked' : '' }}" onclick="toggleRolePill(this)" style="font-size:13px; padding:7px 18px;">
 	                <input type="checkbox" name="roles[]" value="{{ $role->name }}" {{ $oldRole ? 'checked' : '' }}>
 	                <i class="bx bx-shield-quarter"></i> {{ $roleLabels[$role->name] ?? ucfirst(str_replace('-', ' ', $role->name)) }}
 	              </label>
@@ -214,6 +214,18 @@
     cb.checked = !cb.checked;
     label.classList.toggle('is-checked', cb.checked);
   }
+  function toggleRolePill(label) {
+    const cb = label.querySelector('input[type="checkbox"]');
+    const willCheck = !cb.checked;
+
+    document.querySelectorAll('input[name="roles[]"]').forEach(roleInput => {
+      roleInput.checked = false;
+      roleInput.closest('.perm-action-pill').classList.remove('is-checked');
+    });
+
+    cb.checked = willCheck;
+    label.classList.toggle('is-checked', willCheck);
+  }
   function toggleModule(moduleId, checked) {
     document.querySelectorAll('#' + moduleId + ' .perm-action-pill').forEach(pill => {
       const cb = pill.querySelector('input');
@@ -222,8 +234,8 @@
     });
   }
   function toggleAllPerms(checked) {
-    document.querySelectorAll('.perm-action-pill').forEach(pill => {
-      const cb = pill.querySelector('input');
+    document.querySelectorAll('input[name="permissions[]"]').forEach(cb => {
+      const pill = cb.closest('.perm-action-pill');
       cb.checked = checked;
       pill.classList.toggle('is-checked', checked);
     });
