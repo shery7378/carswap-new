@@ -41,6 +41,9 @@
     .select2-container--open {
         z-index: 1085;
     }
+    .swal2-container {
+        z-index: 2000 !important;
+    }
     /* Global Premium Pagination Styling */
     .pagination .page-item .page-link {
         border-radius: 6px !important;
