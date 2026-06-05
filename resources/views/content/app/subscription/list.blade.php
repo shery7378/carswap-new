@@ -95,7 +95,7 @@
                                                 <i class="bx bx-pause-circle"></i>
                                             </button>
                                         @else
-                                            <button class="btn-action edit" style="background-color: #e8f5e9 !important; color: #4caf50 !important;" data-id="{{ $subscription->id }}" data-status="active" data-bs-toggle="tooltip" title="{{ __('Reactivate') }}">
+                                            <button class="btn-action edit status-toggle-btn" style="background-color: #e8f5e9 !important; color: #4caf50 !important;" data-id="{{ $subscription->id }}" data-status="active" data-bs-toggle="tooltip" title="{{ __('Reactivate') }}">
                                                 <i class="bx bx-play-circle"></i>
                                             </button>
                                         @endif
@@ -197,24 +197,55 @@
             var url = '{{ route("app-subscription-status", ":id") }}'.replace(':id', id);
 
             var confirmMsg = status == 'active' ? "{{ __('Are you sure you want to reactivate this subscription?') }}" : "{{ __('Are you sure you want to suspend this subscription?') }}";
-            if(confirm(confirmMsg)) {
-                $.ajax({
-                    url: url,
-                    method: 'PATCH',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        status: status
-                    },
-                    success: function(response) {
-                        if(response.success) {
-                            location.reload();
+            
+            Swal.fire({
+                title: '{{ __('Are you sure?') }}',
+                text: confirmMsg,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: '{{ __('Yes') }}',
+                cancelButtonText: '{{ __('Cancel') }}',
+                customClass: {
+                    confirmButton: 'btn btn-primary me-3',
+                    cancelButton: 'btn btn-label-secondary'
+                },
+                buttonsStyling: false
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        url: url,
+                        method: 'PATCH',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            status: status
+                        },
+                        success: function(response) {
+                            if(response.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __('Success!') }}',
+                                    text: response.message || '{{ __('Status updated successfully!') }}',
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            }
+                        },
+                        error: function() {
+                            Swal.fire({
+                                icon: 'error',
+                                title: '{{ __('Error!') }}',
+                                text: '{{ __('Something went wrong!') }}',
+                                customClass: {
+                                    confirmButton: 'btn btn-primary'
+                                },
+                                buttonsStyling: false
+                            });
                         }
-                    },
-                    error: function() {
-                        alert("{{ __('Something went wrong!') }}");
-                    }
-                });
-            }
+                    });
+                }
+            });
         });
     });
 </script>
