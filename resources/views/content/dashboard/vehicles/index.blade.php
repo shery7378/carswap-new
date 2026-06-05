@@ -215,12 +215,6 @@
                                         </td>
                                     </tr>
                                 @empty
-                                    <tr>
-                                        <td colspan="9" class="text-center py-4 text-muted">
-                                            <i class="bx bx-car fs-2 d-block mb-2"></i>
-                                            {{ __('No vehicles found.') }}
-                                        </td>
-                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -254,6 +248,8 @@
 
             // ── DataTable ────────────────────────────────────────────────────────
             if ($.fn.DataTable) {
+                $.fn.dataTable.ext.errMode = 'none';
+
                 $('#vehicles-table').DataTable({
                     order: [[1, 'asc']],
                     pageLength: 25,
@@ -268,8 +264,13 @@
                         "<'col-12 col-md-auto mb-2 mb-md-0 text-center text-md-start'i>" +
                         "<'col-12 col-md-auto d-flex justify-content-center justify-content-md-end'p>" +
                         ">",
-                    language: {
+                    oldLanguage: {
                         searchPlaceholder: "{{ __('Quick Search Vehicles…') }}"
+                    },
+                    language: {
+                        searchPlaceholder: "{{ __('Quick Search Vehicles') }}",
+                        emptyTable: "{{ __('Nem található jármű.') }}",
+                        zeroRecords: "{{ __('Nem található jármű.') }}"
                     },
                     columnDefs: [
                         { orderable: false, targets: [0, 6, 7, 8, 9] }
@@ -541,7 +542,7 @@
             transform: scale(1.002);
         }
 
-        /* ── Status dropdown z-index ────────────────────────── */
+        /* ── Header filters and status dropdown z-index ────────────────────────── */
         .table-responsive { overflow-y: visible; }
         #vehicles-table tbody tr.status-dropdown-open { position: relative; z-index: 1065; }
         .td-status { position: relative; }
@@ -687,11 +688,11 @@
             min-width: 98px;
         }
 
-        /* ── STICKY HEADER – always above table rows ─────── */
+        /* ── STICKY HEADER – below open filters, above normal rows ─────── */
         #vehicles-table thead th {
             position: sticky;
             top: 0;
-            z-index: 1068;           /* Above row (1065) and dropdown-menu (1067) – header never gets covered */
+            z-index: 1068;
             background: var(--bs-body-bg, #fff);
             box-shadow: 0 1px 2px rgba(0, 0, 0, .08);
         }

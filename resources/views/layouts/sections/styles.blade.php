@@ -36,6 +36,10 @@
     .select2-container--bootstrap-5 .select2-dropdown {
         border-color: #d9dee3;
         box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45);
+        z-index: 1085;
+    }
+    .select2-container--open {
+        z-index: 1085;
     }
     /* Global Premium Pagination Styling */
     .pagination .page-item .page-link {
