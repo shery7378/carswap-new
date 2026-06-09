@@ -28,7 +28,7 @@ class VehicleController extends Controller
             'vehicleStatus',
             'properties.category',
             'user'
-        ])->where('ad_status', 'Publikált');
+        ])->where('ad_status', 'Publikált')->where('is_active', true);
 
         // Filtering by Featured Status
         if ($request->has('featured')) {
@@ -178,7 +178,7 @@ class VehicleController extends Controller
             'documentType',
             'vehicleStatus',
             'properties.category'
-        ])->where('ad_status', 'Publikált')->findOrFail($id);
+        ])->where('ad_status', 'Publikált')->where('is_active', true)->findOrFail($id);
 
         return response()->json($vehicle);
     }
@@ -198,6 +198,7 @@ class VehicleController extends Controller
             'user'
         ])
             ->where('ad_status', 'Publikált')
+            ->where('is_active', true)
             ->where('user_id', $vehicle->user_id) // Same user
             ->where('id', '!=', $vehicle->id) // Exclude the current vehicle
             ->orderBy('id', 'desc')
@@ -221,6 +222,7 @@ class VehicleController extends Controller
         // Fetch New (Novel/Újszerű) vehicles
         $newCars = Vehicle::with($this->getRelations())
             ->where('ad_status', 'Publikált')
+            ->where('is_active', true)
             ->whereHas('vehicleStatus', function ($q) {
                 $q->whereIn('name', ['Novel', 'Újszerű'])
                   ->orWhere('id', 1);
@@ -232,6 +234,7 @@ class VehicleController extends Controller
         // Fetch Used (Used/Használt) vehicles
         $usedCars = Vehicle::with($this->getRelations())
             ->where('ad_status', 'Publikált')
+            ->where('is_active', true)
             ->whereHas('vehicleStatus', function ($q) {
                 $q->whereIn('name', ['Used', 'Használt'])
                   ->orWhere('id', 2);

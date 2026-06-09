@@ -40,7 +40,8 @@ class UserAdController extends Controller
     public function index(Request $request): JsonResponse
     {
         $query = Vehicle::with($this->relations)
-            ->where('ad_status', 'Publikált');
+            ->where('ad_status', 'Publikált')
+            ->where('is_active', true);
 
         // --- Filtering ---
         $filters = [
@@ -537,6 +538,52 @@ class UserAdController extends Controller
             'message'    => 'A jármű sikeresen eladottnak jelölve.',
             'ad_status'  => $vehicle->ad_status,
             'data'       => $vehicle->load($this->relations),
+        ]);
+    }
+
+    // =========================================================================
+    // AUTHENTICATED: PATCH /api/ads/{id}/toggle-active
+    // Deactivate or reactivate an ad without changing its approval status
+    // =========================================================================
+    public function toggleActive(Request $request, int $id): JsonResponse
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        // Ownership check
+        if ($vehicle->user_id !== $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nincs jogosultsága módosítani ezt a hirdetést.',
+            ], 403);
+        }
+
+        $request->validate([
+            'is_active' => 'required|boolean',
+        ]);
+
+        $newIsActive = $request->input('is_active');
+
+        // If reactivating and it's a published/pending ad, check subscription limits
+        if ($newIsActive && in_array($vehicle->ad_status, ['Publikált', 'Függőben'])) {
+            $limitCheck = $this->checkSubscriptionLimits(
+                $request->user(), 
+                false, 
+                true, 
+                count($vehicle->gallery_images ?? []), 
+                $vehicle->id
+            );
+            
+            if ($limitCheck !== true) {
+                return $limitCheck;
+            }
+        }
+
+        $vehicle->update(['is_active' => $newIsActive]);
+
+        return response()->json([
+            'success' => true,
+            'message' => $newIsActive ? 'A hirdetés sikeresen aktiválva.' : 'A hirdetés sikeresen inaktiválva.',
+            'is_active' => $vehicle->is_active,
         ]);
     }
 

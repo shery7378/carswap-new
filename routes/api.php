@@ -116,6 +116,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/ads/{id}', [UserAdController::class, 'update']); // Combined update method using POST for file support
     Route::delete('/ads/{id}', [UserAdController::class, 'destroy']);
     Route::patch('/ads/{id}/status', [UserAdController::class, 'changeStatus']);
+    Route::patch('/ads/{id}/toggle-active', [UserAdController::class, 'toggleActive']);
     Route::patch('/ads/{id}/mark-as-sold', [UserAdController::class, 'markAsSold']);
 
     // Trade Offer from Garage

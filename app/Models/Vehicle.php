@@ -52,6 +52,7 @@ class Vehicle extends Model
         'history_report',
         'owner_type',
         'exchange_preferences',
+        'is_active',
     ];
 
     protected $appends = ['main_image_url', 'gallery_image_urls', 'document_urls', 'is_favorited', 'status', 'posted_by'];
@@ -63,6 +64,7 @@ class Vehicle extends Model
         'technical_expiration' => 'date:Y-m-d',
         'request_price_option' => 'boolean',
         'exchange_preferences' => 'json',
+        'is_active'            => 'boolean',
     ];
 
     public function getPostedByAttribute(): ?string
