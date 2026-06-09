@@ -507,6 +507,40 @@ class UserAdController extends Controller
     }
 
     // =========================================================================
+    // AUTHENTICATED: PATCH /api/ads/{id}/mark-as-sold
+    // Mark a vehicle ad as sold (owner only)
+    // =========================================================================
+    public function markAsSold(Request $request, int $id): JsonResponse
+    {
+        $vehicle = Vehicle::findOrFail($id);
+
+        // Ownership check
+        if ($vehicle->user_id !== $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Nincs jogosultsága módosítani ezt a hirdetést.',
+            ], 403);
+        }
+
+        // Prevent marking an already-sold vehicle again
+        if ($vehicle->ad_status === 'Eladva') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Ez a jármű már eladottként van jelölve.',
+            ], 422);
+        }
+
+        $vehicle->update(['ad_status' => 'Eladva']);
+
+        return response()->json([
+            'success'    => true,
+            'message'    => 'A jármű sikeresen eladottnak jelölve.',
+            'ad_status'  => $vehicle->ad_status,
+            'data'       => $vehicle->load($this->relations),
+        ]);
+    }
+
+    // =========================================================================
     // Private helper: auto-generate ad title
     // =========================================================================
     private function generateTitle(array $data): string
