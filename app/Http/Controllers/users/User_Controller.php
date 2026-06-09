@@ -175,4 +175,24 @@ class User_Controller extends Controller
             'message' => 'Password updated successfully for ' . $user->first_name
         ]);
     }
+
+    public function verifyEmail($id)
+    {
+        $user = User::findOrFail($id);
+
+        if ($user->email_verified_at) {
+            return response()->json([
+                'success' => false,
+                'message' => 'This user email is already verified.',
+            ], 422);
+        }
+
+        $user->email_verified_at = now();
+        $user->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => $user->first_name . ' email address has been verified successfully.',
+        ]);
+    }
 }

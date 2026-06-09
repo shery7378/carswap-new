@@ -210,9 +210,16 @@
                                                 </div>
                                             </div>
                                             @if(!$user->email_verified_at)
-                                                <button class="btn btn-sm btn-label-primary">Verify Manually</button>
+                                                <button
+                                                    type="button"
+                                                    class="btn btn-sm btn-label-primary verify-email-btn"
+                                                    id="verify-email-btn-{{ $user->id }}"
+                                                    data-id="{{ $user->id }}"
+                                                    data-url="{{ route('admin.web-users.verify-email', $user->id) }}">
+                                                    <i class="bx bx-check-shield me-1"></i> Verify Manually
+                                                </button>
                                             @else
-                                                <span class="badge bg-success">Verified</span>
+                                                <span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>Verified</span>
                                             @endif
                                         </div>
                                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center py-4 border-bottom">
@@ -303,3 +310,56 @@
 .font-secondary { font-family: 'Outfit', sans-serif; letter-spacing: 0.02em; }
 .text-xs { font-size: 0.75rem; }
 </style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.verify-email-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const userId  = this.getAttribute('data-id');
+            const url     = this.getAttribute('data-url');
+            const btnEl   = this;
+
+            // Disable & show spinner
+            btnEl.disabled = true;
+            btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verifying...';
+
+            fetch(url, {
+                method: 'PATCH',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(function (res) { return res.json(); })
+            .then(function (data) {
+                if (data.success) {
+                    // Replace button with verified badge
+                    btnEl.outerHTML = '<span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>Verified</span>';
+
+                    // Update the icon above from danger to success
+                    const iconWrapper = document.querySelector('#verify-email-btn-' + userId)?.closest('.list-group-item')?.querySelector('.avatar');
+                    if (iconWrapper) {
+                        iconWrapper.classList.remove('bg-label-danger');
+                        iconWrapper.classList.add('bg-label-success');
+                        const icon = iconWrapper.querySelector('i');
+                        if (icon) { icon.classList.replace('bx-error-circle', 'bx-badge-check'); }
+                    }
+
+                    // Show success message
+                    alert(data.message);
+                } else {
+                    alert(data.message || 'Could not verify email.');
+                    btnEl.disabled = false;
+                    btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> Verify Manually';
+                }
+            })
+            .catch(function () {
+                alert('An error occurred. Please try again.');
+                btnEl.disabled = false;
+                btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> Verify Manually';
+            });
+        });
+    });
+});
+</script>

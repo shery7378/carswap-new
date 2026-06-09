@@ -210,6 +210,7 @@ Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-g
         Route::patch('/app/users/{id}/status', [User_Controller::class, 'updateStatus'])->name('admin.web-users.update-status');
         Route::post('/app/users/reset-password', [User_Controller::class, 'sendResetLink'])->name('admin.web-users.reset-password');
         Route::post('/app/users/{id}/change-password', [User_Controller::class, 'changePassword'])->name('admin.web-users.change-password');
+        Route::patch('/app/users/{id}/verify-email', [User_Controller::class, 'verifyEmail'])->name('admin.web-users.verify-email');
     });
 
     // Main VEHICLES Module
