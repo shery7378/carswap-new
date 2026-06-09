@@ -312,53 +312,75 @@
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.verify-email-btn').forEach(function (btn) {
-        btn.addEventListener('click', function () {
-            const userId  = this.getAttribute('data-id');
-            const url     = this.getAttribute('data-url');
-            const btnEl   = this;
+document.querySelectorAll('.verify-email-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        const userId  = this.getAttribute('data-id');
+        const url     = this.getAttribute('data-url');
+        const btnEl   = this;
 
-            // Disable & show spinner
-            btnEl.disabled = true;
-            btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> {{ __('Verifying...') }}';
+        // Disable & show spinner
+        btnEl.disabled = true;
+        btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> {{ __('Verifying...') }}';
 
-            fetch(url, {
-                method: 'PATCH',
-                headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-            })
-            .then(function (res) { return res.json(); })
-            .then(function (data) {
-                if (data.success) {
-                    // Replace button with verified badge
-                    btnEl.outerHTML = '<span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>{{ __('Verified') }}</span>';
+        fetch(url, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(function (res) { return res.json(); })
+        .then(function (data) {
+            if (data.success) {
+                // Replace button with verified badge
+                btnEl.outerHTML = '<span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>{{ __('Verified') }}</span>';
 
-                    // Update the icon above from danger to success
-                    const iconWrapper = document.querySelector('#verify-email-btn-' + userId)?.closest('.list-group-item')?.querySelector('.avatar');
-                    if (iconWrapper) {
-                        iconWrapper.classList.remove('bg-label-danger');
-                        iconWrapper.classList.add('bg-label-success');
-                        const icon = iconWrapper.querySelector('i');
-                        if (icon) { icon.classList.replace('bx-error-circle', 'bx-badge-check'); }
-                    }
-
-                    // Show success message
-                    alert(data.message);
-                } else {
-                    alert(data.message || '{{ __('Could not verify email.') }}');
-                    btnEl.disabled = false;
-                    btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}';
+                // Update the icon above from danger to success
+                const iconWrapper = document.querySelector('#verify-email-btn-' + userId)?.closest('.list-group-item')?.querySelector('.avatar');
+                if (iconWrapper) {
+                    iconWrapper.classList.remove('bg-label-danger');
+                    iconWrapper.classList.add('bg-label-success');
+                    const icon = iconWrapper.querySelector('i');
+                    if (icon) { icon.classList.replace('bx-error-circle', 'bx-badge-check'); }
                 }
-            })
-            .catch(function () {
-                alert('{{ __('An error occurred. Please try again.') }}');
+
+                // Show success message
+                Swal.fire({
+                    title: '{{ __('Success!') }}',
+                    text: data.message,
+                    icon: 'success',
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
+            } else {
+                Swal.fire({
+                    title: '{{ __('Error!') }}',
+                    text: data.message || '{{ __('Could not verify email.') }}',
+                    icon: 'error',
+                    customClass: {
+                        confirmButton: 'btn btn-primary'
+                    },
+                    buttonsStyling: false
+                });
                 btnEl.disabled = false;
                 btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}';
+            }
+        })
+        .catch(function () {
+            Swal.fire({
+                title: '{{ __('Error!') }}',
+                text: '{{ __('An error occurred. Please try again.') }}',
+                icon: 'error',
+                customClass: {
+                    confirmButton: 'btn btn-primary'
+                },
+                buttonsStyling: false
             });
+            btnEl.disabled = false;
+            btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}';
         });
     });
 });
