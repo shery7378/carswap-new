@@ -19,7 +19,7 @@
                         <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
                         <small class="text-muted"><i class="bx bx-id-card me-1"></i> ID: #{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</small>
                         <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
-                        <small class="fw-bold text-{{ $user->status == 'active' ? 'success' : 'danger' }}"><i class="bx bx-check-circle me-1"></i> {{ ucfirst($user->status ?: 'active') }}</small>
+                        <small class="fw-bold text-{{ $user->status == 'active' ? 'success' : 'danger' }}"><i class="bx bx-check-circle me-1"></i> {{ __(ucfirst($user->status ?: 'active')) }}</small>
                     </div>
                 </div>
             </div>
@@ -47,7 +47,7 @@
                                 </div>
                             @endif
                             <span class="position-absolute bottom-0 end-0 m-3 badge bg-white text-primary shadow-sm px-3 py-2 rounded-pill fw-bold border">
-                                <i class="bx bx-shield-alt me-1"></i> {{ $user->role ?? 'Regular' }}
+                                <i class="bx bx-shield-alt me-1"></i> {{ __(ucfirst($user->role ?? 'Regular')) }}
                             </span>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
                                             <div class="p-3 bg-white border rounded shadow-xs">
                                                 <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Official Designation') }}</small>
                                                 <div class="d-flex align-items-center gap-2 mt-1">
-                                                    <span class="badge bg-primary px-3 text-capitalize">{{ $user->role ?? 'Regular' }}</span>
+                                                    <span class="badge bg-primary px-3 text-capitalize">{{ __(ucfirst($user->role ?? 'Regular')) }}</span>
                                                     @if($user->is_trader)
                                                         <span class="badge bg-info"><i class="bx bxs-badge-check me-1"></i>{{ __('Verified Trader') }}</span>
                                                     @endif

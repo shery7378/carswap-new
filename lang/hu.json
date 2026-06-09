@@ -1013,5 +1013,6 @@
     "Close View": "Nézet bezárása",
     "Verifying...": "Ellenőrzés...",
     "Could not verify email.": "Nem sikerült ellenőrizni az e-mail-t.",
-    "An error occurred. Please try again.": "Hiba történt. Kérjük próbálkozzon újra."
+    "An error occurred. Please try again.": "Hiba történt. Kérjük próbálkozzon újra.",
+    "Regular": "Általános felhasználó"
 }
