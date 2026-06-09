@@ -176,6 +176,21 @@ class RegisterController extends Controller
         }
 
         if ($user->status !== 'active') {
+            if ($user->status === 'banned') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your account has been permanently banned.'
+                ], 403);
+            }
+
+            if ($user->status === 'suspended') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Your account is currently suspended. Please contact support.'
+                ], 403);
+            }
+
+            // Fallback for 'inactive' accounts (pending email verification)
             return response()->json([
                 'success' => false,
                 'message' => 'Please verify your email address before logging in.'
