@@ -69,7 +69,7 @@
                                 <option value="active" selected>Active</option>
                                 <option value="inactive">Inactive</option>
                                 <option value="pending">Pending</option>
-                                <option value="suspended">Suspended</option>
+
                             </select>
                         </div>
                         <div class="col-12">

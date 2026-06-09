@@ -183,13 +183,6 @@ class RegisterController extends Controller
                 ], 403);
             }
 
-            if ($user->status === 'suspended') {
-                return response()->json([
-                    'success' => false,
-                    'message' => __('Your account is currently suspended. Please contact support.')
-                ], 403);
-            }
-
             // Fallback for 'inactive' accounts (pending email verification)
             return response()->json([
                 'success' => false,
