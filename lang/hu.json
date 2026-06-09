@@ -1014,5 +1014,9 @@
     "Verifying...": "Ellenőrzés...",
     "Could not verify email.": "Nem sikerült ellenőrizni az e-mail-t.",
     "An error occurred. Please try again.": "Hiba történt. Kérjük próbálkozzon újra.",
-    "Regular": "Általános felhasználó"
+    "Regular": "Általános felhasználó",
+    "Invalid credentials": "Érvénytelen bejelentkezési adatok",
+    "Your account has been permanently banned.": "A fiókját véglegesen kitiltottuk.",
+    "Your account is currently suspended. Please contact support.": "A fiókja jelenleg fel van függesztve. Kérjük, vegye fel a kapcsolatot az ügyfélszolgálattal.",
+    "Please verify your email address before logging in.": "Kérjük, bejelentkezés előtt ellenőrizze az e-mail címét."
 }

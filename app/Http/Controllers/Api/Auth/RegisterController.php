@@ -171,7 +171,7 @@ class RegisterController extends Controller
         if (!$user || !Hash::check($validated['password'], $user->password)) {
             return response()->json([
                 'success' => false,
-                'message' => 'Invalid credentials'
+                'message' => __('Invalid credentials')
             ], 401);
         }
 
@@ -179,21 +179,21 @@ class RegisterController extends Controller
             if ($user->status === 'banned') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Your account has been permanently banned.'
+                    'message' => __('Your account has been permanently banned.')
                 ], 403);
             }
 
             if ($user->status === 'suspended') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Your account is currently suspended. Please contact support.'
+                    'message' => __('Your account is currently suspended. Please contact support.')
                 ], 403);
             }
 
             // Fallback for 'inactive' accounts (pending email verification)
             return response()->json([
                 'success' => false,
-                'message' => 'Please verify your email address before logging in.'
+                'message' => __('Please verify your email address before logging in.')
             ], 403);
         }
 
