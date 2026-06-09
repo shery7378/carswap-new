@@ -79,10 +79,12 @@
               </select>
             </div>
             <div class="col-md-6 mb-3 d-flex align-items-center mt-3">
-              <div class="form-check form-switch card-body bg-label-primary rounded p-3 m-0 shadow-xs border border-primary border-opacity-25">
-                <input class="form-check-input" type="checkbox" name="is_trader" value="1" id="is_trader" {{ old('is_trader') ? 'checked' : '' }}>
-                <label class="form-check-label fw-bold" for="is_trader">Verified Trader Account</label>
-                <small class="text-muted d-block small">Traders get a "Verified Trader" badge across the platform.</small>
+              <div class="w-100 bg-label-primary rounded p-3 shadow-xs border border-primary border-opacity-25">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" name="is_trader" value="1" id="is_trader" {{ old('is_trader') ? 'checked' : '' }}>
+                  <label class="form-check-label fw-bold text-primary" for="is_trader">Verified Trader Account</label>
+                  <small class="text-muted d-block small mt-1">Traders get a "Verified Trader" badge across the platform.</small>
+                </div>
               </div>
             </div>
           </div>
