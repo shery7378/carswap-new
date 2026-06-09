@@ -54,22 +54,22 @@
 
                     <!-- Quick Details List -->
                     <div class="user-stats-card p-4 bg-white rounded border shadow-xs">
-                        <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2 font-secondary">Engagement Overview</h6>
+                        <h6 class="fw-bold mb-3 small text-uppercase border-bottom pb-2 font-secondary">{{ __('Engagement Overview') }}</h6>
                         <div class="list-group list-group-flush">
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent py-3">
-                                <span class="text-muted small"><i class="bx bx-car me-2"></i>Total Postings</span>
+                                <span class="text-muted small"><i class="bx bx-car me-2"></i>{{ __('Total Postings') }}</span>
                                 <span class="fw-bold fs-5">{{ $totalPostings }}</span>
                             </div>
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent py-3">
-                                <span class="text-muted small"><i class="bx bx-heart me-2"></i>Favorites Count</span>
+                                <span class="text-muted small"><i class="bx bx-heart me-2"></i>{{ __('Favorites Count') }}</span>
                                 <span class="fw-bold fs-5">{{ $totalFavorites }}</span>
                             </div>
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent py-3">
-                                <span class="text-muted small"><i class="bx bx-trophy me-2"></i>Active Plan</span>
+                                <span class="text-muted small"><i class="bx bx-trophy me-2"></i>{{ __('Active Plan') }}</span>
                                 <span class="badge bg-label-info fw-bold">{{ $activePlan }}</span>
                             </div>
                             <div class="list-group-item px-0 d-flex justify-content-between align-items-center bg-transparent py-3">
-                                <span class="text-muted small"><i class="bx bx-calendar me-2"></i>Member Since</span>
+                                <span class="text-muted small"><i class="bx bx-calendar me-2"></i>{{ __('Member Since') }}</span>
                                 <span class="fw-bold">{{ $user->created_at->formatDate() }}</span>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
 
                     <!-- Social Presence -->
                     <div class="mt-4">
-                        <h6 class="fw-bold mb-3 small text-uppercase px-2">Social presence</h6>
+                        <h6 class="fw-bold mb-3 small text-uppercase px-2">{{ __('Social Presence') }}</h6>
                         <div class="d-flex gap-2 px-1">
                             <a @if($user->facebook) href="{{ $user->facebook }}" target="_blank" @endif class="social-btn @if($user->facebook) active fb @endif" title="Facebook"><i class="bx bxl-facebook"></i></a>
                             <a @if($user->instagram) href="{{ $user->instagram }}" target="_blank" @endif class="social-btn @if($user->instagram) active ig @endif" title="Instagram"><i class="bx bxl-instagram"></i></a>
@@ -92,17 +92,17 @@
                         <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
                             <li class="nav-item">
                                 <button type="button" class="nav-link active" role="tab" data-bs-toggle="tab" data-bs-target="#tab-user-info">
-                                    <i class="bx bx-id-card fs-5 me-1"></i> Contact Info
+                                    <i class="bx bx-id-card fs-5 me-1"></i> {{ __('Contact Info') }}
                                 </button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#tab-user-postings">
-                                    <i class="bx bx-list-ul fs-5 me-1"></i> User Postings
+                                    <i class="bx bx-list-ul fs-5 me-1"></i> {{ __('User Postings') }}
                                 </button>
                             </li>
                             <li class="nav-item">
                                 <button type="button" class="nav-link" role="tab" data-bs-toggle="tab" data-bs-target="#tab-user-security">
-                                    <i class="bx bx-lock-alt fs-5 me-1"></i> Security
+                                    <i class="bx bx-lock-alt fs-5 me-1"></i> {{ __('Security') }}
                                 </button>
                             </li>
                         </ul>
@@ -110,29 +110,29 @@
                             <!-- Contact Info Tab -->
                             <div class="tab-pane fade show active" id="tab-user-info" role="tabpanel">
                                 <div class="p-4 border rounded bg-light-soft mb-4">
-                                    <h6 class="fw-bold mb-3 border-bottom pb-2">Direct Contact Details</h6>
+                                    <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Direct Contact Details') }}</h6>
                                     <div class="row g-4">
                                         <div class="col-sm-6">
                                             <div class="p-3 bg-white border rounded shadow-xs">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Primary Phone</small>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Primary Phone') }}</small>
                                                 <span class="fs-5 fw-bold text-dark">{{ $user->phone ?? 'N/A' }}</span>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
                                             <div class="p-3 bg-white border rounded shadow-xs">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">WhatsApp Access</small>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('WhatsApp Access') }}</small>
                                                 <span class="badge bg-label-{{ $user->has_whatsapp ? 'success' : 'secondary' }} fs-6 mt-1">
-                                                    {{ $user->has_whatsapp ? 'Connected' : 'Not Linked' }}
+                                                    {{ $user->has_whatsapp ? __('Connected') : __('Not Linked') }}
                                                 </span>
                                             </div>
                                         </div>
                                         <div class="col-12">
                                             <div class="p-3 bg-white border rounded shadow-xs">
-                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Official Designation</small>
+                                                <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ __('Official Designation') }}</small>
                                                 <div class="d-flex align-items-center gap-2 mt-1">
                                                     <span class="badge bg-primary px-3 text-capitalize">{{ $user->role ?? 'Regular' }}</span>
                                                     @if($user->is_trader)
-                                                        <span class="badge bg-info"><i class="bx bxs-badge-check me-1"></i>Verified Trader</span>
+                                                        <span class="badge bg-info"><i class="bx bxs-badge-check me-1"></i>{{ __('Verified Trader') }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -140,10 +140,10 @@
                                     </div>
                                 </div>
                                 <div class="px-2">
-                                    <h6 class="fw-bold mb-3 border-bottom pb-2">Admin Notes</h6>
+                                    <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Admin Notes') }}</h6>
                                     <div class="bg-label-secondary p-3 rounded border border-light">
-                                        User registered via Web UI. Current account status is <strong>{{ $user->status ?: 'active' }}</strong>. 
-                                        No recent violations reported in the system.
+                                        {{ __('User registered via Web UI. Current account status is') }} <strong>{{ __($user->status ?: 'active') }}</strong>.
+                                        {{ __('No recent violations reported in the system.') }}
                                     </div>
                                 </div>
                             </div>
@@ -155,9 +155,9 @@
                                         <table class="table table-hover table-striped align-middle mb-0">
                                             <thead class="bg-light">
                                                 <tr>
-                                                    <th class="ps-4">Vehicle Listing</th>
-                                                    <th>Price</th>
-                                                    <th class="text-end pe-4">Status</th>
+                                                    <th class="ps-4">{{ __('Vehicle Listing') }}</th>
+                                                    <th>{{ __('Price') }}</th>
+                                                    <th class="text-end pe-4">{{ __('Status') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -184,7 +184,7 @@
                                                     <tr>
                                                         <td colspan="3" class="text-center py-5">
                                                             <i class="bx bx-car text-muted display-4 mb-3 d-block"></i>
-                                                            <p class="text-muted">No vehicles listed by this user.</p>
+                                                            <p class="text-muted">{{ __('No vehicles listed by this user.') }}</p>
                                                         </td>
                                                     </tr>
                                                 @endforelse
@@ -197,7 +197,7 @@
                             <!-- Security Tab -->
                             <div class="tab-pane fade" id="tab-user-security" role="tabpanel">
                                 <div class="p-4 bg-white border rounded" style="min-height: 480px;">
-                                    <h6 class="fw-bold mb-4 border-bottom pb-2">Account Verification & Logs</h6>
+                                    <h6 class="fw-bold mb-4 border-bottom pb-2">{{ __('Account Verification & Logs') }}</h6>
                                     <div class="list-group list-group-flush">
                                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center py-4 border-bottom">
                                             <div class="d-flex align-items-center">
@@ -205,8 +205,8 @@
                                                     <i class="bx {{ $user->email_verified_at ? 'bx-badge-check' : 'bx-error-circle' }} fs-3"></i>
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0">Email Identity</h6>
-                                                    <small class="text-muted">{{ $user->email_verified_at ? 'Verified on ' . $user->email_verified_at->formatDate() : 'Identity not verified yet' }}</small>
+                                                    <h6 class="mb-0">{{ __('Email Identity') }}</h6>
+                                                    <small class="text-muted">{{ $user->email_verified_at ? __('Verified on') . ' ' . $user->email_verified_at->formatDate() : __('Identity not verified yet') }}</small>
                                                 </div>
                                             </div>
                                             @if(!$user->email_verified_at)
@@ -216,10 +216,10 @@
                                                     id="verify-email-btn-{{ $user->id }}"
                                                     data-id="{{ $user->id }}"
                                                     data-url="{{ route('admin.web-users.verify-email', $user->id) }}">
-                                                    <i class="bx bx-check-shield me-1"></i> Verify Manually
+                                                    <i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}
                                                 </button>
                                             @else
-                                                <span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>Verified</span>
+                                                <span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>{{ __('Verified') }}</span>
                                             @endif
                                         </div>
                                         <div class="list-group-item px-0 d-flex justify-content-between align-items-center py-4 border-bottom">
@@ -228,8 +228,8 @@
                                                     <i class="bx bx-time-five fs-3"></i>
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0">Recent Activity</h6>
-                                                    <small class="text-muted">Last system access by user</small>
+                                                    <h6 class="mb-0">{{ __('Recent Activity') }}</h6>
+                                                    <small class="text-muted">{{ __('Last system access by user') }}</small>
                                                 </div>
                                             </div>
                                             <span class="fw-bold">{{ $user->updated_at->diffForHumans() }}</span>
@@ -240,12 +240,12 @@
                                                     <i class="bx bx-key fs-3"></i>
                                                 </div>
                                                 <div>
-                                                    <h6 class="mb-0">Security Credentials</h6>
-                                                    <small class="text-muted">Manually update user access password</small>
+                                                    <h6 class="mb-0">{{ __('Security Credentials') }}</h6>
+                                                    <small class="text-muted">{{ __('Manually update user access password') }}</small>
                                                 </div>
                                             </div>
                                             <button type="button" class="btn btn-sm btn-label-warning change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">
-                                                Change Password
+                                                {{ __('Change Password') }}
                                             </button>
                                         </div>
                                     </div>
@@ -259,7 +259,7 @@
         
         <div class="card-footer bg-light-soft border-top text-end p-4">
             <button type="button" class="btn btn-outline-secondary me-2 rounded-pill px-4" data-bs-dismiss="modal">
-                <i class="bx bx-chevron-left me-1"></i> Close View
+                <i class="bx bx-chevron-left me-1"></i> {{ __('Close View') }}
             </button>
             <div class="btn-group shadow-sm rounded-pill overflow-hidden">
                 <button type="button" class="btn btn-warning border-0 px-4 fw-bold change-password-btn" data-id="{{ $user->id }}" data-name="{{ $user->first_name }} {{ $user->last_name }}">{{ __('Change Password') }}</button>
@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Disable & show spinner
             btnEl.disabled = true;
-            btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Verifying...';
+            btnEl.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> {{ __('Verifying...') }}';
 
             fetch(url, {
                 method: 'PATCH',
@@ -335,7 +335,7 @@ document.addEventListener('DOMContentLoaded', function () {
             .then(function (data) {
                 if (data.success) {
                     // Replace button with verified badge
-                    btnEl.outerHTML = '<span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>Verified</span>';
+                    btnEl.outerHTML = '<span class="badge bg-success"><i class="bx bx-badge-check me-1"></i>{{ __('Verified') }}</span>';
 
                     // Update the icon above from danger to success
                     const iconWrapper = document.querySelector('#verify-email-btn-' + userId)?.closest('.list-group-item')?.querySelector('.avatar');
@@ -349,15 +349,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     // Show success message
                     alert(data.message);
                 } else {
-                    alert(data.message || 'Could not verify email.');
+                    alert(data.message || '{{ __('Could not verify email.') }}');
                     btnEl.disabled = false;
-                    btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> Verify Manually';
+                    btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}';
                 }
             })
             .catch(function () {
-                alert('An error occurred. Please try again.');
+                alert('{{ __('An error occurred. Please try again.') }}');
                 btnEl.disabled = false;
-                btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> Verify Manually';
+                btnEl.innerHTML = '<i class="bx bx-check-shield me-1"></i> {{ __('Verify Manually') }}';
             });
         });
     });
