@@ -383,7 +383,7 @@
                                 <label class="form-label">{{ __('Address') }}</label>
                                 <div class="input-group">
                                     <span class="input-group-text"><i class="bx bx-map-pin"></i></span>
-                                    <input type="text" class="form-control" name="address" id="address" placeholder="{{ __('Search for address...') }}" required>
+                                    <input type="text" class="form-control" name="address" id="address" placeholder="{{ __('Search for address...') }}">
                                 </div>
                                 <input type="hidden" name="latitude" id="latitude">
                                 <input type="hidden" name="longitude" id="longitude">
@@ -425,12 +425,12 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Cylinder Capacity') }}</label>
-                                    <input type="text" class="form-control" name="cylinder_capacity"
-                                        placeholder="e.g. 1598 cm3">
+                                <input type="number" min="0" class="form-control" name="cylinder_capacity"
+                                        placeholder="e.g. 1598">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Performance (Power)') }}</label>
-                                    <input type="text" class="form-control" name="performance" placeholder="e.g. 110 kW">
+                                    <input type="number" min="0" class="form-control" name="performance" placeholder="e.g. 110">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Battery Capacity') }} (kWh)</label>
@@ -578,9 +578,19 @@
                         </div>
                     </div>
 
-                    <div class="card-footer bg-white border-top text-end p-3">
-                        <button type="submit" class="btn btn-primary">{{ __('Save') }}</button>
-                        <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
+                    <!-- Wizard Footer -->
+                    <div class="card-footer bg-white border-top p-3 d-flex justify-content-end align-items-center" id="wizard-footer">
+                        <div class="d-flex gap-2 align-items-center">
+                            <!-- Cancel -->
+                            <a href="{{ route('admin.vehicles.index') }}" class="btn btn-outline-secondary">{{ __('Cancel') }}</a>
+                            <button type="button" class="btn btn-primary" id="btn-next">
+                                {{ __('Next') }} <i class="bx bx-right-arrow-alt ms-1"></i>
+                            </button>
+                            <!-- Submit (shown only on last step) -->
+                            <button type="submit" class="btn btn-success" id="btn-submit" style="display:none;">
+                                <i class="bx bx-check me-1"></i>{{ __('Save') }}
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -588,6 +598,55 @@
     </div>
 
     <script>
+        // ── Full 6-Step Wizard Logic ────────────────────────────────────
+        (function () {
+            const STEPS = [
+                { tabId: 'tab-options',   label: '{{ __('Options') }}' },
+                { tabId: 'tab-price',     label: '{{ __('Price') }}' },
+                { tabId: 'tab-features',  label: '{{ __('Extra Features') }}' },
+                { tabId: 'tab-images',    label: '{{ __('Images & Videos') }}' },
+                { tabId: 'tab-location',  label: '{{ __('Location') }}' },
+                { tabId: 'tab-details',   label: '{{ __('Other Details') }}' },
+            ];
+
+            const btnNext   = document.getElementById('btn-next');
+            const btnSubmit = document.getElementById('btn-submit');
+
+            let currentStep = 0;
+
+            function goToStep(index) {
+                if (index < 0 || index >= STEPS.length) return;
+                currentStep = index;
+                const tab = document.getElementById(STEPS[index].tabId);
+                if (tab) tab.click();
+                updateFooter();
+            }
+
+            function updateFooter() {
+                const isLast  = currentStep === STEPS.length - 1;
+
+                btnNext.style.display   = isLast  ? 'none' : 'inline-block';
+                btnSubmit.style.display = isLast  ? 'inline-block' : 'none';
+            }
+
+            btnNext.addEventListener('click', function () { goToStep(currentStep + 1); });
+
+            // Sync when user clicks a sidebar tab directly
+            STEPS.forEach(function (step, index) {
+                const tab = document.getElementById(step.tabId);
+                if (tab) {
+                    tab.addEventListener('shown.bs.tab', function () {
+                        currentStep = index;
+                        updateFooter();
+                    });
+                }
+            });
+
+            // Init
+            updateFooter();
+        })();
+        // ───────────────────────────────────────────────────────────────
+
         document.addEventListener('DOMContentLoaded', function () {
             const brandSelect = document.getElementById('brand_select');
             const modelSelect = document.getElementById('model_select');

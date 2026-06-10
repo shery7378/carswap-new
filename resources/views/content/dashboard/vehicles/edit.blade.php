@@ -485,13 +485,13 @@
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Cylinder Capacity') }}</label>
-                                    <input type="text" class="form-control" name="cylinder_capacity"
-                                        value="{{ old('cylinder_capacity', $vehicle->cylinder_capacity) }}">
+                                <input type="number" min="0" class="form-control" name="cylinder_capacity"
+                                        value="{{ old('cylinder_capacity', $vehicle->cylinder_capacity) }}" placeholder="e.g. 1598">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Performance (Power)') }}</label>
-                                    <input type="text" class="form-control" name="performance"
-                                        value="{{ old('performance', $vehicle->performance) }}">
+                                    <input type="number" min="0" class="form-control" name="performance"
+                                        value="{{ old('performance', $vehicle->performance) }}" placeholder="e.g. 110">
                                 </div>
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Battery Capacity') }} (kWh)</label>

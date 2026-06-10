@@ -106,8 +106,8 @@ class AdminVehicleController extends Controller
                 'sales_method_id' => 'nullable',
                 'document_type_id' => 'nullable',
                 'vehicle_status_id' => 'nullable',
-                'cylinder_capacity' => 'nullable|string',
-                'performance' => 'nullable|string',
+                'cylinder_capacity' => 'nullable|integer|min:0',
+                'performance' => 'nullable|integer|min:0',
                 'battery_capacity' => 'nullable|numeric|min:0',
                 'range' => 'nullable|integer|min:0',
                 'vin_number' => 'nullable|string',
@@ -173,6 +173,16 @@ class AdminVehicleController extends Controller
             $validated['is_featured'] = $request->has('is_featured');
             $validated['user_id'] = auth()->id() ?? 1;
             $validated['ad_status'] = $request->input('ad_status', 'Publikált');
+
+            // Cast cylinder_capacity to int (or null) before saving
+            $validated['cylinder_capacity'] = isset($validated['cylinder_capacity']) && $validated['cylinder_capacity'] !== ''
+                ? (int) $validated['cylinder_capacity']
+                : null;
+
+            // Cast performance to int (or null) before saving
+            $validated['performance'] = isset($validated['performance']) && $validated['performance'] !== ''
+                ? (int) $validated['performance']
+                : null;
 
             $vehicle = Vehicle::create($validated);
 
@@ -249,8 +259,8 @@ class AdminVehicleController extends Controller
                 'sales_method_id' => 'nullable',
                 'document_type_id' => 'nullable',
                 'vehicle_status_id' => 'nullable',
-                'cylinder_capacity' => 'nullable|string',
-                'performance' => 'nullable|string',
+                'cylinder_capacity' => 'nullable|integer|min:0',
+                'performance' => 'nullable|integer|min:0',
                 'battery_capacity' => 'nullable|numeric|min:0',
                 'range' => 'nullable|integer|min:0',
                 'vin_number' => 'nullable|string',
@@ -338,6 +348,16 @@ class AdminVehicleController extends Controller
                 }
                 $validated['gallery_images'] = $gallery;
             }
+
+            // Cast cylinder_capacity to int (or null) before saving
+            $validated['cylinder_capacity'] = isset($validated['cylinder_capacity']) && $validated['cylinder_capacity'] !== ''
+                ? (int) $validated['cylinder_capacity']
+                : null;
+
+            // Cast performance to int (or null) before saving
+            $validated['performance'] = isset($validated['performance']) && $validated['performance'] !== ''
+                ? (int) $validated['performance']
+                : null;
 
             $validated['is_featured'] = $request->has('is_featured');
             $vehicle->update($validated);
