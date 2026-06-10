@@ -14,7 +14,7 @@
                 <form action="{{ route('admin.partners.store') }}" method="POST" enctype="multipart/form-data" id="partnerForm">
                     @csrf
 
-                    <!-- Company Info Section>
+                    <!-- Company Info Section -->
                     <div class="mb-4">
                         <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Basic Information') }}</h6>
                         <div class="row">
@@ -306,20 +306,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (address && (!lat || !lng)) {
             e.preventDefault();
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ address: address }, function(results, status) {
-                if (status === 'OK' && results[0]) {
-                    document.getElementById('latitude').value = results[0].geometry.location.lat();
-                    document.getElementById('longitude').value = results[0].geometry.location.lng();
-                    form.submit();
-                } else {
-                    Swal.fire({
-                        title: '{{ __('Coordinates Missing') }}',
-                        text: '{{ __('We couldn\'t find the exact location for this address. Please select a valid address from the dropdown.') }}',
-                        icon: 'warning'
-                    });
-                }
-            });
+            if (typeof google !== 'undefined' && google.maps && google.maps.Geocoder) {
+                const geocoder = new google.maps.Geocoder();
+                geocoder.geocode({ address: address }, function(results, status) {
+                    if (status === 'OK' && results[0]) {
+                        document.getElementById('latitude').value = results[0].geometry.location.lat();
+                        document.getElementById('longitude').value = results[0].geometry.location.lng();
+                        form.submit();
+                    } else {
+                        Swal.fire({
+                            title: '{{ __('Coordinates Missing') }}',
+                            text: '{{ __('We couldn\'t find the exact location for this address. Please select a valid address from the dropdown.') }}',
+                            icon: 'warning'
+                        });
+                    }
+                });
+            } else {
+                form.submit();
+            }
         }
     });
 });
