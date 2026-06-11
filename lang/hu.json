@@ -1018,5 +1018,11 @@
     "Invalid credentials": "Érvénytelen bejelentkezési adatok",
     "Your account has been permanently banned.": "A fiókját véglegesen kitiltottuk.",
     "Your account is currently suspended. Please contact support.": "A fiókja jelenleg fel van függesztve. Kérjük, vegye fel a kapcsolatot az ügyfélszolgálattal.",
-    "Please verify your email address before logging in.": "Kérjük, bejelentkezés előtt ellenőrizze az e-mail címét."
+    "Please verify your email address before logging in.": "Kérjük, bejelentkezés előtt ellenőrizze az e-mail címét.",
+    "Security & Status": "Biztonság és állapot",
+    "User Status": "Felhasználó állapota",
+    "Verified Trader Account": "Ellenőrzött kereskedői fiók",
+    "Traders get a \"Verified Trader\" badge across the platform.": "A kereskedők „Ellenőrzött kereskedő” jelvényt kapnak a platformon.",
+    "Leave blank to keep current password.": "Hagyja üresen a jelenlegi jelszó megtartásához.",
+    "Personal Information": "Személyes adatok"
 }

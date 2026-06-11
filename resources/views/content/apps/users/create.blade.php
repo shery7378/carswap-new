@@ -1,6 +1,6 @@
 @extends('layouts/contentNavbarLayout')
 
-@section('title', 'Add Web User')
+@section('title', __('Add Web User'))
 
 @section('content')
 <style>
@@ -18,8 +18,8 @@
     <i class="bx bx-chevron-left"></i>
   </a>
   <h4 class="mb-0">
-    <span class="text-muted fw-light">Web Users /</span>
-    <span class="fw-bold text-primary">Add New User</span>
+    <span class="text-muted fw-light">{{ __('Web Users') }} /</span>
+    <span class="fw-bold text-primary">{{ __('Add New User') }}</span>
   </h4>
 </div>
 
@@ -30,20 +30,20 @@
         <form action="{{ route('admin.web-users.store') }}" method="POST">
           @csrf
 
-          <div class="section-title"><i class="bx bx-user-circle fs-5"></i> Personal Information</div>
+          <div class="section-title"><i class="bx bx-user-circle fs-5"></i> {{ __('Personal Information') }}</div>
           <div class="row mb-4">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">First Name</label>
+              <label class="form-label fw-bold">{{ __('First Name') }}</label>
               <input type="text" class="form-control" name="first_name" placeholder="John" value="{{ old('first_name') }}" required />
               @error('first_name')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Last Name</label>
+              <label class="form-label fw-bold">{{ __('Last Name') }}</label>
               <input type="text" class="form-control" name="last_name" placeholder="Doe" value="{{ old('last_name') }}" required />
               @error('last_name')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Email Address</label>
+              <label class="form-label fw-bold">{{ __('Email Address') }}</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-envelope"></i></span>
                 <input type="email" class="form-control" name="email" placeholder="john.doe@example.com" value="{{ old('email') }}" required />
@@ -51,7 +51,7 @@
               @error('email')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Phone Number</label>
+              <label class="form-label fw-bold">{{ __('Phone Number') }}</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-phone"></i></span>
                 <input type="text" class="form-control" name="phone" placeholder="+1 (555) 000-0000" value="{{ old('phone') }}" />
@@ -60,10 +60,10 @@
             </div>
           </div>
 
-          <div class="section-title"><i class="bx bx-cog fs-5"></i> Security & Status</div>
+          <div class="section-title"><i class="bx bx-cog fs-5"></i> {{ __('Security & Status') }}</div>
           <div class="row mb-4">
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">Password</label>
+              <label class="form-label fw-bold">{{ __('Password') }}</label>
               <div class="input-group input-group-merge">
                 <span class="input-group-text"><i class="bx bx-lock-alt"></i></span>
                 <input type="password" class="form-control" name="password" placeholder="············" required />
@@ -71,19 +71,19 @@
               @error('password')<div class="text-danger mt-1 small">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6 mb-3">
-              <label class="form-label fw-bold">User Status</label>
+              <label class="form-label fw-bold">{{ __('User Status') }}</label>
               <select name="status" class="form-select" required>
-                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active</option>
-                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive</option>
-                <option value="banned" {{ old('status') == 'banned' ? 'selected' : '' }}>Banned</option>
+                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>{{ __('Active') }}</option>
+                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>{{ __('Inactive') }}</option>
+                <option value="banned" {{ old('status') == 'banned' ? 'selected' : '' }}>{{ __('Banned') }}</option>
               </select>
             </div>
             <div class="col-md-6 mb-3 d-flex align-items-center mt-3">
               <div class="w-100 bg-label-primary rounded p-3 shadow-xs border border-primary border-opacity-25">
                 <div class="form-check form-switch mb-0">
                   <input class="form-check-input" type="checkbox" name="is_trader" value="1" id="is_trader" {{ old('is_trader') ? 'checked' : '' }}>
-                  <label class="form-check-label fw-bold text-primary" for="is_trader">Verified Trader Account</label>
-                  <small class="text-muted d-block small mt-1">Traders get a "Verified Trader" badge across the platform.</small>
+                  <label class="form-check-label fw-bold text-primary" for="is_trader">{{ __('Verified Trader Account') }}</label>
+                  <small class="text-muted d-block small mt-1">{{ __('Traders get a "Verified Trader" badge across the platform.') }}</small>
                 </div>
               </div>
             </div>
