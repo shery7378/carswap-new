@@ -19,7 +19,7 @@
                         <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
                         <small class="text-muted"><i class="bx bx-id-card me-1"></i> ID: #{{ str_pad($user->id, 5, '0', STR_PAD_LEFT) }}</small>
                         <span class="badge badge-center rounded-pill bg-label-secondary w-px-4 h-px-4 mx-1"></span>
-                        <small class="fw-bold text-{{ $user->status == 'active' ? 'success' : 'danger' }}"><i class="bx bx-check-circle me-1"></i> {{ __(ucfirst($user->status ?: 'active')) }}</small>
+                        <small id="user-status-badge-{{ $user->id }}" class="fw-bold text-{{ $user->status == 'active' ? 'success' : 'danger' }}"><i class="bx bx-check-circle me-1"></i> <span>{{ __(ucfirst($user->status ?: 'active')) }}</span></small>
                     </div>
                 </div>
             </div>
@@ -142,7 +142,7 @@
                                 <div class="px-2">
                                     <h6 class="fw-bold mb-3 border-bottom pb-2">{{ __('Admin Notes') }}</h6>
                                     <div class="bg-label-secondary p-3 rounded border border-light">
-                                        {{ __('User registered via Web UI. Current account status is') }} <strong>{{ __($user->status ?: 'active') }}</strong>.
+                                        {{ __('User registered via Web UI. Current account status is') }} <strong><span id="user-status-note-{{ $user->id }}">{{ __($user->status ?: 'active') }}</span></strong>.
                                         {{ __('No recent violations reported in the system.') }}
                                     </div>
                                 </div>
@@ -343,6 +343,32 @@ document.querySelectorAll('.verify-email-btn').forEach(function (btn) {
                     iconWrapper.classList.add('bg-label-success');
                     const icon = iconWrapper.querySelector('i');
                     if (icon) { icon.classList.replace('bx-error-circle', 'bx-badge-check'); }
+                }
+
+                // Update status badge at the top
+                const statusBadge = document.getElementById('user-status-badge-' + userId);
+                if (statusBadge) {
+                    statusBadge.className = 'fw-bold text-success';
+                    const badgeText = statusBadge.querySelector('span');
+                    if (badgeText) {
+                        badgeText.textContent = '{{ __('Active') }}';
+                    }
+                }
+
+                // Update status note in the sidebar / body
+                const statusNote = document.getElementById('user-status-note-' + userId);
+                if (statusNote) {
+                    statusNote.textContent = '{{ __('active') }}';
+                }
+
+                // Update status in the main table list if it exists
+                const pageRow = document.querySelector('tr[data-id="' + userId + '"]');
+                if (pageRow) {
+                    const statusBadgeTd = pageRow.querySelector('.td-status .dropdown button .badge');
+                    if (statusBadgeTd) {
+                        statusBadgeTd.className = 'badge bg-success';
+                        statusBadgeTd.textContent = '{{ __('Active') }}';
+                    }
                 }
 
                 // Show success message
