@@ -283,36 +283,76 @@
                 const btn = $(this);
                 const id = btn.data('id');
 
-                $.ajax({
-                    url: `{{ url('/app/vehicles') }}/${id}/toggle-featured`,
-                    type: 'PATCH',
-                    data: { _token: '{{ csrf_token() }}' },
-                    success: function (res) {
-                        if (res.success) {
-                            $(`.featured-toggle-btn[data-id="${id}"]`).each(function () {
-                                const t = $(this);
-                                const icon = t.find('i');
-                                const isMobileCard = t.closest('.vehicle-mobile-card').length;
-
-                                if (res.is_featured) {
-                                    t.removeClass('btn-label-secondary').addClass('btn-label-warning');
-                                    icon.removeClass('bx-star').addClass('bxs-star');
-                                    if (isMobileCard) t.html('<i class="bx bxs-star me-1"></i>{{ __('Featured') }}');
-                                    t.attr('data-bs-original-title', '{{ __('Remove from Featured') }}');
-                                } else {
-                                    t.removeClass('btn-label-warning').addClass('btn-label-secondary');
-                                    icon.removeClass('bxs-star').addClass('bx-star');
-                                    if (isMobileCard) t.html('<i class="bx bx-star me-1"></i>{{ __('Feature') }}');
-                                    t.attr('data-bs-original-title', '{{ __('Mark as Featured') }}');
-                                }
-                            });
-                            toastr.success(res.message, 'Updated');
+                if (!btn.hasClass('btn-label-warning')) {
+                    Swal.fire({
+                        title: 'Biztos benne?',
+                        text: 'Biztos ki szeretnéd emelni ezt a hirdetést?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Igen, emeld ki!',
+                        cancelButtonText: 'Mégse',
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3',
+                            cancelButton: 'btn btn-label-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then(function (result) {
+                        if (result.value) {
+                            executeFeaturedToggle(id);
                         }
-                    },
-                    error: function () {
-                        toastr.error('{{ __('Could not update featured status.') }}', '{{ __('Error') }}');
-                    }
-                });
+                    });
+                } else {
+                    Swal.fire({
+                        title: 'Biztos benne?',
+                        text: 'Biztos el szeretnéd távolítani a kiemelést erről a hirdetésről?',
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Igen, távolítsd el!',
+                        cancelButtonText: 'Mégse',
+                        customClass: {
+                            confirmButton: 'btn btn-primary me-3',
+                            cancelButton: 'btn btn-label-secondary'
+                        },
+                        buttonsStyling: false
+                    }).then(function (result) {
+                        if (result.value) {
+                            executeFeaturedToggle(id);
+                        }
+                    });
+                }
+
+                function executeFeaturedToggle(vehicleId) {
+                    $.ajax({
+                        url: `{{ url('/app/vehicles') }}/${vehicleId}/toggle-featured`,
+                        type: 'PATCH',
+                        data: { _token: '{{ csrf_token() }}' },
+                        success: function (res) {
+                            if (res.success) {
+                                $(`.featured-toggle-btn[data-id="${vehicleId}"]`).each(function () {
+                                    const t = $(this);
+                                    const icon = t.find('i');
+                                    const isMobileCard = t.closest('.vehicle-mobile-card').length;
+
+                                    if (res.is_featured) {
+                                        t.removeClass('btn-label-secondary').addClass('btn-label-warning');
+                                        icon.removeClass('bx-star').addClass('bxs-star');
+                                        if (isMobileCard) t.html('<i class="bx bxs-star me-1"></i>{{ __('Featured') }}');
+                                        t.attr('data-bs-original-title', '{{ __('Remove from Featured') }}');
+                                    } else {
+                                        t.removeClass('btn-label-warning').addClass('btn-label-secondary');
+                                        icon.removeClass('bxs-star').addClass('bx-star');
+                                        if (isMobileCard) t.html('<i class="bx bx-star me-1"></i>{{ __('Feature') }}');
+                                        t.attr('data-bs-original-title', '{{ __('Mark as Featured') }}');
+                                    }
+                                });
+                                toastr.success(res.message, 'Updated');
+                            }
+                        },
+                        error: function () {
+                            toastr.error('{{ __('Could not update featured status.') }}', '{{ __('Error') }}');
+                        }
+                    });
+                }
             });
 
             // ── Desktop row click → modal ────────────────────────────────────────
