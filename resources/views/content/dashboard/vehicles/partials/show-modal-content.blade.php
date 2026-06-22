@@ -141,7 +141,7 @@
                             <div class="col-6 col-sm-4">
                                 <div class="p-3 border-start border-warning border-4 rounded bg-white shadow-xs h-100">
                                     <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.65rem;">{{ __('Power') }}</small>
-                                    <span class="fw-bold fs-5">{{ $vehicle->performance ?? __('N/A') }} <small class="fw-normal">HP</small></span>
+                                    <span class="fw-bold fs-5">{{ $vehicle->performance ?? __('N/A') }} <small class="fw-normal">kW</small></span>
                                 </div>
                             </div>
                             <!-- Status -->

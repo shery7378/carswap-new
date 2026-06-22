@@ -95,7 +95,7 @@
                             <div class="col-6">
                                 <div class="p-2 border rounded bg-light text-center">
                                     <small class="text-muted d-block small">{{ __('Power') }}</small>
-                                    <span class="fw-bold">{{ $vehicle->performance ?? '0' }} HP</span>
+                                    <span class="fw-bold">{{ $vehicle->performance ?? '0' }} kW</span>
                                 </div>
                             </div>
                         </div>
