@@ -117,9 +117,12 @@
   color: white !important;
 }
 
-#layout-menu .menu-link:hover,
+#layout-menu .menu-link:hover {
+  color: #FFFFFF !important;
+  background-color: #6366F1 !important;
+}
 #layout-menu .menu-item.active > .menu-link {
-  color: black !important;
+  color: #FFFFFF !important;
 }
 
 /* Submenu specific targeting */
@@ -127,7 +130,10 @@
   color: white !important;
 }
 
-#layout-menu .menu-inner .menu-sub .menu-link:hover,
+#layout-menu .menu-inner .menu-sub .menu-link:hover {
+  color: #FFFFFF !important;
+  background-color: #6366F1 !important;
+}
 #layout-menu .menu-inner .menu-sub .menu-item.active > .menu-link {
-  color: black !important;
+  color: #FFFFFF !important;
 }
