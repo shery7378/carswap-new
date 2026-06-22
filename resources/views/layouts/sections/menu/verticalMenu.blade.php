@@ -180,8 +180,26 @@
                   }
                 }
               } else {
-                if (str_contains($currentRouteName, $menu->slug) and strpos($currentRouteName, $menu->slug) === 0) {
+                if ($currentRouteName && str_contains($currentRouteName, $menu->slug) and strpos($currentRouteName, $menu->slug) === 0) {
                   $activeClass = 'active open';
+                }
+              }
+              
+              if (!$activeClass) {
+                foreach($menu->submenu as $submenu) {
+                  if (isset($submenu->url) && request()->is(trim($submenu->url, '/'))) {
+                    $activeClass = 'active open';
+                    break;
+                  }
+                  if (isset($submenu->slug)) {
+                    $slugs = is_array($submenu->slug) ? $submenu->slug : [$submenu->slug];
+                    foreach ($slugs as $slug) {
+                      if ($currentRouteName === $slug || ($currentRouteName && str_contains($currentRouteName, $slug) && strpos($currentRouteName, $slug) === 0)) {
+                        $activeClass = 'active open';
+                        break 2;
+                      }
+                    }
+                  }
                 }
               }
             }
