@@ -431,7 +431,7 @@ class AdminVehicleController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Vehicle status updated to ' . $request->ad_status);
+        return redirect()->back()->with('success', __('Vehicle status updated to') . ' ' . __($request->ad_status));
     }
 
     public function bulkUpdateStatus(Request $request)

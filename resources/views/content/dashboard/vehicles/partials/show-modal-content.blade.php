@@ -6,7 +6,16 @@
             </span>
         </div>
         <div class="pe-3 overflow-hidden">
-            <h5 class="modal-title fw-bold mb-0 text-dark text-truncate">{{ $vehicle->title }}</h5>
+            <div class="d-flex align-items-center gap-2">
+                <h5 class="modal-title fw-bold mb-0 text-dark text-truncate">{{ $vehicle->title }}</h5>
+                <button type="button" 
+                    class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
+                    data-id="{{ $vehicle->id }}" 
+                    data-bs-toggle="tooltip" 
+                    title="{{ $vehicle->is_featured ? __('Remove from Featured') : __('Mark as Featured') }}">
+                    <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
+                </button>
+            </div>
             <div class="d-flex align-items-center flex-wrap gap-x-2 small mt-1">
                 <span class="text-muted"><i class="bx bx-map-pin me-1 text-primary"></i>{{ $vehicle->location ?: __('N/A') }}</span>
                 <span class="badge badge-center rounded-pill bg-label-secondary w-px-2 h-px-2 mx-1"></span>
@@ -18,13 +27,6 @@
     </div>
     <div class="ms-auto d-flex align-items-center gap-2">
 
-        <button type="button" 
-            class="btn btn-icon btn-sm {{ $vehicle->is_featured ? 'btn-label-warning' : 'btn-label-secondary' }} featured-toggle-btn" 
-            data-id="{{ $vehicle->id }}" 
-            data-bs-toggle="tooltip" 
-            title="{{ $vehicle->is_featured ? __('Remove from Featured') : __('Mark as Featured') }}">
-            <i class="bx {{ $vehicle->is_featured ? 'bxs-star' : 'bx-star' }}"></i>
-        </button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
 </div>
