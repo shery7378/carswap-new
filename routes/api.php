@@ -85,6 +85,7 @@ Route::get('/brands', [VehicleOptionController::class, 'getBrands']);
 Route::get('/brands/{brandId}/models', [VehicleOptionController::class, 'getModels']);
 Route::get('/brands-body-types', [VehicleOptionController::class, 'getBrandsBodyTypes']);
 Route::get('/body-types', [VehicleOptionController::class, 'getBodyTypes']);
+Route::get('/popular-options', [VehicleOptionController::class, 'getPopularOptions']);
 
 // Public Ads API Routes
 // These routes use UserAdController and are open to all visitors.

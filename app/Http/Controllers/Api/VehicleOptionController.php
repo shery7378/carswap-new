@@ -78,4 +78,31 @@ class VehicleOptionController extends Controller
     {
         return response()->json(BodyType::where('is_active', true)->orderBy('name')->get());
     }
+
+    /**
+     * Get popular brands and body types (designs) based on active vehicle count.
+     */
+    public function getPopularOptions()
+    {
+        $activeVehiclesQuery = function ($query) {
+            $query->where('ad_status', 'Publikált')->where('is_active', true);
+        };
+
+        $brands = Brand::withCount(['vehicles' => $activeVehiclesQuery])
+            ->where('is_active', true)
+            ->orderBy('vehicles_count', 'desc')
+            ->take(4)
+            ->get();
+
+        $bodyTypes = BodyType::where('is_active', true)
+            ->withCount(['vehicles' => $activeVehiclesQuery])
+            ->orderBy('vehicles_count', 'desc')
+            ->take(4)
+            ->get();
+
+        return response()->json([
+            'brands' => $brands,
+            'body_types' => $bodyTypes,
+        ]);
+    }
 }
