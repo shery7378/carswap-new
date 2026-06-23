@@ -174,20 +174,18 @@
 
         <div class="plan-actions px-4 pb-4 mt-auto border-top pt-3 bg-light">
           <div class="d-grid gap-2">
-            {{-- Loop through all plans in this group to ensure everything has an Edit button --}}
-            @foreach($group as $plan)
+            {{-- Single edit button for the entire card (links to the primary/monthly plan) --}}
             <div class="d-flex gap-2 align-items-center mb-2">
-              <span class="badge bg-label-{{ $plan->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
-                 {{ $plan->is_active ? __('LIVE') : __('OFF') }}
+              <span class="badge bg-label-{{ $main->is_active ? 'success' : 'secondary' }} flex-grow-0 me-1" style="min-width: 70px;">
+                 {{ $main->is_active ? __('LIVE') : __('OFF') }}
               </span>
-              <a href="{{ route('app-subscription-plan-edit', $plan->id) }}" class="btn btn-outline-{{ $plan->billing_period == 'yearly' ? 'info' : 'primary' }} flex-grow-1">
-                {{ __('Edit') }} {{ __(ucfirst($plan->billing_period)) }}
+              <a href="{{ route('app-subscription-plan-edit', $main->id) }}" class="btn btn-outline-primary flex-grow-1">
+                {{ __('Szerkesztés') }}
               </a>
-              <button class="btn btn-label-{{ $plan->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $plan->id }}" title="{{ $plan->is_active ? 'Deactivate' : 'Activate' }}">
+              <button class="btn btn-label-{{ $main->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $main->id }}" title="{{ $main->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
               </button>
             </div>
-            @endforeach
 
             <button class="btn btn-label-danger w-100 mt-2 delete-plan" data-id="{{ $main->id }}">
                <i class="bx bx-trash me-1"></i> {{ __('Delete Entire Card') }}
