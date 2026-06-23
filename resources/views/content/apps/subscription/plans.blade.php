@@ -102,7 +102,7 @@
              </span>
           </div>
           <h4 class="fw-bold mb-0">{{ $main->name }}</h4>
-          <p class="text-muted small mt-1 mb-0">{{ $main->description }}</p>
+          <p class="text-muted small mt-1 mb-0">{!! $main->description !!}</p>
           
           {{-- Pricing Display --}}
           <div class="d-flex justify-content-center gap-4 mt-3">

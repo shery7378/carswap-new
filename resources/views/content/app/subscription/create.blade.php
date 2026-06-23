@@ -109,7 +109,7 @@
                     <textarea name="description"
                               class="form-control"
                               rows="2"
-                              placeholder="{{ __('Short description of this plan') }}">{{ isset($plan) ? $plan->description : old('description') }}</textarea>
+                              placeholder="{{ __('Short description of this plan') }}">{!! isset($plan) ? $plan->description : old('description') !!}</textarea>
                 </div>
 
                 <hr class="my-3">
