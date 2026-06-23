@@ -80,25 +80,43 @@ class VehicleOptionController extends Controller
     }
 
     /**
-     * Get popular brands and body types (designs) based on active vehicle count.
+     * Get popular brands and body types (designs) based on search counts in settings.
      */
     public function getPopularOptions()
     {
-        $activeVehiclesQuery = function ($query) {
-            $query->where('ad_status', 'Publikált')->where('is_active', true);
-        };
+        $setting = \App\Models\Setting::where('key', 'popular_searches')->first();
+        
+        $brandIds = [];
+        $bodyTypeIds = [];
 
-        $brands = Brand::withCount(['vehicles' => $activeVehiclesQuery])
+        if ($setting && $setting->value) {
+            $data = json_decode($setting->value, true);
+            
+            // Sort and get top 4
+            if (isset($data['brands'])) {
+                arsort($data['brands']);
+                $brandIds = array_slice(array_keys($data['brands']), 0, 4);
+            }
+            if (isset($data['body_types'])) {
+                arsort($data['body_types']);
+                $bodyTypeIds = array_slice(array_keys($data['body_types']), 0, 4);
+            }
+        }
+
+        // Fetch models
+        $brands = empty($brandIds) ? [] : Brand::whereIn('id', $brandIds)
             ->where('is_active', true)
-            ->orderBy('vehicles_count', 'desc')
-            ->take(4)
-            ->get();
+            ->get()
+            ->sortBy(function($brand) use ($brandIds) {
+                return array_search($brand->id, $brandIds);
+            })->values();
 
-        $bodyTypes = BodyType::where('is_active', true)
-            ->withCount(['vehicles' => $activeVehiclesQuery])
-            ->orderBy('vehicles_count', 'desc')
-            ->take(4)
-            ->get();
+        $bodyTypes = empty($bodyTypeIds) ? [] : BodyType::whereIn('id', $bodyTypeIds)
+            ->where('is_active', true)
+            ->get()
+            ->sortBy(function($bt) use ($bodyTypeIds) {
+                return array_search($bt->id, $bodyTypeIds);
+            })->values();
 
         return response()->json([
             'brands' => $brands,

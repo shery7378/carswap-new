@@ -35,9 +35,13 @@ class VehicleController extends Controller
             $query->where('is_featured', $request->featured == '1' || $request->featured == 'true');
         }
 
+        $trackedBrands = [];
+        $trackedBodyTypes = [];
+
         // Filtering by Brand
         if ($request->has('brand_id')) {
             $query->where('brand_id', $request->brand_id);
+            $trackedBrands[] = $request->brand_id;
         }
 
         // Filtering by Model
@@ -48,6 +52,11 @@ class VehicleController extends Controller
         // Filtering by Body Type (Design)
         if ($request->has('body_type_id')) {
             $query->where('body_type_id', $request->body_type_id);
+            $trackedBodyTypes[] = $request->body_type_id;
+        }
+
+        if (!empty($trackedBrands) || !empty($trackedBodyTypes)) {
+            $this->trackSearches($trackedBrands, $trackedBodyTypes);
         }
 
         // Filtering by Fuel Type
@@ -272,5 +281,37 @@ class VehicleController extends Controller
             'properties.category',
             'user'
         ];
+    }
+
+    /**
+     * Track searches internally in settings table
+     */
+    private function trackSearches(array $brands, array $bodyTypes)
+    {
+        try {
+            $setting = \App\Models\Setting::firstOrCreate(
+                ['key' => 'popular_searches'],
+                ['value' => json_encode(['brands' => [], 'body_types' => []])]
+            );
+
+            $data = json_decode($setting->value, true);
+            if (!isset($data['brands'])) $data['brands'] = [];
+            if (!isset($data['body_types'])) $data['body_types'] = [];
+
+            foreach ($brands as $id) {
+                if (!isset($data['brands'][$id])) $data['brands'][$id] = 0;
+                $data['brands'][$id]++;
+            }
+
+            foreach ($bodyTypes as $id) {
+                if (!isset($data['body_types'][$id])) $data['body_types'][$id] = 0;
+                $data['body_types'][$id]++;
+            }
+
+            $setting->value = json_encode($data);
+            $setting->save();
+        } catch (\Exception $e) {
+            // Ignore tracking errors to not break the API
+        }
     }
 }
