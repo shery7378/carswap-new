@@ -182,7 +182,7 @@
               <a href="{{ route('app-subscription-plan-edit', $main->id) }}" class="btn btn-outline-primary flex-grow-1">
                 {{ __('Szerkesztés') }}
               </a>
-              <button class="btn btn-label-{{ $main->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $main->id }}" title="{{ $main->is_active ? 'Deactivate' : 'Activate' }}">
+              <button class="btn btn-icon btn-label-{{ $main->is_active ? 'secondary' : 'success' }} toggle-plan-status" data-id="{{ $main->id }}" title="{{ $main->is_active ? 'Deactivate' : 'Activate' }}">
                 <i class="bx bx-power-off"></i>
               </button>
             </div>
