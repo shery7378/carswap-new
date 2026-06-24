@@ -50,11 +50,19 @@
                 </div>
                 
                 <!-- Gallery Thumbs -->
-                @php $gallery = $vehicle->gallery_image_urls; @endphp
-                @if($gallery && count($gallery) > 0)
-                    <div class="gallery-scroller d-flex gap-2 overflow-auto pb-2 scroll-styling" style="max-width: 100%;">
-                        @foreach($gallery as $img)
-                            <img src="{{ $img }}" class="rounded border shadow-xs flex-shrink-0" style="width: 50px; height: 50px; cursor: pointer; object-fit: cover;" onclick="document.getElementById('modal-vehicle-main-image').src=this.src;" onmouseover="this.classList.add('border-primary')" onmouseout="this.classList.remove('border-primary')">
+                @php 
+                    $allImages = [];
+                    if($vehicle->main_image_url) {
+                        $allImages[] = $vehicle->main_image_url;
+                    }
+                    if($vehicle->gallery_image_urls && is_array($vehicle->gallery_image_urls)) {
+                        $allImages = array_merge($allImages, $vehicle->gallery_image_urls);
+                    }
+                @endphp
+                @if(count($allImages) > 0)
+                    <div class="gallery-scroller d-flex flex-wrap gap-2 pb-2 mt-2" style="max-width: 100%;">
+                        @foreach($allImages as $img)
+                            <img src="{{ $img }}" class="rounded border shadow-xs flex-shrink-0" style="width: 65px; height: 65px; cursor: pointer; object-fit: cover; transition: border-color 0.2s;" onclick="document.getElementById('modal-vehicle-main-image').src=this.src;" onmouseover="this.classList.add('border-primary', 'border-2')" onmouseout="this.classList.remove('border-primary', 'border-2')">
                         @endforeach
                     </div>
                 @endif
