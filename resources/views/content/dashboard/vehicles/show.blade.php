@@ -281,7 +281,7 @@
                                                                 </div>
                                                                 <div class="col-md-3">
                                                                     <small class="text-muted text-uppercase d-block mb-2 fw-bold">Min Year</small>
-                                                                    <div class="fs-6 fw-bold text-dark">{{ $pref['year_from'] ?: 'Any' }}</div>
+                                                                    <div class="fs-6 fw-bold text-dark">{{ $pref['year_from'] ?? 'Any' }}</div>
                                                                 </div>
                                                                 @if(isset($pref['battery_capacity']) && $pref['battery_capacity'])
                                                                 <div class="col-md-3">
