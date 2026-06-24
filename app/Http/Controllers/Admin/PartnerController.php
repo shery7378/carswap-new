@@ -144,20 +144,56 @@ class PartnerController extends Controller
             'longitude' => 'nullable|numeric',
         ]);
 
-        if ($request->hasFile('image')) {
+        if ($request->input('delete_image') == '1' && !$request->hasFile('image')) {
+            // Delete logo with no replacement
+            if ($partner->image) {
+                Storage::disk('public')->delete($partner->image);
+            }
+            $validated['image'] = null;
+        } elseif ($request->hasFile('image')) {
             if ($partner->image) {
                 Storage::disk('public')->delete($partner->image);
             }
             $validated['image'] = $request->file('image')->store('partners', 'public');
         }
 
+        // Handle gallery: keep only the paths still in keep_gallery[], then add replacements & new uploads
+        $existingGallery = $partner->gallery ?? [];
+        $keepGallery = $request->input('keep_gallery', []);
+
+        // Delete images that were removed (not in keep_gallery)
+        foreach ($existingGallery as $oldPath) {
+            if (!in_array($oldPath, $keepGallery)) {
+                Storage::disk('public')->delete($oldPath);
+            }
+        }
+
+        // Start with the kept images
+        $galleryPaths = array_values($keepGallery);
+
+        // Handle per-image replacements (replace_gallery[index] = new file)
+        if ($request->hasFile('replace_gallery')) {
+            foreach ($request->file('replace_gallery') as $index => $file) {
+                // The original path at this index (before removal) — find it in the original array
+                $originalPath = $existingGallery[$index] ?? null;
+                if ($originalPath && in_array($originalPath, $galleryPaths)) {
+                    // Remove the original from kept paths and delete the file
+                    $galleryPaths = array_values(array_filter($galleryPaths, fn($p) => $p !== $originalPath));
+                    Storage::disk('public')->delete($originalPath);
+                }
+                $galleryPaths[] = $file->store('partners/gallery', 'public');
+            }
+        }
+
+        // Append brand new gallery photos
         if ($request->hasFile('gallery')) {
-            $galleryPaths = $partner->gallery ?? [];
             foreach ($request->file('gallery') as $file) {
                 $galleryPaths[] = $file->store('partners/gallery', 'public');
             }
-            $validated['gallery'] = $galleryPaths;
         }
+
+        $validated['gallery'] = $galleryPaths;
+
 
         $validated['is_active'] = $request->has('is_active');
         $validated['show_opening_hours'] = $request->has('show_opening_hours');

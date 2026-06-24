@@ -134,13 +134,23 @@
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">{{ __('Featured Image (Logo)') }}</label>
                                 @if($partner->image)
-                                <div class="mb-2">
-                                    <img src="{{ asset('storage/' . $partner->image) }}" alt="{{ __('Current Logo') }}" class="rounded border" style="width: 120px; height: 120px; object-fit: cover;">
+                                <div class="mb-2 position-relative d-inline-block" id="logo-current-wrapper">
+                                    <img src="{{ asset('storage/' . $partner->image) }}" alt="{{ __('Current Logo') }}" class="rounded border" style="width: 120px; height: 120px; object-fit: cover;" id="logo-current-img">
+                                    <div class="d-flex gap-1 mt-1">
+                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteLogo()" title="{{ __('Delete logo') }}">
+                                            <i class="bx bx-trash me-1"></i>{{ __('Delete') }}
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('image').click()" title="{{ __('Replace logo') }}">
+                                            <i class="bx bx-refresh me-1"></i>{{ __('Replace') }}
+                                        </button>
+                                    </div>
+                                    <input type="hidden" name="delete_image" id="delete_image" value="0">
                                 </div>
                                 @endif
-                                <input type="file" class="form-control @error('image') is-invalid @enderror" id="image" name="image" onchange="previewLogo(this)" />
+                                <input type="file" class="form-control @error('image') is-invalid @enderror {{ $partner->image ? 'd-none' : '' }}" id="image" name="image" onchange="previewLogo(this)" />
                                 <div id="logo-preview" class="mt-2 d-none">
                                     <img id="logo-img" src="" alt="{{ __('New Logo Preview') }}" class="rounded border" style="width: 120px; height: 120px; object-fit: cover;">
+                                    <button type="button" class="btn btn-sm btn-outline-danger mt-1" onclick="cancelLogoReplace()"><i class="bx bx-x me-1"></i>{{ __('Cancel') }}</button>
                                 </div>
                                 @error('image')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
@@ -150,10 +160,22 @@
                             <label class="form-label">{{ __('Photo Gallery') }}</label>
                             
                             @if($partner->gallery && count($partner->gallery) > 0)
-                            <div class="row g-2 mb-3">
-                                @foreach($partner->gallery as $photo)
-                                <div class="col-md-2 col-sm-4">
-                                    <img src="{{ asset('storage/' . $photo) }}" class="img-fluid rounded border" style="height: 100px; width: 100%; object-fit: cover;">
+                            <div class="row g-3 mb-3" id="existing-gallery-wrapper">
+                                @foreach($partner->gallery as $index => $photo)
+                                <div class="col-sm-6 col-md-3 existing-gallery-item" id="gallery-item-{{ $index }}">
+                                    <div>
+                                        <img src="{{ asset('storage/' . $photo) }}" class="img-fluid rounded border mb-2" style="height: 120px; width: 100%; object-fit: cover;" id="gallery-preview-{{ $index }}">
+                                        <input type="hidden" name="keep_gallery[]" value="{{ $photo }}" id="keep-gallery-{{ $index }}">
+                                        <input type="file" name="replace_gallery[{{ $index }}]" class="d-none" id="replace-gallery-file-{{ $index }}" onchange="previewGalleryReplace(this, {{ $index }})" accept="image/*">
+                                        <div class="d-grid gap-1">
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="deleteGalleryItem({{ $index }})">
+                                                <i class="bx bx-trash me-1"></i>{{ __('Delete') }}
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="document.getElementById('replace-gallery-file-{{ $index }}').click()">
+                                                <i class="bx bx-refresh me-1"></i>{{ __('Replace') }}
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
@@ -244,6 +266,66 @@ function previewLogo(input) {
         reader.readAsDataURL(input.files[0]);
     } else {
         preview.classList.add('d-none');
+    }
+}
+
+function deleteLogo() {
+    if (!confirm('{{ __('Are you sure you want to delete the logo?') }}')) return;
+    document.getElementById('delete_image').value = '1';
+    const wrapper = document.getElementById('logo-current-wrapper');
+    if (wrapper) wrapper.style.opacity = '0.4';
+    // Show the file input for optional replacement
+    const fileInput = document.getElementById('image');
+    fileInput.classList.remove('d-none');
+    // Mark visually
+    if (wrapper) {
+        const badge = document.createElement('span');
+        badge.className = 'badge bg-danger mt-1 d-block';
+        badge.textContent = '{{ __('Will be deleted') }}';
+        badge.id = 'logo-delete-badge';
+        if (!document.getElementById('logo-delete-badge')) {
+            wrapper.appendChild(badge);
+        }
+    }
+}
+
+function cancelLogoReplace() {
+    const preview = document.getElementById('logo-preview');
+    const fileInput = document.getElementById('image');
+    preview.classList.add('d-none');
+    fileInput.value = '';
+    // Hide input if logo exists
+    const wrapper = document.getElementById('logo-current-wrapper');
+    if (wrapper) fileInput.classList.add('d-none');
+}
+
+function deleteGalleryItem(index) {
+    if (!confirm('{{ __('Are you sure you want to delete this photo?') }}')) return;
+    const item = document.getElementById('gallery-item-' + index);
+    const keepInput = document.getElementById('keep-gallery-' + index);
+    if (keepInput) keepInput.disabled = true;
+    const replaceFile = document.getElementById('replace-gallery-file-' + index);
+    if (replaceFile) replaceFile.disabled = true;
+    if (item) item.style.opacity = '0.3';
+    const img = document.getElementById('gallery-preview-' + index);
+    if (img) {
+        img.style.filter = 'grayscale(100%)';
+        // Add deleted badge
+        const badge = document.createElement('div');
+        badge.className = 'badge bg-danger position-absolute top-0 start-0 m-1';
+        badge.textContent = '{{ __('Deleting') }}';
+        img.parentElement.appendChild(badge);
+    }
+}
+
+function previewGalleryReplace(input, index) {
+    if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const img = document.getElementById('gallery-preview-' + index);
+            if (img) img.src = e.target.result;
+        }
+        reader.readAsDataURL(input.files[0]);
     }
 }
 
