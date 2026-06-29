@@ -24,6 +24,7 @@
     $activeCount = $items->where('is_active', 1)->count();
     $inactiveCount = $items->where('is_active', 0)->count();
     $showImageField = in_array($type, ['brands', 'body-types']);
+    $brandLogoPlaceholder = \App\Models\Brand::logoPlaceholder();
     $totalCols = 4;
     if ($showImageField) {
         $totalCols = 5;
@@ -222,7 +223,13 @@
                                     <td class="ps-4"><span class="text-muted fw-semibold">#{{ $item->id }}</span></td>
                                     @if($showImageField)
                                         <td class="logo-cell">
-                                            @if(!empty($item->image))
+                                            @if($type === 'brands')
+                                                <img src="{{ \App\Models\Brand::logoUrl($item->name, $item->image ?? null) }}"
+                                                     alt="{{ $item->name }}"
+                                                     class="rounded shadow-xs brand-image-preview"
+                                                     style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;"
+                                                     onerror="this.onerror=null;this.src='{{ $brandLogoPlaceholder }}';">
+                                            @elseif(!empty($item->image))
                                                 <img src="{{ asset('storage/' . $item->image) }}" alt="{{ $item->name }}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">
                                             @else
                                                 <div class="avatar avatar-xs">
@@ -279,7 +286,7 @@
                                              <button type="button" class="btn-action edit edit-btn"
                                                  data-id="{{ $item->id }}"
                                                  data-name="{{ $item->name }}"
-                                                 @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
+                                                 @if($showImageField) data-image="{{ $type === 'brands' ? \App\Models\Brand::logoUrl($item->name, $item->image ?? null) : ($item->image ? asset('storage/' . $item->image) : '') }}" @endif
                                                  @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
                                                  @if($type === 'extra-features') data-category="{{ $item->property_category_id }}" @endif
                                                  @if($type === 'transmissions') data-parent="{{ $item->parent_id }}" @endif
@@ -493,6 +500,7 @@
                     if (response.success) {
                         const item = response.item;
                         const type = '{{ $type }}';
+                        const brandLogoPlaceholder = @json($brandLogoPlaceholder);
 
                         if (type === 'transmissions') {
                             window.location.reload();
@@ -504,10 +512,12 @@
                                 <td class="ps-4"><span class="text-muted fw-semibold">#${item.id}</span></td>`;
 
                         if (type === 'brands' || type === 'body-types') {
-                            const logoSrc = item.image ? `{{ asset('storage') }}/${item.image}` : '';
+                            const logoSrc = type === 'brands'
+                                ? (item.logo_url || brandLogoPlaceholder)
+                                : (item.image ? `{{ asset('storage') }}/${item.image}` : '');
                             rowHtml += `
                                 <td class="logo-cell">
-                                    ${item.image ? `<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">` : `
+                                    ${(type === 'brands' || item.image) ? `<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;" onerror="this.onerror=null;this.src='${brandLogoPlaceholder}';">` : `
                                         <div class="avatar avatar-xs">
                                             <span class="avatar-initial rounded bg-label-secondary small"><i class="bx bx-image-alt"></i></span>
                                         </div>
@@ -552,7 +562,7 @@
                                     <div class="action-container">
                                         <button type="button" class="btn-action edit edit-btn"
                                             data-id="${item.id}" data-name="${item.name}" 
-                                            ${(type === 'brands' || type === 'body-types') ? `data-image="${item.image ? `{{ asset('storage') }}/${item.image}` : ''}"` : ''}
+                                            ${(type === 'brands' || type === 'body-types') ? `data-image="${logoSrc || ''}"` : ''}
                                             ${type === 'models' ? `data-brand="${item.brand_id}"` : ''}
                                             ${type === 'extra-features' ? `data-category="${item.property_category_id}"` : ''}
                                             data-bs-toggle="tooltip" title="Edit Item">
@@ -625,6 +635,7 @@
             e.preventDefault();
             const form = $(this);
             const type = '{{ $type }}';
+            const brandLogoPlaceholder = @json($brandLogoPlaceholder);
             $.ajax({
                 url: form.attr('action'),
                 type: 'POST', // Blade method field handles PUT
@@ -643,9 +654,16 @@
                         
                         row.find('.item-name').text(item.name);
                         
-                        if ((type === 'brands' || type === 'body-types') && item.image) {
-                            const logoSrc = `{{ asset('storage') }}/${item.image}`;
-                            row.find('.logo-cell').html(`<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;">`);
+                        if (type === 'brands' || type === 'body-types') {
+                            const logoSrc = type === 'brands'
+                                ? (item.logo_url || brandLogoPlaceholder)
+                                : (item.image ? `{{ asset('storage') }}/${item.image}` : '');
+
+                            if (logoSrc) {
+                                row.find('.logo-cell').html(`<img src="${logoSrc}" alt="${item.name}" class="rounded shadow-xs brand-image-preview" style="width: 32px; height: 32px; object-fit: contain; background: #f8f9fa; padding: 2px;" onerror="this.onerror=null;this.src='${brandLogoPlaceholder}';">`);
+                            } else {
+                                row.find('.logo-cell').html(`<div class="avatar avatar-xs"><span class="avatar-initial rounded bg-label-secondary small"><i class="bx bx-image-alt"></i></span></div>`);
+                            }
                         }
 
                         if (response.brand_name) {
@@ -659,7 +677,11 @@
                         // Update data attributes on edit button
                         const editBtn = row.find('.edit-btn');
                         editBtn.data('name', item.name);
-                        if (item.image) editBtn.data('image', `{{ asset('storage') }}/${item.image}`);
+                        if (type === 'brands') {
+                            editBtn.data('image', item.logo_url || brandLogoPlaceholder);
+                        } else if (item.image) {
+                            editBtn.data('image', `{{ asset('storage') }}/${item.image}`);
+                        }
                         if (item.brand_id) editBtn.data('brand', item.brand_id);
                         if (item.property_category_id) editBtn.data('category', item.property_category_id);
                         if (item.parent_id) editBtn.data('parent', item.parent_id);

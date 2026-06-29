@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" role="img" aria-label="Brand logo placeholder">
+  <rect width="64" height="64" rx="10" fill="#f3f4f6"/>
+  <path d="M18 42h28l-4.8-12.3a4 4 0 0 0-3.7-2.5H26.5a4 4 0 0 0-3.7 2.5L18 42Z" fill="#d1d5db"/>
+  <path d="M23 42h18.5c2.5 0 4.5 2 4.5 4.5v1.5H18v-1.5c0-2.5 2-4.5 4.5-4.5H23Z" fill="#9ca3af"/>
+  <circle cx="25" cy="48" r="3" fill="#6b7280"/>
+  <circle cx="39" cy="48" r="3" fill="#6b7280"/>
+  <path d="M25 31h14l2.4 6H22.6L25 31Z" fill="#ffffff"/>
+</svg>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\dashboard;
 
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
@@ -103,6 +104,7 @@ class VehicleRelationController extends Controller
 
         $id = DB::table($table)->insertGetId($data);
         $item = DB::table($table)->where('id', $id)->first();
+        $item = $this->withLocalLogoFields($item, $type);
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
@@ -178,6 +180,7 @@ class VehicleRelationController extends Controller
 
         DB::table($table)->where('id', $id)->update($data);
         $item = DB::table($table)->where('id', $id)->first();
+        $item = $this->withLocalLogoFields($item, $type);
 
         if ($request->ajax() || $request->wantsJson()) {
             return response()->json([
@@ -264,5 +267,18 @@ class VehicleRelationController extends Controller
         ];
 
         return $map[$type] ?? null;
+    }
+
+    private function withLocalLogoFields($item, string $type)
+    {
+        if ($type !== 'brands' || !$item) {
+            return $item;
+        }
+
+        $item->logo_slug = Brand::logoSlug($item->name);
+        $item->logo_url = Brand::logoUrl($item->name, $item->image ?? null);
+        $item->logo_placeholder = Brand::logoPlaceholder();
+
+        return $item;
     }
 }
