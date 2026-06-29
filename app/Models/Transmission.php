@@ -6,7 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transmission extends Model
 {
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'parent_id', 'is_active'];
+
+    public function parent()
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
     public function vehicles()
     {
         return $this->hasMany(Vehicle::class);

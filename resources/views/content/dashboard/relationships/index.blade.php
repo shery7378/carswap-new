@@ -30,6 +30,12 @@
     } elseif ($type === 'models' || $type === 'extra-features') {
         $totalCols = 5;
     }
+    $transmissionParents = collect();
+    $transmissionChildren = collect();
+    if ($type === 'transmissions') {
+        $transmissionParents = $items->whereNull('parent_id');
+        $transmissionChildren = $items->whereNotNull('parent_id')->groupBy('parent_id');
+    }
 @endphp
 
 <!-- TITLE & STATS -->
@@ -143,6 +149,21 @@
                         </div>
                     @endif
 
+                    @if($type === 'transmissions')
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-2">{{ __('Parent Category') }}</label>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-category"></i></span>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="parent_id" id="add_parent_id">
+                                    <option value="">{{ __('No parent category') }}</option>
+                                    @foreach($transmissionParents->sortBy('name') as $parent)
+                                        <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
+
                     <div class="mb-2 mt-4 pt-2">
                         <button type="submit" class="btn btn-primary d-flex align-items-center w-100 justify-content-center shadow-primary py-2 fw-bold" id="addBtn">
                             <span class="btn-loader d-none spinner-border spinner-border-sm me-2"></span>
@@ -192,8 +213,12 @@
                         </thead>
                         
                         <tbody class="table-border-bottom-0">
-                            @foreach($items as $item)
-                                <tr class="transition-all hover-bg-light" data-id="{{ $item->id }}">
+                            @php
+                                $renderItems = $type === 'transmissions' ? $transmissionParents : $items;
+                            @endphp
+                            @foreach($renderItems as $item)
+                                @php $children = $type === 'transmissions' ? ($transmissionChildren[$item->id] ?? collect()) : collect(); @endphp
+                                <tr class="transition-all hover-bg-light transmission-parent-row" data-id="{{ $item->id }}">
                                     <td class="ps-4"><span class="text-muted fw-semibold">#{{ $item->id }}</span></td>
                                     @if($showImageField)
                                         <td class="logo-cell">
@@ -208,6 +233,11 @@
                                     @endif
                                     <td class="name-cell">
                                         <div class="d-flex align-items-center">
+                                            @if($type === 'transmissions' && $children->isNotEmpty())
+                                                <button type="button" class="btn btn-sm p-0 me-2 transmission-collapse-toggle" data-parent="{{ $item->id }}" aria-expanded="true">
+                                                    <i class="bx bx-chevron-down"></i>
+                                                </button>
+                                            @endif
                                             <div class="indicator badge rounded-pill bg-{{ $item->is_active ? 'success' : 'secondary' }} me-2 p-1"></div>
                                             <span class="fw-bold text-dark fs-6 item-name text-truncate">{{ $item->name }}</span>
                                         </div>
@@ -252,6 +282,7 @@
                                                  @if($showImageField) data-image="{{ $item->image ? asset('storage/' . $item->image) : '' }}" @endif
                                                  @if($type === 'models') data-brand="{{ $item->brand_id }}" @endif
                                                  @if($type === 'extra-features') data-category="{{ $item->property_category_id }}" @endif
+                                                 @if($type === 'transmissions') data-parent="{{ $item->parent_id }}" @endif
                                                  data-bs-toggle="tooltip" title="{{ __('Edit Item') }}">
                                                  <i class="bx bx-edit-alt"></i>
                                              </button>
@@ -268,6 +299,48 @@
                                          </div>
                                      </td>
                                 </tr>
+                                @if($type === 'transmissions')
+                                    @foreach($children as $child)
+                                        <tr class="transition-all hover-bg-light transmission-child-row" data-id="{{ $child->id }}" data-parent="{{ $item->id }}">
+                                            <td class="ps-4"><span class="text-muted fw-semibold">#{{ $child->id }}</span></td>
+                                            <td class="name-cell">
+                                                <div class="d-flex align-items-center ps-4">
+                                                    <span class="me-2 text-muted">↳</span>
+                                                    <div class="indicator badge rounded-pill bg-{{ $child->is_active ? 'success' : 'secondary' }} me-2 p-1"></div>
+                                                    <span class="fw-bold text-dark fs-6 item-name text-truncate">{{ $child->name }}</span>
+                                                </div>
+                                            </td>
+                                            <td class="text-center">
+                                                <div class="form-check form-switch d-flex justify-content-center">
+                                                    <input class="form-check-input status-toggle-switch" type="checkbox"
+                                                        data-id="{{ $child->id }}"
+                                                        data-type="{{ $type }}"
+                                                        {{ ($child->is_active ?? true) ? 'checked' : '' }}>
+                                                </div>
+                                            </td>
+                                            <td class="text-center pe-4">
+                                                <div class="action-container">
+                                                    <button type="button" class="btn-action edit edit-btn"
+                                                        data-id="{{ $child->id }}"
+                                                        data-name="{{ $child->name }}"
+                                                        data-parent="{{ $child->parent_id }}"
+                                                        data-bs-toggle="tooltip" title="{{ __('Edit Item') }}">
+                                                        <i class="bx bx-edit-alt"></i>
+                                                    </button>
+                                                    <form action="{{ route('admin.vehicle-settings.destroy', [$type, $child->id]) }}"
+                                                        method="POST" class="d-inline delete-form">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="button" class="btn-action delete delete-trigger"
+                                                            data-bs-toggle="tooltip" title="{{ __('Delete Item') }}">
+                                                            <i class="bx bx-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             @endforeach
                         </tbody>
                     </table>
@@ -339,6 +412,21 @@
                             </div>
                         </div>
                     @endif
+
+                    @if($type === 'transmissions')
+                        <div class="mb-3">
+                            <label class="form-label fw-bold text-muted small text-uppercase">{{ __('Parent Category') }}</label>
+                            <div class="input-group input-group-merge shadow-none border-0">
+                                <span class="input-group-text bg-light border-0"><i class="bx bx-category"></i></span>
+                                <select class="form-select bg-light border-0 px-3 py-2 no-select2" name="parent_id" id="edit_parent_id">
+                                    <option value="">{{ __('No parent category') }}</option>
+                                    @foreach($transmissionParents->sortBy('name') as $parent)
+                                        <option value="{{ $parent->id }}">{{ $parent->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endif
                 </div>
                 <div class="modal-footer border-0 pt-0 pb-4 px-4 justify-content-between">
                     <button type="button" class="btn btn-label-secondary px-4" data-bs-dismiss="modal">{{ __('Discard') }}</button>
@@ -354,6 +442,7 @@
     $(document).ready(function() {
         const table = $('#relationships-table').DataTable({
             "order": [[0, "desc"]],
+            "ordering": {{ $type === 'transmissions' ? 'false' : 'true' }},
             "pageLength": 10,
             "language": {
                 "search": "",
@@ -404,6 +493,12 @@
                     if (response.success) {
                         const item = response.item;
                         const type = '{{ $type }}';
+
+                        if (type === 'transmissions') {
+                            window.location.reload();
+                            return;
+                        }
+
                         let rowHtml = `
                             <tr class="transition-all hover-bg-light" data-id="${item.id}">
                                 <td class="ps-4"><span class="text-muted fw-semibold">#${item.id}</span></td>`;
@@ -499,12 +594,14 @@
             const name = $(this).data('name');
             const brandId = $(this).data('brand');
             const categoryId = $(this).data('category');
+            const parentId = $(this).data('parent');
             const image = $(this).data('image');
             const type = '{{ $type }}';
  
             $('#edit_name').val(name);
             $('#edit_brand_id').val(brandId);
             $('#edit_property_category_id').val(categoryId);
+            $('#edit_parent_id').val(parentId || '');
             
             if (type === 'brands' || type === 'body-types') {
                 if (image) {
@@ -538,6 +635,11 @@
                     if (response.success) {
                         const item = response.item;
                         const row = $(`tr[data-id="${item.id}"]`);
+
+                        if (type === 'transmissions') {
+                            window.location.reload();
+                            return;
+                        }
                         
                         row.find('.item-name').text(item.name);
                         
@@ -560,6 +662,7 @@
                         if (item.image) editBtn.data('image', `{{ asset('storage') }}/${item.image}`);
                         if (item.brand_id) editBtn.data('brand', item.brand_id);
                         if (item.property_category_id) editBtn.data('category', item.property_category_id);
+                        if (item.parent_id) editBtn.data('parent', item.parent_id);
 
                         bootstrap.Modal.getInstance(document.getElementById('editModal')).hide();
                         toastr.success('{{ __('Item updated successfully') }}');
@@ -597,6 +700,16 @@
             });
         });
 
+        $(document).on('click', '.transmission-collapse-toggle', function() {
+            const btn = $(this);
+            const parentId = btn.data('parent');
+            const expanded = btn.attr('aria-expanded') === 'true';
+
+            btn.attr('aria-expanded', expanded ? 'false' : 'true');
+            btn.find('i').toggleClass('bx-chevron-down', !expanded).toggleClass('bx-chevron-right', expanded);
+            $(`.transmission-child-row[data-parent="${parentId}"]`).toggleClass('d-none', expanded);
+        });
+
         // Delete Logic
         $(document).on('click', '.delete-trigger', function() {
             const btn = $(this);
@@ -619,6 +732,10 @@
                         data: form.serialize(),
                         success: function(response) {
                             if (response.success) {
+                                if ('{{ $type }}' === 'transmissions') {
+                                    window.location.reload();
+                                    return;
+                                }
                                 table.row(row).remove().draw(false);
                                 toastr.success(response.message, 'Deleted');
                                 updateStats();

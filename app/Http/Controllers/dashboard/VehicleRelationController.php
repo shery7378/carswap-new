@@ -29,7 +29,15 @@ class VehicleRelationController extends Controller
             $query->where('type', 'interior');
         }
 
-        $items = $query->orderBy('id', 'desc')->get();
+        if ($type === 'transmissions') {
+            $items = $query
+                ->orderByRaw('COALESCE(parent_id, id)')
+                ->orderByRaw('CASE WHEN parent_id IS NULL THEN 0 ELSE 1 END')
+                ->orderBy('id')
+                ->get();
+        } else {
+            $items = $query->orderBy('id', 'desc')->get();
+        }
         $title = Str::headline($type);
 
         return view('content.dashboard.relationships.index', compact('items', 'type', 'title'));
@@ -57,7 +65,8 @@ class VehicleRelationController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', 'max:255', $uniqueRule],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'parent_id' => ['nullable', Rule::exists('transmissions', 'id')],
         ], [
             'name.unique' => __('This name has already been taken.'),
         ]);
@@ -81,6 +90,10 @@ class VehicleRelationController extends Controller
             $data['property_category_id'] = $request->property_category_id;
         }
 
+        if ($type === 'transmissions') {
+            $data['parent_id'] = $request->filled('parent_id') ? $request->parent_id : null;
+        }
+
         // Add type for colors slug-based management
         if ($type === 'exterior-colors') {
             $data['type'] = 'exterior';
@@ -97,7 +110,8 @@ class VehicleRelationController extends Controller
                 'message' => Str::headline($type) . ' added successfully.',
                 'item' => $item,
                 'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null,
-                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null
+                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null,
+                'parent_name' => ($type === 'transmissions' && isset($item->parent_id)) ? (DB::table('transmissions')->where('id', $item->parent_id)->value('name') ?? 'N/A') : null
             ]);
         }
 
@@ -129,7 +143,8 @@ class VehicleRelationController extends Controller
 
         $request->validate([
             'name' => ['required', 'string', 'max:255', $uniqueRule],
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048'
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'parent_id' => ['nullable', Rule::exists('transmissions', 'id')->where(fn ($query) => $query->where('id', '!=', $id))],
         ], [
             'name.unique' => __('This name has already been taken.'),
         ]);
@@ -157,6 +172,10 @@ class VehicleRelationController extends Controller
             $data['property_category_id'] = $request->property_category_id;
         }
 
+        if ($type === 'transmissions') {
+            $data['parent_id'] = $request->filled('parent_id') ? $request->parent_id : null;
+        }
+
         DB::table($table)->where('id', $id)->update($data);
         $item = DB::table($table)->where('id', $id)->first();
 
@@ -166,7 +185,8 @@ class VehicleRelationController extends Controller
                 'message' => Str::headline($type) . ' updated successfully.',
                 'item' => $item,
                 'brand_name' => ($type === 'models' && isset($item->brand_id)) ? (DB::table('brands')->where('id', $item->brand_id)->value('name') ?? 'N/A') : null,
-                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null
+                'category_name' => ($type === 'extra-features' && isset($item->property_category_id)) ? (DB::table('property_categories')->where('id', $item->property_category_id)->value('name') ?? 'N/A') : null,
+                'parent_name' => ($type === 'transmissions' && isset($item->parent_id)) ? (DB::table('transmissions')->where('id', $item->parent_id)->value('name') ?? 'N/A') : null
             ]);
         }
 
