@@ -484,13 +484,38 @@
             });
 
             // ── Status dropdown z-index fix ───────────────────────────────────────
+            // Detect Safari (desktop + iOS) — both share -webkit-touch-callout support
+            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent)
+                        || (typeof CSS !== 'undefined' && CSS.supports('-webkit-touch-callout', 'none'));
+
             $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').addClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').addClass('status-dropdown-open');
+
+                // Safari fix: escape overflow:auto clip by switching to position:fixed
+                if (isSafari) {
+                    var $menu = $(this).find('.dropdown-menu');
+                    var toggle = $(this).find('[data-bs-toggle="dropdown"]')[0];
+                    if (toggle && $menu.length) {
+                        var rect = toggle.getBoundingClientRect();
+                        var menuW = $menu.outerWidth() || 150;
+                        var left  = Math.max(4, Math.min(rect.right - menuW, window.innerWidth - menuW - 4));
+                        var top   = rect.bottom + 4;
+                        $menu.addClass('safari-fixed-dropdown')
+                             .css({ top: top + 'px', left: left + 'px' });
+                    }
+                }
             });
             $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').removeClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').removeClass('status-dropdown-open');
+
+                // Clean up Safari fixed positioning
+                if (isSafari) {
+                    $(this).find('.dropdown-menu')
+                           .removeClass('safari-fixed-dropdown')
+                           .css({ top: '', left: '' });
+                }
             });
 
             // ── Actions dropdown z-index fix ─────────────────────────────────────
@@ -664,39 +689,40 @@
 	            }
 	        }
 
+	        /* ── Safari: dropdown uses position:fixed (set via JS) so it escapes
+	           the overflow:auto scroll container (.vehicles-table-responsive).
+	           The @supports block below applies *visual* Safari-only polish only;
+	           positioning is handled in the shown.bs.dropdown handler below. ── */
 	        @supports (-webkit-touch-callout: none) {
-	            .status-dropdown .dropdown-menu {
-	                position: absolute !important;
-	                top: calc(100% + .35rem) !important;
-	                right: 0 !important;
-	                left: auto !important;
-	                z-index: 9999 !important;
+	            /* When JS applies .safari-fixed-dropdown, switch to fixed coords */
+	            .status-dropdown .dropdown-menu.safari-fixed-dropdown {
+	                position: fixed !important;
+	                /* top / left are set inline by JS */
+	                right: auto !important;
+	                z-index: 99999 !important;
 	                background-color: #ffffff !important;
+	                -webkit-background-clip: padding-box !important;
 	                background-clip: padding-box !important;
+	                border: 1px solid rgba(0,0,0,.10) !important;
+	                box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15) !important;
 	                opacity: 1 !important;
 	                width: max-content !important;
+	                min-width: 9rem !important;
 	                max-width: calc(100vw - 1rem) !important;
 	                -webkit-backdrop-filter: none !important;
 	                backdrop-filter: none !important;
+	                /* Force GPU layer so Safari composites it on top */
 	                -webkit-transform: translateZ(0) !important;
 	                transform: translateZ(0) !important;
 	                -webkit-backface-visibility: hidden;
 	                backface-visibility: hidden;
 	                will-change: transform;
+	                /* Prevent any inherited transparency */
+	                color: #333 !important;
 	            }
 
 	            .status-dropdown.show {
 	                z-index: 9998 !important;
-	            }
-
-	            @media (max-width: 767.98px) {
-	                .status-dropdown .dropdown-menu {
-	                    right: 0 !important;
-	                    left: auto !important;
-	                    width: min(12.5rem, calc(100vw - 1rem)) !important;
-	                    max-width: calc(100vw - 1rem) !important;
-	                    margin-top: .25rem !important;
-	                }
 	            }
 	        }
 
