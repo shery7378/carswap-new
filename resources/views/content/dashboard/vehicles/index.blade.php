@@ -483,24 +483,7 @@
                 });
             });
 
-            // ── Status dropdown – Safari position:fixed Popper strategy ──────────
-            // Safari clips position:absolute menus inside overflow:auto tables AND
-            // later <tr> siblings paint over the menu due to table stacking rules.
-            // Fix: re-init the Bootstrap Dropdown with Popper strategy:'fixed' on
-            // Safari so Popper positions the menu relative to the viewport.
-            var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-
-            if (isSafari && typeof bootstrap !== 'undefined') {
-                document.querySelectorAll('.status-dropdown [data-bs-toggle="dropdown"]')
-                    .forEach(function (el) {
-                        var inst = bootstrap.Dropdown.getInstance(el);
-                        if (inst) inst.dispose();
-                        new bootstrap.Dropdown(el, {
-                            popperConfig: { strategy: 'fixed' }
-                        });
-                    });
-            }
-
+            // ── Status dropdown z-index fix ───────────────────────────────────────
             $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').addClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').addClass('status-dropdown-open');
@@ -681,39 +664,39 @@
 	            }
 	        }
 
-	        /* ── Safari-specific dropdown fixes ───────────────────────
-	           JS re-inits Bootstrap with Popper strategy:'fixed' on Safari so
-	           the menu is viewport-relative and escapes overflow:auto clipping
-	           AND table stacking context. CSS below adds visual-only polish. */
 	        @supports (-webkit-touch-callout: none) {
-	            /* Solid, fully opaque white background so no table content bleeds through */
 	            .status-dropdown .dropdown-menu {
+	                position: absolute !important;
+	                top: calc(100% + .35rem) !important;
+	                right: 0 !important;
+	                left: auto !important;
+	                z-index: 9999 !important;
 	                background-color: #ffffff !important;
-	                -webkit-background-clip: padding-box !important;
 	                background-clip: padding-box !important;
-	                border: 1px solid rgba(0,0,0,.12) !important;
-	                box-shadow: 0 8px 24px rgba(0,0,0,.18) !important;
 	                opacity: 1 !important;
-	                /* Disable any blur/transparency effects */
+	                width: max-content !important;
+	                max-width: calc(100vw - 1rem) !important;
 	                -webkit-backdrop-filter: none !important;
 	                backdrop-filter: none !important;
-	                /* Force isolated GPU compositing layer */
 	                -webkit-transform: translateZ(0) !important;
 	                transform: translateZ(0) !important;
-	                isolation: isolate !important;
-	                z-index: 99999 !important;
-	                color: #333 !important;
+	                -webkit-backface-visibility: hidden;
+	                backface-visibility: hidden;
+	                will-change: transform;
 	            }
+
 	            .status-dropdown.show {
-	                z-index: 99998 !important;
+	                z-index: 9998 !important;
 	            }
-	            /* Prevent sibling rows from painting over the open dropdown */
-	            #vehicles-table tbody tr {
-	                isolation: isolate;
-	            }
-	            #vehicles-table tbody tr.status-dropdown-open {
-	                z-index: 99997 !important;
-	                isolation: isolate !important;
+
+	            @media (max-width: 767.98px) {
+	                .status-dropdown .dropdown-menu {
+	                    right: 0 !important;
+	                    left: auto !important;
+	                    width: min(12.5rem, calc(100vw - 1rem)) !important;
+	                    max-width: calc(100vw - 1rem) !important;
+	                    margin-top: .25rem !important;
+	                }
 	            }
 	        }
 
