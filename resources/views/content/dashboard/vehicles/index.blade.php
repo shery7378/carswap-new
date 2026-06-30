@@ -161,7 +161,7 @@
                                                     <span
                                                         class="badge bg-{{ $statusClass }}">{{ __($vehicle->ad_status) }}</span>
                                                 </button>
-                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-1">
+                                                <ul class="dropdown-menu dropdown-menu-end bg-white shadow border-0 mt-1">
                                                     <form action="{{ route('admin.vehicles.update-status', $vehicle->id) }}"
                                                         method="POST">
                                                         @csrf @method('PATCH')
@@ -637,10 +637,12 @@
 	                top: calc(100% + .35rem) !important;
 	                right: 0 !important;
 	                left: auto !important;
-	                z-index: 3000 !important;
-	                background-color: #fff !important;
+	                z-index: 9999 !important;
+	                background-color: #ffffff !important;
 	                background-clip: padding-box !important;
 	                opacity: 1 !important;
+	                -webkit-backdrop-filter: none !important;
+	                backdrop-filter: none !important;
 	                -webkit-transform: translateZ(0) !important;
 	                transform: translateZ(0) !important;
 	                -webkit-backface-visibility: hidden;
@@ -649,7 +651,7 @@
 	            }
 
 	            .status-dropdown.show {
-	                z-index: 2999 !important;
+	                z-index: 9998 !important;
 	            }
 	        }
 
