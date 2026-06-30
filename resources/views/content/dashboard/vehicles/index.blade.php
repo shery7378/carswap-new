@@ -483,20 +483,24 @@
                 });
             });
 
-            // ── Status dropdown z-index fix ───────────────────────────────────────
-            // Safari (desktop + iOS) clips position:absolute dropdowns inside
-            // overflow:auto containers. Fix: temporarily unlock overflow when open.
+            // ── Status dropdown – Safari position:fixed Popper strategy ──────────
+            // Safari clips position:absolute menus inside overflow:auto tables AND
+            // later <tr> siblings paint over the menu due to table stacking rules.
+            // Fix: re-init the Bootstrap Dropdown with Popper strategy:'fixed' on
+            // Safari so Popper positions the menu relative to the viewport.
             var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
-            $(document).on('show.bs.dropdown', '.status-dropdown', function () {
-                // Unlock the scroll container BEFORE Bootstrap opens the menu
-                if (isSafari) {
-                    $('.vehicles-table-responsive').css({
-                        'overflow-x': 'visible',
-                        'overflow-y': 'visible'
+            if (isSafari && typeof bootstrap !== 'undefined') {
+                document.querySelectorAll('.status-dropdown [data-bs-toggle="dropdown"]')
+                    .forEach(function (el) {
+                        var inst = bootstrap.Dropdown.getInstance(el);
+                        if (inst) inst.dispose();
+                        new bootstrap.Dropdown(el, {
+                            popperConfig: { strategy: 'fixed' }
+                        });
                     });
-                }
-            });
+            }
+
             $(document).on('shown.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').addClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').addClass('status-dropdown-open');
@@ -504,15 +508,6 @@
             $(document).on('hide.bs.dropdown', '.status-dropdown', function () {
                 $(this).closest('tr').removeClass('status-dropdown-open');
                 $(this).closest('.vehicle-mobile-card').removeClass('status-dropdown-open');
-            });
-            $(document).on('hidden.bs.dropdown', '.status-dropdown', function () {
-                // Restore scroll container after menu is fully hidden
-                if (isSafari) {
-                    $('.vehicles-table-responsive').css({
-                        'overflow-x': 'auto',
-                        'overflow-y': 'auto'
-                    });
-                }
             });
 
             // ── Actions dropdown z-index fix ─────────────────────────────────────
@@ -687,31 +682,38 @@
 	        }
 
 	        /* ── Safari-specific dropdown fixes ───────────────────────
-	           Safari clips position:absolute children of overflow:auto containers.
-	           The JS handler temporarily sets overflow:visible on the scroll
-	           container so Bootstrap's own positioning works untouched.
-	           This CSS block only adds visual polish (solid bg, shadow, z-index). */
+	           JS re-inits Bootstrap with Popper strategy:'fixed' on Safari so
+	           the menu is viewport-relative and escapes overflow:auto clipping
+	           AND table stacking context. CSS below adds visual-only polish. */
 	        @supports (-webkit-touch-callout: none) {
+	            /* Solid, fully opaque white background so no table content bleeds through */
 	            .status-dropdown .dropdown-menu {
-	                z-index: 9999 !important;
 	                background-color: #ffffff !important;
 	                -webkit-background-clip: padding-box !important;
 	                background-clip: padding-box !important;
-	                border: 1px solid rgba(0,0,0,.10) !important;
-	                box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15) !important;
+	                border: 1px solid rgba(0,0,0,.12) !important;
+	                box-shadow: 0 8px 24px rgba(0,0,0,.18) !important;
 	                opacity: 1 !important;
+	                /* Disable any blur/transparency effects */
 	                -webkit-backdrop-filter: none !important;
 	                backdrop-filter: none !important;
-	                /* Force GPU compositing layer so Safari renders it on top */
+	                /* Force isolated GPU compositing layer */
 	                -webkit-transform: translateZ(0) !important;
 	                transform: translateZ(0) !important;
-	                -webkit-backface-visibility: hidden;
-	                backface-visibility: hidden;
+	                isolation: isolate !important;
+	                z-index: 99999 !important;
 	                color: #333 !important;
 	            }
-
 	            .status-dropdown.show {
-	                z-index: 9998 !important;
+	                z-index: 99998 !important;
+	            }
+	            /* Prevent sibling rows from painting over the open dropdown */
+	            #vehicles-table tbody tr {
+	                isolation: isolate;
+	            }
+	            #vehicles-table tbody tr.status-dropdown-open {
+	                z-index: 99997 !important;
+	                isolation: isolate !important;
 	            }
 	        }
 
