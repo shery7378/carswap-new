@@ -310,17 +310,22 @@
                         <textarea name="description" class="form-control" rows="3" required></textarea>
                     </div>
 	                    <div class="row">
-                            @if (!$isFaqSection)
+                            @if (!$isFaqSection && $section->id != 13)
 	                            <div class="col-md-6 mb-3">
 	                                <label class="form-label">@lang('Icon Class (Boxicons)')</label>
 	                                <input type="text" name="icon" class="form-control" placeholder="bx-car">
 	                            </div>
+                                <div class="col-md-6 mb-3">
+                            @elseif (!$isFaqSection)
                                 <div class="col-md-6 mb-3">
                             @else
                                 <div class="col-md-12 mb-3">
                             @endif
 	                            <label class="form-label">@lang('Display Order')</label>
 	                            <input type="number" name="order" class="form-control" value="0">
+	                            @if ($section->id == 13)
+	                                <small class="text-muted">Lower numbers appear first on the page.</small>
+	                            @endif
 	                        </div>
 	                    </div>
                         @if (!$isFaqSection)
@@ -371,17 +376,22 @@
                             required></textarea>
                     </div>
 	                    <div class="row">
-                            @if (!$isFaqSection)
+                            @if (!$isFaqSection && $section->id != 13)
 	                            <div class="col-md-6 mb-3">
 	                                <label class="form-label">@lang('Icon Class')</label>
 	                                <input type="text" id="edit-item-icon" name="icon" class="form-control">
 	                            </div>
+                                <div class="col-md-6 mb-3">
+                            @elseif (!$isFaqSection)
                                 <div class="col-md-6 mb-3">
                             @else
                                 <div class="col-md-12 mb-3">
                             @endif
 	                            <label class="form-label">@lang('Display Order')</label>
 	                            <input type="number" id="edit-item-order" name="order" class="form-control">
+	                            @if ($section->id == 13)
+	                                <small class="text-muted">Lower numbers appear first on the page.</small>
+	                            @endif
 	                        </div>
 	                    </div>
                         @if (!$isFaqSection)
@@ -490,7 +500,9 @@
                         document.querySelector('#edit-item-description').value = item.description;
                     }
 
-                    document.querySelector('#edit-item-icon').value = item.icon || '';
+                    if (document.querySelector('#edit-item-icon')) {
+                        document.querySelector('#edit-item-icon').value = item.icon || '';
+                    }
                     document.querySelector('#edit-item-order').value = item.order || 0;
                 });
             });
