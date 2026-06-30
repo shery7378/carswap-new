@@ -560,16 +560,45 @@
             }
         }
 
-        @media (max-width: 576px) {
-            .dataTables_filter,
-            .dataTables_paginate {
-                justify-content: flex-start !important;
-            }
+	        @media (max-width: 576px) {
+	            .card-header.d-flex {
+	                flex-direction: column;
+	                align-items: stretch;
+	            }
 
-            .dataTables_filter input {
-                max-width: 100%;
-            }
-        }
+	            .card-header.d-flex > .d-flex {
+	                width: 100%;
+	                flex-direction: column;
+	                align-items: stretch;
+	            }
+
+	            .card-header .btn,
+	            .card-header form,
+	            .card-header select {
+	                width: 100%;
+	            }
+
+	            .card-header .btn-group,
+	            .card-header .btn-group .btn,
+	            .card-header .btn-primary {
+	                width: 100%;
+	            }
+
+	            .dataTables_wrapper .dataTables_length,
+	            .dataTables_wrapper .dataTables_filter {
+	                width: 100%;
+	            }
+
+	            .dataTables_filter,
+	            .dataTables_paginate {
+	                justify-content: flex-start !important;
+	            }
+
+	            .dataTables_filter input {
+	                max-width: 100%;
+	                width: 100%;
+	            }
+	        }
 
         /* ── Desktop table row ──────────────────────────────── */
         #vehicles-table tbody tr {
@@ -616,7 +645,11 @@
 	            .status-dropdown .dropdown-menu {
 	                z-index: 2001;
 	                min-width: 160px;
+	                width: max-content;
+	                max-width: calc(100vw - 1rem);
 	                box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .12);
+	                background-color: #ffffff;
+	                opacity: 1;
 	            }
 
 	            .status-dropdown .dropdown-menu[data-bs-popper] {
@@ -641,6 +674,8 @@
 	                background-color: #ffffff !important;
 	                background-clip: padding-box !important;
 	                opacity: 1 !important;
+	                width: max-content !important;
+	                max-width: calc(100vw - 1rem) !important;
 	                -webkit-backdrop-filter: none !important;
 	                backdrop-filter: none !important;
 	                -webkit-transform: translateZ(0) !important;
@@ -652,6 +687,16 @@
 
 	            .status-dropdown.show {
 	                z-index: 9998 !important;
+	            }
+
+	            @media (max-width: 767.98px) {
+	                .status-dropdown .dropdown-menu {
+	                    right: 0 !important;
+	                    left: auto !important;
+	                    width: min(12.5rem, calc(100vw - 1rem)) !important;
+	                    max-width: calc(100vw - 1rem) !important;
+	                    margin-top: .25rem !important;
+	                }
 	            }
 	        }
 
