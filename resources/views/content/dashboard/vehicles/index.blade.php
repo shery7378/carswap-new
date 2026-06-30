@@ -631,6 +631,28 @@
 	            }
 	        }
 
+	        @supports (-webkit-touch-callout: none) {
+	            .status-dropdown .dropdown-menu {
+	                position: absolute !important;
+	                top: calc(100% + .35rem) !important;
+	                right: 0 !important;
+	                left: auto !important;
+	                z-index: 3000 !important;
+	                background-color: #fff !important;
+	                background-clip: padding-box !important;
+	                opacity: 1 !important;
+	                -webkit-transform: translateZ(0) !important;
+	                transform: translateZ(0) !important;
+	                -webkit-backface-visibility: hidden;
+	                backface-visibility: hidden;
+	                will-change: transform;
+	            }
+
+	            .status-dropdown.show {
+	                z-index: 2999 !important;
+	            }
+	        }
+
 	        /* ── Actions dropdown z-index ───────────────────────── */
 	        #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
         #vehicles-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
