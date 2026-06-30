@@ -590,6 +590,11 @@
 	        .status-dropdown { position: relative; }
 	        .status-dropdown.show { z-index: 1066; }
 	        .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
+	        .status-dropdown .dropdown-menu {
+	            background-color: #fff;
+	            background-clip: padding-box;
+	            border: 1px solid rgba(0, 0, 0, .08);
+	        }
             .status-dropdown .dropdown-item { transition: color .15s ease; }
             .status-dropdown .dropdown-item i,
             .status-dropdown .dropdown-item .badge-dot { transition: color .15s ease, background-color .15s ease; }
@@ -603,8 +608,31 @@
             .status-dropdown .dropdown-item.status-option-secondary:focus { color: var(--bs-secondary) !important; }
 	        .vehicle-mobile-card.status-dropdown-open { position: relative; z-index: 1065; }
 
-        /* ── Actions dropdown z-index ───────────────────────── */
-        #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
+	        @media (max-width: 1199.98px) {
+	            .status-dropdown.show {
+	                z-index: 2000;
+	            }
+
+	            .status-dropdown .dropdown-menu {
+	                z-index: 2001;
+	                min-width: 160px;
+	                box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .12);
+	            }
+
+	            .status-dropdown .dropdown-menu[data-bs-popper] {
+	                inset: auto 0 auto auto !important;
+	                margin-top: .35rem !important;
+	                transform: none !important;
+	            }
+
+	            .vehicle-mobile-card.status-dropdown-open,
+	            #vehicles-table tbody tr.status-dropdown-open {
+	                z-index: 1999;
+	            }
+	        }
+
+	        /* ── Actions dropdown z-index ───────────────────────── */
+	        #vehicles-table tbody tr.actions-dropdown-open { position: relative; z-index: 1070; }
         #vehicles-table tbody tr.actions-dropdown-open td:last-child { position: relative; z-index: 1071; }
         .vehicles-actions.dropdown.show { z-index: 1072; }
         .vehicles-actions.dropdown .dropdown-menu { z-index: 1073; }
