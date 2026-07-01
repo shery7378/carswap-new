@@ -652,11 +652,11 @@
 	                opacity: 1;
 	            }
 
-	            .status-dropdown .dropdown-menu[data-bs-popper] {
+	            /* .status-dropdown .dropdown-menu[data-bs-popper] {
 	                inset: auto 0 auto auto !important;
 	                margin-top: .35rem !important;
 	                transform: none !important;
-	            }
+	            } */
 
 	            .vehicle-mobile-card.status-dropdown-open,
 	            #vehicles-table tbody tr.status-dropdown-open {
