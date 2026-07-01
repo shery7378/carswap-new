@@ -697,6 +697,29 @@
 	                    max-width: calc(100vw - 1rem) !important;
 	                    margin-top: .25rem !important;
 	                } */
+
+	                #vehicles-table tbody tr.status-dropdown-open {
+	                    position: relative;
+	                    z-index: 9997;
+	                    isolation: isolate;
+	                }
+
+	                #vehicles-table tbody tr.status-dropdown-open .td-status {
+	                    position: relative;
+	                    z-index: 9998;
+	                }
+
+	                .status-dropdown.show {
+	                    position: relative;
+	                    z-index: 9998;
+	                }
+
+	                .status-dropdown.show .dropdown-menu {
+	                    z-index: 9999;
+	                    background-color: #ffffff;
+	                    -webkit-transform-style: preserve-3d;
+	                    transform-style: preserve-3d;
+	                }
 	            }
 	        }
 
