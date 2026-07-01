@@ -603,12 +603,11 @@
         /* ── Desktop table row ──────────────────────────────── */
         #vehicles-table tbody tr {
             cursor: pointer;
-            transition: background-color .15s ease, transform .15s ease;
+            transition: background-color .15s ease;
         }
 
         #vehicles-table tbody tr:hover {
             background-color: rgba(105, 108, 255, .04) !important;
-            transform: scale(1.002);
         }
 
         /* ── Header filters and status dropdown z-index ────────────────────────── */
