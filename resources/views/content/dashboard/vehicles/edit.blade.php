@@ -502,11 +502,6 @@
                                     <input type="number" class="form-control" name="range" value="{{ old('range', $vehicle->range) }}">
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">{{ __('Engine Number') }}</label>
-                                    <input type="text" class="form-control" name="engine_number"
-                                        value="{{ old('engine_number', $vehicle->engine_number) }}">
-                                </div>
-                                <div class="col-md-6 mb-3">
                                     <label class="form-label">{{ __('Exterior Color') }}</label>
                                      <select class="form-select" name="exterior_color_id">
                                          <option value="">{{ __('Select Color') }}</option>

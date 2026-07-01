@@ -196,7 +196,6 @@
                             </thead>
                             <tbody>
                                 <tr><td class="text-muted px-3 py-2">VIN / Alvázszám</td><td class="fw-bold px-3 py-2">{{ $vehicle->vin_number ?: __('N/A') }}</td></tr>
-                                <tr><td class="text-muted px-3 py-2">{{ __('Engine Code') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->engine_number ?: __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Cylinder Capacity') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->cylinder_capacity ?: __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Battery Capacity') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->battery_capacity ? $vehicle->battery_capacity . ' kWh' : __('N/A') }}</td></tr>
                                 <tr><td class="text-muted px-3 py-2">{{ __('Range') }}</td><td class="fw-bold px-3 py-2">{{ $vehicle->range ? $vehicle->range . ' km' : __('N/A') }}</td></tr>
