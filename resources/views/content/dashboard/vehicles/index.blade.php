@@ -720,6 +720,13 @@
 	                    -webkit-transform-style: preserve-3d;
 	                    transform-style: preserve-3d;
 	                }
+
+	                .status-dropdown.show .dropdown-menu[data-bs-popper] {
+	                    inset: auto 0 100% auto !important;
+	                    margin-top: 0 !important;
+	                    margin-bottom: .25rem !important;
+	                    transform: none !important;
+	                }
 	            }
 	        }
 
