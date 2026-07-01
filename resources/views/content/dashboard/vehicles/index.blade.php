@@ -618,12 +618,12 @@
         #vehicles-table tbody tr.status-dropdown-open .td-status { z-index: 1066; }
 	        .status-dropdown { position: relative; }
 	        .status-dropdown.show { z-index: 1066; }
-	        .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; }
-	        .status-dropdown .dropdown-menu {
+	        /* .status-dropdown .dropdown-menu { z-index: 1067; min-width: 140px; } */
+	        /* .status-dropdown .dropdown-menu {
 	            background-color: #fff;
 	            background-clip: padding-box;
 	            border: 1px solid rgba(0, 0, 0, .08);
-	        }
+	        } */
             .status-dropdown .dropdown-item { transition: color .15s ease; }
             .status-dropdown .dropdown-item i,
             .status-dropdown .dropdown-item .badge-dot { transition: color .15s ease, background-color .15s ease; }
@@ -642,7 +642,7 @@
 	                z-index: 2000;
 	            }
 
-	            .status-dropdown .dropdown-menu {
+	            /* .status-dropdown .dropdown-menu {
 	                z-index: 2001;
 	                min-width: 160px;
 	                width: max-content;
@@ -650,7 +650,7 @@
 	                box-shadow: 0 .5rem 1.5rem rgba(0, 0, 0, .12);
 	                background-color: #ffffff;
 	                opacity: 1;
-	            }
+	            } */
 
 	            /* .status-dropdown .dropdown-menu[data-bs-popper] {
 	                inset: auto 0 auto auto !important;
@@ -665,7 +665,7 @@
 	        }
 
 	        @supports (-webkit-touch-callout: none) {
-	            .status-dropdown .dropdown-menu {
+	            /* .status-dropdown .dropdown-menu {
 	                position: absolute !important;
 	                top: calc(100% + .35rem) !important;
 	                right: 0 !important;
@@ -683,20 +683,20 @@
 	                -webkit-backface-visibility: hidden;
 	                backface-visibility: hidden;
 	                will-change: transform;
-	            }
+	            } */
 
-	            .status-dropdown.show {
+	            /* .status-dropdown.show {
 	                z-index: 9998 !important;
-	            }
+	            } */
 
 	            @media (max-width: 767.98px) {
-	                .status-dropdown .dropdown-menu {
+	                /* .status-dropdown .dropdown-menu {
 	                    right: 0 !important;
 	                    left: auto !important;
 	                    width: min(12.5rem, calc(100vw - 1rem)) !important;
 	                    max-width: calc(100vw - 1rem) !important;
 	                    margin-top: .25rem !important;
-	                }
+	                } */
 	            }
 	        }
 
