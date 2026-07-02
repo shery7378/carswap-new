@@ -23,6 +23,7 @@ class ContactController extends Controller
             'phone' => 'nullable|string|max:20',
             'subject' => 'required|string|max:255',
             'message' => 'required|string|max:4000',
+            'vehicle_id' => 'nullable|exists:vehicles,id',
         ]);
 
         if ($validator->fails()) {
@@ -36,6 +37,7 @@ class ContactController extends Controller
             'subject' => $request->subject,
             'message' => $request->message,
             'status' => 'unread',
+            'vehicle_id' => $request->vehicle_id,
         ]);
 
         // Send Email Notification to Admin

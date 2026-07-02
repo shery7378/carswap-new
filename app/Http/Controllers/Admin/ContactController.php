@@ -26,6 +26,10 @@ class ContactController extends Controller
         
         // Mark as read if it was unread
         if ($contact->status === 'unread') {
+            $contact->statusHistories()->create([
+                'old_status' => $contact->status,
+                'new_status' => 'read',
+            ]);
             $contact->update(['status' => 'read']);
         }
         
@@ -38,6 +42,14 @@ class ContactController extends Controller
     public function updateStatus(Request $request, $id)
     {
         $contact = Contact::findOrFail($id);
+        
+        if ($contact->status !== $request->status) {
+            $contact->statusHistories()->create([
+                'old_status' => $contact->status,
+                'new_status' => $request->status,
+            ]);
+        }
+        
         $contact->update(['status' => $request->status]);
 
         return redirect()->back()->with('success', __('Contact status updated successfully.'));
@@ -61,7 +73,19 @@ class ContactController extends Controller
             );
 
             // Update status to replied
-            $contact->update(['status' => 'replied']);
+            if ($contact->status !== 'replied') {
+                $contact->statusHistories()->create([
+                    'old_status' => $contact->status,
+                    'new_status' => 'replied',
+                ]);
+                $contact->update(['status' => 'replied']);
+            }
+
+            // Save reply history
+            $contact->replies()->create([
+                'subject' => $request->subject,
+                'message' => $request->message,
+            ]);
 
             return redirect()->back()->with('success', 'Reply email sent successfully.');
         } catch (\Exception $e) {

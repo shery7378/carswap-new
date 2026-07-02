@@ -13,5 +13,21 @@ class Contact extends Model
         'subject',
         'message',
         'status',
+        'vehicle_id',
     ];
+
+    public function vehicle()
+    {
+        return $this->belongsTo(Vehicle::class);
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(ContactReply::class);
+    }
+
+    public function statusHistories()
+    {
+        return $this->hasMany(ContactStatusHistory::class);
+    }
 }
