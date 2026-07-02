@@ -91,6 +91,40 @@
             </div>
           </div>
 
+
+          <div class="section-title mt-4"><i class="bx bx-credit-card fs-5"></i> {{ __('Subscription Assignment') }}</div>
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ __('Assign Plan') }}</label>
+              <select name="plan_id" class="form-select">
+                <option value="">{{ __('No Plan (Select to assign)') }}</option>
+                @foreach($plans as $plan)
+                <option value="{{ $plan->id }}" {{ $user->activeSubscription && $user->activeSubscription->plan_id == $plan->id ? 'selected' : '' }}>
+                  {{ $plan->name }} ({{ $plan->billing_period }}) - {{ $plan->price }} {{ __('Ft') }}
+                </option>
+                @endforeach
+              </select>
+              <small class="text-muted">{{ __('Selecting a plan will assign it to the user. Leave blank if no change is needed.') }}</small>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ __('Custom Expiry Date') }}</label>
+              <input type="datetime-local" class="form-control" name="subscription_ends_at" value="{{ $user->activeSubscription ? $user->activeSubscription->ends_at->format('Y-m-d\TH:i') : '' }}">
+              <small class="text-muted">{{ __('If left blank, defaults to +1 month or +1 year based on the plan.') }}</small>
+            </div>
+
+
+            <div class="col-md-6 mb-3 d-flex align-items-center mt-3">
+              <div class="w-100 bg-label-danger rounded p-3 shadow-xs border border-danger border-opacity-25">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" name="remove_subscription" value="1" id="remove_subscription">
+                  <label class="form-check-label fw-bold text-danger" for="remove_subscription">{{ __('Cancel Active Subscription') }}</label>
+                  <small class="text-muted d-block small mt-1">{{ __('Warning: This will deactivate the user\'s current subscription immediately.') }}</small>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row mt-5">
             <div class="col-12 d-flex justify-content-end gap-3">
               <a href="{{ route('admin.web-users.index') }}" class="btn btn-outline-secondary px-4">{{ __('Cancel') }}</a>
@@ -104,4 +138,18 @@
     </div>
   </div>
 </div>
+@endsection
+
+@section('page-script')
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    $('.select2').select2({
+        placeholder: "Válassz...",
+        allowClear: true,
+        width: '100%'
+    });
+});
+</script>
 @endsection

@@ -39,7 +39,8 @@ class User_Controller extends Controller
 
     public function create()
     {
-        return view('content.apps.users.create');
+        $plans = \App\Models\Plan::all();
+        return view('content.apps.users.create', compact('plans'));
     }
 
     public function store(Request $request)
@@ -62,7 +63,7 @@ class User_Controller extends Controller
             'phone.unique' => 'Ez a telefonszám már regisztrálva van valaki máshoz!',
         ]);
 
-        User::create([
+        $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
             'email' => $request->email,
@@ -72,13 +73,38 @@ class User_Controller extends Controller
             'is_trader' => $request->is_trader ? true : false,
         ]);
 
+        if ($request->filled('plan_id')) {
+            $plan = \App\Models\Plan::find($request->plan_id);
+            if ($plan) {
+                $endsAt = $request->filled('subscription_ends_at') 
+                    ? \Carbon\Carbon::parse($request->subscription_ends_at) 
+                    : ($plan->billing_period == 'yearly' ? now()->addYear() : now()->addMonth());
+                
+                $amount = $plan->price ?? 0;
+                    
+                \App\Models\Subscription::create([
+                    'user_id' => $user->id,
+                    'plan_id' => $plan->id,
+                    'amount' => $amount,
+                    'status' => 'active',
+                    'starts_at' => now(),
+                    'ends_at' => $endsAt,
+                    'next_billing_at' => $endsAt,
+                    'duration' => $plan->billing_period ?? 'monthly',
+                ]);
+            }
+        }
+
         return redirect()->route('admin.web-users.index')->with('success', 'User created successfully');
     }
 
     public function edit($id)
     {
-        $user = User::findOrFail($id);
-        return view('content.apps.users.edit', compact('user'));
+        $user = User::with(['roles', 'permissions', 'activeSubscription'])->findOrFail($id);
+        $plans = \App\Models\Plan::all();
+        $roles = \Spatie\Permission\Models\Role::all();
+        $permissions = \Spatie\Permission\Models\Permission::all();
+        return view('content.apps.users.edit', compact('user', 'plans', 'roles', 'permissions'));
     }
 
     public function update(Request $request, $id)
@@ -102,6 +128,44 @@ class User_Controller extends Controller
         if ($request->filled('password')) {
             $user->password = \Illuminate\Support\Facades\Hash::make($request->password);
             $user->save();
+        }
+
+
+        // Handle Subscription manually
+        if ($request->has('remove_subscription') && $request->remove_subscription == '1') {
+            $activeSub = $user->activeSubscription;
+            if ($activeSub) {
+                $activeSub->update(['status' => 'canceled']);
+            }
+        } elseif ($request->filled('plan_id')) {
+            $plan = \App\Models\Plan::find($request->plan_id);
+            if ($plan) {
+                $endsAt = $request->filled('subscription_ends_at') 
+                    ? \Carbon\Carbon::parse($request->subscription_ends_at) 
+                    : ($plan->billing_period == 'yearly' ? now()->addYear() : now()->addMonth());
+                
+                $amount = $plan->price ?? 0;
+                    
+                $activeSub = $user->activeSubscription;
+                if ($activeSub) {
+                    $activeSub->update([
+                        'plan_id' => $plan->id,
+                        'ends_at' => $endsAt,
+                        'amount' => $amount,
+                    ]);
+                } else {
+                    \App\Models\Subscription::create([
+                        'user_id' => $user->id,
+                        'plan_id' => $plan->id,
+                        'amount' => $amount,
+                        'status' => 'active',
+                        'starts_at' => now(),
+                        'ends_at' => $endsAt,
+                        'next_billing_at' => $endsAt,
+                        'duration' => $plan->billing_period ?? 'monthly',
+                    ]);
+                }
+            }
         }
 
         return redirect()->route('admin.web-users.index')->with('success', 'User updated successfully');

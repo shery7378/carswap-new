@@ -89,6 +89,28 @@
             </div>
           </div>
 
+          <div class="section-title mt-4"><i class="bx bx-credit-card fs-5"></i> {{ __('Subscription Assignment') }}</div>
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ __('Assign Plan') }}</label>
+              <select name="plan_id" class="form-select">
+                <option value="">{{ __('No Plan (Select to assign)') }}</option>
+                @foreach($plans as $plan)
+                <option value="{{ $plan->id }}" {{ old('plan_id') == $plan->id ? 'selected' : '' }}>
+                  {{ $plan->name }} ({{ $plan->billing_period }}) - {{ $plan->price }} {{ __('Ft') }}
+                </option>
+                @endforeach
+              </select>
+              <small class="text-muted">{{ __('Selecting a plan will assign it to the user. Leave blank if no change is needed.') }}</small>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <label class="form-label fw-bold">{{ __('Custom Expiry Date') }}</label>
+              <input type="datetime-local" class="form-control" name="subscription_ends_at" value="{{ old('subscription_ends_at') }}">
+              <small class="text-muted">{{ __('If left blank, defaults to +1 month or +1 year based on the plan.') }}</small>
+            </div>
+          </div>
+
           <div class="row mt-5">
             <div class="col-12 d-flex justify-content-end gap-3">
               <a href="{{ route('admin.web-users.index') }}" class="btn btn-outline-secondary px-4">{{ __('Cancel') }}</a>
