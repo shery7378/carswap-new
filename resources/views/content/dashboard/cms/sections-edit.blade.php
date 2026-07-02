@@ -258,8 +258,8 @@
                                             </button>
                                             <form action="{{ route('admin.cms.items.destroy', $item->id) }}" method="POST">
                                                 @csrf @method('DELETE')
-                                                <button type="submit" class="btn-action delete"
-                                                    onclick="return confirm('{{ __('Remove?') }}')" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
+                                                <button type="button" class="btn-action delete delete-item-btn"
+                                                    title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
                                                     <i class="icon-base bx bx-trash"></i>
                                                 </button>
                                             </form>
@@ -504,6 +504,35 @@
                         document.querySelector('#edit-item-icon').value = item.icon || '';
                     }
                     document.querySelector('#edit-item-order').value = item.order || 0;
+                });
+            });
+
+            // SweetAlert2 for delete buttons
+            document.querySelectorAll('.delete-item-btn').forEach(button => {
+                button.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const form = this.closest('form');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Biztos benne?',
+                            text: 'This action cannot be undone!',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#f44336', // Red/Orange
+                            cancelButtonColor: '#8592a3',
+                            confirmButtonText: 'Igen, töröld!',
+                            cancelButtonText: 'Mégse'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                form.submit();
+                            }
+                        });
+                    } else {
+                        // Fallback in case Swal isn't loaded
+                        if (confirm('Biztos benne? This action cannot be undone!')) {
+                            form.submit();
+                        }
+                    }
                 });
             });
         });
