@@ -556,7 +556,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                             </div>
                             <div class="kpi-label">{{ __('Regisztrált felhasználók') }}</div>
                             <div class="kpi-trend text-success mt-1">
-                                <i class="bx bx-user-plus"></i> +{{ $stats['new_users_7d'] }} {{ __('this week') }}
+                                <i class="bx bx-user-plus"></i> +{{ $stats['new_users_7d'] }} {{ __('ezen a héten') }}
                             </div>
                         </div>
                     </div>
