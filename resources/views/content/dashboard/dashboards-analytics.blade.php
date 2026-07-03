@@ -730,10 +730,16 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
             </div>
             <div class="card-body">
                 @forelse($failed_subscriptions as $sub)
+                @php
+                    $subUser = $sub->user;
+                    $subAvatarName = trim(optional($subUser)->first_name . ' ' . optional($subUser)->last_name) ?: 'User';
+                    $subAvatarFallback = 'https://ui-avatars.com/api/?name=' . urlencode($subAvatarName) . '&background=EBF4FF&color=7F9CF5';
+                @endphp
                 <div class="user-list-item">
-                    <img src="{{ optional($sub->user)->getAvatarUrl() ?? 'https://ui-avatars.com/api/?name=U&background=EBF4FF&color=7F9CF5' }}"
+                    <img src="{{ optional($subUser)->getAvatarUrl() ?? $subAvatarFallback }}"
                          class="user-avatar-sm"
-                         alt="user">
+                         alt="user"
+                         onerror="this.onerror=null; this.src='{{ $subAvatarFallback }}';">
                     <div class="flex-grow-1 min-width-0">
                         <div class="user-name">
                             {{ optional($sub->user) ? trim(optional($sub->user)->first_name . ' ' . optional($sub->user)->last_name) : __('Unknown User') }}
@@ -1003,10 +1009,16 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
             </div>
             <div class="card-body">
                 @forelse($recent_subscriptions as $sub)
+                @php
+                    $subUser = $sub->user;
+                    $subAvatarName = trim(optional($subUser)->first_name . ' ' . optional($subUser)->last_name) ?: 'User';
+                    $subAvatarFallback = 'https://ui-avatars.com/api/?name=' . urlencode($subAvatarName) . '&background=EBF4FF&color=7F9CF5';
+                @endphp
                 <div class="user-list-item">
-                    <img src="{{ optional($sub->user)->getAvatarUrl() ?? 'https://ui-avatars.com/api/?name=U&background=EBF4FF&color=7F9CF5' }}"
+                    <img src="{{ optional($subUser)->getAvatarUrl() ?? $subAvatarFallback }}"
                          class="user-avatar-sm"
-                         alt="user">
+                         alt="user"
+                         onerror="this.onerror=null; this.src='{{ $subAvatarFallback }}';">
                     <div class="flex-grow-1 min-width-0">
                         <div class="user-name">
                             {{ optional($sub->user) ? trim(optional($sub->user)->first_name . ' ' . optional($sub->user)->last_name) : __('Unknown') }}
