@@ -184,6 +184,21 @@
                   $activeClass = 'active open';
                 }
               }
+
+              if (!$activeClass && $menu->slug === 'app-access-control') {
+                $accessControlRoutes = [
+                  'admin.roles.',
+                  'admin.users.',
+                  'admin.web-users.',
+                ];
+
+                foreach ($accessControlRoutes as $routePrefix) {
+                  if ($currentRouteName && str_starts_with($currentRouteName, $routePrefix)) {
+                    $activeClass = 'active open';
+                    break;
+                  }
+                }
+              }
               
               if (!$activeClass) {
                 foreach($menu->submenu as $submenu) {
