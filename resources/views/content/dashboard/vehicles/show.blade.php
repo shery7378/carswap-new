@@ -49,8 +49,16 @@
                     <!-- Sidebar: Image & Quick Stats -->
                     <div class="col-md-5 border-end bg-light-soft p-4">
                         <div class="main-image-wrapper mb-3 position-relative">
-                            @if($vehicle->main_image_url)
-                                <img id="detail-main-image" src="{{ $vehicle->main_image_url }}" alt="{{ $vehicle->title }}" 
+                            @php
+                                $detailMainImage = null;
+                                if ($vehicle->main_image) {
+                                    $detailMainImage = preg_match('/^https?:\/\//', $vehicle->main_image)
+                                        ? $vehicle->main_image
+                                        : asset('storage/' . ltrim(preg_replace('#^storage/#', '', $vehicle->main_image), '/'));
+                                }
+                            @endphp
+                            @if($detailMainImage)
+                                <img id="detail-main-image" src="{{ $detailMainImage }}" alt="{{ $vehicle->title }}" 
                                     class="img-fluid rounded shadow-sm w-100" style="max-height: 450px; object-fit: cover;"
                                     onerror="this.src='https://placehold.co/800x600?text=No+Main+Image';">
                             @else
@@ -65,19 +73,38 @@
                         </div>
                         
                         @php 
-                            $gallery = $vehicle->gallery_image_urls;
+                            $gallery = [];
+                            if ($detailMainImage) {
+                                $gallery[] = $detailMainImage;
+                            }
+
+                            $galleryImages = $vehicle->gallery_images;
+                            if (is_string($galleryImages)) {
+                                $galleryImages = json_decode($galleryImages, true);
+                            }
+                            if (is_array($galleryImages)) {
+                                $galleryImages = array_map(function ($path) {
+                                    if (preg_match('/^https?:\/\//', $path)) {
+                                        return $path;
+                                    }
+
+                                    return asset('storage/' . ltrim(preg_replace('#^storage/#', '', $path), '/'));
+                                }, $galleryImages);
+                                $gallery = array_merge($gallery, $galleryImages);
+                            }
                         @endphp
                         
                         @if($gallery && is_array($gallery) && count($gallery) > 0)
                             <h6 class="fw-bold mb-3 small text-uppercase">{{ __('Gallery (:count Photos)', ['count' => count($gallery)]) }}</h6>
-                            <div class="gallery-wrapper row g-2 mb-4" style="max-height: 250px; overflow-y: auto; padding: 2px;">
+                            <div class="gallery-wrapper d-flex flex-wrap gap-2 mb-4" style="max-height: 250px; overflow-y: auto; padding: 2px;">
                                 @foreach($gallery as $imgUrl)
-                                    <div class="col-3">
+                                    <button type="button" class="gallery-thumb-btn p-0 border-0 bg-transparent"
+                                            onclick="document.getElementById('detail-main-image').src=this.querySelector('img').src;">
                                         <img src="{{ $imgUrl }}" class="img-fluid rounded border shadow-xs gallery-thumb" 
-                                            style="height: 65px; width: 100%; object-fit: cover; cursor: pointer;"
-                                            onclick="document.getElementById('detail-main-image').src=this.src;"
+                                            style="height: 72px; width: 92px; object-fit: cover; cursor: pointer;"
+                                            alt="{{ __('Gallery image') }}"
                                             onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=x';">
-                                    </div>
+                                    </button>
                                 @endforeach
                             </div>
                         @endif
@@ -357,6 +384,9 @@
 }
 .gallery-thumb {
     transition: all 0.2s ease-in-out;
+}
+.gallery-thumb-btn {
+    flex: 0 0 auto;
 }
 .gallery-thumb:hover {
     border-color: #696cff !important;

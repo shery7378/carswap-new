@@ -37,8 +37,16 @@
         <div class="col-md-5 border-end bg-light p-4">
             <div class="text-center mb-4 position-relative">
                 <div class="main-img-container rounded border shadow-sm p-1 bg-white mb-2 overflow-hidden position-relative">
-                    @if($vehicle->main_image_url)
-                        <img id="modal-vehicle-main-image" src="{{ $vehicle->main_image_url }}" class="img-fluid rounded" style="max-height: 280px; width: 100%; object-fit: cover;" onerror="this.src='https://placehold.co/800x600?text=No+Main+Image';">
+                    @php
+                    $mainImageSrc = null;
+                    if ($vehicle->main_image) {
+                        $mainImageSrc = preg_match('/^https?:\/\//', $vehicle->main_image)
+                            ? $vehicle->main_image
+                            : asset('storage/' . $vehicle->main_image);
+                    }
+                    @endphp
+                    @if($mainImageSrc)
+                        <img id="modal-vehicle-main-image" src="{{ $mainImageSrc }}" class="img-fluid rounded" style="max-height: 280px; width: 100%; object-fit: cover;" onerror="this.src='https://placehold.co/800x600?text=No+Main+Image';">
                         <span class="position-absolute top-0 end-0 m-2 badge bg-primary shadow-lg fs-6 py-2 px-3">
                             @formatCurrency($vehicle->price)
                         </span>
@@ -50,13 +58,19 @@
                 </div>
                 
                 <!-- Gallery Thumbs -->
-                @php 
+                @php
                     $allImages = [];
-                    if($vehicle->main_image_url) {
-                        $allImages[] = $vehicle->main_image_url;
+                    if ($mainImageSrc) {
+                        $allImages[] = $mainImageSrc;
                     }
-                    if($vehicle->gallery_image_urls && is_array($vehicle->gallery_image_urls)) {
-                        $allImages = array_merge($allImages, $vehicle->gallery_image_urls);
+                    $galleryImages = $vehicle->gallery_images;
+                    if (is_string($galleryImages)) {
+                        $galleryImages = json_decode($galleryImages, true);
+                    }
+                    if (is_array($galleryImages)) {
+                        foreach ($galleryImages as $path) {
+                            $allImages[] = preg_match('/^https?:\/\//', $path) ? $path : asset('storage/' . $path);
+                        }
                     }
                 @endphp
                 @if(count($allImages) > 0)

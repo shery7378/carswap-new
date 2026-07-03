@@ -96,9 +96,21 @@ class Vehicle extends Model
 
     public function getMainImageUrlAttribute(): ?string
     {
-        return $this->main_image
-            ? Storage::disk('public')->url($this->main_image)
-            : null;
+        if (!$this->main_image) {
+            return null;
+        }
+
+        if (preg_match('/^https?:\/\//', $this->main_image)) {
+            return $this->main_image;
+        }
+
+        $path = ltrim($this->main_image, '/');
+
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        return Storage::disk('public')->url($path);
     }
 
     public function getGalleryImageUrlsAttribute(): array
@@ -118,6 +130,16 @@ class Vehicle extends Model
 
         return array_map(
             function ($path) {
+                if (preg_match('/^https?:\/\//', $path)) {
+                    return $path;
+                }
+
+                $path = ltrim($path, '/');
+
+                if (str_starts_with($path, 'storage/')) {
+                    $path = substr($path, strlen('storage/'));
+                }
+
                 return Storage::disk('public')->url($path);
             },
             $images
