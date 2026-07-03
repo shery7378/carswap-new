@@ -18,6 +18,92 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
+    (function() {
+        const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+        const refreshUrl = @json(route('admin.session.refresh'));
+        const loginUrl = @json(route('login'));
+        const refreshInterval = 10 * 60 * 1000;
+        let refreshTimer = null;
+        let refreshInFlight = false;
+
+        function updateCsrfToken(token) {
+            if (!token) {
+                return;
+            }
+
+            if (csrfMeta) {
+                csrfMeta.setAttribute('content', token);
+            }
+
+            document.querySelectorAll('input[name="_token"]').forEach(function(input) {
+                input.value = token;
+            });
+
+            window.csrfToken = token;
+        }
+
+        function redirectToLogin() {
+            window.location.replace(loginUrl);
+        }
+
+        async function refreshSession() {
+            if (refreshInFlight || !refreshUrl) {
+                return;
+            }
+
+            refreshInFlight = true;
+
+            try {
+                const response = await fetch(refreshUrl, {
+                    method: 'GET',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                });
+
+                if (response.status === 401 || response.status === 419) {
+                    redirectToLogin();
+                    return;
+                }
+
+                if (!response.ok) {
+                    return;
+                }
+
+                const data = await response.json();
+                updateCsrfToken(data.csrf_token);
+            } catch (error) {
+                // Keep the admin usable even if background refresh fails.
+            } finally {
+                refreshInFlight = false;
+            }
+        }
+
+        function startRefreshLoop() {
+            clearInterval(refreshTimer);
+            refreshTimer = setInterval(refreshSession, refreshInterval);
+        }
+
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                refreshSession();
+            }
+        });
+
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                refreshSession();
+            }
+        });
+
+        window.addEventListener('focus', refreshSession);
+
+        startRefreshLoop();
+        setTimeout(refreshSession, 15 * 1000);
+    })();
+
     // Global Select2 Initialization
     function initSelect2(selector = 'select:not(.no-select2)') {
         $(selector).each(function() {

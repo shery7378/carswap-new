@@ -24,6 +24,9 @@
     <meta property="og:site_name"
         content="{{ config('settings.storeName') ?? config('variables.creatorName') ?? '' }}" />
     <meta name="robots" content="noindex, nofollow" />
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <!-- laravel CRUD token -->
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <!-- Canonical SEO -->

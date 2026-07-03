@@ -74,7 +74,15 @@ Route::get('/reset-password/{token}', [AuthController::class, 'showResetPassword
 Route::post('/reset-password', [AuthController::class, 'resetPassword'])->name('admin.password.update');
 
 // Protected Routes Section
-Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-guard'])->group(function () {
+Route::middleware(['auth:admin-guard', 'role:super-admin|admin|sub-admin,admin-guard', 'admin.no_cache'])->group(function () {
+
+    Route::get('/session/refresh', function () {
+        session()->regenerateToken();
+
+        return response()->json([
+            'csrf_token' => csrf_token(),
+        ]);
+    })->name('admin.session.refresh');
 
     // General Dashboard & Logout
     Route::get('/dashboard', [Analytics::class, 'index'])->name('dashboard-analytics');

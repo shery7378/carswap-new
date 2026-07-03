@@ -3,6 +3,9 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Session\TokenMismatchException;
+use Illuminate\Http\Request;
+use App\Http\Middleware\AdminNoCache;
 
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
@@ -20,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
       'role' => RoleMiddleware::class,
       'permission' => PermissionMiddleware::class,
       'role_or_permission' => RoleOrPermissionMiddleware::class,
+      'admin.no_cache' => AdminNoCache::class,
     ]);
 
     $middleware->validateCsrfTokens(except: [
@@ -31,5 +35,15 @@ return Application::configure(basePath: dirname(__DIR__))
     ]);
   })
   ->withExceptions(function (Exceptions $exceptions) {
-    //
+    $exceptions->render(function (TokenMismatchException $e, Request $request) {
+        $isAdminArea = $request->is('dashboard', 'profile', 'app/*');
+
+        if ($isAdminArea) {
+            return redirect()
+                ->route('login')
+                ->with('status', 'Your session expired. Please sign in again.');
+        }
+
+        return response()->view('errors.419', [], 419);
+    });
   })->create();
