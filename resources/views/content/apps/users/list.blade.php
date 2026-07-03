@@ -61,10 +61,14 @@
                             </thead>
                             <tbody>
                                 @foreach($users as $user)
+                                    @php
+                                        $avatarName = trim($user->first_name . ' ' . $user->last_name) ?: 'User';
+                                        $avatarFallback = 'https://ui-avatars.com/api/?name=' . urlencode($avatarName) . '&color=7F9CF5&background=EBF4FF';
+                                    @endphp
                                     <tr data-id="{{ $user->id }}">
                                         <td>
-                                            <div class="avatar avatar-md border border-light shadow-sm bg-white rounded-circle">
-                                                <img src="{{ $user->getAvatarUrl() }}" alt="avatar" class="rounded-circle" style="width: 40px; height: 40px; object-fit: cover;">
+                                            <div class="avatar avatar-md border border-light shadow-sm bg-white rounded-circle overflow-hidden d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <img src="{{ $user->getAvatarUrl() }}" alt="avatar" class="rounded-circle" style="width: 100%; height: 100%; object-fit: cover; display: block;" onerror="this.onerror=null; this.src='{{ $avatarFallback }}';">
                                             </div>
                                         </td>
                                         <td>
