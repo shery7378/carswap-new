@@ -526,10 +526,10 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                                 </div>
                                 <div class="kpi-number text-warning">{{ $stats['pending_vehicles'] }}</div>
                             </div>
-                            <div class="kpi-label">{{ __('Pending Approval') }}</div>
+                            <div class="kpi-label">{{ __('Jóváhagyásra vár') }}</div>
                             @if($stats['pending_vehicles'] > 0)
                             <div class="kpi-trend text-warning mt-1">
-                                <i class="bx bx-error-circle"></i> {{ __('Needs review') }}
+                                <i class="bx bx-error-circle"></i> {{ __('Felülvizsgálat szükséges') }}
                             </div>
                             @else
                             <div class="kpi-trend text-success mt-1">
@@ -554,7 +554,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                                 </div>
                                 <div class="kpi-number">{{ $stats['total_users'] }}</div>
                             </div>
-                            <div class="kpi-label">{{ __('Registered Users') }}</div>
+                            <div class="kpi-label">{{ __('Regisztrált felhasználók') }}</div>
                             <div class="kpi-trend text-success mt-1">
                                 <i class="bx bx-user-plus"></i> +{{ $stats['new_users_7d'] }} {{ __('this week') }}
                             </div>
@@ -578,7 +578,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                             </div>
                             <div class="kpi-label">{{ __('Partners') }}</div>
                             <div class="kpi-trend text-muted mt-1">
-                                <i class="bx bx-building"></i> {{ __('Dealers & Services') }}
+                                <i class="bx bx-building"></i> {{ __('Márkakereskedők és szolgáltatások') }}
                             </div>
                         </div>
                     </div>
@@ -598,10 +598,10 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                                 </div>
                                 <div class="kpi-number">{{ $stats['active_subscriptions'] }}</div>
                             </div>
-                            <div class="kpi-label">{{ __('Active Subscriptions') }}</div>
+                            <div class="kpi-label">{{ __('Aktív előfizetések') }}</div>
                             @if($stats['failed_subscriptions'] > 0)
                             <div class="kpi-trend text-danger mt-1">
-                                <i class="bx bx-error"></i> {{ $stats['failed_subscriptions'] }} {{ __('failed') }}
+                                <i class="bx bx-error"></i> {{ $stats['failed_subscriptions'] }} {{ __('sikertelen') }}
                             </div>
                             @else
                             <div class="kpi-trend text-success mt-1">
@@ -626,10 +626,10 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                                 </div>
                                 <div class="kpi-number {{ $stats['open_contacts'] > 0 ? 'text-danger' : '' }}">{{ $stats['open_contacts'] }}</div>
                             </div>
-                            <div class="kpi-label">{{ __('Open Contacts') }}</div>
+                            <div class="kpi-label">{{ __('Nyitott kapcsolatok') }}</div>
                             @if($stats['open_contacts'] > 0)
                             <div class="kpi-trend text-danger mt-1">
-                                <i class="bx bx-bell"></i> {{ __('Awaiting reply') }}
+                                <i class="bx bx-bell"></i> {{ __('Válaszra vár') }}
                             </div>
                             @else
                             <div class="kpi-trend text-success mt-1">
@@ -659,13 +659,13 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-time-five text-warning"></i>
-                        {{ __('Listings Awaiting Approval') }}
+                        {{ __('Jóváhagyásra váró hirdetések') }}
                         @if($stats['pending_vehicles'] > 0)
                             <span class="badge bg-warning text-dark ms-1">{{ $stats['pending_vehicles'] }}</span>
                         @endif
                     </div>
                     <a href="{{ route('admin.vehicles.index') }}" class="btn btn-sm btn-outline-primary" style="font-size:0.76rem;">
-                        {{ __('View All') }} <i class="bx bx-right-arrow-alt"></i>
+                        {{ __('Összes megtekintése') }} <i class="bx bx-right-arrow-alt"></i>
                     </a>
                 </div>
             </div>
@@ -696,7 +696,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                         </div>
                     </div>
                     <a href="{{ route('admin.vehicles.show', $vehicle->id) }}" class="pending-approve-btn">
-                        <i class="bx bx-show" style="font-size:0.8rem;"></i> {{ __('Review') }}
+                        <i class="bx bx-show" style="font-size:0.8rem;"></i> {{ __('Ellenőrzés') }}
                     </a>
                 </div>
                 @empty
@@ -718,13 +718,13 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-error-circle text-danger"></i>
-                        {{ __('Failed / Cancelled Subscriptions') }}
+                        {{ __('Sikertelen / Törölt előfizetések') }}
                         @if($stats['failed_subscriptions'] > 0)
                             <span class="badge bg-danger ms-1">{{ $stats['failed_subscriptions'] }}</span>
                         @endif
                     </div>
                     <a href="{{ route('app-subscription-list') }}" class="btn btn-sm btn-outline-danger" style="font-size:0.76rem;">
-                        {{ __('View All') }}
+                        {{ __('Összes megtekintése') }}
                     </a>
                 </div>
             </div>
@@ -742,14 +742,24 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                     </div>
                     <div class="d-flex flex-column align-items-end gap-1">
                         @php $st = strtolower($sub->status ?? 'unknown'); @endphp
-                        <span class="status-pill status-{{ $st }}">{{ ucfirst($sub->status ?? 'unknown') }}</span>
+                        <span class="status-pill status-{{ $st }}">
+                            @php
+                                $statusLabel = match ($st) {
+                                    'cancelled' => __('Törölve'),
+                                    'expired' => __('Lejárt'),
+                                    'failed' => __('Sikertelen'),
+                                    default => ucfirst($sub->status ?? 'unknown'),
+                                };
+                            @endphp
+                            {{ $statusLabel }}
+                        </span>
                         <span class="user-time-badge">{{ $sub->updated_at->diffForHumans() }}</span>
                     </div>
                 </div>
                 @empty
                 <div class="empty-state">
                     <i class="bx bx-shield-check text-success"></i>
-                    <p>{{ __('No failed or cancelled subscriptions. All healthy!') }}</p>
+                    <p>{{ __('Nincsenek sikertelen vagy törölt előfizetések. Minden rendben!') }}</p>
                 </div>
                 @endforelse
             </div>
@@ -771,8 +781,8 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-pulse text-primary"></i>
-                        {{ __('Recent Activity') }}
-                        <span class="section-badge">{{ __('Last 30 days') }}</span>
+                        {{ __('Legutóbbi tevékenység') }}
+                        <span class="section-badge">{{ __('Utolsó 30 nap') }}</span>
                     </div>
                 </div>
             </div>
@@ -812,11 +822,11 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-user-plus text-success"></i>
-                        {{ __('New Registrations') }}
-                        <span class="section-badge">{{ __('7 days') }}</span>
+                        {{ __('Új regisztrációk') }}
+                        <span class="section-badge">{{ __('7 nap') }}</span>
                     </div>
                     <a href="{{ route('admin.web-users.index') }}" class="btn btn-sm btn-outline-success" style="font-size:0.76rem;">
-                        {{ __('All Users') }}
+                        {{ __('Összes felhasználó') }}
                     </a>
                 </div>
             </div>
@@ -837,7 +847,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 @empty
                 <div class="empty-state">
                     <i class="bx bx-user-x"></i>
-                    <p>{{ __('No new registrations in the last 7 days.') }}</p>
+                    <p>{{ __('Nincsenek új regisztrációk az elmúlt 7 napban.') }}</p>
                 </div>
                 @endforelse
             </div>
@@ -860,10 +870,10 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-support text-info"></i>
-                        {{ __('Support Requests') }}
+                        {{ __('Támogatási kérések') }}
                     </div>
                     <a href="{{ route('admin.contacts.index') }}" class="btn btn-sm btn-outline-info" style="font-size:0.76rem;">
-                        {{ __('View All') }}
+                        {{ __('Összes megtekintése') }}
                     </a>
                 </div>
             </div>
@@ -882,14 +892,24 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                     </div>
                     <div class="d-flex flex-column align-items-end gap-1 ms-2">
                         @php $cst = strtolower($contact->status ?? 'new'); @endphp
-                        <span class="status-pill status-{{ $cst }}">{{ ucfirst($contact->status ?? 'new') }}</span>
+                        <span class="status-pill status-{{ $cst }}">
+                            @php
+                                $contactStatusLabel = match ($cst) {
+                                    'replied' => __('Válaszolt'),
+                                    'read' => __('Olvasva'),
+                                    'new' => __('Új'),
+                                    default => ucfirst($contact->status ?? 'new'),
+                                };
+                            @endphp
+                            {{ $contactStatusLabel }}
+                        </span>
                         <span class="inbox-time">{{ $contact->created_at->diffForHumans() }}</span>
                     </div>
                 </a>
                 @empty
                 <div class="empty-state">
                     <i class="bx bx-envelope-open"></i>
-                    <p>{{ __('No support requests found.') }}</p>
+                    <p>{{ __('Nem található támogatási kérés.') }}</p>
                 </div>
                 @endforelse
             </div>
@@ -905,13 +925,13 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-transfer-alt text-secondary"></i>
-                        {{ __('Trade Offer Inbox') }}
+                        {{ __('Csereláda bejövő üzenetek') }}
                         @if($stats['open_trade_offers'] > 0)
                             <span class="badge bg-secondary ms-1">{{ $stats['open_trade_offers'] }}</span>
                         @endif
                     </div>
                     <a href="{{ route('admin.trade-offers.index') }}" class="btn btn-sm btn-outline-secondary" style="font-size:0.76rem;">
-                        {{ __('View All') }}
+                        {{ __('Összes megtekintése') }}
                     </a>
                 </div>
             </div>
@@ -933,7 +953,17 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                     <div class="d-flex flex-column align-items-end gap-1 ms-2">
                         @php $tst = strtolower($offer->status ?? 'new'); @endphp
                         <span class="status-pill status-{{ in_array($tst, ['new','pending','open','closed','rejected']) ? $tst : 'new' }}">
-                            {{ ucfirst($offer->status ?? 'New') }}
+                            @php
+                                $offerStatusLabel = match ($tst) {
+                                    'viewed' => __('Megtekintve'),
+                                    'pending' => __('Függőben'),
+                                    'closed' => __('Lezárva'),
+                                    'rejected' => __('Elutasítva'),
+                                    'new' => __('Új'),
+                                    default => ucfirst($offer->status ?? 'New'),
+                                };
+                            @endphp
+                            {{ $offerStatusLabel }}
                         </span>
                         <span class="inbox-time">{{ $offer->created_at->diffForHumans() }}</span>
                     </div>
@@ -964,10 +994,10 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="section-header mb-0">
                     <div class="section-title">
                         <i class="bx bx-badge-check text-primary"></i>
-                        {{ __('Recent Subscriptions') }}
+                        {{ __('Legutóbbi előfizetések') }}
                     </div>
                     <a href="{{ route('app-subscription-list') }}" class="btn btn-sm btn-outline-primary" style="font-size:0.76rem;">
-                        {{ __('View All') }}
+                        {{ __('Összes megtekintése') }}
                     </a>
                 </div>
             </div>
@@ -1019,11 +1049,11 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                         <div class="section-header mb-0">
                             <div class="section-title" style="font-size:0.85rem;">
                                 <i class="bx bx-buildings text-purple" style="color:#a855f7;"></i>
-                                {{ __('New Partners') }}
-                                <span class="section-badge">7d</span>
+                                {{ __('Új partnerek') }}
+                                <span class="section-badge">7 nap</span>
                             </div>
                             <a href="{{ route('admin.partners.index') }}" class="btn btn-sm btn-outline-secondary" style="font-size:0.7rem; padding:2px 8px;">
-                                {{ __('All') }}
+                                {{ __('Mind') }}
                             </a>
                         </div>
                     </div>
@@ -1051,7 +1081,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                         @empty
                         <div class="empty-state" style="padding:20px 0;">
                             <i class="bx bx-buildings"></i>
-                            <p>{{ __('No new partners this week.') }}</p>
+                            <p>{{ __('Nincsenek új partnerek ezen a héten.') }}</p>
                         </div>
                         @endforelse
                     </div>
