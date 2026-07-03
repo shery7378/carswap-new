@@ -456,7 +456,7 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
 
                 <div class="mb-4">
                     <p class="text-white mb-1" style="font-size:0.9rem;opacity:0.85;">
-                        {{ __("Here's what's happening in your platform today.") }}
+                        {{ __('Itt láthatja, mi történik ma az Ön platformján.') }}
                     </p>
                     <p class="hero-time mb-0">
                         <i class="bx bx-time me-1"></i>
@@ -467,22 +467,22 @@ body, .card, .table { font-family: 'Inter', sans-serif; }
                 <div class="d-flex flex-wrap gap-2">
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-vehicles', 'admin-guard'))
                     <a href="{{ route('admin.vehicles.index') }}" class="hero-btn">
-                        <i class="bx bx-car"></i> {{ __('Vehicles') }}
+                        <i class="bx bx-car"></i> {{ __('Járművek') }}
                     </a>
                     @endif
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-users', 'admin-guard'))
                     <a href="{{ route('admin.web-users.index') }}" class="hero-btn">
-                        <i class="bx bx-group"></i> {{ __('Users') }}
+                        <i class="bx bx-group"></i> {{ __('Felhasználók') }}
                     </a>
                     @endif
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-subscriptions', 'admin-guard'))
                     <a href="{{ route('app-subscription-list') }}" class="hero-btn">
-                        <i class="bx bx-badge-check"></i> {{ __('Subscriptions') }}
+                        <i class="bx bx-badge-check"></i> {{ __('Előfizetések') }}
                     </a>
                     @endif
                     @if(auth('admin-guard')->user()->hasRole('super-admin') || auth('admin-guard')->user()->hasPermissionTo('view-contacts', 'admin-guard'))
                     <a href="{{ route('admin.contacts.index') }}" class="hero-btn">
-                        <i class="bx bx-envelope"></i> {{ __('Contacts') }}
+                        <i class="bx bx-envelope"></i> {{ __('Kapcsolatok') }}
                     </a>
                     @endif
                 </div>
